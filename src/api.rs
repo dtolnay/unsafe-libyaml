@@ -172,59 +172,59 @@ pub type yaml_token_type_t = yaml_token_type_e;
 #[repr(C)]
 pub struct yaml_token_s {
     pub type_0: yaml_token_type_t,
-    pub data: C2RustUnnamed,
+    pub data: Unnamed,
     pub start_mark: yaml_mark_t,
     pub end_mark: yaml_mark_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub union C2RustUnnamed {
-    pub stream_start: C2RustUnnamed_6,
-    pub alias: C2RustUnnamed_5,
-    pub anchor: C2RustUnnamed_4,
-    pub tag: C2RustUnnamed_3,
-    pub scalar: C2RustUnnamed_2,
-    pub version_directive: C2RustUnnamed_1,
-    pub tag_directive: C2RustUnnamed_0,
+pub union Unnamed {
+    pub stream_start: Unnamed_6,
+    pub alias: Unnamed_5,
+    pub anchor: Unnamed_4,
+    pub tag: Unnamed_3,
+    pub scalar: Unnamed_2,
+    pub version_directive: Unnamed_1,
+    pub tag_directive: Unnamed_0,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_0 {
+pub struct Unnamed_0 {
     pub handle: *mut yaml_char_t,
     pub prefix: *mut yaml_char_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_1 {
+pub struct Unnamed_1 {
     pub major: libc::c_int,
     pub minor: libc::c_int,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_2 {
+pub struct Unnamed_2 {
     pub value: *mut yaml_char_t,
     pub length: size_t,
     pub style: yaml_scalar_style_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_3 {
+pub struct Unnamed_3 {
     pub handle: *mut yaml_char_t,
     pub suffix: *mut yaml_char_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_4 {
+pub struct Unnamed_4 {
     pub value: *mut yaml_char_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_5 {
+pub struct Unnamed_5 {
     pub value: *mut yaml_char_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_6 {
+pub struct Unnamed_6 {
     pub encoding: yaml_encoding_t,
 }
 pub type yaml_token_t = yaml_token_s;
@@ -245,24 +245,24 @@ pub type yaml_event_type_t = yaml_event_type_e;
 #[repr(C)]
 pub struct yaml_event_s {
     pub type_0: yaml_event_type_t,
-    pub data: C2RustUnnamed_7,
+    pub data: Unnamed_7,
     pub start_mark: yaml_mark_t,
     pub end_mark: yaml_mark_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub union C2RustUnnamed_7 {
-    pub stream_start: C2RustUnnamed_15,
-    pub document_start: C2RustUnnamed_13,
-    pub document_end: C2RustUnnamed_12,
-    pub alias: C2RustUnnamed_11,
-    pub scalar: C2RustUnnamed_10,
-    pub sequence_start: C2RustUnnamed_9,
-    pub mapping_start: C2RustUnnamed_8,
+pub union Unnamed_7 {
+    pub stream_start: Unnamed_15,
+    pub document_start: Unnamed_13,
+    pub document_end: Unnamed_12,
+    pub alias: Unnamed_11,
+    pub scalar: Unnamed_10,
+    pub sequence_start: Unnamed_9,
+    pub mapping_start: Unnamed_8,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_8 {
+pub struct Unnamed_8 {
     pub anchor: *mut yaml_char_t,
     pub tag: *mut yaml_char_t,
     pub implicit: libc::c_int,
@@ -270,7 +270,7 @@ pub struct C2RustUnnamed_8 {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_9 {
+pub struct Unnamed_9 {
     pub anchor: *mut yaml_char_t,
     pub tag: *mut yaml_char_t,
     pub implicit: libc::c_int,
@@ -278,7 +278,7 @@ pub struct C2RustUnnamed_9 {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_10 {
+pub struct Unnamed_10 {
     pub anchor: *mut yaml_char_t,
     pub tag: *mut yaml_char_t,
     pub value: *mut yaml_char_t,
@@ -289,43 +289,43 @@ pub struct C2RustUnnamed_10 {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_11 {
+pub struct Unnamed_11 {
     pub anchor: *mut yaml_char_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_12 {
+pub struct Unnamed_12 {
     pub implicit: libc::c_int,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_13 {
+pub struct Unnamed_13 {
     pub version_directive: *mut yaml_version_directive_t,
-    pub tag_directives: C2RustUnnamed_14,
+    pub tag_directives: Unnamed_14,
     pub implicit: libc::c_int,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_14 {
+pub struct Unnamed_14 {
     pub start: *mut yaml_tag_directive_t,
     pub end: *mut yaml_tag_directive_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_15 {
+pub struct Unnamed_15 {
     pub encoding: yaml_encoding_t,
 }
 pub type yaml_event_t = yaml_event_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_16 {
+pub struct Unnamed_16 {
     pub start: *mut yaml_tag_directive_t,
     pub end: *mut yaml_tag_directive_t,
     pub top: *mut yaml_tag_directive_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_17 {
+pub struct Unnamed_17 {
     pub error: yaml_error_type_t,
 }
 pub type yaml_node_type_e = libc::c_uint;
@@ -339,26 +339,26 @@ pub type yaml_node_type_t = yaml_node_type_e;
 pub struct yaml_node_s {
     pub type_0: yaml_node_type_t,
     pub tag: *mut yaml_char_t,
-    pub data: C2RustUnnamed_18,
+    pub data: Unnamed_18,
     pub start_mark: yaml_mark_t,
     pub end_mark: yaml_mark_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub union C2RustUnnamed_18 {
-    pub scalar: C2RustUnnamed_23,
-    pub sequence: C2RustUnnamed_21,
-    pub mapping: C2RustUnnamed_19,
+pub union Unnamed_18 {
+    pub scalar: Unnamed_23,
+    pub sequence: Unnamed_21,
+    pub mapping: Unnamed_19,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_19 {
-    pub pairs: C2RustUnnamed_20,
+pub struct Unnamed_19 {
+    pub pairs: Unnamed_20,
     pub style: yaml_mapping_style_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_20 {
+pub struct Unnamed_20 {
     pub start: *mut yaml_node_pair_t,
     pub end: *mut yaml_node_pair_t,
     pub top: *mut yaml_node_pair_t,
@@ -372,13 +372,13 @@ pub struct yaml_node_pair_s {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_21 {
-    pub items: C2RustUnnamed_22,
+pub struct Unnamed_21 {
+    pub items: Unnamed_22,
     pub style: yaml_sequence_style_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_22 {
+pub struct Unnamed_22 {
     pub start: *mut yaml_node_item_t,
     pub end: *mut yaml_node_item_t,
     pub top: *mut yaml_node_item_t,
@@ -386,7 +386,7 @@ pub struct C2RustUnnamed_22 {
 pub type yaml_node_item_t = libc::c_int;
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_23 {
+pub struct Unnamed_23 {
     pub value: *mut yaml_char_t,
     pub length: size_t,
     pub style: yaml_scalar_style_t,
@@ -395,9 +395,9 @@ pub type yaml_node_t = yaml_node_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct yaml_document_s {
-    pub nodes: C2RustUnnamed_25,
+    pub nodes: Unnamed_25,
     pub version_directive: *mut yaml_version_directive_t,
-    pub tag_directives: C2RustUnnamed_24,
+    pub tag_directives: Unnamed_24,
     pub start_implicit: libc::c_int,
     pub end_implicit: libc::c_int,
     pub start_mark: yaml_mark_t,
@@ -405,13 +405,13 @@ pub struct yaml_document_s {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_24 {
+pub struct Unnamed_24 {
     pub start: *mut yaml_tag_directive_t,
     pub end: *mut yaml_tag_directive_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_25 {
+pub struct Unnamed_25 {
     pub start: *mut yaml_node_t,
     pub end: *mut yaml_node_t,
     pub top: *mut yaml_node_t,
@@ -419,60 +419,60 @@ pub struct C2RustUnnamed_25 {
 pub type yaml_document_t = yaml_document_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_26 {
+pub struct Unnamed_26 {
     pub start: *mut yaml_tag_directive_t,
     pub end: *mut yaml_tag_directive_t,
     pub top: *mut yaml_tag_directive_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_27 {
+pub struct Unnamed_27 {
     pub start: *mut yaml_node_t,
     pub end: *mut yaml_node_t,
     pub top: *mut yaml_node_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_28 {
+pub struct Unnamed_28 {
     pub error: yaml_error_type_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_29 {
+pub struct Unnamed_29 {
     pub error: yaml_error_type_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_30 {
+pub struct Unnamed_30 {
     pub start: *mut yaml_node_item_t,
     pub end: *mut yaml_node_item_t,
     pub top: *mut yaml_node_item_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_31 {
+pub struct Unnamed_31 {
     pub error: yaml_error_type_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_32 {
+pub struct Unnamed_32 {
     pub start: *mut yaml_node_pair_t,
     pub end: *mut yaml_node_pair_t,
     pub top: *mut yaml_node_pair_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_33 {
+pub struct Unnamed_33 {
     pub error: yaml_error_type_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_34 {
+pub struct Unnamed_34 {
     pub error: yaml_error_type_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_35 {
+pub struct Unnamed_35 {
     pub error: yaml_error_type_t,
 }
 pub type yaml_read_handler_t = unsafe extern "C" fn(
@@ -536,76 +536,76 @@ pub struct yaml_parser_s {
     pub context_mark: yaml_mark_t,
     pub read_handler: Option::<yaml_read_handler_t>,
     pub read_handler_data: *mut libc::c_void,
-    pub input: C2RustUnnamed_45,
+    pub input: Unnamed_45,
     pub eof: libc::c_int,
-    pub buffer: C2RustUnnamed_44,
+    pub buffer: Unnamed_44,
     pub unread: size_t,
-    pub raw_buffer: C2RustUnnamed_43,
+    pub raw_buffer: Unnamed_43,
     pub encoding: yaml_encoding_t,
     pub offset: size_t,
     pub mark: yaml_mark_t,
     pub stream_start_produced: libc::c_int,
     pub stream_end_produced: libc::c_int,
     pub flow_level: libc::c_int,
-    pub tokens: C2RustUnnamed_42,
+    pub tokens: Unnamed_42,
     pub tokens_parsed: size_t,
     pub token_available: libc::c_int,
-    pub indents: C2RustUnnamed_41,
+    pub indents: Unnamed_41,
     pub indent: libc::c_int,
     pub simple_key_allowed: libc::c_int,
-    pub simple_keys: C2RustUnnamed_40,
-    pub states: C2RustUnnamed_39,
+    pub simple_keys: Unnamed_40,
+    pub states: Unnamed_39,
     pub state: yaml_parser_state_t,
-    pub marks: C2RustUnnamed_38,
-    pub tag_directives: C2RustUnnamed_37,
-    pub aliases: C2RustUnnamed_36,
+    pub marks: Unnamed_38,
+    pub tag_directives: Unnamed_37,
+    pub aliases: Unnamed_36,
     pub document: *mut yaml_document_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_36 {
+pub struct Unnamed_36 {
     pub start: *mut yaml_alias_data_t,
     pub end: *mut yaml_alias_data_t,
     pub top: *mut yaml_alias_data_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_37 {
+pub struct Unnamed_37 {
     pub start: *mut yaml_tag_directive_t,
     pub end: *mut yaml_tag_directive_t,
     pub top: *mut yaml_tag_directive_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_38 {
+pub struct Unnamed_38 {
     pub start: *mut yaml_mark_t,
     pub end: *mut yaml_mark_t,
     pub top: *mut yaml_mark_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_39 {
+pub struct Unnamed_39 {
     pub start: *mut yaml_parser_state_t,
     pub end: *mut yaml_parser_state_t,
     pub top: *mut yaml_parser_state_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_40 {
+pub struct Unnamed_40 {
     pub start: *mut yaml_simple_key_t,
     pub end: *mut yaml_simple_key_t,
     pub top: *mut yaml_simple_key_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_41 {
+pub struct Unnamed_41 {
     pub start: *mut libc::c_int,
     pub end: *mut libc::c_int,
     pub top: *mut libc::c_int,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_42 {
+pub struct Unnamed_42 {
     pub start: *mut yaml_token_t,
     pub end: *mut yaml_token_t,
     pub head: *mut yaml_token_t,
@@ -613,7 +613,7 @@ pub struct C2RustUnnamed_42 {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_43 {
+pub struct Unnamed_43 {
     pub start: *mut libc::c_uchar,
     pub end: *mut libc::c_uchar,
     pub pointer: *mut libc::c_uchar,
@@ -621,7 +621,7 @@ pub struct C2RustUnnamed_43 {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_44 {
+pub struct Unnamed_44 {
     pub start: *mut yaml_char_t,
     pub end: *mut yaml_char_t,
     pub pointer: *mut yaml_char_t,
@@ -629,13 +629,13 @@ pub struct C2RustUnnamed_44 {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub union C2RustUnnamed_45 {
-    pub string: C2RustUnnamed_46,
+pub union Unnamed_45 {
+    pub string: Unnamed_46,
     pub file: *mut FILE,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_46 {
+pub struct Unnamed_46 {
     pub start: *const libc::c_uchar,
     pub end: *const libc::c_uchar,
     pub current: *const libc::c_uchar,
@@ -681,20 +681,20 @@ pub struct yaml_emitter_s {
     pub problem: *const libc::c_char,
     pub write_handler: Option::<yaml_write_handler_t>,
     pub write_handler_data: *mut libc::c_void,
-    pub output: C2RustUnnamed_56,
-    pub buffer: C2RustUnnamed_55,
-    pub raw_buffer: C2RustUnnamed_54,
+    pub output: Unnamed_56,
+    pub buffer: Unnamed_55,
+    pub raw_buffer: Unnamed_54,
     pub encoding: yaml_encoding_t,
     pub canonical: libc::c_int,
     pub best_indent: libc::c_int,
     pub best_width: libc::c_int,
     pub unicode: libc::c_int,
     pub line_break: yaml_break_t,
-    pub states: C2RustUnnamed_53,
+    pub states: Unnamed_53,
     pub state: yaml_emitter_state_t,
-    pub events: C2RustUnnamed_52,
-    pub indents: C2RustUnnamed_51,
-    pub tag_directives: C2RustUnnamed_50,
+    pub events: Unnamed_52,
+    pub indents: Unnamed_51,
+    pub tag_directives: Unnamed_50,
     pub indent: libc::c_int,
     pub flow_level: libc::c_int,
     pub root_context: libc::c_int,
@@ -706,9 +706,9 @@ pub struct yaml_emitter_s {
     pub whitespace: libc::c_int,
     pub indention: libc::c_int,
     pub open_ended: libc::c_int,
-    pub anchor_data: C2RustUnnamed_49,
-    pub tag_data: C2RustUnnamed_48,
-    pub scalar_data: C2RustUnnamed_47,
+    pub anchor_data: Unnamed_49,
+    pub tag_data: Unnamed_48,
+    pub scalar_data: Unnamed_47,
     pub opened: libc::c_int,
     pub closed: libc::c_int,
     pub anchors: *mut yaml_anchors_t,
@@ -717,7 +717,7 @@ pub struct yaml_emitter_s {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_47 {
+pub struct Unnamed_47 {
     pub value: *mut yaml_char_t,
     pub length: size_t,
     pub multiline: libc::c_int,
@@ -729,7 +729,7 @@ pub struct C2RustUnnamed_47 {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_48 {
+pub struct Unnamed_48 {
     pub handle: *mut yaml_char_t,
     pub handle_length: size_t,
     pub suffix: *mut yaml_char_t,
@@ -737,28 +737,28 @@ pub struct C2RustUnnamed_48 {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_49 {
+pub struct Unnamed_49 {
     pub anchor: *mut yaml_char_t,
     pub anchor_length: size_t,
     pub alias: libc::c_int,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_50 {
+pub struct Unnamed_50 {
     pub start: *mut yaml_tag_directive_t,
     pub end: *mut yaml_tag_directive_t,
     pub top: *mut yaml_tag_directive_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_51 {
+pub struct Unnamed_51 {
     pub start: *mut libc::c_int,
     pub end: *mut libc::c_int,
     pub top: *mut libc::c_int,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_52 {
+pub struct Unnamed_52 {
     pub start: *mut yaml_event_t,
     pub end: *mut yaml_event_t,
     pub head: *mut yaml_event_t,
@@ -766,14 +766,14 @@ pub struct C2RustUnnamed_52 {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_53 {
+pub struct Unnamed_53 {
     pub start: *mut yaml_emitter_state_t,
     pub end: *mut yaml_emitter_state_t,
     pub top: *mut yaml_emitter_state_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_54 {
+pub struct Unnamed_54 {
     pub start: *mut libc::c_uchar,
     pub end: *mut libc::c_uchar,
     pub pointer: *mut libc::c_uchar,
@@ -781,7 +781,7 @@ pub struct C2RustUnnamed_54 {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_55 {
+pub struct Unnamed_55 {
     pub start: *mut yaml_char_t,
     pub end: *mut yaml_char_t,
     pub pointer: *mut yaml_char_t,
@@ -789,13 +789,13 @@ pub struct C2RustUnnamed_55 {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub union C2RustUnnamed_56 {
-    pub string: C2RustUnnamed_57,
+pub union Unnamed_56 {
+    pub string: Unnamed_57,
     pub file: *mut FILE,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub struct C2RustUnnamed_57 {
+pub struct Unnamed_57 {
     pub buffer: *mut libc::c_uchar,
     pub size: size_t,
     pub size_written: *mut size_t,
@@ -2369,7 +2369,7 @@ pub unsafe extern "C" fn yaml_document_start_event_initialize(
     mut implicit: libc::c_int,
 ) -> libc::c_int {
     let mut current_block: u64;
-    let mut context: C2RustUnnamed_17 = C2RustUnnamed_17 {
+    let mut context: Unnamed_17 = Unnamed_17 {
         error: YAML_NO_ERROR,
     };
     let mut mark: yaml_mark_t = {
@@ -2382,8 +2382,8 @@ pub unsafe extern "C" fn yaml_document_start_event_initialize(
     };
     let mut version_directive_copy: *mut yaml_version_directive_t = 0
         as *mut yaml_version_directive_t;
-    let mut tag_directives_copy: C2RustUnnamed_16 = {
-        let mut init = C2RustUnnamed_16 {
+    let mut tag_directives_copy: Unnamed_16 = {
+        let mut init = Unnamed_16 {
             start: 0 as *mut yaml_tag_directive_t,
             end: 0 as *mut yaml_tag_directive_t,
             top: 0 as *mut yaml_tag_directive_t,
@@ -3141,11 +3141,11 @@ pub unsafe extern "C" fn yaml_document_initialize(
     mut end_implicit: libc::c_int,
 ) -> libc::c_int {
     let mut current_block: u64;
-    let mut context: C2RustUnnamed_28 = C2RustUnnamed_28 {
+    let mut context: Unnamed_28 = Unnamed_28 {
         error: YAML_NO_ERROR,
     };
-    let mut nodes: C2RustUnnamed_27 = {
-        let mut init = C2RustUnnamed_27 {
+    let mut nodes: Unnamed_27 = {
+        let mut init = Unnamed_27 {
             start: 0 as *mut yaml_node_t,
             end: 0 as *mut yaml_node_t,
             top: 0 as *mut yaml_node_t,
@@ -3154,8 +3154,8 @@ pub unsafe extern "C" fn yaml_document_initialize(
     };
     let mut version_directive_copy: *mut yaml_version_directive_t = 0
         as *mut yaml_version_directive_t;
-    let mut tag_directives_copy: C2RustUnnamed_26 = {
-        let mut init = C2RustUnnamed_26 {
+    let mut tag_directives_copy: Unnamed_26 = {
+        let mut init = Unnamed_26 {
             start: 0 as *mut yaml_tag_directive_t,
             end: 0 as *mut yaml_tag_directive_t,
             top: 0 as *mut yaml_tag_directive_t,
@@ -3527,7 +3527,7 @@ pub unsafe extern "C" fn yaml_document_add_scalar(
     mut length: libc::c_int,
     mut style: yaml_scalar_style_t,
 ) -> libc::c_int {
-    let mut context: C2RustUnnamed_29 = C2RustUnnamed_29 {
+    let mut context: Unnamed_29 = Unnamed_29 {
         error: YAML_NO_ERROR,
     };
     let mut mark: yaml_mark_t = {
@@ -3543,8 +3543,8 @@ pub unsafe extern "C" fn yaml_document_add_scalar(
     let mut node: yaml_node_t = yaml_node_t {
         type_0: YAML_NO_NODE,
         tag: 0 as *mut yaml_char_t,
-        data: C2RustUnnamed_18 {
-            scalar: C2RustUnnamed_23 {
+        data: Unnamed_18 {
+            scalar: Unnamed_23 {
                 value: 0 as *mut yaml_char_t,
                 length: 0,
                 style: YAML_ANY_SCALAR_STYLE,
@@ -3659,7 +3659,7 @@ pub unsafe extern "C" fn yaml_document_add_sequence(
     mut tag: *const yaml_char_t,
     mut style: yaml_sequence_style_t,
 ) -> libc::c_int {
-    let mut context: C2RustUnnamed_31 = C2RustUnnamed_31 {
+    let mut context: Unnamed_31 = Unnamed_31 {
         error: YAML_NO_ERROR,
     };
     let mut mark: yaml_mark_t = {
@@ -3671,8 +3671,8 @@ pub unsafe extern "C" fn yaml_document_add_sequence(
         init
     };
     let mut tag_copy: *mut yaml_char_t = 0 as *mut yaml_char_t;
-    let mut items: C2RustUnnamed_30 = {
-        let mut init = C2RustUnnamed_30 {
+    let mut items: Unnamed_30 = {
+        let mut init = Unnamed_30 {
             start: 0 as *mut yaml_node_item_t,
             end: 0 as *mut yaml_node_item_t,
             top: 0 as *mut yaml_node_item_t,
@@ -3682,8 +3682,8 @@ pub unsafe extern "C" fn yaml_document_add_sequence(
     let mut node: yaml_node_t = yaml_node_t {
         type_0: YAML_NO_NODE,
         tag: 0 as *mut yaml_char_t,
-        data: C2RustUnnamed_18 {
-            scalar: C2RustUnnamed_23 {
+        data: Unnamed_18 {
+            scalar: Unnamed_23 {
                 value: 0 as *mut yaml_char_t,
                 length: 0,
                 style: YAML_ANY_SCALAR_STYLE,
@@ -3789,7 +3789,7 @@ pub unsafe extern "C" fn yaml_document_add_mapping(
     mut tag: *const yaml_char_t,
     mut style: yaml_mapping_style_t,
 ) -> libc::c_int {
-    let mut context: C2RustUnnamed_33 = C2RustUnnamed_33 {
+    let mut context: Unnamed_33 = Unnamed_33 {
         error: YAML_NO_ERROR,
     };
     let mut mark: yaml_mark_t = {
@@ -3801,8 +3801,8 @@ pub unsafe extern "C" fn yaml_document_add_mapping(
         init
     };
     let mut tag_copy: *mut yaml_char_t = 0 as *mut yaml_char_t;
-    let mut pairs: C2RustUnnamed_32 = {
-        let mut init = C2RustUnnamed_32 {
+    let mut pairs: Unnamed_32 = {
+        let mut init = Unnamed_32 {
             start: 0 as *mut yaml_node_pair_t,
             end: 0 as *mut yaml_node_pair_t,
             top: 0 as *mut yaml_node_pair_t,
@@ -3812,8 +3812,8 @@ pub unsafe extern "C" fn yaml_document_add_mapping(
     let mut node: yaml_node_t = yaml_node_t {
         type_0: YAML_NO_NODE,
         tag: 0 as *mut yaml_char_t,
-        data: C2RustUnnamed_18 {
-            scalar: C2RustUnnamed_23 {
+        data: Unnamed_18 {
+            scalar: Unnamed_23 {
                 value: 0 as *mut yaml_char_t,
                 length: 0,
                 style: YAML_ANY_SCALAR_STYLE,
@@ -3919,7 +3919,7 @@ pub unsafe extern "C" fn yaml_document_append_sequence_item(
     mut sequence: libc::c_int,
     mut item: libc::c_int,
 ) -> libc::c_int {
-    let mut context: C2RustUnnamed_34 = C2RustUnnamed_34 {
+    let mut context: Unnamed_34 = Unnamed_34 {
         error: YAML_NO_ERROR,
     };
     if !document.is_null() {} else {
@@ -4036,7 +4036,7 @@ pub unsafe extern "C" fn yaml_document_append_mapping_pair(
     mut key: libc::c_int,
     mut value: libc::c_int,
 ) -> libc::c_int {
-    let mut context: C2RustUnnamed_35 = C2RustUnnamed_35 {
+    let mut context: Unnamed_35 = Unnamed_35 {
         error: YAML_NO_ERROR,
     };
     let mut pair: yaml_node_pair_t = yaml_node_pair_t {
