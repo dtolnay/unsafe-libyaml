@@ -8,7 +8,7 @@ fn test(id: &str) {
         .join("yaml-test-suite")
         .join(id);
 
-    let output = Command::new(env!("CARGO_BIN_EXE_run_emitter_test_suite"))
+    let output = Command::new(env!("CARGO_BIN_EXE_run-emitter-test-suite"))
         .arg(dir.join("test.event"))
         .stdin(Stdio::null())
         .output()
