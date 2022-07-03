@@ -23,19 +23,4 @@ pub mod reader;
 pub mod scanner;
 pub mod writer;
 } // mod src
-pub mod tests {
-pub mod example_deconstructor;
-pub mod example_deconstructor_alt;
-pub mod example_reformatter;
-pub mod example_reformatter_alt;
-pub mod run_dumper;
-pub mod run_emitter;
-pub mod run_emitter_test_suite;
-pub mod run_loader;
-pub mod run_parser;
-pub mod run_parser_test_suite;
-pub mod run_scanner;
-pub mod test_reader;
-pub mod test_version;
-} // mod tests
 } // mod src
