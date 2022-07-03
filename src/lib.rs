@@ -39,6 +39,8 @@ pub mod externs {
     }
 }
 
+mod yaml;
+
 #[rustfmt::skip]
 pub mod api;
 #[rustfmt::skip]
@@ -55,3 +57,5 @@ pub mod reader;
 pub mod scanner;
 #[rustfmt::skip]
 pub mod writer;
+
+pub use crate::yaml::*;
