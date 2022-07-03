@@ -7,9 +7,6 @@
 #![allow(unused_mut)]
 #![feature(extern_types)]
 #![feature(label_break_value)]
-#![feature(register_tool)]
-#![register_tool(c2rust)]
-
 
 extern crate libc;
 pub mod src {
