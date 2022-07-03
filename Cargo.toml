@@ -4,14 +4,6 @@ version = "0.0.0"
 edition = "2018"
 publish = false
 
-[[test]]
-name = "test_reader"
-harness = false
-
-[[test]]
-name = "test_version"
-harness = false
-
 [workspace]
 [dev-dependencies]
 pretty_assertions = "1.0"
