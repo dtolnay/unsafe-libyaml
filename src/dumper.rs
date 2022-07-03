@@ -1,4 +1,4 @@
-use ::libc;
+use crate::libc;
 extern "C" {
     pub type _IO_wide_data;
     pub type _IO_codecvt;

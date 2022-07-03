@@ -9,6 +9,12 @@
     unused_variables,
 )]
 
+pub mod libc {
+    pub use std::os::raw::{
+        c_char, c_int, c_long, c_schar, c_uchar, c_uint, c_ulong, c_ushort, c_void,
+    };
+}
+
 pub mod api;
 pub mod dumper;
 pub mod emitter;

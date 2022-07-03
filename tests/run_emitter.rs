@@ -6,7 +6,7 @@
     unused_mut,
 )]
 
-use ::libc;
+use unsafe_libyaml::libc;
 extern "C" {
     pub type _IO_wide_data;
     pub type _IO_codecvt;
