@@ -8,7 +8,6 @@
 #![feature(extern_types)]
 #![feature(label_break_value)]
 
-pub mod src {
 pub mod api;
 pub mod dumper;
 pub mod emitter;
@@ -17,4 +16,3 @@ pub mod parser;
 pub mod reader;
 pub mod scanner;
 pub mod writer;
-} // mod src
