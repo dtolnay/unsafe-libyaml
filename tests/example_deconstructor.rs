@@ -1,3 +1,11 @@
+#![feature(extern_types)]
+#![allow(
+    non_camel_case_types,
+    non_snake_case,
+    unused_assignments,
+    unused_mut,
+)]
+
 use ::libc;
 extern "C" {
     pub type _IO_wide_data;
