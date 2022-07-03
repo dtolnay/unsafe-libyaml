@@ -1,6 +1,6 @@
 use proc_macro::TokenStream;
 use quote::{format_ident, quote};
-use std::collections::BTreeSet as Set;
+use std::collections::{BTreeMap as Map, BTreeSet as Set};
 use std::fs::{self, File};
 use std::io::{BufRead, BufReader};
 use std::path::Path;
@@ -31,10 +31,9 @@ fn test(ignorelist: &str, check: fn(&Path) -> bool) -> TokenStream {
         ignored_ids.insert(line);
     }
 
-    let mut tests = proc_macro2::TokenStream::new();
-    let ignore = quote!(#[ignore]);
+    let mut ids = Map::new();
     let yaml_test_suite = tests_dir.join("data").join("yaml-test-suite");
-    for entry in fs::read_dir(yaml_test_suite).unwrap() {
+    for entry in fs::read_dir(&yaml_test_suite).unwrap() {
         let entry = entry.unwrap();
         if !entry.file_type().unwrap().is_dir() {
             continue;
@@ -53,9 +52,15 @@ fn test(ignorelist: &str, check: fn(&Path) -> bool) -> TokenStream {
         }
 
         let file_name = entry.file_name();
-        let id = file_name.to_str().unwrap();
+        let id = file_name.to_str().unwrap().to_owned();
+        ids.insert(id, slug);
+    }
+
+    let mut tests = proc_macro2::TokenStream::new();
+    let ignore = quote!(#[ignore]);
+    for (id, slug) in ids {
         let test_name = format_ident!("_{id}_{slug}");
-        let ignore = ignored_ids.contains(id).then_some(&ignore);
+        let ignore = ignored_ids.contains(&id).then_some(&ignore);
 
         tests.extend(quote! {
             #[test]
