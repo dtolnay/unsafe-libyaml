@@ -11,3 +11,8 @@ harness = false
 [[test]]
 name = "test_version"
 harness = false
+
+[workspace]
+[dev-dependencies]
+pretty_assertions = "1.0"
+unsafe-libyaml-test-suite = { path = "tests/data" }
