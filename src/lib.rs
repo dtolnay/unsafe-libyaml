@@ -6,7 +6,6 @@
 #![allow(unused_assignments)]
 #![allow(unused_mut)]
 #![feature(extern_types)]
-#![feature(label_break_value)]
 
 pub mod api;
 pub mod dumper;
