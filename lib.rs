@@ -8,7 +8,6 @@
 #![feature(extern_types)]
 #![feature(label_break_value)]
 
-extern crate libc;
 pub mod src {
 pub mod api;
 pub mod dumper;
