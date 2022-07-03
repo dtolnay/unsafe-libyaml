@@ -1,4 +1,3 @@
-#![feature(extern_types)]
 #![allow(
     non_camel_case_types,
     non_snake_case,

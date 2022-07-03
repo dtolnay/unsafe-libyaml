@@ -5,19 +5,6 @@ extern "C" {
     fn malloc(_: libc::c_ulong) -> *mut libc::c_void;
     fn realloc(_: *mut libc::c_void, _: libc::c_ulong) -> *mut libc::c_void;
     fn free(_: *mut libc::c_void);
-    fn fread(
-        _: *mut libc::c_void,
-        _: libc::c_ulong,
-        _: libc::c_ulong,
-        _: *mut FILE,
-    ) -> libc::c_ulong;
-    fn fwrite(
-        _: *const libc::c_void,
-        _: libc::c_ulong,
-        _: libc::c_ulong,
-        _: *mut FILE,
-    ) -> libc::c_ulong;
-    fn ferror(__stream: *mut FILE) -> libc::c_int;
     fn memcpy(
         _: *mut libc::c_void,
         _: *const libc::c_void,
@@ -575,21 +562,6 @@ unsafe extern "C" fn yaml_string_read_handler(
     *size_read = size;
     return 1 as libc::c_int;
 }
-unsafe extern "C" fn yaml_file_read_handler(
-    mut data: *mut libc::c_void,
-    mut buffer: *mut libc::c_uchar,
-    mut size: size_t,
-    mut size_read: *mut size_t,
-) -> libc::c_int {
-    let mut parser: *mut yaml_parser_t = data as *mut yaml_parser_t;
-    *size_read = fread(
-        buffer as *mut libc::c_void,
-        1 as libc::c_int as libc::c_ulong,
-        size,
-        (*parser).input.file,
-    );
-    return (ferror((*parser).input.file) == 0) as libc::c_int;
-}
 #[no_mangle]
 pub unsafe extern "C" fn yaml_parser_set_input_string(
     mut parser: *mut yaml_parser_t,
@@ -656,62 +628,6 @@ pub unsafe extern "C" fn yaml_parser_set_input_string(
     *fresh84 = input;
     let ref mut fresh85 = (*parser).input.string.end;
     *fresh85 = input.offset(size as isize);
-}
-#[no_mangle]
-pub unsafe extern "C" fn yaml_parser_set_input_file(
-    mut parser: *mut yaml_parser_t,
-    mut file: *mut FILE,
-) {
-    if !parser.is_null() {} else {
-        __assert_fail(
-            b"parser\0" as *const u8 as *const libc::c_char,
-            b"api.c\0" as *const u8 as *const libc::c_char,
-            311 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<
-                &[u8; 57],
-                &[libc::c_char; 57],
-            >(b"void yaml_parser_set_input_file(yaml_parser_t *, FILE *)\0"))
-                .as_ptr(),
-        );
-    }
-    if ((*parser).read_handler).is_none() {} else {
-        __assert_fail(
-            b"!parser->read_handler\0" as *const u8 as *const libc::c_char,
-            b"api.c\0" as *const u8 as *const libc::c_char,
-            312 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<
-                &[u8; 57],
-                &[libc::c_char; 57],
-            >(b"void yaml_parser_set_input_file(yaml_parser_t *, FILE *)\0"))
-                .as_ptr(),
-        );
-    }
-    if !file.is_null() {} else {
-        __assert_fail(
-            b"file\0" as *const u8 as *const libc::c_char,
-            b"api.c\0" as *const u8 as *const libc::c_char,
-            313 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<
-                &[u8; 57],
-                &[libc::c_char; 57],
-            >(b"void yaml_parser_set_input_file(yaml_parser_t *, FILE *)\0"))
-                .as_ptr(),
-        );
-    }
-    let ref mut fresh86 = (*parser).read_handler;
-    *fresh86 = Some(
-        yaml_file_read_handler
-            as unsafe extern "C" fn(
-                *mut libc::c_void,
-                *mut libc::c_uchar,
-                size_t,
-                *mut size_t,
-            ) -> libc::c_int,
-    );
-    let ref mut fresh87 = (*parser).read_handler_data;
-    *fresh87 = parser as *mut libc::c_void;
-    let ref mut fresh88 = (*parser).input.file;
-    *fresh88 = file;
 }
 #[no_mangle]
 pub unsafe extern "C" fn yaml_parser_set_input(
@@ -1093,19 +1009,6 @@ unsafe extern "C" fn yaml_string_write_handler(
     *fresh153 = (*fresh153 as libc::c_ulong).wrapping_add(size) as size_t as size_t;
     return 1 as libc::c_int;
 }
-unsafe extern "C" fn yaml_file_write_handler(
-    mut data: *mut libc::c_void,
-    mut buffer: *mut libc::c_uchar,
-    mut size: size_t,
-) -> libc::c_int {
-    let mut emitter: *mut yaml_emitter_t = data as *mut yaml_emitter_t;
-    return (fwrite(
-        buffer as *const libc::c_void,
-        1 as libc::c_int as libc::c_ulong,
-        size,
-        (*emitter).output.file,
-    ) == size) as libc::c_int;
-}
 #[no_mangle]
 pub unsafe extern "C" fn yaml_emitter_set_output_string(
     mut emitter: *mut yaml_emitter_t,
@@ -1172,61 +1075,6 @@ pub unsafe extern "C" fn yaml_emitter_set_output_string(
     let ref mut fresh157 = (*emitter).output.string.size_written;
     *fresh157 = size_written;
     *size_written = 0 as libc::c_int as size_t;
-}
-#[no_mangle]
-pub unsafe extern "C" fn yaml_emitter_set_output_file(
-    mut emitter: *mut yaml_emitter_t,
-    mut file: *mut FILE,
-) {
-    if !emitter.is_null() {} else {
-        __assert_fail(
-            b"emitter\0" as *const u8 as *const libc::c_char,
-            b"api.c\0" as *const u8 as *const libc::c_char,
-            480 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<
-                &[u8; 60],
-                &[libc::c_char; 60],
-            >(b"void yaml_emitter_set_output_file(yaml_emitter_t *, FILE *)\0"))
-                .as_ptr(),
-        );
-    }
-    if ((*emitter).write_handler).is_none() {} else {
-        __assert_fail(
-            b"!emitter->write_handler\0" as *const u8 as *const libc::c_char,
-            b"api.c\0" as *const u8 as *const libc::c_char,
-            481 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<
-                &[u8; 60],
-                &[libc::c_char; 60],
-            >(b"void yaml_emitter_set_output_file(yaml_emitter_t *, FILE *)\0"))
-                .as_ptr(),
-        );
-    }
-    if !file.is_null() {} else {
-        __assert_fail(
-            b"file\0" as *const u8 as *const libc::c_char,
-            b"api.c\0" as *const u8 as *const libc::c_char,
-            482 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<
-                &[u8; 60],
-                &[libc::c_char; 60],
-            >(b"void yaml_emitter_set_output_file(yaml_emitter_t *, FILE *)\0"))
-                .as_ptr(),
-        );
-    }
-    let ref mut fresh158 = (*emitter).write_handler;
-    *fresh158 = Some(
-        yaml_file_write_handler
-            as unsafe extern "C" fn(
-                *mut libc::c_void,
-                *mut libc::c_uchar,
-                size_t,
-            ) -> libc::c_int,
-    );
-    let ref mut fresh159 = (*emitter).write_handler_data;
-    *fresh159 = emitter as *mut libc::c_void;
-    let ref mut fresh160 = (*emitter).output.file;
-    *fresh160 = file;
 }
 #[no_mangle]
 pub unsafe extern "C" fn yaml_emitter_set_output(

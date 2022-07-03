@@ -14,6 +14,7 @@ use std::ptr;
 use unsafe_libyaml::externs::__assert_fail;
 use unsafe_libyaml::*;
 extern "C" {
+    pub type FILE;
     fn yaml_parser_parse(
         parser: *mut yaml_parser_t,
         event: *mut yaml_event_t,
