@@ -1,3 +1,4 @@
+use crate::externs::__assert_fail;
 use crate::libc;
 extern "C" {
     pub type _IO_wide_data;
@@ -15,12 +16,6 @@ extern "C" {
     ) -> *mut libc::c_void;
     fn strcmp(_: *const libc::c_char, _: *const libc::c_char) -> libc::c_int;
     fn strlen(_: *const libc::c_char) -> libc::c_ulong;
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
     fn yaml_malloc(size: size_t) -> *mut libc::c_void;
     fn yaml_free(ptr: *mut libc::c_void);
     fn yaml_parser_fetch_more_tokens(parser: *mut yaml_parser_t) -> libc::c_int;

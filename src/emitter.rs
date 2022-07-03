@@ -24,12 +24,6 @@ extern "C" {
     ) -> libc::c_int;
     fn strlen(_: *const libc::c_char) -> libc::c_ulong;
     fn yaml_event_delete(event: *mut yaml_event_t);
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
     fn yaml_emitter_flush(emitter: *mut yaml_emitter_t) -> libc::c_int;
 }
 pub type size_t = libc::c_ulong;

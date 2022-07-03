@@ -1,3 +1,4 @@
+use crate::externs::__assert_fail;
 use crate::libc;
 extern "C" {
     pub type _IO_wide_data;
@@ -36,12 +37,6 @@ extern "C" {
     ) -> *mut libc::c_void;
     fn strdup(_: *const libc::c_char) -> *mut libc::c_char;
     fn strlen(_: *const libc::c_char) -> libc::c_ulong;
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
 }
 pub type size_t = libc::c_ulong;
 pub type __off_t = libc::c_long;

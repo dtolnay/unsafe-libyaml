@@ -1,14 +1,9 @@
+use crate::externs::__assert_fail;
 use crate::libc;
 extern "C" {
     pub type _IO_wide_data;
     pub type _IO_codecvt;
     pub type _IO_marker;
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
     fn memmove(
         _: *mut libc::c_void,
         _: *const libc::c_void,

@@ -15,6 +15,30 @@ pub mod libc {
     };
 }
 
+pub mod externs {
+    use crate::libc;
+    use std::ffi::CStr;
+    use std::io::{self, Write};
+    use std::process;
+
+    pub unsafe fn __assert_fail(
+        __assertion: *const libc::c_char,
+        __file: *const libc::c_char,
+        __line: libc::c_uint,
+        __function: *const libc::c_char,
+    ) -> ! {
+        let _ = writeln!(
+            io::stderr(),
+            "{}:{}: {}: Assertion `{}` failed.",
+            CStr::from_ptr(__file).to_string_lossy(),
+            __line,
+            CStr::from_ptr(__function).to_string_lossy(),
+            CStr::from_ptr(__assertion).to_string_lossy(),
+        );
+        process::abort();
+    }
+}
+
 #[rustfmt::skip]
 pub mod api;
 #[rustfmt::skip]

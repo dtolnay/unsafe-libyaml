@@ -6,6 +6,7 @@
     unused_mut,
 )]
 
+use unsafe_libyaml::externs::__assert_fail;
 use unsafe_libyaml::libc;
 extern "C" {
     pub type _IO_wide_data;
@@ -91,12 +92,6 @@ extern "C" {
         style: yaml_mapping_style_t,
     ) -> libc::c_int;
     fn yaml_mapping_end_event_initialize(event: *mut yaml_event_t) -> libc::c_int;
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
     fn yaml_malloc(size: size_t) -> *mut libc::c_void;
 }
 pub type size_t = libc::c_ulong;

@@ -6,6 +6,7 @@
     unused_mut,
 )]
 
+use unsafe_libyaml::externs::__assert_fail;
 use unsafe_libyaml::libc;
 extern "C" {
     pub type _IO_wide_data;
@@ -117,12 +118,6 @@ extern "C" {
         _: *const libc::c_char,
         _: libc::c_ulong,
     ) -> libc::c_int;
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
 }
 pub type size_t = libc::c_ulong;
 pub type __off_t = libc::c_long;

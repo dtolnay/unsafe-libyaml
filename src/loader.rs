@@ -1,3 +1,4 @@
+use crate::externs::__assert_fail;
 use crate::libc;
 extern "C" {
     pub type _IO_wide_data;
@@ -15,12 +16,6 @@ extern "C" {
         event: *mut yaml_event_t,
     ) -> libc::c_int;
     fn yaml_free(ptr: *mut libc::c_void);
-    fn __assert_fail(
-        __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
-    ) -> !;
     fn yaml_stack_extend(
         start: *mut *mut libc::c_void,
         top: *mut *mut libc::c_void,
