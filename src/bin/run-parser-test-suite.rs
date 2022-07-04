@@ -17,7 +17,6 @@ extern "C" {
     fn yaml_parser_delete(parser: *mut yaml_parser_t);
     fn yaml_parser_initialize(parser: *mut yaml_parser_t) -> libc::c_int;
     fn yaml_event_delete(event: *mut yaml_event_t);
-    static mut stdin: *mut FILE;
     static mut stdout: *mut FILE;
     static mut stderr: *mut FILE;
     fn fclose(__stream: *mut FILE) -> libc::c_int;
@@ -25,11 +24,6 @@ extern "C" {
     fn fopen(_: *const libc::c_char, _: *const libc::c_char) -> *mut FILE;
     fn fprintf(_: *mut FILE, _: *const libc::c_char, _: ...) -> libc::c_int;
     fn printf(_: *const libc::c_char, _: ...) -> libc::c_int;
-    fn strncmp(
-        _: *const libc::c_char,
-        _: *const libc::c_char,
-        _: libc::c_ulong,
-    ) -> libc::c_int;
     fn abort() -> !;
 }
 unsafe fn main_0(
@@ -147,76 +141,20 @@ unsafe fn main_0(
             column: 0,
         },
     };
-    let mut flow: libc::c_int = -(1 as libc::c_int);
     let mut i: libc::c_int = 0 as libc::c_int;
     let mut foundfile: libc::c_int = 0 as libc::c_int;
     i = 1 as libc::c_int;
     while i < argc {
-        if strncmp(
-            *argv.offset(i as isize),
-            b"--flow\0" as *const u8 as *const libc::c_char,
-            6 as libc::c_int as libc::c_ulong,
-        ) == 0 as libc::c_int
-        {
-            if i + 1 as libc::c_int == argc {
-                return usage(1 as libc::c_int);
-            }
-            i += 1;
-            if strncmp(
+        if foundfile == 0 {
+            input = fopen(
                 *argv.offset(i as isize),
-                b"keep\0" as *const u8 as *const libc::c_char,
-                4 as libc::c_int as libc::c_ulong,
-            ) == 0 as libc::c_int
-            {
-                flow = 0 as libc::c_int;
-            } else if strncmp(
-                    *argv.offset(i as isize),
-                    b"on\0" as *const u8 as *const libc::c_char,
-                    2 as libc::c_int as libc::c_ulong,
-                ) == 0 as libc::c_int
-                {
-                flow = 1 as libc::c_int;
-            } else if strncmp(
-                    *argv.offset(i as isize),
-                    b"off\0" as *const u8 as *const libc::c_char,
-                    3 as libc::c_int as libc::c_ulong,
-                ) == 0 as libc::c_int
-                {
-                flow = -(1 as libc::c_int);
-            } else {
-                return usage(1 as libc::c_int)
-            }
-        } else if strncmp(
-                *argv.offset(i as isize),
-                b"--help\0" as *const u8 as *const libc::c_char,
-                6 as libc::c_int as libc::c_ulong,
-            ) == 0 as libc::c_int
-            {
-            return usage(0 as libc::c_int)
+                b"rb\0" as *const u8 as *const libc::c_char,
+            );
+            foundfile = 1 as libc::c_int;
         } else {
-            if strncmp(
-                *argv.offset(i as isize),
-                b"-h\0" as *const u8 as *const libc::c_char,
-                2 as libc::c_int as libc::c_ulong,
-            ) == 0 as libc::c_int
-            {
-                return usage(0 as libc::c_int)
-            } else {
-                if foundfile == 0 {
-                    input = fopen(
-                        *argv.offset(i as isize),
-                        b"rb\0" as *const u8 as *const libc::c_char,
-                    );
-                    foundfile = 1 as libc::c_int;
-                } else {
-                    return usage(1 as libc::c_int)
-                }
-            }
+            return usage(1 as libc::c_int)
         }
         i += 1;
-    }
-    if foundfile == 0 {
-        input = stdin;
     }
     if !input.is_null() {} else {
         __assert_fail(
@@ -293,14 +231,6 @@ unsafe fn main_0(
                 == YAML_MAPPING_START_EVENT as libc::c_int as libc::c_uint
             {
             printf(b"+MAP\0" as *const u8 as *const libc::c_char);
-            if flow == 0 as libc::c_int
-                && event.data.mapping_start.style as libc::c_uint
-                    == YAML_FLOW_MAPPING_STYLE as libc::c_int as libc::c_uint
-            {
-                printf(b" {}\0" as *const u8 as *const libc::c_char);
-            } else if flow == 1 as libc::c_int {
-                printf(b" {}\0" as *const u8 as *const libc::c_char);
-            }
             if !(event.data.mapping_start.anchor).is_null() {
                 printf(
                     b" &%s\0" as *const u8 as *const libc::c_char,
@@ -322,14 +252,6 @@ unsafe fn main_0(
                 == YAML_SEQUENCE_START_EVENT as libc::c_int as libc::c_uint
             {
             printf(b"+SEQ\0" as *const u8 as *const libc::c_char);
-            if flow == 0 as libc::c_int
-                && event.data.sequence_start.style as libc::c_uint
-                    == YAML_FLOW_SEQUENCE_STYLE as libc::c_int as libc::c_uint
-            {
-                printf(b" []\0" as *const u8 as *const libc::c_char);
-            } else if flow == 1 as libc::c_int {
-                printf(b" []\0" as *const u8 as *const libc::c_char);
-            }
             if !(event.data.sequence_start.anchor).is_null() {
                 printf(
                     b" &%s\0" as *const u8 as *const libc::c_char,
@@ -447,7 +369,7 @@ pub unsafe extern "C" fn print_escaped(mut str: *mut yaml_char_t, mut length: si
 pub unsafe extern "C" fn usage(mut ret: libc::c_int) -> libc::c_int {
     fprintf(
         stderr,
-        b"Usage: libyaml-parser [--flow (on|off|keep)] [<input-file>]\n\0" as *const u8
+        b"Usage: libyaml-parser [<input-file>]\n\0" as *const u8
             as *const libc::c_char,
     );
     return ret;

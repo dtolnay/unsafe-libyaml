@@ -9,7 +9,6 @@
 use unsafe_libyaml::externs::__assert_fail;
 use unsafe_libyaml::*;
 extern "C" {
-    static mut stdin: *mut FILE;
     static mut stdout: *mut FILE;
     static mut stderr: *mut FILE;
     fn fclose(__stream: *mut FILE) -> libc::c_int;
@@ -89,7 +88,6 @@ extern "C" {
         style: yaml_mapping_style_t,
     ) -> libc::c_int;
     fn yaml_mapping_end_event_initialize(event: *mut yaml_event_t) -> libc::c_int;
-    fn yaml_malloc(size: size_t) -> *mut libc::c_void;
 }
 unsafe fn main_0(
     mut argc: libc::c_int,
@@ -212,88 +210,9 @@ unsafe fn main_0(
     let mut line: [libc::c_char; 1024] = [0; 1024];
     let mut foundfile: libc::c_int = 0 as libc::c_int;
     let mut i: libc::c_int = 0 as libc::c_int;
-    let mut minor: libc::c_int = 0 as libc::c_int;
-    let mut flow: libc::c_int = -(1 as libc::c_int);
     i = 1 as libc::c_int;
     while i < argc {
-        if strncmp(
-            *argv.offset(i as isize),
-            b"--help\0" as *const u8 as *const libc::c_char,
-            6 as libc::c_int as libc::c_ulong,
-        ) == 0 as libc::c_int
-        {
-            return usage(0 as libc::c_int);
-        }
-        if strncmp(
-            *argv.offset(i as isize),
-            b"-h\0" as *const u8 as *const libc::c_char,
-            2 as libc::c_int as libc::c_ulong,
-        ) == 0 as libc::c_int
-        {
-            return usage(0 as libc::c_int);
-        }
-        if strncmp(
-            *argv.offset(i as isize),
-            b"--flow\0" as *const u8 as *const libc::c_char,
-            6 as libc::c_int as libc::c_ulong,
-        ) == 0 as libc::c_int
-        {
-            if i + 1 as libc::c_int == argc {
-                return usage(1 as libc::c_int);
-            }
-            i += 1;
-            if strncmp(
-                *argv.offset(i as isize),
-                b"keep\0" as *const u8 as *const libc::c_char,
-                4 as libc::c_int as libc::c_ulong,
-            ) == 0 as libc::c_int
-            {
-                flow = 0 as libc::c_int;
-            } else if strncmp(
-                    *argv.offset(i as isize),
-                    b"on\0" as *const u8 as *const libc::c_char,
-                    2 as libc::c_int as libc::c_ulong,
-                ) == 0 as libc::c_int
-                {
-                flow = 1 as libc::c_int;
-            } else if strncmp(
-                    *argv.offset(i as isize),
-                    b"off\0" as *const u8 as *const libc::c_char,
-                    3 as libc::c_int as libc::c_ulong,
-                ) == 0 as libc::c_int
-                {
-                flow = -(1 as libc::c_int);
-            } else {
-                return usage(1 as libc::c_int)
-            }
-        } else if strncmp(
-                *argv.offset(i as isize),
-                b"--directive\0" as *const u8 as *const libc::c_char,
-                11 as libc::c_int as libc::c_ulong,
-            ) == 0 as libc::c_int
-            {
-            if i + 1 as libc::c_int == argc {
-                return usage(1 as libc::c_int);
-            }
-            i += 1;
-            if strncmp(
-                *argv.offset(i as isize),
-                b"1.1\0" as *const u8 as *const libc::c_char,
-                3 as libc::c_int as libc::c_ulong,
-            ) == 0 as libc::c_int
-            {
-                minor = 1 as libc::c_int;
-            } else if strncmp(
-                    *argv.offset(i as isize),
-                    b"1.2\0" as *const u8 as *const libc::c_char,
-                    3 as libc::c_int as libc::c_ulong,
-                ) == 0 as libc::c_int
-                {
-                minor = 2 as libc::c_int;
-            } else {
-                return usage(1 as libc::c_int)
-            }
-        } else if foundfile == 0 {
+        if foundfile == 0 {
             input = fopen(
                 *argv.offset(i as isize),
                 b"rb\0" as *const u8 as *const libc::c_char,
@@ -301,16 +220,6 @@ unsafe fn main_0(
             foundfile = 1 as libc::c_int;
         }
         i += 1;
-    }
-    if minor != 0 {
-        version_directive = yaml_malloc(
-            ::std::mem::size_of::<yaml_version_directive_t>() as libc::c_ulong,
-        ) as *mut yaml_version_directive_t;
-        (*version_directive).major = 1 as libc::c_int;
-        (*version_directive).minor = minor;
-    }
-    if foundfile == 0 {
-        input = stdin;
     }
     if !input.is_null() {} else {
         __assert_fail(
@@ -396,17 +305,6 @@ unsafe fn main_0(
             ) == 0 as libc::c_int
             {
             style = YAML_BLOCK_MAPPING_STYLE as libc::c_int;
-            if flow == 1 as libc::c_int {
-                style = YAML_FLOW_MAPPING_STYLE as libc::c_int;
-            } else if flow == 0 as libc::c_int
-                    && strncmp(
-                        line.as_mut_ptr().offset(5 as libc::c_int as isize),
-                        b"{}\0" as *const u8 as *const libc::c_char,
-                        2 as libc::c_int as libc::c_ulong,
-                    ) == 0 as libc::c_int
-                {
-                style = YAML_FLOW_MAPPING_STYLE as libc::c_int;
-            }
             ok = yaml_mapping_start_event_initialize(
                 &mut event,
                 get_anchor(
@@ -432,17 +330,6 @@ unsafe fn main_0(
             ) == 0 as libc::c_int
             {
             style = YAML_BLOCK_SEQUENCE_STYLE as libc::c_int;
-            if flow == 1 as libc::c_int {
-                style = YAML_FLOW_MAPPING_STYLE as libc::c_int;
-            } else if flow == 0 as libc::c_int
-                    && strncmp(
-                        line.as_mut_ptr().offset(5 as libc::c_int as isize),
-                        b"[]\0" as *const u8 as *const libc::c_char,
-                        2 as libc::c_int as libc::c_ulong,
-                    ) == 0 as libc::c_int
-                {
-                style = YAML_FLOW_SEQUENCE_STYLE as libc::c_int;
-            }
             ok = yaml_sequence_start_event_initialize(
                 &mut event,
                 get_anchor(
@@ -743,15 +630,6 @@ pub unsafe extern "C" fn get_value(
         c = c.offset(1);
     }
     *value.offset(i as isize) = '\0' as i32 as libc::c_char;
-}
-#[no_mangle]
-pub unsafe extern "C" fn usage(mut ret: libc::c_int) -> libc::c_int {
-    fprintf(
-        stderr,
-        b"Usage: run-emitter-test-suite [--directive (1.1|1.2)] [--flow (on|off|keep)] [<input-file>]\n\0"
-            as *const u8 as *const libc::c_char,
-    );
-    return ret;
 }
 pub fn main() {
     let mut args: Vec::<*mut libc::c_char> = Vec::new();
