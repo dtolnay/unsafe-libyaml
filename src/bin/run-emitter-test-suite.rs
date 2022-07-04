@@ -6,6 +6,9 @@
     unused_mut,
 )]
 
+use std::env;
+use std::ffi::CString;
+use std::process::ExitCode;
 use unsafe_libyaml::externs::__assert_fail;
 use unsafe_libyaml::*;
 extern "C" {
@@ -89,10 +92,7 @@ extern "C" {
     ) -> libc::c_int;
     fn yaml_mapping_end_event_initialize(event: *mut yaml_event_t) -> libc::c_int;
 }
-unsafe fn main_0(
-    mut argc: libc::c_int,
-    mut argv: *mut *mut libc::c_char,
-) -> libc::c_int {
+unsafe fn unsafe_main() -> ExitCode {
     let mut current_block: u64;
     let mut input: *mut FILE = 0 as *mut FILE;
     let mut emitter: yaml_emitter_t = yaml_emitter_t {
@@ -209,17 +209,15 @@ unsafe fn main_0(
     let mut unicode: libc::c_int = 0 as libc::c_int;
     let mut line: [libc::c_char; 1024] = [0; 1024];
     let mut foundfile: libc::c_int = 0 as libc::c_int;
-    let mut i: libc::c_int = 0 as libc::c_int;
-    i = 1 as libc::c_int;
-    while i < argc {
+    for arg in env::args().skip(1) {
         if foundfile == 0 {
+            let cstring = CString::new(arg).expect("Failed to convert argument into CString.");
             input = fopen(
-                *argv.offset(i as isize),
+                cstring.as_ptr(),
                 b"rb\0" as *const u8 as *const libc::c_char,
             );
             foundfile = 1 as libc::c_int;
         }
-        i += 1;
     }
     if !input.is_null() {} else {
         __assert_fail(
@@ -239,7 +237,7 @@ unsafe fn main_0(
             b"Could not initalize the emitter object\n\0" as *const u8
                 as *const libc::c_char,
         );
-        return 1 as libc::c_int;
+        return ExitCode::FAILURE;
     }
     yaml_emitter_set_output_file(&mut emitter, stdout);
     yaml_emitter_set_canonical(&mut emitter, canonical);
@@ -394,7 +392,7 @@ unsafe fn main_0(
                 line.as_mut_ptr(),
             );
             fflush(stdout);
-            return 1 as libc::c_int;
+            return ExitCode::FAILURE;
         }
         if ok == 0 {
             current_block = 13850764817919632987;
@@ -413,7 +411,7 @@ unsafe fn main_0(
                     as *const libc::c_char,
             );
             yaml_emitter_delete(&mut emitter);
-            return 1 as libc::c_int;
+            return ExitCode::FAILURE;
         }
         6684355725484023210 => {
             match emitter.error as libc::c_uint {
@@ -446,7 +444,7 @@ unsafe fn main_0(
                 }
             }
             yaml_emitter_delete(&mut emitter);
-            return 1 as libc::c_int;
+            return ExitCode::FAILURE;
         }
         _ => {
             if fclose(input) == 0 {} else {
@@ -463,7 +461,7 @@ unsafe fn main_0(
             }
             yaml_emitter_delete(&mut emitter);
             fflush(stdout);
-            return 0 as libc::c_int;
+            return ExitCode::SUCCESS;
         }
     };
 }
@@ -631,22 +629,6 @@ pub unsafe extern "C" fn get_value(
     }
     *value.offset(i as isize) = '\0' as i32 as libc::c_char;
 }
-pub fn main() {
-    let mut args: Vec::<*mut libc::c_char> = Vec::new();
-    for arg in ::std::env::args() {
-        args.push(
-            (::std::ffi::CString::new(arg))
-                .expect("Failed to convert argument into CString.")
-                .into_raw(),
-        );
-    }
-    args.push(::std::ptr::null_mut());
-    unsafe {
-        ::std::process::exit(
-            main_0(
-                (args.len() - 1) as libc::c_int,
-                args.as_mut_ptr() as *mut *mut libc::c_char,
-            ) as i32,
-        )
-    }
+fn main() -> ExitCode {
+    unsafe { unsafe_main() }
 }

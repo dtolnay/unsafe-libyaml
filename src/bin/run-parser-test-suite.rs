@@ -6,6 +6,9 @@
     unused_mut,
 )]
 
+use std::env;
+use std::ffi::CString;
+use std::process::ExitCode;
 use unsafe_libyaml::externs::__assert_fail;
 use unsafe_libyaml::*;
 extern "C" {
@@ -26,10 +29,7 @@ extern "C" {
     fn printf(_: *const libc::c_char, _: ...) -> libc::c_int;
     fn abort() -> !;
 }
-unsafe fn main_0(
-    mut argc: libc::c_int,
-    mut argv: *mut *mut libc::c_char,
-) -> libc::c_int {
+unsafe fn unsafe_main() -> ExitCode {
     let mut input: *mut FILE = 0 as *mut FILE;
     let mut parser: yaml_parser_t = yaml_parser_t {
         error: YAML_NO_ERROR,
@@ -141,20 +141,18 @@ unsafe fn main_0(
             column: 0,
         },
     };
-    let mut i: libc::c_int = 0 as libc::c_int;
     let mut foundfile: libc::c_int = 0 as libc::c_int;
-    i = 1 as libc::c_int;
-    while i < argc {
+    for arg in env::args().skip(1) {
         if foundfile == 0 {
+            let cstring = CString::new(arg).expect("Failed to convert argument into CString.");
             input = fopen(
-                *argv.offset(i as isize),
+                cstring.as_ptr(),
                 b"rb\0" as *const u8 as *const libc::c_char,
             );
             foundfile = 1 as libc::c_int;
         } else {
-            return usage(1 as libc::c_int)
+            return usage(ExitCode::FAILURE)
         }
-        i += 1;
     }
     if !input.is_null() {} else {
         __assert_fail(
@@ -174,7 +172,7 @@ unsafe fn main_0(
             b"Could not initialize the parser object\n\0" as *const u8
                 as *const libc::c_char,
         );
-        return 1 as libc::c_int;
+        return ExitCode::FAILURE;
     }
     yaml_parser_set_input_file(&mut parser, input);
     loop {
@@ -198,7 +196,7 @@ unsafe fn main_0(
                     parser.problem,
                 );
             }
-            return 1 as libc::c_int;
+            return ExitCode::FAILURE;
         }
         type_0 = event.type_0;
         if type_0 as libc::c_uint == YAML_NO_EVENT as libc::c_int as libc::c_uint {
@@ -338,7 +336,7 @@ unsafe fn main_0(
     }
     yaml_parser_delete(&mut parser);
     fflush(stdout);
-    return 0 as libc::c_int;
+    return ExitCode::SUCCESS;
 }
 #[no_mangle]
 pub unsafe extern "C" fn print_escaped(mut str: *mut yaml_char_t, mut length: size_t) {
@@ -365,8 +363,7 @@ pub unsafe extern "C" fn print_escaped(mut str: *mut yaml_char_t, mut length: si
         i += 1;
     }
 }
-#[no_mangle]
-pub unsafe extern "C" fn usage(mut ret: libc::c_int) -> libc::c_int {
+unsafe fn usage(ret: ExitCode) -> ExitCode {
     fprintf(
         stderr,
         b"Usage: libyaml-parser [<input-file>]\n\0" as *const u8
@@ -374,22 +371,6 @@ pub unsafe extern "C" fn usage(mut ret: libc::c_int) -> libc::c_int {
     );
     return ret;
 }
-pub fn main() {
-    let mut args: Vec::<*mut libc::c_char> = Vec::new();
-    for arg in ::std::env::args() {
-        args.push(
-            (::std::ffi::CString::new(arg))
-                .expect("Failed to convert argument into CString.")
-                .into_raw(),
-        );
-    }
-    args.push(::std::ptr::null_mut());
-    unsafe {
-        ::std::process::exit(
-            main_0(
-                (args.len() - 1) as libc::c_int,
-                args.as_mut_ptr() as *mut *mut libc::c_char,
-            ) as i32,
-        )
-    }
+fn main() -> ExitCode {
+    unsafe { unsafe_main() }
 }
