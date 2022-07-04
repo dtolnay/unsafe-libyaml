@@ -1,8 +1,9 @@
 use crate::externs::__assert_fail;
 use crate::libc;
 use crate::yaml::*;
+use std::io::Write;
+use std::slice;
 extern "C" {
-    fn sprintf(_: *mut libc::c_char, _: *const libc::c_char, _: ...) -> libc::c_int;
     fn yaml_malloc(size: size_t) -> *mut libc::c_void;
     fn yaml_free(ptr: *mut libc::c_void);
     fn yaml_emitter_emit(
@@ -421,11 +422,8 @@ unsafe extern "C" fn yaml_emitter_generate_anchor(
     if anchor.is_null() {
         return 0 as *mut yaml_char_t;
     }
-    sprintf(
-        anchor as *mut libc::c_char,
-        b"id%03d\0" as *const u8 as *const libc::c_char,
-        anchor_id,
-    );
+    let mut buffer = slice::from_raw_parts_mut(anchor.cast(), 16);
+    let _ = write!(buffer, "id{:03}\0", anchor_id);
     return anchor;
 }
 unsafe extern "C" fn yaml_emitter_dump_node(
