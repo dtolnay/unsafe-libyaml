@@ -8,14 +8,14 @@
 
 use std::env;
 use std::ffi::CString;
+use std::io::{self, Write as _};
 use std::process::ExitCode;
+use std::slice;
 use unsafe_libyaml::externs::__assert_fail;
 use unsafe_libyaml::*;
 extern "C" {
-    static mut stdout: *mut FILE;
     static mut stderr: *mut FILE;
     fn fclose(__stream: *mut FILE) -> libc::c_int;
-    fn fflush(__stream: *mut FILE) -> libc::c_int;
     fn fopen(_: *const libc::c_char, _: *const libc::c_char) -> *mut FILE;
     fn fprintf(_: *mut FILE, _: *const libc::c_char, _: ...) -> libc::c_int;
     fn abort() -> !;
@@ -25,7 +25,11 @@ extern "C" {
     ) -> libc::c_int;
     fn yaml_emitter_set_unicode(emitter: *mut yaml_emitter_t, unicode: libc::c_int);
     fn yaml_emitter_set_canonical(emitter: *mut yaml_emitter_t, canonical: libc::c_int);
-    fn yaml_emitter_set_output_file(emitter: *mut yaml_emitter_t, file: *mut FILE);
+    fn yaml_emitter_set_output(
+        emitter: *mut yaml_emitter_t,
+        handler: Option<yaml_write_handler_t>,
+        data: *mut libc::c_void,
+    );
     fn yaml_emitter_delete(emitter: *mut yaml_emitter_t);
     fn yaml_emitter_initialize(emitter: *mut yaml_emitter_t) -> libc::c_int;
     fn fgets(
@@ -239,7 +243,16 @@ unsafe fn unsafe_main() -> ExitCode {
         );
         return ExitCode::FAILURE;
     }
-    yaml_emitter_set_output_file(&mut emitter, stdout);
+    unsafe extern "C" fn write_to_stdout(
+        _data: *mut libc::c_void,
+        buffer: *mut libc::c_uchar,
+        size: size_t,
+    ) -> libc::c_int {
+        let bytes = slice::from_raw_parts(buffer.cast(), size as usize);
+        let _ = io::stdout().write_all(bytes);
+        size as libc::c_int
+    }
+    yaml_emitter_set_output(&mut emitter, Some(write_to_stdout), 0 as *mut libc::c_void);
     yaml_emitter_set_canonical(&mut emitter, canonical);
     yaml_emitter_set_unicode(&mut emitter, unicode);
     loop {
@@ -391,7 +404,6 @@ unsafe fn unsafe_main() -> ExitCode {
                 b"Unknown event: '%s'\n\0" as *const u8 as *const libc::c_char,
                 line.as_mut_ptr(),
             );
-            fflush(stdout);
             return ExitCode::FAILURE;
         }
         if ok == 0 {
@@ -460,7 +472,6 @@ unsafe fn unsafe_main() -> ExitCode {
                 );
             }
             yaml_emitter_delete(&mut emitter);
-            fflush(stdout);
             return ExitCode::SUCCESS;
         }
     };

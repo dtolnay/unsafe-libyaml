@@ -6,9 +6,11 @@
     unused_mut,
 )]
 
+use std::cmp;
 use std::env;
-use std::ffi::CString;
+use std::fs;
 use std::process::ExitCode;
+use std::ptr;
 use unsafe_libyaml::externs::__assert_fail;
 use unsafe_libyaml::*;
 extern "C" {
@@ -16,21 +18,21 @@ extern "C" {
         parser: *mut yaml_parser_t,
         event: *mut yaml_event_t,
     ) -> libc::c_int;
-    fn yaml_parser_set_input_file(parser: *mut yaml_parser_t, file: *mut FILE);
+    fn yaml_parser_set_input(
+        parser: *mut yaml_parser_t,
+        handler: Option<yaml_read_handler_t>,
+        data: *mut libc::c_void,
+    );
     fn yaml_parser_delete(parser: *mut yaml_parser_t);
     fn yaml_parser_initialize(parser: *mut yaml_parser_t) -> libc::c_int;
     fn yaml_event_delete(event: *mut yaml_event_t);
-    static mut stdout: *mut FILE;
     static mut stderr: *mut FILE;
-    fn fclose(__stream: *mut FILE) -> libc::c_int;
-    fn fflush(__stream: *mut FILE) -> libc::c_int;
-    fn fopen(_: *const libc::c_char, _: *const libc::c_char) -> *mut FILE;
     fn fprintf(_: *mut FILE, _: *const libc::c_char, _: ...) -> libc::c_int;
     fn printf(_: *const libc::c_char, _: ...) -> libc::c_int;
     fn abort() -> !;
 }
 unsafe fn unsafe_main() -> ExitCode {
-    let mut input: *mut FILE = 0 as *mut FILE;
+    let mut input = None;
     let mut parser: yaml_parser_t = yaml_parser_t {
         error: YAML_NO_ERROR,
         problem: 0 as *const libc::c_char,
@@ -142,30 +144,24 @@ unsafe fn unsafe_main() -> ExitCode {
         },
     };
     let mut foundfile: libc::c_int = 0 as libc::c_int;
-    for arg in env::args().skip(1) {
+    for arg in env::args_os().skip(1) {
         if foundfile == 0 {
-            let cstring = CString::new(arg).expect("Failed to convert argument into CString.");
-            input = fopen(
-                cstring.as_ptr(),
-                b"rb\0" as *const u8 as *const libc::c_char,
-            );
+            input = fs::read(arg).ok();
             foundfile = 1 as libc::c_int;
         } else {
             return usage(ExitCode::FAILURE)
         }
     }
-    if !input.is_null() {} else {
-        __assert_fail(
-            b"input\0" as *const u8 as *const libc::c_char,
-            b"run-parser-test-suite.c\0" as *const u8 as *const libc::c_char,
-            46 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<
-                &[u8; 23],
-                &[libc::c_char; 23],
-            >(b"int main(int, char **)\0"))
-                .as_ptr(),
-        );
-    }
+    let input = input.unwrap_or_else(|| __assert_fail(
+        b"input\0" as *const u8 as *const libc::c_char,
+        b"run-parser-test-suite.c\0" as *const u8 as *const libc::c_char,
+        46 as libc::c_int as libc::c_uint,
+        (*::std::mem::transmute::<
+            &[u8; 23],
+            &[libc::c_char; 23],
+        >(b"int main(int, char **)\0"))
+            .as_ptr(),
+    ));
     if yaml_parser_initialize(&mut parser) == 0 {
         fprintf(
             stderr,
@@ -174,7 +170,21 @@ unsafe fn unsafe_main() -> ExitCode {
         );
         return ExitCode::FAILURE;
     }
-    yaml_parser_set_input_file(&mut parser, input);
+    unsafe extern "C" fn read_from_file(
+        data: *mut libc::c_void,
+        buffer: *mut libc::c_uchar,
+        size: size_t,
+        size_read: *mut size_t,
+    ) -> libc::c_int {
+        let remaining: *mut &[u8] = data.cast();
+        let n = cmp::min(size as usize, (*remaining).len());
+        ptr::copy_nonoverlapping((*remaining).as_ptr().cast(), buffer, n);
+        *remaining = &(*remaining)[n..];
+        *size_read = n as size_t;
+        1 as libc::c_int
+    }
+    let mut remaining = input.as_slice();
+    yaml_parser_set_input(&mut parser, Some(read_from_file), ptr::addr_of_mut!(remaining).cast());
     loop {
         let mut type_0: yaml_event_type_t = YAML_NO_EVENT;
         if yaml_parser_parse(&mut parser, &mut event) == 0 {
@@ -322,20 +332,7 @@ unsafe fn unsafe_main() -> ExitCode {
             break;
         }
     }
-    if fclose(input) == 0 {} else {
-        __assert_fail(
-            b"!fclose(input)\0" as *const u8 as *const libc::c_char,
-            b"run-parser-test-suite.c\0" as *const u8 as *const libc::c_char,
-            155 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<
-                &[u8; 23],
-                &[libc::c_char; 23],
-            >(b"int main(int, char **)\0"))
-                .as_ptr(),
-        );
-    }
     yaml_parser_delete(&mut parser);
-    fflush(stdout);
     return ExitCode::SUCCESS;
 }
 #[no_mangle]
