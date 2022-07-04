@@ -1,21 +1,8 @@
+use crate::api::{yaml_document_delete, yaml_free, yaml_malloc, yaml_stack_extend, yaml_strdup};
 use crate::externs::*;
 use crate::libc;
+use crate::parser::yaml_parser_parse;
 use crate::yaml::*;
-extern "C" {
-    fn yaml_document_delete(document: *mut yaml_document_t);
-    fn yaml_parser_parse(
-        parser: *mut yaml_parser_t,
-        event: *mut yaml_event_t,
-    ) -> libc::c_int;
-    fn yaml_free(ptr: *mut libc::c_void);
-    fn yaml_stack_extend(
-        start: *mut *mut libc::c_void,
-        top: *mut *mut libc::c_void,
-        end: *mut *mut libc::c_void,
-    ) -> libc::c_int;
-    fn yaml_malloc(size: size_t) -> *mut libc::c_void;
-    fn yaml_strdup(_: *const yaml_char_t) -> *mut yaml_char_t;
-}
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct loader_ctx {

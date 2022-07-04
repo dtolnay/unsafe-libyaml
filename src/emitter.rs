@@ -1,23 +1,8 @@
+use crate::api::{yaml_event_delete, yaml_free, yaml_queue_extend, yaml_stack_extend, yaml_strdup};
 use crate::externs::*;
 use crate::libc;
+use crate::writer::yaml_emitter_flush;
 use crate::yaml::*;
-extern "C" {
-    fn yaml_queue_extend(
-        start: *mut *mut libc::c_void,
-        head: *mut *mut libc::c_void,
-        tail: *mut *mut libc::c_void,
-        end: *mut *mut libc::c_void,
-    ) -> libc::c_int;
-    fn yaml_strdup(_: *const yaml_char_t) -> *mut yaml_char_t;
-    fn yaml_free(ptr: *mut libc::c_void);
-    fn yaml_stack_extend(
-        start: *mut *mut libc::c_void,
-        top: *mut *mut libc::c_void,
-        end: *mut *mut libc::c_void,
-    ) -> libc::c_int;
-    fn yaml_event_delete(event: *mut yaml_event_t);
-    fn yaml_emitter_flush(emitter: *mut yaml_emitter_t) -> libc::c_int;
-}
 unsafe extern "C" fn yaml_emitter_set_emitter_error(
     mut emitter: *mut yaml_emitter_t,
     mut problem: *const libc::c_char,

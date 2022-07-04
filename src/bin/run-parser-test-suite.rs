@@ -11,22 +11,12 @@ use std::env;
 use std::fs;
 use std::process::ExitCode;
 use std::ptr;
+use unsafe_libyaml::api::{yaml_event_delete, yaml_parser_delete, yaml_parser_initialize, yaml_parser_set_input};
 use unsafe_libyaml::externs::__assert_fail;
+use unsafe_libyaml::parser::yaml_parser_parse;
 use unsafe_libyaml::*;
 extern "C" {
     pub type FILE;
-    fn yaml_parser_parse(
-        parser: *mut yaml_parser_t,
-        event: *mut yaml_event_t,
-    ) -> libc::c_int;
-    fn yaml_parser_set_input(
-        parser: *mut yaml_parser_t,
-        handler: Option<yaml_read_handler_t>,
-        data: *mut libc::c_void,
-    );
-    fn yaml_parser_delete(parser: *mut yaml_parser_t);
-    fn yaml_parser_initialize(parser: *mut yaml_parser_t) -> libc::c_int;
-    fn yaml_event_delete(event: *mut yaml_event_t);
     static mut stderr: *mut FILE;
     fn fprintf(_: *mut FILE, _: *const libc::c_char, _: ...) -> libc::c_int;
     fn printf(_: *const libc::c_char, _: ...) -> libc::c_int;

@@ -11,7 +11,17 @@ use std::ffi::CString;
 use std::io::{self, Write as _};
 use std::process::ExitCode;
 use std::slice;
-use unsafe_libyaml::externs::__assert_fail;
+use unsafe_libyaml::api::{
+    yaml_alias_event_initialize, yaml_document_end_event_initialize,
+    yaml_document_start_event_initialize, yaml_emitter_delete, yaml_emitter_initialize,
+    yaml_emitter_set_canonical, yaml_emitter_set_output, yaml_emitter_set_unicode,
+    yaml_mapping_end_event_initialize, yaml_mapping_start_event_initialize,
+    yaml_scalar_event_initialize, yaml_sequence_end_event_initialize,
+    yaml_sequence_start_event_initialize, yaml_stream_end_event_initialize,
+    yaml_stream_start_event_initialize,
+};
+use unsafe_libyaml::emitter::yaml_emitter_emit;
+use unsafe_libyaml::externs::{__assert_fail, memcpy, strlen, strncmp};
 use unsafe_libyaml::*;
 extern "C" {
     pub type FILE;
@@ -20,82 +30,12 @@ extern "C" {
     fn fopen(_: *const libc::c_char, _: *const libc::c_char) -> *mut FILE;
     fn fprintf(_: *mut FILE, _: *const libc::c_char, _: ...) -> libc::c_int;
     fn abort() -> !;
-    fn yaml_emitter_emit(
-        emitter: *mut yaml_emitter_t,
-        event: *mut yaml_event_t,
-    ) -> libc::c_int;
-    fn yaml_emitter_set_unicode(emitter: *mut yaml_emitter_t, unicode: libc::c_int);
-    fn yaml_emitter_set_canonical(emitter: *mut yaml_emitter_t, canonical: libc::c_int);
-    fn yaml_emitter_set_output(
-        emitter: *mut yaml_emitter_t,
-        handler: Option<yaml_write_handler_t>,
-        data: *mut libc::c_void,
-    );
-    fn yaml_emitter_delete(emitter: *mut yaml_emitter_t);
-    fn yaml_emitter_initialize(emitter: *mut yaml_emitter_t) -> libc::c_int;
     fn fgets(
         __s: *mut libc::c_char,
         __n: libc::c_int,
         __stream: *mut FILE,
     ) -> *mut libc::c_char;
-    fn memcpy(
-        _: *mut libc::c_void,
-        _: *const libc::c_void,
-        _: libc::c_ulong,
-    ) -> *mut libc::c_void;
-    fn strncmp(
-        _: *const libc::c_char,
-        _: *const libc::c_char,
-        _: libc::c_ulong,
-    ) -> libc::c_int;
     fn strchr(_: *const libc::c_char, _: libc::c_int) -> *mut libc::c_char;
-    fn strlen(_: *const libc::c_char) -> libc::c_ulong;
-    fn yaml_stream_start_event_initialize(
-        event: *mut yaml_event_t,
-        encoding: yaml_encoding_t,
-    ) -> libc::c_int;
-    fn yaml_stream_end_event_initialize(event: *mut yaml_event_t) -> libc::c_int;
-    fn yaml_document_start_event_initialize(
-        event: *mut yaml_event_t,
-        version_directive: *mut yaml_version_directive_t,
-        tag_directives_start: *mut yaml_tag_directive_t,
-        tag_directives_end: *mut yaml_tag_directive_t,
-        implicit: libc::c_int,
-    ) -> libc::c_int;
-    fn yaml_document_end_event_initialize(
-        event: *mut yaml_event_t,
-        implicit: libc::c_int,
-    ) -> libc::c_int;
-    fn yaml_alias_event_initialize(
-        event: *mut yaml_event_t,
-        anchor: *const yaml_char_t,
-    ) -> libc::c_int;
-    fn yaml_scalar_event_initialize(
-        event: *mut yaml_event_t,
-        anchor: *const yaml_char_t,
-        tag: *const yaml_char_t,
-        value: *const yaml_char_t,
-        length: libc::c_int,
-        plain_implicit: libc::c_int,
-        quoted_implicit: libc::c_int,
-        style: yaml_scalar_style_t,
-    ) -> libc::c_int;
-    fn yaml_sequence_start_event_initialize(
-        event: *mut yaml_event_t,
-        anchor: *const yaml_char_t,
-        tag: *const yaml_char_t,
-        implicit: libc::c_int,
-        style: yaml_sequence_style_t,
-    ) -> libc::c_int;
-    fn yaml_sequence_end_event_initialize(event: *mut yaml_event_t) -> libc::c_int;
-    fn yaml_mapping_start_event_initialize(
-        event: *mut yaml_event_t,
-        anchor: *const yaml_char_t,
-        tag: *const yaml_char_t,
-        implicit: libc::c_int,
-        style: yaml_mapping_style_t,
-    ) -> libc::c_int;
-    fn yaml_mapping_end_event_initialize(event: *mut yaml_event_t) -> libc::c_int;
 }
 unsafe fn unsafe_main() -> ExitCode {
     let mut current_block: u64;

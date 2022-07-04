@@ -1,39 +1,11 @@
+use crate::api::{
+    yaml_free, yaml_malloc, yaml_queue_extend, yaml_stack_extend, yaml_string_extend,
+    yaml_string_join, yaml_token_delete,
+};
 use crate::externs::*;
 use crate::libc;
+use crate::reader::yaml_parser_update_buffer;
 use crate::yaml::*;
-extern "C" {
-    fn yaml_token_delete(token: *mut yaml_token_t);
-    fn yaml_stack_extend(
-        start: *mut *mut libc::c_void,
-        top: *mut *mut libc::c_void,
-        end: *mut *mut libc::c_void,
-    ) -> libc::c_int;
-    fn yaml_queue_extend(
-        start: *mut *mut libc::c_void,
-        head: *mut *mut libc::c_void,
-        tail: *mut *mut libc::c_void,
-        end: *mut *mut libc::c_void,
-    ) -> libc::c_int;
-    fn yaml_free(ptr: *mut libc::c_void);
-    fn yaml_parser_update_buffer(
-        parser: *mut yaml_parser_t,
-        length: size_t,
-    ) -> libc::c_int;
-    fn yaml_string_extend(
-        start: *mut *mut yaml_char_t,
-        pointer: *mut *mut yaml_char_t,
-        end: *mut *mut yaml_char_t,
-    ) -> libc::c_int;
-    fn yaml_string_join(
-        a_start: *mut *mut yaml_char_t,
-        a_pointer: *mut *mut yaml_char_t,
-        a_end: *mut *mut yaml_char_t,
-        b_start: *mut *mut yaml_char_t,
-        b_pointer: *mut *mut yaml_char_t,
-        b_end: *mut *mut yaml_char_t,
-    ) -> libc::c_int;
-    fn yaml_malloc(size: size_t) -> *mut libc::c_void;
-}
 #[no_mangle]
 pub unsafe extern "C" fn yaml_parser_scan(
     mut parser: *mut yaml_parser_t,

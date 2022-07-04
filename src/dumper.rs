@@ -1,17 +1,10 @@
+use crate::api::{yaml_document_delete, yaml_free, yaml_malloc};
+use crate::emitter::yaml_emitter_emit;
 use crate::externs::*;
 use crate::libc;
 use crate::yaml::*;
 use std::io::Write;
 use std::slice;
-extern "C" {
-    fn yaml_malloc(size: size_t) -> *mut libc::c_void;
-    fn yaml_free(ptr: *mut libc::c_void);
-    fn yaml_emitter_emit(
-        emitter: *mut yaml_emitter_t,
-        event: *mut yaml_event_t,
-    ) -> libc::c_int;
-    fn yaml_document_delete(document: *mut yaml_document_t);
-}
 #[no_mangle]
 pub unsafe extern "C" fn yaml_emitter_open(
     mut emitter: *mut yaml_emitter_t,
