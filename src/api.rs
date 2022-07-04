@@ -1,28 +1,6 @@
-use crate::externs::__assert_fail;
+use crate::externs::*;
 use crate::libc;
 use crate::yaml::*;
-extern "C" {
-    fn malloc(_: libc::c_ulong) -> *mut libc::c_void;
-    fn realloc(_: *mut libc::c_void, _: libc::c_ulong) -> *mut libc::c_void;
-    fn free(_: *mut libc::c_void);
-    fn memcpy(
-        _: *mut libc::c_void,
-        _: *const libc::c_void,
-        _: libc::c_ulong,
-    ) -> *mut libc::c_void;
-    fn memmove(
-        _: *mut libc::c_void,
-        _: *const libc::c_void,
-        _: libc::c_ulong,
-    ) -> *mut libc::c_void;
-    fn memset(
-        _: *mut libc::c_void,
-        _: libc::c_int,
-        _: libc::c_ulong,
-    ) -> *mut libc::c_void;
-    fn strdup(_: *const libc::c_char) -> *mut libc::c_char;
-    fn strlen(_: *const libc::c_char) -> libc::c_ulong;
-}
 #[no_mangle]
 pub unsafe extern "C" fn yaml_get_version_string() -> *const libc::c_char {
     return b"0.2.5\0" as *const u8 as *const libc::c_char;

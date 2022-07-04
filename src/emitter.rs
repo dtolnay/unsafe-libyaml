@@ -1,3 +1,4 @@
+use crate::externs::*;
 use crate::libc;
 use crate::yaml::*;
 extern "C" {
@@ -14,13 +15,6 @@ extern "C" {
         top: *mut *mut libc::c_void,
         end: *mut *mut libc::c_void,
     ) -> libc::c_int;
-    fn strcmp(_: *const libc::c_char, _: *const libc::c_char) -> libc::c_int;
-    fn strncmp(
-        _: *const libc::c_char,
-        _: *const libc::c_char,
-        _: libc::c_ulong,
-    ) -> libc::c_int;
-    fn strlen(_: *const libc::c_char) -> libc::c_ulong;
     fn yaml_event_delete(event: *mut yaml_event_t);
     fn yaml_emitter_flush(emitter: *mut yaml_emitter_t) -> libc::c_int;
 }

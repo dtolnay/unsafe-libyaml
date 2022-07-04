@@ -1,18 +1,6 @@
-use crate::externs::__assert_fail;
+use crate::externs::*;
 use crate::libc;
 use crate::yaml::*;
-extern "C" {
-    fn memmove(
-        _: *mut libc::c_void,
-        _: *const libc::c_void,
-        _: libc::c_ulong,
-    ) -> *mut libc::c_void;
-    fn memcmp(
-        _: *const libc::c_void,
-        _: *const libc::c_void,
-        _: libc::c_ulong,
-    ) -> libc::c_int;
-}
 unsafe extern "C" fn yaml_parser_set_reader_error(
     mut parser: *mut yaml_parser_t,
     mut problem: *const libc::c_char,

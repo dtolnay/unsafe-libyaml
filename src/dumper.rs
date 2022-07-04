@@ -1,4 +1,4 @@
-use crate::externs::__assert_fail;
+use crate::externs::*;
 use crate::libc;
 use crate::yaml::*;
 use std::io::Write;
@@ -11,12 +11,6 @@ extern "C" {
         event: *mut yaml_event_t,
     ) -> libc::c_int;
     fn yaml_document_delete(document: *mut yaml_document_t);
-    fn memset(
-        _: *mut libc::c_void,
-        _: libc::c_int,
-        _: libc::c_ulong,
-    ) -> *mut libc::c_void;
-    fn strcmp(_: *const libc::c_char, _: *const libc::c_char) -> libc::c_int;
 }
 #[no_mangle]
 pub unsafe extern "C" fn yaml_emitter_open(

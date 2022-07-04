@@ -1,13 +1,7 @@
-use crate::externs::__assert_fail;
+use crate::externs::*;
 use crate::libc;
 use crate::yaml::*;
 extern "C" {
-    fn memset(
-        _: *mut libc::c_void,
-        _: libc::c_int,
-        _: libc::c_ulong,
-    ) -> *mut libc::c_void;
-    fn strcmp(_: *const libc::c_char, _: *const libc::c_char) -> libc::c_int;
     fn yaml_document_delete(document: *mut yaml_document_t);
     fn yaml_parser_parse(
         parser: *mut yaml_parser_t,

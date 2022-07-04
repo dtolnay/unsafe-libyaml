@@ -1,19 +1,7 @@
-use crate::externs::__assert_fail;
+use crate::externs::*;
 use crate::libc;
 use crate::yaml::*;
 extern "C" {
-    fn memcpy(
-        _: *mut libc::c_void,
-        _: *const libc::c_void,
-        _: libc::c_ulong,
-    ) -> *mut libc::c_void;
-    fn memset(
-        _: *mut libc::c_void,
-        _: libc::c_int,
-        _: libc::c_ulong,
-    ) -> *mut libc::c_void;
-    fn strcmp(_: *const libc::c_char, _: *const libc::c_char) -> libc::c_int;
-    fn strlen(_: *const libc::c_char) -> libc::c_ulong;
     fn yaml_malloc(size: size_t) -> *mut libc::c_void;
     fn yaml_free(ptr: *mut libc::c_void);
     fn yaml_parser_fetch_more_tokens(parser: *mut yaml_parser_t) -> libc::c_int;
