@@ -4,6 +4,7 @@
 use std::env;
 use std::ffi::CString;
 use std::io::{self, Write as _};
+use std::mem::MaybeUninit;
 use std::process::ExitCode;
 use std::ptr;
 use std::slice;
@@ -32,114 +33,10 @@ extern "C" {
 unsafe fn unsafe_main() -> ExitCode {
     let mut current_block: u64;
     let mut input: *mut FILE = ptr::null_mut::<FILE>();
-    let mut emitter: yaml_emitter_t = yaml_emitter_t {
-        error: YAML_NO_ERROR,
-        problem: ptr::null::<libc::c_char>(),
-        write_handler: None,
-        write_handler_data: ptr::null_mut::<libc::c_void>(),
-        output: unnamed_yaml_emitter_s_output {
-            string: unnamed_yaml_emitter_s_output_string {
-                buffer: ptr::null_mut::<libc::c_uchar>(),
-                size: 0,
-                size_written: ptr::null_mut::<size_t>(),
-            },
-        },
-        buffer: unnamed_yaml_emitter_s_buffer {
-            start: ptr::null_mut::<yaml_char_t>(),
-            end: ptr::null_mut::<yaml_char_t>(),
-            pointer: ptr::null_mut::<yaml_char_t>(),
-            last: ptr::null_mut::<yaml_char_t>(),
-        },
-        raw_buffer: unnamed_yaml_emitter_s_raw_buffer {
-            start: ptr::null_mut::<libc::c_uchar>(),
-            end: ptr::null_mut::<libc::c_uchar>(),
-            pointer: ptr::null_mut::<libc::c_uchar>(),
-            last: ptr::null_mut::<libc::c_uchar>(),
-        },
-        encoding: YAML_ANY_ENCODING,
-        canonical: 0,
-        best_indent: 0,
-        best_width: 0,
-        unicode: 0,
-        line_break: YAML_ANY_BREAK,
-        states: unnamed_yaml_emitter_s_states {
-            start: ptr::null_mut::<yaml_emitter_state_t>(),
-            end: ptr::null_mut::<yaml_emitter_state_t>(),
-            top: ptr::null_mut::<yaml_emitter_state_t>(),
-        },
-        state: YAML_EMIT_STREAM_START_STATE,
-        events: unnamed_yaml_emitter_s_events {
-            start: ptr::null_mut::<yaml_event_t>(),
-            end: ptr::null_mut::<yaml_event_t>(),
-            head: ptr::null_mut::<yaml_event_t>(),
-            tail: ptr::null_mut::<yaml_event_t>(),
-        },
-        indents: unnamed_yaml_emitter_s_indents {
-            start: ptr::null_mut::<libc::c_int>(),
-            end: ptr::null_mut::<libc::c_int>(),
-            top: ptr::null_mut::<libc::c_int>(),
-        },
-        tag_directives: unnamed_yaml_emitter_s_tag_directives {
-            start: ptr::null_mut::<yaml_tag_directive_t>(),
-            end: ptr::null_mut::<yaml_tag_directive_t>(),
-            top: ptr::null_mut::<yaml_tag_directive_t>(),
-        },
-        indent: 0,
-        flow_level: 0,
-        root_context: 0,
-        sequence_context: 0,
-        mapping_context: 0,
-        simple_key_context: 0,
-        line: 0,
-        column: 0,
-        whitespace: 0,
-        indention: 0,
-        open_ended: 0,
-        anchor_data: unnamed_yaml_emitter_s_anchor_data {
-            anchor: ptr::null_mut::<yaml_char_t>(),
-            anchor_length: 0,
-            alias: 0,
-        },
-        tag_data: unnamed_yaml_emitter_s_tag_data {
-            handle: ptr::null_mut::<yaml_char_t>(),
-            handle_length: 0,
-            suffix: ptr::null_mut::<yaml_char_t>(),
-            suffix_length: 0,
-        },
-        scalar_data: unnamed_yaml_emitter_s_scalar_data {
-            value: ptr::null_mut::<yaml_char_t>(),
-            length: 0,
-            multiline: 0,
-            flow_plain_allowed: 0,
-            block_plain_allowed: 0,
-            single_quoted_allowed: 0,
-            block_allowed: 0,
-            style: YAML_ANY_SCALAR_STYLE,
-        },
-        opened: 0,
-        closed: 0,
-        anchors: ptr::null_mut::<yaml_anchors_t>(),
-        last_anchor_id: 0,
-        document: ptr::null_mut::<yaml_document_t>(),
-    };
-    let mut event: yaml_event_t = yaml_event_t {
-        type_0: YAML_NO_EVENT,
-        data: unnamed_yaml_event_s_data {
-            stream_start: unnamed_yaml_event_s_data_stream_start {
-                encoding: YAML_ANY_ENCODING,
-            },
-        },
-        start_mark: yaml_mark_t {
-            index: 0,
-            line: 0,
-            column: 0,
-        },
-        end_mark: yaml_mark_t {
-            index: 0,
-            line: 0,
-            column: 0,
-        },
-    };
+    let mut emitter = MaybeUninit::<yaml_emitter_t>::uninit();
+    let emitter = emitter.as_mut_ptr();
+    let mut event = MaybeUninit::<yaml_event_t>::uninit();
+    let event = event.as_mut_ptr();
     let mut version_directive: *mut yaml_version_directive_t =
         ptr::null_mut::<yaml_version_directive_t>();
     let mut canonical: libc::c_int = 0 as libc::c_int;
@@ -166,7 +63,7 @@ unsafe fn unsafe_main() -> ExitCode {
                 .as_ptr(),
         );
     }
-    if yaml_emitter_initialize(&mut emitter) == 0 {
+    if yaml_emitter_initialize(emitter) == 0 {
         fprintf(
             stderr,
             b"Could not initalize the emitter object\n\0" as *const u8 as *const libc::c_char,
@@ -183,12 +80,12 @@ unsafe fn unsafe_main() -> ExitCode {
         size as libc::c_int
     }
     yaml_emitter_set_output(
-        &mut emitter,
+        emitter,
         Some(write_to_stdout),
         ptr::null_mut::<libc::c_void>(),
     );
-    yaml_emitter_set_canonical(&mut emitter, canonical);
-    yaml_emitter_set_unicode(&mut emitter, unicode);
+    yaml_emitter_set_canonical(emitter, canonical);
+    yaml_emitter_set_unicode(emitter, unicode);
     loop {
         if !(get_line(input, line.as_mut_ptr()) != 0) {
             current_block = 1934991416718554651;
@@ -205,14 +102,14 @@ unsafe fn unsafe_main() -> ExitCode {
             4 as libc::c_int as libc::c_ulong,
         ) == 0 as libc::c_int
         {
-            ok = yaml_stream_start_event_initialize(&mut event, YAML_UTF8_ENCODING);
+            ok = yaml_stream_start_event_initialize(event, YAML_UTF8_ENCODING);
         } else if strncmp(
             line.as_mut_ptr(),
             b"-STR\0" as *const u8 as *const libc::c_char,
             4 as libc::c_int as libc::c_ulong,
         ) == 0 as libc::c_int
         {
-            ok = yaml_stream_end_event_initialize(&mut event);
+            ok = yaml_stream_end_event_initialize(event);
         } else if strncmp(
             line.as_mut_ptr(),
             b"+DOC\0" as *const u8 as *const libc::c_char,
@@ -225,7 +122,7 @@ unsafe fn unsafe_main() -> ExitCode {
                 4 as libc::c_int as libc::c_ulong,
             ) != 0 as libc::c_int) as libc::c_int;
             ok = yaml_document_start_event_initialize(
-                &mut event,
+                event,
                 version_directive,
                 ptr::null_mut::<yaml_tag_directive_t>(),
                 ptr::null_mut::<yaml_tag_directive_t>(),
@@ -242,7 +139,7 @@ unsafe fn unsafe_main() -> ExitCode {
                 b" ...\0" as *const u8 as *const libc::c_char,
                 4 as libc::c_int as libc::c_ulong,
             ) != 0 as libc::c_int) as libc::c_int;
-            ok = yaml_document_end_event_initialize(&mut event, implicit);
+            ok = yaml_document_end_event_initialize(event, implicit);
         } else if strncmp(
             line.as_mut_ptr(),
             b"+MAP\0" as *const u8 as *const libc::c_char,
@@ -251,7 +148,7 @@ unsafe fn unsafe_main() -> ExitCode {
         {
             style = YAML_BLOCK_MAPPING_STYLE as libc::c_int;
             ok = yaml_mapping_start_event_initialize(
-                &mut event,
+                event,
                 get_anchor(
                     '&' as i32 as libc::c_char,
                     line.as_mut_ptr(),
@@ -267,7 +164,7 @@ unsafe fn unsafe_main() -> ExitCode {
             4 as libc::c_int as libc::c_ulong,
         ) == 0 as libc::c_int
         {
-            ok = yaml_mapping_end_event_initialize(&mut event);
+            ok = yaml_mapping_end_event_initialize(event);
         } else if strncmp(
             line.as_mut_ptr(),
             b"+SEQ\0" as *const u8 as *const libc::c_char,
@@ -276,7 +173,7 @@ unsafe fn unsafe_main() -> ExitCode {
         {
             style = YAML_BLOCK_SEQUENCE_STYLE as libc::c_int;
             ok = yaml_sequence_start_event_initialize(
-                &mut event,
+                event,
                 get_anchor(
                     '&' as i32 as libc::c_char,
                     line.as_mut_ptr(),
@@ -292,7 +189,7 @@ unsafe fn unsafe_main() -> ExitCode {
             4 as libc::c_int as libc::c_ulong,
         ) == 0 as libc::c_int
         {
-            ok = yaml_sequence_end_event_initialize(&mut event);
+            ok = yaml_sequence_end_event_initialize(event);
         } else if strncmp(
             line.as_mut_ptr(),
             b"=VAL\0" as *const u8 as *const libc::c_char,
@@ -306,7 +203,7 @@ unsafe fn unsafe_main() -> ExitCode {
                 == ptr::null_mut::<libc::c_void>() as *mut libc::c_char)
                 as libc::c_int;
             ok = yaml_scalar_event_initialize(
-                &mut event,
+                event,
                 get_anchor(
                     '&' as i32 as libc::c_char,
                     line.as_mut_ptr(),
@@ -326,7 +223,7 @@ unsafe fn unsafe_main() -> ExitCode {
         ) == 0 as libc::c_int
         {
             ok = yaml_alias_event_initialize(
-                &mut event,
+                event,
                 get_anchor(
                     '*' as i32 as libc::c_char,
                     line.as_mut_ptr(),
@@ -345,7 +242,7 @@ unsafe fn unsafe_main() -> ExitCode {
             current_block = 13850764817919632987;
             break;
         }
-        if yaml_emitter_emit(&mut emitter, &mut event) == 0 {
+        if yaml_emitter_emit(emitter, event) == 0 {
             current_block = 6684355725484023210;
             break;
         }
@@ -357,11 +254,11 @@ unsafe fn unsafe_main() -> ExitCode {
                 b"Memory error: Not enough memory for creating an event\n\0" as *const u8
                     as *const libc::c_char,
             );
-            yaml_emitter_delete(&mut emitter);
+            yaml_emitter_delete(emitter);
             return ExitCode::FAILURE;
         }
         6684355725484023210 => {
-            match emitter.error as libc::c_uint {
+            match (*emitter).error as libc::c_uint {
                 1 => {
                     fprintf(
                         stderr,
@@ -373,14 +270,14 @@ unsafe fn unsafe_main() -> ExitCode {
                     fprintf(
                         stderr,
                         b"Writer error: %s\n\0" as *const u8 as *const libc::c_char,
-                        emitter.problem,
+                        (*emitter).problem,
                     );
                 }
                 7 => {
                     fprintf(
                         stderr,
                         b"Emitter error: %s\n\0" as *const u8 as *const libc::c_char,
-                        emitter.problem,
+                        (*emitter).problem,
                     );
                 }
                 _ => {
@@ -390,7 +287,7 @@ unsafe fn unsafe_main() -> ExitCode {
                     );
                 }
             }
-            yaml_emitter_delete(&mut emitter);
+            yaml_emitter_delete(emitter);
             return ExitCode::FAILURE;
         }
         _ => {
@@ -406,7 +303,7 @@ unsafe fn unsafe_main() -> ExitCode {
                     .as_ptr(),
                 );
             }
-            yaml_emitter_delete(&mut emitter);
+            yaml_emitter_delete(emitter);
             return ExitCode::SUCCESS;
         }
     };

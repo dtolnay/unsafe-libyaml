@@ -4,6 +4,7 @@
 use std::cmp;
 use std::env;
 use std::fs;
+use std::mem::MaybeUninit;
 use std::process::ExitCode;
 use std::ptr;
 use unsafe_libyaml::api::{
@@ -21,116 +22,10 @@ extern "C" {
 }
 unsafe fn unsafe_main() -> ExitCode {
     let mut input = None;
-    let mut parser: yaml_parser_t = yaml_parser_t {
-        error: YAML_NO_ERROR,
-        problem: ptr::null::<libc::c_char>(),
-        problem_offset: 0,
-        problem_value: 0,
-        problem_mark: yaml_mark_t {
-            index: 0,
-            line: 0,
-            column: 0,
-        },
-        context: ptr::null::<libc::c_char>(),
-        context_mark: yaml_mark_t {
-            index: 0,
-            line: 0,
-            column: 0,
-        },
-        read_handler: None,
-        read_handler_data: ptr::null_mut::<libc::c_void>(),
-        input: unnamed_yaml_parser_s_input {
-            string: unnamed_yaml_parser_s_input_string {
-                start: ptr::null::<libc::c_uchar>(),
-                end: ptr::null::<libc::c_uchar>(),
-                current: ptr::null::<libc::c_uchar>(),
-            },
-        },
-        eof: 0,
-        buffer: unnamed_yaml_parser_s_buffer {
-            start: ptr::null_mut::<yaml_char_t>(),
-            end: ptr::null_mut::<yaml_char_t>(),
-            pointer: ptr::null_mut::<yaml_char_t>(),
-            last: ptr::null_mut::<yaml_char_t>(),
-        },
-        unread: 0,
-        raw_buffer: unnamed_yaml_parser_s_raw_buffer {
-            start: ptr::null_mut::<libc::c_uchar>(),
-            end: ptr::null_mut::<libc::c_uchar>(),
-            pointer: ptr::null_mut::<libc::c_uchar>(),
-            last: ptr::null_mut::<libc::c_uchar>(),
-        },
-        encoding: YAML_ANY_ENCODING,
-        offset: 0,
-        mark: yaml_mark_t {
-            index: 0,
-            line: 0,
-            column: 0,
-        },
-        stream_start_produced: 0,
-        stream_end_produced: 0,
-        flow_level: 0,
-        tokens: unnamed_yaml_parser_s_tokens {
-            start: ptr::null_mut::<yaml_token_t>(),
-            end: ptr::null_mut::<yaml_token_t>(),
-            head: ptr::null_mut::<yaml_token_t>(),
-            tail: ptr::null_mut::<yaml_token_t>(),
-        },
-        tokens_parsed: 0,
-        token_available: 0,
-        indents: unnamed_yaml_parser_s_indents {
-            start: ptr::null_mut::<libc::c_int>(),
-            end: ptr::null_mut::<libc::c_int>(),
-            top: ptr::null_mut::<libc::c_int>(),
-        },
-        indent: 0,
-        simple_key_allowed: 0,
-        simple_keys: unnamed_yaml_parser_s_simple_keys {
-            start: ptr::null_mut::<yaml_simple_key_t>(),
-            end: ptr::null_mut::<yaml_simple_key_t>(),
-            top: ptr::null_mut::<yaml_simple_key_t>(),
-        },
-        states: unnamed_yaml_parser_s_states {
-            start: ptr::null_mut::<yaml_parser_state_t>(),
-            end: ptr::null_mut::<yaml_parser_state_t>(),
-            top: ptr::null_mut::<yaml_parser_state_t>(),
-        },
-        state: YAML_PARSE_STREAM_START_STATE,
-        marks: unnamed_yaml_parser_s_marks {
-            start: ptr::null_mut::<yaml_mark_t>(),
-            end: ptr::null_mut::<yaml_mark_t>(),
-            top: ptr::null_mut::<yaml_mark_t>(),
-        },
-        tag_directives: unnamed_yaml_parser_s_tag_directives {
-            start: ptr::null_mut::<yaml_tag_directive_t>(),
-            end: ptr::null_mut::<yaml_tag_directive_t>(),
-            top: ptr::null_mut::<yaml_tag_directive_t>(),
-        },
-        aliases: unnamed_yaml_parser_s_aliases {
-            start: ptr::null_mut::<yaml_alias_data_t>(),
-            end: ptr::null_mut::<yaml_alias_data_t>(),
-            top: ptr::null_mut::<yaml_alias_data_t>(),
-        },
-        document: ptr::null_mut::<yaml_document_t>(),
-    };
-    let mut event: yaml_event_t = yaml_event_t {
-        type_0: YAML_NO_EVENT,
-        data: unnamed_yaml_event_s_data {
-            stream_start: unnamed_yaml_event_s_data_stream_start {
-                encoding: YAML_ANY_ENCODING,
-            },
-        },
-        start_mark: yaml_mark_t {
-            index: 0,
-            line: 0,
-            column: 0,
-        },
-        end_mark: yaml_mark_t {
-            index: 0,
-            line: 0,
-            column: 0,
-        },
-    };
+    let mut parser = MaybeUninit::<yaml_parser_t>::uninit();
+    let parser = parser.as_mut_ptr();
+    let mut event = MaybeUninit::<yaml_event_t>::uninit();
+    let event = event.as_mut_ptr();
     let mut foundfile: libc::c_int = 0 as libc::c_int;
     for arg in env::args_os().skip(1) {
         if foundfile == 0 {
@@ -149,7 +44,7 @@ unsafe fn unsafe_main() -> ExitCode {
                 .as_ptr(),
         )
     });
-    if yaml_parser_initialize(&mut parser) == 0 {
+    if yaml_parser_initialize(parser) == 0 {
         fprintf(
             stderr,
             b"Could not initialize the parser object\n\0" as *const u8 as *const libc::c_char,
@@ -171,32 +66,32 @@ unsafe fn unsafe_main() -> ExitCode {
     }
     let mut remaining = input.as_slice();
     yaml_parser_set_input(
-        &mut parser,
+        parser,
         Some(read_from_file),
         ptr::addr_of_mut!(remaining).cast(),
     );
     loop {
         let mut type_0: yaml_event_type_t = YAML_NO_EVENT;
-        if yaml_parser_parse(&mut parser, &mut event) == 0 {
-            if parser.problem_mark.line != 0 || parser.problem_mark.column != 0 {
+        if yaml_parser_parse(parser, event) == 0 {
+            if (*parser).problem_mark.line != 0 || (*parser).problem_mark.column != 0 {
                 fprintf(
                     stderr,
                     b"Parse error: %s\nLine: %lu Column: %lu\n\0" as *const u8
                         as *const libc::c_char,
-                    parser.problem,
-                    (parser.problem_mark.line).wrapping_add(1 as libc::c_int as libc::c_ulong),
-                    (parser.problem_mark.column).wrapping_add(1 as libc::c_int as libc::c_ulong),
+                    (*parser).problem,
+                    ((*parser).problem_mark.line).wrapping_add(1 as libc::c_int as libc::c_ulong),
+                    ((*parser).problem_mark.column).wrapping_add(1 as libc::c_int as libc::c_ulong),
                 );
             } else {
                 fprintf(
                     stderr,
                     b"Parse error: %s\n\0" as *const u8 as *const libc::c_char,
-                    parser.problem,
+                    (*parser).problem,
                 );
             }
             return ExitCode::FAILURE;
         }
-        type_0 = event.type_0;
+        type_0 = (*event).type_0;
         if type_0 as libc::c_uint == YAML_NO_EVENT as libc::c_int as libc::c_uint {
             printf(b"???\n\0" as *const u8 as *const libc::c_char);
         } else if type_0 as libc::c_uint == YAML_STREAM_START_EVENT as libc::c_int as libc::c_uint {
@@ -206,29 +101,29 @@ unsafe fn unsafe_main() -> ExitCode {
         } else if type_0 as libc::c_uint == YAML_DOCUMENT_START_EVENT as libc::c_int as libc::c_uint
         {
             printf(b"+DOC\0" as *const u8 as *const libc::c_char);
-            if event.data.document_start.implicit == 0 {
+            if (*event).data.document_start.implicit == 0 {
                 printf(b" ---\0" as *const u8 as *const libc::c_char);
             }
             printf(b"\n\0" as *const u8 as *const libc::c_char);
         } else if type_0 as libc::c_uint == YAML_DOCUMENT_END_EVENT as libc::c_int as libc::c_uint {
             printf(b"-DOC\0" as *const u8 as *const libc::c_char);
-            if event.data.document_end.implicit == 0 {
+            if (*event).data.document_end.implicit == 0 {
                 printf(b" ...\0" as *const u8 as *const libc::c_char);
             }
             printf(b"\n\0" as *const u8 as *const libc::c_char);
         } else if type_0 as libc::c_uint == YAML_MAPPING_START_EVENT as libc::c_int as libc::c_uint
         {
             printf(b"+MAP\0" as *const u8 as *const libc::c_char);
-            if !(event.data.mapping_start.anchor).is_null() {
+            if !((*event).data.mapping_start.anchor).is_null() {
                 printf(
                     b" &%s\0" as *const u8 as *const libc::c_char,
-                    event.data.mapping_start.anchor,
+                    (*event).data.mapping_start.anchor,
                 );
             }
-            if !(event.data.mapping_start.tag).is_null() {
+            if !((*event).data.mapping_start.tag).is_null() {
                 printf(
                     b" <%s>\0" as *const u8 as *const libc::c_char,
-                    event.data.mapping_start.tag,
+                    (*event).data.mapping_start.tag,
                 );
             }
             printf(b"\n\0" as *const u8 as *const libc::c_char);
@@ -237,16 +132,16 @@ unsafe fn unsafe_main() -> ExitCode {
         } else if type_0 as libc::c_uint == YAML_SEQUENCE_START_EVENT as libc::c_int as libc::c_uint
         {
             printf(b"+SEQ\0" as *const u8 as *const libc::c_char);
-            if !(event.data.sequence_start.anchor).is_null() {
+            if !((*event).data.sequence_start.anchor).is_null() {
                 printf(
                     b" &%s\0" as *const u8 as *const libc::c_char,
-                    event.data.sequence_start.anchor,
+                    (*event).data.sequence_start.anchor,
                 );
             }
-            if !(event.data.sequence_start.tag).is_null() {
+            if !((*event).data.sequence_start.tag).is_null() {
                 printf(
                     b" <%s>\0" as *const u8 as *const libc::c_char,
-                    event.data.sequence_start.tag,
+                    (*event).data.sequence_start.tag,
                 );
             }
             printf(b"\n\0" as *const u8 as *const libc::c_char);
@@ -254,19 +149,19 @@ unsafe fn unsafe_main() -> ExitCode {
             printf(b"-SEQ\n\0" as *const u8 as *const libc::c_char);
         } else if type_0 as libc::c_uint == YAML_SCALAR_EVENT as libc::c_int as libc::c_uint {
             printf(b"=VAL\0" as *const u8 as *const libc::c_char);
-            if !(event.data.scalar.anchor).is_null() {
+            if !((*event).data.scalar.anchor).is_null() {
                 printf(
                     b" &%s\0" as *const u8 as *const libc::c_char,
-                    event.data.scalar.anchor,
+                    (*event).data.scalar.anchor,
                 );
             }
-            if !(event.data.scalar.tag).is_null() {
+            if !((*event).data.scalar.tag).is_null() {
                 printf(
                     b" <%s>\0" as *const u8 as *const libc::c_char,
-                    event.data.scalar.tag,
+                    (*event).data.scalar.tag,
                 );
             }
-            match event.data.scalar.style as libc::c_uint {
+            match (*event).data.scalar.style as libc::c_uint {
                 1 => {
                     printf(b" :\0" as *const u8 as *const libc::c_char);
                 }
@@ -287,22 +182,22 @@ unsafe fn unsafe_main() -> ExitCode {
                 }
                 _ => {}
             }
-            print_escaped(event.data.scalar.value, event.data.scalar.length);
+            print_escaped((*event).data.scalar.value, (*event).data.scalar.length);
             printf(b"\n\0" as *const u8 as *const libc::c_char);
         } else if type_0 as libc::c_uint == YAML_ALIAS_EVENT as libc::c_int as libc::c_uint {
             printf(
                 b"=ALI *%s\n\0" as *const u8 as *const libc::c_char,
-                event.data.alias.anchor,
+                (*event).data.alias.anchor,
             );
         } else {
             abort();
         }
-        yaml_event_delete(&mut event);
+        yaml_event_delete(event);
         if type_0 as libc::c_uint == YAML_STREAM_END_EVENT as libc::c_int as libc::c_uint {
             break;
         }
     }
-    yaml_parser_delete(&mut parser);
+    yaml_parser_delete(parser);
     return ExitCode::SUCCESS;
 }
 #[no_mangle]
