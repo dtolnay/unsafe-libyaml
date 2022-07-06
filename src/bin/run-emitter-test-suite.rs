@@ -1,10 +1,5 @@
 #![feature(extern_types)]
-#![allow(
-    non_camel_case_types,
-    non_snake_case,
-    unused_assignments,
-    unused_mut,
-)]
+#![allow(non_camel_case_types, non_snake_case, unused_assignments, unused_mut)]
 
 use std::env;
 use std::ffi::CString;
@@ -30,11 +25,7 @@ extern "C" {
     fn fopen(_: *const libc::c_char, _: *const libc::c_char) -> *mut FILE;
     fn fprintf(_: *mut FILE, _: *const libc::c_char, _: ...) -> libc::c_int;
     fn abort() -> !;
-    fn fgets(
-        __s: *mut libc::c_char,
-        __n: libc::c_int,
-        __stream: *mut FILE,
-    ) -> *mut libc::c_char;
+    fn fgets(__s: *mut libc::c_char, __n: libc::c_int, __stream: *mut FILE) -> *mut libc::c_char;
     fn strchr(_: *const libc::c_char, _: libc::c_int) -> *mut libc::c_char;
 }
 unsafe fn unsafe_main() -> ExitCode {
@@ -148,8 +139,7 @@ unsafe fn unsafe_main() -> ExitCode {
             column: 0,
         },
     };
-    let mut version_directive: *mut yaml_version_directive_t = 0
-        as *mut yaml_version_directive_t;
+    let mut version_directive: *mut yaml_version_directive_t = 0 as *mut yaml_version_directive_t;
     let mut canonical: libc::c_int = 0 as libc::c_int;
     let mut unicode: libc::c_int = 0 as libc::c_int;
     let mut line: [libc::c_char; 1024] = [0; 1024];
@@ -164,23 +154,20 @@ unsafe fn unsafe_main() -> ExitCode {
             foundfile = 1 as libc::c_int;
         }
     }
-    if !input.is_null() {} else {
+    if !input.is_null() {
+    } else {
         __assert_fail(
             b"input\0" as *const u8 as *const libc::c_char,
             b"run-emitter-test-suite.c\0" as *const u8 as *const libc::c_char,
             72 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<
-                &[u8; 23],
-                &[libc::c_char; 23],
-            >(b"int main(int, char **)\0"))
+            (*::std::mem::transmute::<&[u8; 23], &[libc::c_char; 23]>(b"int main(int, char **)\0"))
                 .as_ptr(),
         );
     }
     if yaml_emitter_initialize(&mut emitter) == 0 {
         fprintf(
             stderr,
-            b"Could not initalize the emitter object\n\0" as *const u8
-                as *const libc::c_char,
+            b"Could not initalize the emitter object\n\0" as *const u8 as *const libc::c_char,
         );
         return ExitCode::FAILURE;
     }
@@ -214,18 +201,18 @@ unsafe fn unsafe_main() -> ExitCode {
         {
             ok = yaml_stream_start_event_initialize(&mut event, YAML_UTF8_ENCODING);
         } else if strncmp(
-                line.as_mut_ptr(),
-                b"-STR\0" as *const u8 as *const libc::c_char,
-                4 as libc::c_int as libc::c_ulong,
-            ) == 0 as libc::c_int
-            {
+            line.as_mut_ptr(),
+            b"-STR\0" as *const u8 as *const libc::c_char,
+            4 as libc::c_int as libc::c_ulong,
+        ) == 0 as libc::c_int
+        {
             ok = yaml_stream_end_event_initialize(&mut event);
         } else if strncmp(
-                line.as_mut_ptr(),
-                b"+DOC\0" as *const u8 as *const libc::c_char,
-                4 as libc::c_int as libc::c_ulong,
-            ) == 0 as libc::c_int
-            {
+            line.as_mut_ptr(),
+            b"+DOC\0" as *const u8 as *const libc::c_char,
+            4 as libc::c_int as libc::c_ulong,
+        ) == 0 as libc::c_int
+        {
             implicit = (strncmp(
                 line.as_mut_ptr().offset(4 as libc::c_int as isize),
                 b" ---\0" as *const u8 as *const libc::c_char,
@@ -239,11 +226,11 @@ unsafe fn unsafe_main() -> ExitCode {
                 implicit,
             );
         } else if strncmp(
-                line.as_mut_ptr(),
-                b"-DOC\0" as *const u8 as *const libc::c_char,
-                4 as libc::c_int as libc::c_ulong,
-            ) == 0 as libc::c_int
-            {
+            line.as_mut_ptr(),
+            b"-DOC\0" as *const u8 as *const libc::c_char,
+            4 as libc::c_int as libc::c_ulong,
+        ) == 0 as libc::c_int
+        {
             implicit = (strncmp(
                 line.as_mut_ptr().offset(4 as libc::c_int as isize),
                 b" ...\0" as *const u8 as *const libc::c_char,
@@ -251,11 +238,11 @@ unsafe fn unsafe_main() -> ExitCode {
             ) != 0 as libc::c_int) as libc::c_int;
             ok = yaml_document_end_event_initialize(&mut event, implicit);
         } else if strncmp(
-                line.as_mut_ptr(),
-                b"+MAP\0" as *const u8 as *const libc::c_char,
-                4 as libc::c_int as libc::c_ulong,
-            ) == 0 as libc::c_int
-            {
+            line.as_mut_ptr(),
+            b"+MAP\0" as *const u8 as *const libc::c_char,
+            4 as libc::c_int as libc::c_ulong,
+        ) == 0 as libc::c_int
+        {
             style = YAML_BLOCK_MAPPING_STYLE as libc::c_int;
             ok = yaml_mapping_start_event_initialize(
                 &mut event,
@@ -269,18 +256,18 @@ unsafe fn unsafe_main() -> ExitCode {
                 style as yaml_mapping_style_t,
             );
         } else if strncmp(
-                line.as_mut_ptr(),
-                b"-MAP\0" as *const u8 as *const libc::c_char,
-                4 as libc::c_int as libc::c_ulong,
-            ) == 0 as libc::c_int
-            {
+            line.as_mut_ptr(),
+            b"-MAP\0" as *const u8 as *const libc::c_char,
+            4 as libc::c_int as libc::c_ulong,
+        ) == 0 as libc::c_int
+        {
             ok = yaml_mapping_end_event_initialize(&mut event);
         } else if strncmp(
-                line.as_mut_ptr(),
-                b"+SEQ\0" as *const u8 as *const libc::c_char,
-                4 as libc::c_int as libc::c_ulong,
-            ) == 0 as libc::c_int
-            {
+            line.as_mut_ptr(),
+            b"+SEQ\0" as *const u8 as *const libc::c_char,
+            4 as libc::c_int as libc::c_ulong,
+        ) == 0 as libc::c_int
+        {
             style = YAML_BLOCK_SEQUENCE_STYLE as libc::c_int;
             ok = yaml_sequence_start_event_initialize(
                 &mut event,
@@ -294,23 +281,24 @@ unsafe fn unsafe_main() -> ExitCode {
                 style as yaml_sequence_style_t,
             );
         } else if strncmp(
-                line.as_mut_ptr(),
-                b"-SEQ\0" as *const u8 as *const libc::c_char,
-                4 as libc::c_int as libc::c_ulong,
-            ) == 0 as libc::c_int
-            {
+            line.as_mut_ptr(),
+            b"-SEQ\0" as *const u8 as *const libc::c_char,
+            4 as libc::c_int as libc::c_ulong,
+        ) == 0 as libc::c_int
+        {
             ok = yaml_sequence_end_event_initialize(&mut event);
         } else if strncmp(
-                line.as_mut_ptr(),
-                b"=VAL\0" as *const u8 as *const libc::c_char,
-                4 as libc::c_int as libc::c_ulong,
-            ) == 0 as libc::c_int
-            {
+            line.as_mut_ptr(),
+            b"=VAL\0" as *const u8 as *const libc::c_char,
+            4 as libc::c_int as libc::c_ulong,
+        ) == 0 as libc::c_int
+        {
             let mut value: [libc::c_char; 1024] = [0; 1024];
             let mut style_0: libc::c_int = 0;
             get_value(line.as_mut_ptr(), value.as_mut_ptr(), &mut style_0);
             implicit = (get_tag(line.as_mut_ptr(), tag.as_mut_ptr())
-                == 0 as *mut libc::c_void as *mut libc::c_char) as libc::c_int;
+                == 0 as *mut libc::c_void as *mut libc::c_char)
+                as libc::c_int;
             ok = yaml_scalar_event_initialize(
                 &mut event,
                 get_anchor(
@@ -326,11 +314,11 @@ unsafe fn unsafe_main() -> ExitCode {
                 style_0 as yaml_scalar_style_t,
             );
         } else if strncmp(
-                line.as_mut_ptr(),
-                b"=ALI\0" as *const u8 as *const libc::c_char,
-                4 as libc::c_int as libc::c_ulong,
-            ) == 0 as libc::c_int
-            {
+            line.as_mut_ptr(),
+            b"=ALI\0" as *const u8 as *const libc::c_char,
+            4 as libc::c_int as libc::c_ulong,
+        ) == 0 as libc::c_int
+        {
             ok = yaml_alias_event_initialize(
                 &mut event,
                 get_anchor(
@@ -400,16 +388,16 @@ unsafe fn unsafe_main() -> ExitCode {
             return ExitCode::FAILURE;
         }
         _ => {
-            if fclose(input) == 0 {} else {
+            if fclose(input) == 0 {
+            } else {
                 __assert_fail(
                     b"!fclose(input)\0" as *const u8 as *const libc::c_char,
                     b"run-emitter-test-suite.c\0" as *const u8 as *const libc::c_char,
                     157 as libc::c_int as libc::c_uint,
-                    (*::std::mem::transmute::<
-                        &[u8; 23],
-                        &[libc::c_char; 23],
-                    >(b"int main(int, char **)\0"))
-                        .as_ptr(),
+                    (*::std::mem::transmute::<&[u8; 23], &[libc::c_char; 23]>(
+                        b"int main(int, char **)\0",
+                    ))
+                    .as_ptr(),
                 );
             }
             yaml_emitter_delete(&mut emitter);
@@ -460,10 +448,7 @@ pub unsafe extern "C" fn get_anchor(
         start as *const libc::c_void,
         end.offset_from(start) as libc::c_long as libc::c_ulong,
     );
-    *anchor
-        .offset(
-            end.offset_from(start) as libc::c_long as isize,
-        ) = '\0' as i32 as libc::c_char;
+    *anchor.offset(end.offset_from(start) as libc::c_long as isize) = '\0' as i32 as libc::c_char;
     return anchor;
 }
 #[no_mangle]
@@ -487,11 +472,9 @@ pub unsafe extern "C" fn get_tag(
         (end.offset_from(start) as libc::c_long - 1 as libc::c_int as libc::c_long)
             as libc::c_ulong,
     );
-    *tag
-        .offset(
-            (end.offset_from(start) as libc::c_long - 1 as libc::c_int as libc::c_long)
-                as isize,
-        ) = '\0' as i32 as libc::c_char;
+    *tag.offset(
+        (end.offset_from(start) as libc::c_long - 1 as libc::c_int as libc::c_long) as isize,
+    ) = '\0' as i32 as libc::c_char;
     return tag;
 }
 #[no_mangle]

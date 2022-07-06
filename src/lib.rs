@@ -156,21 +156,13 @@ pub mod externs {
 
 mod yaml;
 
-#[rustfmt::skip]
 pub mod api;
-#[rustfmt::skip]
 pub mod dumper;
-#[rustfmt::skip]
 pub mod emitter;
-#[rustfmt::skip]
 pub mod loader;
-#[rustfmt::skip]
 pub mod parser;
-#[rustfmt::skip]
 pub mod reader;
-#[rustfmt::skip]
 pub mod scanner;
-#[rustfmt::skip]
 pub mod writer;
 
 pub use crate::yaml::*;

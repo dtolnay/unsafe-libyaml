@@ -11,45 +11,43 @@ unsafe extern "C" fn yaml_emitter_set_writer_error(
     return 0 as libc::c_int;
 }
 #[no_mangle]
-pub unsafe extern "C" fn yaml_emitter_flush(
-    mut emitter: *mut yaml_emitter_t,
-) -> libc::c_int {
+pub unsafe extern "C" fn yaml_emitter_flush(mut emitter: *mut yaml_emitter_t) -> libc::c_int {
     let mut low: libc::c_int = 0;
     let mut high: libc::c_int = 0;
-    if !emitter.is_null() {} else {
+    if !emitter.is_null() {
+    } else {
         __assert_fail(
             b"emitter\0" as *const u8 as *const libc::c_char,
             b"writer.c\0" as *const u8 as *const libc::c_char,
             36 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<
-                &[u8; 41],
-                &[libc::c_char; 41],
-            >(b"int yaml_emitter_flush(yaml_emitter_t *)\0"))
-                .as_ptr(),
+            (*::std::mem::transmute::<&[u8; 41], &[libc::c_char; 41]>(
+                b"int yaml_emitter_flush(yaml_emitter_t *)\0",
+            ))
+            .as_ptr(),
         );
     }
-    if ((*emitter).write_handler).is_some() {} else {
+    if ((*emitter).write_handler).is_some() {
+    } else {
         __assert_fail(
             b"emitter->write_handler\0" as *const u8 as *const libc::c_char,
             b"writer.c\0" as *const u8 as *const libc::c_char,
             37 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<
-                &[u8; 41],
-                &[libc::c_char; 41],
-            >(b"int yaml_emitter_flush(yaml_emitter_t *)\0"))
-                .as_ptr(),
+            (*::std::mem::transmute::<&[u8; 41], &[libc::c_char; 41]>(
+                b"int yaml_emitter_flush(yaml_emitter_t *)\0",
+            ))
+            .as_ptr(),
         );
     }
-    if (*emitter).encoding as u64 != 0 {} else {
+    if (*emitter).encoding as u64 != 0 {
+    } else {
         __assert_fail(
             b"emitter->encoding\0" as *const u8 as *const libc::c_char,
             b"writer.c\0" as *const u8 as *const libc::c_char,
             38 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<
-                &[u8; 41],
-                &[libc::c_char; 41],
-            >(b"int yaml_emitter_flush(yaml_emitter_t *)\0"))
-                .as_ptr(),
+            (*::std::mem::transmute::<&[u8; 41], &[libc::c_char; 41]>(
+                b"int yaml_emitter_flush(yaml_emitter_t *)\0",
+            ))
+            .as_ptr(),
         );
     }
     let ref mut fresh1 = (*emitter).buffer.last;
@@ -59,17 +57,11 @@ pub unsafe extern "C" fn yaml_emitter_flush(
     if (*emitter).buffer.start == (*emitter).buffer.last {
         return 1 as libc::c_int;
     }
-    if (*emitter).encoding as libc::c_uint
-        == YAML_UTF8_ENCODING as libc::c_int as libc::c_uint
-    {
-        if ((*emitter).write_handler)
-            .expect(
-                "non-null function pointer",
-            )(
+    if (*emitter).encoding as libc::c_uint == YAML_UTF8_ENCODING as libc::c_int as libc::c_uint {
+        if ((*emitter).write_handler).expect("non-null function pointer")(
             (*emitter).write_handler_data,
             (*emitter).buffer.start,
-            ((*emitter).buffer.last).offset_from((*emitter).buffer.start) as libc::c_long
-                as size_t,
+            ((*emitter).buffer.last).offset_from((*emitter).buffer.start) as libc::c_long as size_t,
         ) != 0
         {
             let ref mut fresh3 = (*emitter).buffer.last;
@@ -81,7 +73,7 @@ pub unsafe extern "C" fn yaml_emitter_flush(
             return yaml_emitter_set_writer_error(
                 emitter,
                 b"write error\0" as *const u8 as *const libc::c_char,
-            )
+            );
         }
     }
     low = if (*emitter).encoding as libc::c_uint
@@ -130,57 +122,40 @@ pub unsafe extern "C" fn yaml_emitter_flush(
         while k < width as libc::c_ulong {
             octet = *((*emitter).buffer.pointer).offset(k as isize);
             value = (value << 6 as libc::c_int)
-                .wrapping_add(
-                    (octet as libc::c_int & 0x3f as libc::c_int) as libc::c_uint,
-                );
+                .wrapping_add((octet as libc::c_int & 0x3f as libc::c_int) as libc::c_uint);
             k = k.wrapping_add(1);
         }
         let ref mut fresh5 = (*emitter).buffer.pointer;
         *fresh5 = (*fresh5).offset(width as isize);
         if value < 0x10000 as libc::c_int as libc::c_uint {
-            *((*emitter).raw_buffer.last)
-                .offset(high as isize) = (value >> 8 as libc::c_int) as libc::c_uchar;
-            *((*emitter).raw_buffer.last)
-                .offset(
-                    low as isize,
-                ) = (value & 0xff as libc::c_int as libc::c_uint) as libc::c_uchar;
+            *((*emitter).raw_buffer.last).offset(high as isize) =
+                (value >> 8 as libc::c_int) as libc::c_uchar;
+            *((*emitter).raw_buffer.last).offset(low as isize) =
+                (value & 0xff as libc::c_int as libc::c_uint) as libc::c_uchar;
             let ref mut fresh6 = (*emitter).raw_buffer.last;
             *fresh6 = (*fresh6).offset(2 as libc::c_int as isize);
         } else {
             value = value.wrapping_sub(0x10000 as libc::c_int as libc::c_uint);
-            *((*emitter).raw_buffer.last)
-                .offset(
-                    high as isize,
-                ) = (0xd8 as libc::c_int as libc::c_uint)
-                .wrapping_add(value >> 18 as libc::c_int) as libc::c_uchar;
-            *((*emitter).raw_buffer.last)
-                .offset(
-                    low as isize,
-                ) = (value >> 10 as libc::c_int & 0xff as libc::c_int as libc::c_uint)
-                as libc::c_uchar;
-            *((*emitter).raw_buffer.last)
-                .offset(
-                    (high + 2 as libc::c_int) as isize,
-                ) = (0xdc as libc::c_int as libc::c_uint)
-                .wrapping_add(
-                    value >> 8 as libc::c_int & 0xff as libc::c_int as libc::c_uint,
-                ) as libc::c_uchar;
-            *((*emitter).raw_buffer.last)
-                .offset(
-                    (low + 2 as libc::c_int) as isize,
-                ) = (value & 0xff as libc::c_int as libc::c_uint) as libc::c_uchar;
+            *((*emitter).raw_buffer.last).offset(high as isize) =
+                (0xd8 as libc::c_int as libc::c_uint).wrapping_add(value >> 18 as libc::c_int)
+                    as libc::c_uchar;
+            *((*emitter).raw_buffer.last).offset(low as isize) =
+                (value >> 10 as libc::c_int & 0xff as libc::c_int as libc::c_uint) as libc::c_uchar;
+            *((*emitter).raw_buffer.last).offset((high + 2 as libc::c_int) as isize) =
+                (0xdc as libc::c_int as libc::c_uint)
+                    .wrapping_add(value >> 8 as libc::c_int & 0xff as libc::c_int as libc::c_uint)
+                    as libc::c_uchar;
+            *((*emitter).raw_buffer.last).offset((low + 2 as libc::c_int) as isize) =
+                (value & 0xff as libc::c_int as libc::c_uint) as libc::c_uchar;
             let ref mut fresh7 = (*emitter).raw_buffer.last;
             *fresh7 = (*fresh7).offset(4 as libc::c_int as isize);
         }
     }
-    if ((*emitter).write_handler)
-        .expect(
-            "non-null function pointer",
-        )(
+    if ((*emitter).write_handler).expect("non-null function pointer")(
         (*emitter).write_handler_data,
         (*emitter).raw_buffer.start,
-        ((*emitter).raw_buffer.last).offset_from((*emitter).raw_buffer.start)
-            as libc::c_long as size_t,
+        ((*emitter).raw_buffer.last).offset_from((*emitter).raw_buffer.start) as libc::c_long
+            as size_t,
     ) != 0
     {
         let ref mut fresh8 = (*emitter).buffer.last;
@@ -196,6 +171,6 @@ pub unsafe extern "C" fn yaml_emitter_flush(
         return yaml_emitter_set_writer_error(
             emitter,
             b"write error\0" as *const u8 as *const libc::c_char,
-        )
+        );
     };
 }

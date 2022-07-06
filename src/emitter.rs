@@ -19,14 +19,10 @@ pub unsafe extern "C" fn yaml_emitter_emit(
 ) -> libc::c_int {
     if if (*emitter).events.tail != (*emitter).events.end
         || yaml_queue_extend(
-            &mut (*emitter).events.start as *mut *mut yaml_event_t
-                as *mut *mut libc::c_void,
-            &mut (*emitter).events.head as *mut *mut yaml_event_t
-                as *mut *mut libc::c_void,
-            &mut (*emitter).events.tail as *mut *mut yaml_event_t
-                as *mut *mut libc::c_void,
-            &mut (*emitter).events.end as *mut *mut yaml_event_t
-                as *mut *mut libc::c_void,
+            &mut (*emitter).events.start as *mut *mut yaml_event_t as *mut *mut libc::c_void,
+            &mut (*emitter).events.head as *mut *mut yaml_event_t as *mut *mut libc::c_void,
+            &mut (*emitter).events.tail as *mut *mut yaml_event_t as *mut *mut libc::c_void,
+            &mut (*emitter).events.end as *mut *mut yaml_event_t as *mut *mut libc::c_void,
         ) != 0
     {
         let ref mut fresh1 = (*emitter).events.tail;
@@ -135,26 +131,26 @@ unsafe extern "C" fn yaml_emitter_append_tag_directive(
     if (copy.handle).is_null() || (copy.prefix).is_null() {
         (*emitter).error = YAML_MEMORY_ERROR;
     } else if !(if (*emitter).tag_directives.top != (*emitter).tag_directives.end
-            || yaml_stack_extend(
-                &mut (*emitter).tag_directives.start as *mut *mut yaml_tag_directive_t
-                    as *mut *mut libc::c_void,
-                &mut (*emitter).tag_directives.top as *mut *mut yaml_tag_directive_t
-                    as *mut *mut libc::c_void,
-                &mut (*emitter).tag_directives.end as *mut *mut yaml_tag_directive_t
-                    as *mut *mut libc::c_void,
-            ) != 0
-        {
-            let ref mut fresh5 = (*emitter).tag_directives.top;
-            let fresh6 = *fresh5;
-            *fresh5 = (*fresh5).offset(1);
-            *fresh6 = copy;
-            1 as libc::c_int
-        } else {
-            (*emitter).error = YAML_MEMORY_ERROR;
-            0 as libc::c_int
-        } == 0)
-        {
-        return 1 as libc::c_int
+        || yaml_stack_extend(
+            &mut (*emitter).tag_directives.start as *mut *mut yaml_tag_directive_t
+                as *mut *mut libc::c_void,
+            &mut (*emitter).tag_directives.top as *mut *mut yaml_tag_directive_t
+                as *mut *mut libc::c_void,
+            &mut (*emitter).tag_directives.end as *mut *mut yaml_tag_directive_t
+                as *mut *mut libc::c_void,
+        ) != 0
+    {
+        let ref mut fresh5 = (*emitter).tag_directives.top;
+        let fresh6 = *fresh5;
+        *fresh5 = (*fresh5).offset(1);
+        *fresh6 = copy;
+        1 as libc::c_int
+    } else {
+        (*emitter).error = YAML_MEMORY_ERROR;
+        0 as libc::c_int
+    } == 0)
+    {
+        return 1 as libc::c_int;
     }
     yaml_free(copy.handle as *mut libc::c_void);
     yaml_free(copy.prefix as *mut libc::c_void);
@@ -167,12 +163,9 @@ unsafe extern "C" fn yaml_emitter_increase_indent(
 ) -> libc::c_int {
     if if (*emitter).indents.top != (*emitter).indents.end
         || yaml_stack_extend(
-            &mut (*emitter).indents.start as *mut *mut libc::c_int
-                as *mut *mut libc::c_void,
-            &mut (*emitter).indents.top as *mut *mut libc::c_int
-                as *mut *mut libc::c_void,
-            &mut (*emitter).indents.end as *mut *mut libc::c_int
-                as *mut *mut libc::c_void,
+            &mut (*emitter).indents.start as *mut *mut libc::c_int as *mut *mut libc::c_void,
+            &mut (*emitter).indents.top as *mut *mut libc::c_int as *mut *mut libc::c_void,
+            &mut (*emitter).indents.end as *mut *mut libc::c_int as *mut *mut libc::c_void,
         ) != 0
     {
         let ref mut fresh7 = (*emitter).indents.top;
@@ -188,8 +181,11 @@ unsafe extern "C" fn yaml_emitter_increase_indent(
         return 0 as libc::c_int;
     }
     if (*emitter).indent < 0 as libc::c_int {
-        (*emitter)
-            .indent = if flow != 0 { (*emitter).best_indent } else { 0 as libc::c_int };
+        (*emitter).indent = if flow != 0 {
+            (*emitter).best_indent
+        } else {
+            0 as libc::c_int
+        };
     } else if indentless == 0 {
         (*emitter).indent += (*emitter).best_indent;
     }
@@ -220,18 +216,10 @@ unsafe extern "C" fn yaml_emitter_state_machine(
             return yaml_emitter_emit_flow_mapping_value(emitter, event, 0 as libc::c_int);
         }
         11 => {
-            return yaml_emitter_emit_block_sequence_item(
-                emitter,
-                event,
-                1 as libc::c_int,
-            );
+            return yaml_emitter_emit_block_sequence_item(emitter, event, 1 as libc::c_int);
         }
         12 => {
-            return yaml_emitter_emit_block_sequence_item(
-                emitter,
-                event,
-                0 as libc::c_int,
-            );
+            return yaml_emitter_emit_block_sequence_item(emitter, event, 0 as libc::c_int);
         }
         13 => {
             return yaml_emitter_emit_block_mapping_key(emitter, event, 1 as libc::c_int);
@@ -240,24 +228,15 @@ unsafe extern "C" fn yaml_emitter_state_machine(
             return yaml_emitter_emit_block_mapping_key(emitter, event, 0 as libc::c_int);
         }
         15 => {
-            return yaml_emitter_emit_block_mapping_value(
-                emitter,
-                event,
-                1 as libc::c_int,
-            );
+            return yaml_emitter_emit_block_mapping_value(emitter, event, 1 as libc::c_int);
         }
         16 => {
-            return yaml_emitter_emit_block_mapping_value(
-                emitter,
-                event,
-                0 as libc::c_int,
-            );
+            return yaml_emitter_emit_block_mapping_value(emitter, event, 0 as libc::c_int);
         }
         17 => {
             return yaml_emitter_set_emitter_error(
                 emitter,
-                b"expected nothing after STREAM-END\0" as *const u8
-                    as *const libc::c_char,
+                b"expected nothing after STREAM-END\0" as *const u8 as *const libc::c_char,
             );
         }
         _ => {}
@@ -269,18 +248,14 @@ unsafe extern "C" fn yaml_emitter_emit_stream_start(
     mut event: *mut yaml_event_t,
 ) -> libc::c_int {
     (*emitter).open_ended = 0 as libc::c_int;
-    if (*event).type_0 as libc::c_uint
-        == YAML_STREAM_START_EVENT as libc::c_int as libc::c_uint
-    {
+    if (*event).type_0 as libc::c_uint == YAML_STREAM_START_EVENT as libc::c_int as libc::c_uint {
         if (*emitter).encoding as u64 == 0 {
             (*emitter).encoding = (*event).data.stream_start.encoding;
         }
         if (*emitter).encoding as u64 == 0 {
             (*emitter).encoding = YAML_UTF8_ENCODING;
         }
-        if (*emitter).best_indent < 2 as libc::c_int
-            || (*emitter).best_indent > 9 as libc::c_int
-        {
+        if (*emitter).best_indent < 2 as libc::c_int || (*emitter).best_indent > 9 as libc::c_int {
             (*emitter).best_indent = 2 as libc::c_int;
         }
         if (*emitter).best_width >= 0 as libc::c_int
@@ -299,8 +274,7 @@ unsafe extern "C" fn yaml_emitter_emit_stream_start(
         (*emitter).column = 0 as libc::c_int;
         (*emitter).whitespace = 1 as libc::c_int;
         (*emitter).indention = 1 as libc::c_int;
-        if (*emitter).encoding as libc::c_uint
-            != YAML_UTF8_ENCODING as libc::c_int as libc::c_uint
+        if (*emitter).encoding as libc::c_uint != YAML_UTF8_ENCODING as libc::c_int as libc::c_uint
         {
             if yaml_emitter_write_bom(emitter) == 0 {
                 return 0 as libc::c_int;
@@ -319,23 +293,18 @@ unsafe extern "C" fn yaml_emitter_emit_document_start(
     mut event: *mut yaml_event_t,
     mut first: libc::c_int,
 ) -> libc::c_int {
-    if (*event).type_0 as libc::c_uint
-        == YAML_DOCUMENT_START_EVENT as libc::c_int as libc::c_uint
-    {
+    if (*event).type_0 as libc::c_uint == YAML_DOCUMENT_START_EVENT as libc::c_int as libc::c_uint {
         let mut default_tag_directives: [yaml_tag_directive_t; 3] = [
             {
                 let mut init = yaml_tag_directive_s {
-                    handle: b"!\0" as *const u8 as *const libc::c_char
-                        as *mut yaml_char_t,
-                    prefix: b"!\0" as *const u8 as *const libc::c_char
-                        as *mut yaml_char_t,
+                    handle: b"!\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
+                    prefix: b"!\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
                 };
                 init
             },
             {
                 let mut init = yaml_tag_directive_s {
-                    handle: b"!!\0" as *const u8 as *const libc::c_char
-                        as *mut yaml_char_t,
+                    handle: b"!!\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
                     prefix: b"tag:yaml.org,2002:\0" as *const u8 as *const libc::c_char
                         as *mut yaml_char_t,
                 };
@@ -349,8 +318,7 @@ unsafe extern "C" fn yaml_emitter_emit_document_start(
                 init
             },
         ];
-        let mut tag_directive: *mut yaml_tag_directive_t = 0
-            as *mut yaml_tag_directive_t;
+        let mut tag_directive: *mut yaml_tag_directive_t = 0 as *mut yaml_tag_directive_t;
         let mut implicit: libc::c_int = 0;
         if !((*event).data.document_start.version_directive).is_null() {
             if yaml_emitter_analyze_version_directive(
@@ -366,24 +334,14 @@ unsafe extern "C" fn yaml_emitter_emit_document_start(
             if yaml_emitter_analyze_tag_directive(emitter, *tag_directive) == 0 {
                 return 0 as libc::c_int;
             }
-            if yaml_emitter_append_tag_directive(
-                emitter,
-                *tag_directive,
-                0 as libc::c_int,
-            ) == 0
-            {
+            if yaml_emitter_append_tag_directive(emitter, *tag_directive, 0 as libc::c_int) == 0 {
                 return 0 as libc::c_int;
             }
             tag_directive = tag_directive.offset(1);
         }
         tag_directive = default_tag_directives.as_mut_ptr();
         while !((*tag_directive).handle).is_null() {
-            if yaml_emitter_append_tag_directive(
-                emitter,
-                *tag_directive,
-                1 as libc::c_int,
-            ) == 0
-            {
+            if yaml_emitter_append_tag_directive(emitter, *tag_directive, 1 as libc::c_int) == 0 {
                 return 0 as libc::c_int;
             }
             tag_directive = tag_directive.offset(1);
@@ -424,9 +382,7 @@ unsafe extern "C" fn yaml_emitter_emit_document_start(
             {
                 return 0 as libc::c_int;
             }
-            if (*(*event).data.document_start.version_directive).minor
-                == 1 as libc::c_int
-            {
+            if (*(*event).data.document_start.version_directive).minor == 1 as libc::c_int {
                 if yaml_emitter_write_indicator(
                     emitter,
                     b"1.1\0" as *const u8 as *const libc::c_char,
@@ -438,14 +394,14 @@ unsafe extern "C" fn yaml_emitter_emit_document_start(
                     return 0 as libc::c_int;
                 }
             } else if yaml_emitter_write_indicator(
-                    emitter,
-                    b"1.2\0" as *const u8 as *const libc::c_char,
-                    1 as libc::c_int,
-                    0 as libc::c_int,
-                    0 as libc::c_int,
-                ) == 0
-                {
-                return 0 as libc::c_int
+                emitter,
+                b"1.2\0" as *const u8 as *const libc::c_char,
+                1 as libc::c_int,
+                0 as libc::c_int,
+                0 as libc::c_int,
+            ) == 0
+            {
+                return 0 as libc::c_int;
             }
             if yaml_emitter_write_indent(emitter) == 0 {
                 return 0 as libc::c_int;
@@ -517,9 +473,7 @@ unsafe extern "C" fn yaml_emitter_emit_document_start(
         (*emitter).open_ended = 0 as libc::c_int;
         return 1 as libc::c_int;
     } else {
-        if (*event).type_0 as libc::c_uint
-            == YAML_STREAM_END_EVENT as libc::c_int as libc::c_uint
-        {
+        if (*event).type_0 as libc::c_uint == YAML_STREAM_END_EVENT as libc::c_int as libc::c_uint {
             if (*emitter).open_ended == 2 as libc::c_int {
                 if yaml_emitter_write_indicator(
                     emitter,
@@ -556,10 +510,8 @@ unsafe extern "C" fn yaml_emitter_emit_document_content(
         || yaml_stack_extend(
             &mut (*emitter).states.start as *mut *mut yaml_emitter_state_t
                 as *mut *mut libc::c_void,
-            &mut (*emitter).states.top as *mut *mut yaml_emitter_state_t
-                as *mut *mut libc::c_void,
-            &mut (*emitter).states.end as *mut *mut yaml_emitter_state_t
-                as *mut *mut libc::c_void,
+            &mut (*emitter).states.top as *mut *mut yaml_emitter_state_t as *mut *mut libc::c_void,
+            &mut (*emitter).states.end as *mut *mut yaml_emitter_state_t as *mut *mut libc::c_void,
         ) != 0
     {
         let ref mut fresh9 = (*emitter).states.top;
@@ -587,9 +539,7 @@ unsafe extern "C" fn yaml_emitter_emit_document_end(
     mut emitter: *mut yaml_emitter_t,
     mut event: *mut yaml_event_t,
 ) -> libc::c_int {
-    if (*event).type_0 as libc::c_uint
-        == YAML_DOCUMENT_END_EVENT as libc::c_int as libc::c_uint
-    {
+    if (*event).type_0 as libc::c_uint == YAML_DOCUMENT_END_EVENT as libc::c_int as libc::c_uint {
         if yaml_emitter_write_indent(emitter) == 0 {
             return 0 as libc::c_int;
         }
@@ -645,16 +595,13 @@ unsafe extern "C" fn yaml_emitter_emit_flow_sequence_item(
         {
             return 0 as libc::c_int;
         }
-        if yaml_emitter_increase_indent(emitter, 1 as libc::c_int, 0 as libc::c_int) == 0
-        {
+        if yaml_emitter_increase_indent(emitter, 1 as libc::c_int, 0 as libc::c_int) == 0 {
             return 0 as libc::c_int;
         }
         let ref mut fresh12 = (*emitter).flow_level;
         *fresh12 += 1;
     }
-    if (*event).type_0 as libc::c_uint
-        == YAML_SEQUENCE_END_EVENT as libc::c_int as libc::c_uint
-    {
+    if (*event).type_0 as libc::c_uint == YAML_SEQUENCE_END_EVENT as libc::c_int as libc::c_uint {
         let ref mut fresh13 = (*emitter).flow_level;
         *fresh13 -= 1;
         let ref mut fresh14 = (*emitter).indents.top;
@@ -711,10 +658,8 @@ unsafe extern "C" fn yaml_emitter_emit_flow_sequence_item(
         || yaml_stack_extend(
             &mut (*emitter).states.start as *mut *mut yaml_emitter_state_t
                 as *mut *mut libc::c_void,
-            &mut (*emitter).states.top as *mut *mut yaml_emitter_state_t
-                as *mut *mut libc::c_void,
-            &mut (*emitter).states.end as *mut *mut yaml_emitter_state_t
-                as *mut *mut libc::c_void,
+            &mut (*emitter).states.top as *mut *mut yaml_emitter_state_t as *mut *mut libc::c_void,
+            &mut (*emitter).states.end as *mut *mut yaml_emitter_state_t as *mut *mut libc::c_void,
         ) != 0
     {
         let ref mut fresh16 = (*emitter).states.top;
@@ -754,16 +699,13 @@ unsafe extern "C" fn yaml_emitter_emit_flow_mapping_key(
         {
             return 0 as libc::c_int;
         }
-        if yaml_emitter_increase_indent(emitter, 1 as libc::c_int, 0 as libc::c_int) == 0
-        {
+        if yaml_emitter_increase_indent(emitter, 1 as libc::c_int, 0 as libc::c_int) == 0 {
             return 0 as libc::c_int;
         }
         let ref mut fresh18 = (*emitter).flow_level;
         *fresh18 += 1;
     }
-    if (*event).type_0 as libc::c_uint
-        == YAML_MAPPING_END_EVENT as libc::c_int as libc::c_uint
-    {
+    if (*event).type_0 as libc::c_uint == YAML_MAPPING_END_EVENT as libc::c_int as libc::c_uint {
         let ref mut fresh19 = (*emitter).flow_level;
         *fresh19 -= 1;
         let ref mut fresh20 = (*emitter).indents.top;
@@ -927,10 +869,8 @@ unsafe extern "C" fn yaml_emitter_emit_flow_mapping_value(
         || yaml_stack_extend(
             &mut (*emitter).states.start as *mut *mut yaml_emitter_state_t
                 as *mut *mut libc::c_void,
-            &mut (*emitter).states.top as *mut *mut yaml_emitter_state_t
-                as *mut *mut libc::c_void,
-            &mut (*emitter).states.end as *mut *mut yaml_emitter_state_t
-                as *mut *mut libc::c_void,
+            &mut (*emitter).states.top as *mut *mut yaml_emitter_state_t as *mut *mut libc::c_void,
+            &mut (*emitter).states.end as *mut *mut yaml_emitter_state_t as *mut *mut libc::c_void,
         ) != 0
     {
         let ref mut fresh26 = (*emitter).states.top;
@@ -969,9 +909,7 @@ unsafe extern "C" fn yaml_emitter_emit_block_sequence_item(
             return 0 as libc::c_int;
         }
     }
-    if (*event).type_0 as libc::c_uint
-        == YAML_SEQUENCE_END_EVENT as libc::c_int as libc::c_uint
-    {
+    if (*event).type_0 as libc::c_uint == YAML_SEQUENCE_END_EVENT as libc::c_int as libc::c_uint {
         let ref mut fresh28 = (*emitter).indents.top;
         *fresh28 = (*fresh28).offset(-1);
         (*emitter).indent = **fresh28;
@@ -997,10 +935,8 @@ unsafe extern "C" fn yaml_emitter_emit_block_sequence_item(
         || yaml_stack_extend(
             &mut (*emitter).states.start as *mut *mut yaml_emitter_state_t
                 as *mut *mut libc::c_void,
-            &mut (*emitter).states.top as *mut *mut yaml_emitter_state_t
-                as *mut *mut libc::c_void,
-            &mut (*emitter).states.end as *mut *mut yaml_emitter_state_t
-                as *mut *mut libc::c_void,
+            &mut (*emitter).states.top as *mut *mut yaml_emitter_state_t as *mut *mut libc::c_void,
+            &mut (*emitter).states.end as *mut *mut yaml_emitter_state_t as *mut *mut libc::c_void,
         ) != 0
     {
         let ref mut fresh30 = (*emitter).states.top;
@@ -1030,14 +966,11 @@ unsafe extern "C" fn yaml_emitter_emit_block_mapping_key(
     mut first: libc::c_int,
 ) -> libc::c_int {
     if first != 0 {
-        if yaml_emitter_increase_indent(emitter, 0 as libc::c_int, 0 as libc::c_int) == 0
-        {
+        if yaml_emitter_increase_indent(emitter, 0 as libc::c_int, 0 as libc::c_int) == 0 {
             return 0 as libc::c_int;
         }
     }
-    if (*event).type_0 as libc::c_uint
-        == YAML_MAPPING_END_EVENT as libc::c_int as libc::c_uint
-    {
+    if (*event).type_0 as libc::c_uint == YAML_MAPPING_END_EVENT as libc::c_int as libc::c_uint {
         let ref mut fresh32 = (*emitter).indents.top;
         *fresh32 = (*fresh32).offset(-1);
         (*emitter).indent = **fresh32;
@@ -1158,10 +1091,8 @@ unsafe extern "C" fn yaml_emitter_emit_block_mapping_value(
         || yaml_stack_extend(
             &mut (*emitter).states.start as *mut *mut yaml_emitter_state_t
                 as *mut *mut libc::c_void,
-            &mut (*emitter).states.top as *mut *mut yaml_emitter_state_t
-                as *mut *mut libc::c_void,
-            &mut (*emitter).states.end as *mut *mut yaml_emitter_state_t
-                as *mut *mut libc::c_void,
+            &mut (*emitter).states.top as *mut *mut yaml_emitter_state_t as *mut *mut libc::c_void,
+            &mut (*emitter).states.end as *mut *mut yaml_emitter_state_t as *mut *mut libc::c_void,
         ) != 0
     {
         let ref mut fresh38 = (*emitter).states.top;
@@ -1205,8 +1136,8 @@ unsafe extern "C" fn yaml_emitter_emit_node(
         _ => {
             return yaml_emitter_set_emitter_error(
                 emitter,
-                b"expected SCALAR, SEQUENCE-START, MAPPING-START, or ALIAS\0"
-                    as *const u8 as *const libc::c_char,
+                b"expected SCALAR, SEQUENCE-START, MAPPING-START, or ALIAS\0" as *const u8
+                    as *const libc::c_char,
             );
         }
     };
@@ -1220,7 +1151,8 @@ unsafe extern "C" fn yaml_emitter_emit_alias(
     }
     if (*emitter).simple_key_context != 0 {
         if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-            < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+            < (*emitter).buffer.end
+            || yaml_emitter_flush(emitter) != 0)
             && {
                 let ref mut fresh40 = (*emitter).buffer.pointer;
                 let fresh41 = *fresh40;
@@ -1276,7 +1208,8 @@ unsafe extern "C" fn yaml_emitter_emit_sequence_start(
     if yaml_emitter_process_tag(emitter) == 0 {
         return 0 as libc::c_int;
     }
-    if (*emitter).flow_level != 0 || (*emitter).canonical != 0
+    if (*emitter).flow_level != 0
+        || (*emitter).canonical != 0
         || (*event).data.sequence_start.style as libc::c_uint
             == YAML_FLOW_SEQUENCE_STYLE as libc::c_int as libc::c_uint
         || yaml_emitter_check_empty_sequence(emitter) != 0
@@ -1297,7 +1230,8 @@ unsafe extern "C" fn yaml_emitter_emit_mapping_start(
     if yaml_emitter_process_tag(emitter) == 0 {
         return 0 as libc::c_int;
     }
-    if (*emitter).flow_level != 0 || (*emitter).canonical != 0
+    if (*emitter).flow_level != 0
+        || (*emitter).canonical != 0
         || (*event).data.mapping_start.style as libc::c_uint
             == YAML_FLOW_MAPPING_STYLE as libc::c_int as libc::c_uint
         || yaml_emitter_check_empty_mapping(emitter) != 0
@@ -1321,11 +1255,10 @@ unsafe extern "C" fn yaml_emitter_check_empty_sequence(
     {
         return 0 as libc::c_int;
     }
-    return ((*((*emitter).events.head).offset(0 as libc::c_int as isize)).type_0
-        as libc::c_uint == YAML_SEQUENCE_START_EVENT as libc::c_int as libc::c_uint
-        && (*((*emitter).events.head).offset(1 as libc::c_int as isize)).type_0
-            as libc::c_uint == YAML_SEQUENCE_END_EVENT as libc::c_int as libc::c_uint)
-        as libc::c_int;
+    return ((*((*emitter).events.head).offset(0 as libc::c_int as isize)).type_0 as libc::c_uint
+        == YAML_SEQUENCE_START_EVENT as libc::c_int as libc::c_uint
+        && (*((*emitter).events.head).offset(1 as libc::c_int as isize)).type_0 as libc::c_uint
+            == YAML_SEQUENCE_END_EVENT as libc::c_int as libc::c_uint) as libc::c_int;
 }
 unsafe extern "C" fn yaml_emitter_check_empty_mapping(
     mut emitter: *mut yaml_emitter_t,
@@ -1335,11 +1268,10 @@ unsafe extern "C" fn yaml_emitter_check_empty_mapping(
     {
         return 0 as libc::c_int;
     }
-    return ((*((*emitter).events.head).offset(0 as libc::c_int as isize)).type_0
-        as libc::c_uint == YAML_MAPPING_START_EVENT as libc::c_int as libc::c_uint
-        && (*((*emitter).events.head).offset(1 as libc::c_int as isize)).type_0
-            as libc::c_uint == YAML_MAPPING_END_EVENT as libc::c_int as libc::c_uint)
-        as libc::c_int;
+    return ((*((*emitter).events.head).offset(0 as libc::c_int as isize)).type_0 as libc::c_uint
+        == YAML_MAPPING_START_EVENT as libc::c_int as libc::c_uint
+        && (*((*emitter).events.head).offset(1 as libc::c_int as isize)).type_0 as libc::c_uint
+            == YAML_MAPPING_END_EVENT as libc::c_int as libc::c_uint) as libc::c_int;
 }
 unsafe extern "C" fn yaml_emitter_check_simple_key(
     mut emitter: *mut yaml_emitter_t,
@@ -1348,42 +1280,39 @@ unsafe extern "C" fn yaml_emitter_check_simple_key(
     let mut length: size_t = 0 as libc::c_int as size_t;
     match (*event).type_0 as libc::c_uint {
         5 => {
-            length = (length as libc::c_ulong)
-                .wrapping_add((*emitter).anchor_data.anchor_length) as size_t as size_t;
+            length = (length as libc::c_ulong).wrapping_add((*emitter).anchor_data.anchor_length)
+                as size_t as size_t;
         }
         6 => {
             if (*emitter).scalar_data.multiline != 0 {
                 return 0 as libc::c_int;
             }
-            length = (length as libc::c_ulong)
-                .wrapping_add(
-                    ((*emitter).anchor_data.anchor_length)
-                        .wrapping_add((*emitter).tag_data.handle_length)
-                        .wrapping_add((*emitter).tag_data.suffix_length)
-                        .wrapping_add((*emitter).scalar_data.length),
-                ) as size_t as size_t;
+            length = (length as libc::c_ulong).wrapping_add(
+                ((*emitter).anchor_data.anchor_length)
+                    .wrapping_add((*emitter).tag_data.handle_length)
+                    .wrapping_add((*emitter).tag_data.suffix_length)
+                    .wrapping_add((*emitter).scalar_data.length),
+            ) as size_t as size_t;
         }
         7 => {
             if yaml_emitter_check_empty_sequence(emitter) == 0 {
                 return 0 as libc::c_int;
             }
-            length = (length as libc::c_ulong)
-                .wrapping_add(
-                    ((*emitter).anchor_data.anchor_length)
-                        .wrapping_add((*emitter).tag_data.handle_length)
-                        .wrapping_add((*emitter).tag_data.suffix_length),
-                ) as size_t as size_t;
+            length = (length as libc::c_ulong).wrapping_add(
+                ((*emitter).anchor_data.anchor_length)
+                    .wrapping_add((*emitter).tag_data.handle_length)
+                    .wrapping_add((*emitter).tag_data.suffix_length),
+            ) as size_t as size_t;
         }
         9 => {
             if yaml_emitter_check_empty_mapping(emitter) == 0 {
                 return 0 as libc::c_int;
             }
-            length = (length as libc::c_ulong)
-                .wrapping_add(
-                    ((*emitter).anchor_data.anchor_length)
-                        .wrapping_add((*emitter).tag_data.handle_length)
-                        .wrapping_add((*emitter).tag_data.suffix_length),
-                ) as size_t as size_t;
+            length = (length as libc::c_ulong).wrapping_add(
+                ((*emitter).anchor_data.anchor_length)
+                    .wrapping_add((*emitter).tag_data.handle_length)
+                    .wrapping_add((*emitter).tag_data.suffix_length),
+            ) as size_t as size_t;
         }
         _ => return 0 as libc::c_int,
     }
@@ -1399,13 +1328,13 @@ unsafe extern "C" fn yaml_emitter_select_scalar_style(
     let mut style: yaml_scalar_style_t = (*event).data.scalar.style;
     let mut no_tag: libc::c_int = (((*emitter).tag_data.handle).is_null()
         && ((*emitter).tag_data.suffix).is_null()) as libc::c_int;
-    if no_tag != 0 && (*event).data.scalar.plain_implicit == 0
+    if no_tag != 0
+        && (*event).data.scalar.plain_implicit == 0
         && (*event).data.scalar.quoted_implicit == 0
     {
         return yaml_emitter_set_emitter_error(
             emitter,
-            b"neither tag nor implicit flags are specified\0" as *const u8
-                as *const libc::c_char,
+            b"neither tag nor implicit flags are specified\0" as *const u8 as *const libc::c_char,
         );
     }
     if style as libc::c_uint == YAML_ANY_SCALAR_STYLE as libc::c_int as libc::c_uint {
@@ -1419,8 +1348,7 @@ unsafe extern "C" fn yaml_emitter_select_scalar_style(
     }
     if style as libc::c_uint == YAML_PLAIN_SCALAR_STYLE as libc::c_int as libc::c_uint {
         if (*emitter).flow_level != 0 && (*emitter).scalar_data.flow_plain_allowed == 0
-            || (*emitter).flow_level == 0
-                && (*emitter).scalar_data.block_plain_allowed == 0
+            || (*emitter).flow_level == 0 && (*emitter).scalar_data.block_plain_allowed == 0
         {
             style = YAML_SINGLE_QUOTED_SCALAR_STYLE;
         }
@@ -1433,26 +1361,24 @@ unsafe extern "C" fn yaml_emitter_select_scalar_style(
             style = YAML_SINGLE_QUOTED_SCALAR_STYLE;
         }
     }
-    if style as libc::c_uint
-        == YAML_SINGLE_QUOTED_SCALAR_STYLE as libc::c_int as libc::c_uint
-    {
+    if style as libc::c_uint == YAML_SINGLE_QUOTED_SCALAR_STYLE as libc::c_int as libc::c_uint {
         if (*emitter).scalar_data.single_quoted_allowed == 0 {
             style = YAML_DOUBLE_QUOTED_SCALAR_STYLE;
         }
     }
     if style as libc::c_uint == YAML_LITERAL_SCALAR_STYLE as libc::c_int as libc::c_uint
-        || style as libc::c_uint
-            == YAML_FOLDED_SCALAR_STYLE as libc::c_int as libc::c_uint
+        || style as libc::c_uint == YAML_FOLDED_SCALAR_STYLE as libc::c_int as libc::c_uint
     {
-        if (*emitter).scalar_data.block_allowed == 0 || (*emitter).flow_level != 0
+        if (*emitter).scalar_data.block_allowed == 0
+            || (*emitter).flow_level != 0
             || (*emitter).simple_key_context != 0
         {
             style = YAML_DOUBLE_QUOTED_SCALAR_STYLE;
         }
     }
-    if no_tag != 0 && (*event).data.scalar.quoted_implicit == 0
-        && style as libc::c_uint
-            != YAML_PLAIN_SCALAR_STYLE as libc::c_int as libc::c_uint
+    if no_tag != 0
+        && (*event).data.scalar.quoted_implicit == 0
+        && style as libc::c_uint != YAML_PLAIN_SCALAR_STYLE as libc::c_int as libc::c_uint
     {
         let ref mut fresh46 = (*emitter).tag_data.handle;
         *fresh46 = b"!\0" as *const u8 as *const libc::c_char as *mut yaml_char_t;
@@ -1461,9 +1387,7 @@ unsafe extern "C" fn yaml_emitter_select_scalar_style(
     (*emitter).scalar_data.style = style;
     return 1 as libc::c_int;
 }
-unsafe extern "C" fn yaml_emitter_process_anchor(
-    mut emitter: *mut yaml_emitter_t,
-) -> libc::c_int {
+unsafe extern "C" fn yaml_emitter_process_anchor(mut emitter: *mut yaml_emitter_t) -> libc::c_int {
     if ((*emitter).anchor_data.anchor).is_null() {
         return 1 as libc::c_int;
     }
@@ -1487,9 +1411,7 @@ unsafe extern "C" fn yaml_emitter_process_anchor(
         (*emitter).anchor_data.anchor_length,
     );
 }
-unsafe extern "C" fn yaml_emitter_process_tag(
-    mut emitter: *mut yaml_emitter_t,
-) -> libc::c_int {
+unsafe extern "C" fn yaml_emitter_process_tag(mut emitter: *mut yaml_emitter_t) -> libc::c_int {
     if ((*emitter).tag_data.handle).is_null() && ((*emitter).tag_data.suffix).is_null() {
         return 1 as libc::c_int;
     }
@@ -1546,9 +1468,7 @@ unsafe extern "C" fn yaml_emitter_process_tag(
     }
     return 1 as libc::c_int;
 }
-unsafe extern "C" fn yaml_emitter_process_scalar(
-    mut emitter: *mut yaml_emitter_t,
-) -> libc::c_int {
+unsafe extern "C" fn yaml_emitter_process_scalar(mut emitter: *mut yaml_emitter_t) -> libc::c_int {
     match (*emitter).scalar_data.style as libc::c_uint {
         1 => {
             return yaml_emitter_write_plain_scalar(
@@ -1663,10 +1583,8 @@ unsafe extern "C" fn yaml_emitter_analyze_tag_directive(
                 >= 'a' as i32 as yaml_char_t as libc::c_int
                 && *(handle.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                     <= 'z' as i32 as yaml_char_t as libc::c_int
-            || *(handle.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                == '_' as i32
-            || *(handle.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                == '-' as i32)
+            || *(handle.pointer).offset(0 as libc::c_int as isize) as libc::c_int == '_' as i32
+            || *(handle.pointer).offset(0 as libc::c_int as isize) as libc::c_int == '-' as i32)
         {
             return yaml_emitter_set_emitter_error(
                 emitter,
@@ -1674,29 +1592,31 @@ unsafe extern "C" fn yaml_emitter_analyze_tag_directive(
                     as *const libc::c_char,
             );
         }
-        handle
-            .pointer = (handle.pointer)
-            .offset(
-                (if *(handle.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                    & 0x80 as libc::c_int == 0 as libc::c_int
-                {
-                    1 as libc::c_int
-                } else if *(handle.pointer).offset(0 as libc::c_int as isize)
-                        as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
-                    {
-                    2 as libc::c_int
-                } else if *(handle.pointer).offset(0 as libc::c_int as isize)
-                        as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
-                    {
-                    3 as libc::c_int
-                } else if *(handle.pointer).offset(0 as libc::c_int as isize)
-                        as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
-                    {
-                    4 as libc::c_int
-                } else {
-                    0 as libc::c_int
-                }) as isize,
-            );
+        handle.pointer = (handle.pointer).offset(
+            (if *(handle.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                & 0x80 as libc::c_int
+                == 0 as libc::c_int
+            {
+                1 as libc::c_int
+            } else if *(handle.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                & 0xe0 as libc::c_int
+                == 0xc0 as libc::c_int
+            {
+                2 as libc::c_int
+            } else if *(handle.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                & 0xf0 as libc::c_int
+                == 0xe0 as libc::c_int
+            {
+                3 as libc::c_int
+            } else if *(handle.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                & 0xf8 as libc::c_int
+                == 0xf0 as libc::c_int
+            {
+                4 as libc::c_int
+            } else {
+                0 as libc::c_int
+            }) as isize,
+        );
     }
     if prefix.start == prefix.end {
         return yaml_emitter_set_emitter_error(
@@ -1744,52 +1664,50 @@ unsafe extern "C" fn yaml_emitter_analyze_anchor(
                 >= 'a' as i32 as yaml_char_t as libc::c_int
                 && *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                     <= 'z' as i32 as yaml_char_t as libc::c_int
-            || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                == '_' as i32
-            || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                == '-' as i32)
+            || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int == '_' as i32
+            || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int == '-' as i32)
         {
             return yaml_emitter_set_emitter_error(
                 emitter,
                 if alias != 0 {
-                    b"alias value must contain alphanumerical characters only\0"
-                        as *const u8 as *const libc::c_char
+                    b"alias value must contain alphanumerical characters only\0" as *const u8
+                        as *const libc::c_char
                 } else {
-                    b"anchor value must contain alphanumerical characters only\0"
-                        as *const u8 as *const libc::c_char
+                    b"anchor value must contain alphanumerical characters only\0" as *const u8
+                        as *const libc::c_char
                 },
             );
         }
-        string
-            .pointer = (string.pointer)
-            .offset(
-                (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                    & 0x80 as libc::c_int == 0 as libc::c_int
-                {
-                    1 as libc::c_int
-                } else if *(string.pointer).offset(0 as libc::c_int as isize)
-                        as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
-                    {
-                    2 as libc::c_int
-                } else if *(string.pointer).offset(0 as libc::c_int as isize)
-                        as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
-                    {
-                    3 as libc::c_int
-                } else if *(string.pointer).offset(0 as libc::c_int as isize)
-                        as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
-                    {
-                    4 as libc::c_int
-                } else {
-                    0 as libc::c_int
-                }) as isize,
-            );
+        string.pointer = (string.pointer).offset(
+            (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                & 0x80 as libc::c_int
+                == 0 as libc::c_int
+            {
+                1 as libc::c_int
+            } else if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                & 0xe0 as libc::c_int
+                == 0xc0 as libc::c_int
+            {
+                2 as libc::c_int
+            } else if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                & 0xf0 as libc::c_int
+                == 0xe0 as libc::c_int
+            {
+                3 as libc::c_int
+            } else if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                & 0xf8 as libc::c_int
+                == 0xf0 as libc::c_int
+            {
+                4 as libc::c_int
+            } else {
+                0 as libc::c_int
+            }) as isize,
+        );
     }
     let ref mut fresh47 = (*emitter).anchor_data.anchor;
     *fresh47 = string.start;
-    (*emitter)
-        .anchor_data
-        .anchor_length = (string.end).offset_from(string.start) as libc::c_long
-        as size_t;
+    (*emitter).anchor_data.anchor_length =
+        (string.end).offset_from(string.start) as libc::c_long as size_t;
     (*emitter).anchor_data.alias = alias;
     return 1 as libc::c_int;
 }
@@ -1816,11 +1734,8 @@ unsafe extern "C" fn yaml_emitter_analyze_tag(
     }
     tag_directive = (*emitter).tag_directives.start;
     while tag_directive != (*emitter).tag_directives.top {
-        let mut prefix_length: size_t = strlen(
-            (*tag_directive).prefix as *mut libc::c_char,
-        );
-        if prefix_length
-            < (string.end).offset_from(string.start) as libc::c_long as size_t
+        let mut prefix_length: size_t = strlen((*tag_directive).prefix as *mut libc::c_char);
+        if prefix_length < (string.end).offset_from(string.start) as libc::c_long as size_t
             && strncmp(
                 (*tag_directive).prefix as *mut libc::c_char,
                 string.start as *mut libc::c_char,
@@ -1829,15 +1744,12 @@ unsafe extern "C" fn yaml_emitter_analyze_tag(
         {
             let ref mut fresh48 = (*emitter).tag_data.handle;
             *fresh48 = (*tag_directive).handle;
-            (*emitter)
-                .tag_data
-                .handle_length = strlen((*tag_directive).handle as *mut libc::c_char);
+            (*emitter).tag_data.handle_length =
+                strlen((*tag_directive).handle as *mut libc::c_char);
             let ref mut fresh49 = (*emitter).tag_data.suffix;
             *fresh49 = (string.start).offset(prefix_length as isize);
-            (*emitter)
-                .tag_data
-                .suffix_length = ((string.end).offset_from(string.start) as libc::c_long
-                as libc::c_ulong)
+            (*emitter).tag_data.suffix_length = ((string.end).offset_from(string.start)
+                as libc::c_long as libc::c_ulong)
                 .wrapping_sub(prefix_length);
             return 1 as libc::c_int;
         }
@@ -1845,10 +1757,8 @@ unsafe extern "C" fn yaml_emitter_analyze_tag(
     }
     let ref mut fresh50 = (*emitter).tag_data.suffix;
     *fresh50 = string.start;
-    (*emitter)
-        .tag_data
-        .suffix_length = (string.end).offset_from(string.start) as libc::c_long
-        as size_t;
+    (*emitter).tag_data.suffix_length =
+        (string.end).offset_from(string.start) as libc::c_long as size_t;
     return 1 as libc::c_int;
 }
 unsafe extern "C" fn yaml_emitter_analyze_scalar(
@@ -1906,25 +1816,59 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
         flow_indicators = 1 as libc::c_int;
     }
     preceded_by_whitespace = 1 as libc::c_int;
-    followed_by_whitespace = (*(string.pointer)
-        .offset(
+    followed_by_whitespace = (*(string.pointer).offset(
+        (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int & 0x80 as libc::c_int
+            == 0 as libc::c_int
+        {
+            1 as libc::c_int
+        } else {
             (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                & 0x80 as libc::c_int == 0 as libc::c_int
+                & 0xe0 as libc::c_int
+                == 0xc0 as libc::c_int
+            {
+                2 as libc::c_int
+            } else {
+                (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                    & 0xf0 as libc::c_int
+                    == 0xe0 as libc::c_int
+                {
+                    3 as libc::c_int
+                } else {
+                    (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0xf8 as libc::c_int
+                        == 0xf0 as libc::c_int
+                    {
+                        4 as libc::c_int
+                    } else {
+                        0 as libc::c_int
+                    })
+                })
+            })
+        }) as isize,
+    ) as libc::c_int
+        == ' ' as i32 as yaml_char_t as libc::c_int
+        || *(string.pointer).offset(
+            (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                & 0x80 as libc::c_int
+                == 0 as libc::c_int
             {
                 1 as libc::c_int
             } else {
                 (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                    & 0xe0 as libc::c_int == 0xc0 as libc::c_int
+                    & 0xe0 as libc::c_int
+                    == 0xc0 as libc::c_int
                 {
                     2 as libc::c_int
                 } else {
-                    (if *(string.pointer).offset(0 as libc::c_int as isize)
-                        as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
+                    (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0xf0 as libc::c_int
+                        == 0xe0 as libc::c_int
                     {
                         3 as libc::c_int
                     } else {
-                        (if *(string.pointer).offset(0 as libc::c_int as isize)
-                            as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
+                        (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                            & 0xf8 as libc::c_int
+                            == 0xf0 as libc::c_int
                         {
                             4 as libc::c_int
                         } else {
@@ -1933,26 +1877,62 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                     })
                 })
             }) as isize,
-        ) as libc::c_int == ' ' as i32 as yaml_char_t as libc::c_int
-        || *(string.pointer)
-            .offset(
+        ) as libc::c_int
+            == '\t' as i32 as yaml_char_t as libc::c_int
+        || (*(string.pointer).offset(
+            (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                & 0x80 as libc::c_int
+                == 0 as libc::c_int
+            {
+                1 as libc::c_int
+            } else {
                 (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                    & 0x80 as libc::c_int == 0 as libc::c_int
+                    & 0xe0 as libc::c_int
+                    == 0xc0 as libc::c_int
+                {
+                    2 as libc::c_int
+                } else {
+                    (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0xf0 as libc::c_int
+                        == 0xe0 as libc::c_int
+                    {
+                        3 as libc::c_int
+                    } else {
+                        (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                            & 0xf8 as libc::c_int
+                            == 0xf0 as libc::c_int
+                        {
+                            4 as libc::c_int
+                        } else {
+                            0 as libc::c_int
+                        })
+                    })
+                })
+            }) as isize,
+        ) as libc::c_int
+            == '\r' as i32 as yaml_char_t as libc::c_int
+            || *(string.pointer).offset(
+                (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                    & 0x80 as libc::c_int
+                    == 0 as libc::c_int
                 {
                     1 as libc::c_int
                 } else {
-                    (if *(string.pointer).offset(0 as libc::c_int as isize)
-                        as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
+                    (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0xe0 as libc::c_int
+                        == 0xc0 as libc::c_int
                     {
                         2 as libc::c_int
                     } else {
-                        (if *(string.pointer).offset(0 as libc::c_int as isize)
-                            as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
+                        (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                            & 0xf0 as libc::c_int
+                            == 0xe0 as libc::c_int
                         {
                             3 as libc::c_int
                         } else {
-                            (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
+                            (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                                & 0xf8 as libc::c_int
+                                == 0xf0 as libc::c_int
                             {
                                 4 as libc::c_int
                             } else {
@@ -1961,26 +1941,30 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                         })
                     })
                 }) as isize,
-            ) as libc::c_int == '\t' as i32 as yaml_char_t as libc::c_int
-        || (*(string.pointer)
-            .offset(
+            ) as libc::c_int
+                == '\n' as i32 as yaml_char_t as libc::c_int
+            || *(string.pointer).offset(
                 (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                    & 0x80 as libc::c_int == 0 as libc::c_int
+                    & 0x80 as libc::c_int
+                    == 0 as libc::c_int
                 {
                     1 as libc::c_int
                 } else {
-                    (if *(string.pointer).offset(0 as libc::c_int as isize)
-                        as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
+                    (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0xe0 as libc::c_int
+                        == 0xc0 as libc::c_int
                     {
                         2 as libc::c_int
                     } else {
-                        (if *(string.pointer).offset(0 as libc::c_int as isize)
-                            as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
+                        (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                            & 0xf0 as libc::c_int
+                            == 0xe0 as libc::c_int
                         {
                             3 as libc::c_int
                         } else {
-                            (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
+                            (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                                & 0xf8 as libc::c_int
+                                == 0xf0 as libc::c_int
                             {
                                 4 as libc::c_int
                             } else {
@@ -1989,26 +1973,31 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                         })
                     })
                 }) as isize,
-            ) as libc::c_int == '\r' as i32 as yaml_char_t as libc::c_int
-            || *(string.pointer)
-                .offset(
-                    (if *(string.pointer).offset(0 as libc::c_int as isize)
-                        as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
+            ) as libc::c_int
+                == -62i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset(
+                    ((if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0x80 as libc::c_int
+                        == 0 as libc::c_int
                     {
                         1 as libc::c_int
                     } else {
-                        (if *(string.pointer).offset(0 as libc::c_int as isize)
-                            as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
+                        (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                            & 0xe0 as libc::c_int
+                            == 0xc0 as libc::c_int
                         {
                             2 as libc::c_int
                         } else {
-                            (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
+                            (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                                & 0xf0 as libc::c_int
+                                == 0xe0 as libc::c_int
                             {
                                 3 as libc::c_int
                             } else {
                                 (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                    as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
+                                    as libc::c_int
+                                    & 0xf8 as libc::c_int
+                                    == 0xf0 as libc::c_int
                                 {
                                     4 as libc::c_int
                                 } else {
@@ -2016,27 +2005,64 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                                 })
                             })
                         })
-                    }) as isize,
-                ) as libc::c_int == '\n' as i32 as yaml_char_t as libc::c_int
-            || *(string.pointer)
-                .offset(
-                    (if *(string.pointer).offset(0 as libc::c_int as isize)
-                        as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
+                    }) + 1 as libc::c_int) as isize,
+                ) as libc::c_int
+                    == -123i32 as yaml_char_t as libc::c_int
+            || *(string.pointer).offset(
+                (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                    & 0x80 as libc::c_int
+                    == 0 as libc::c_int
+                {
+                    1 as libc::c_int
+                } else {
+                    (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0xe0 as libc::c_int
+                        == 0xc0 as libc::c_int
+                    {
+                        2 as libc::c_int
+                    } else {
+                        (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                            & 0xf0 as libc::c_int
+                            == 0xe0 as libc::c_int
+                        {
+                            3 as libc::c_int
+                        } else {
+                            (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                                & 0xf8 as libc::c_int
+                                == 0xf0 as libc::c_int
+                            {
+                                4 as libc::c_int
+                            } else {
+                                0 as libc::c_int
+                            })
+                        })
+                    })
+                }) as isize,
+            ) as libc::c_int
+                == -30i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset(
+                    ((if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0x80 as libc::c_int
+                        == 0 as libc::c_int
                     {
                         1 as libc::c_int
                     } else {
-                        (if *(string.pointer).offset(0 as libc::c_int as isize)
-                            as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
+                        (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                            & 0xe0 as libc::c_int
+                            == 0xc0 as libc::c_int
                         {
                             2 as libc::c_int
                         } else {
-                            (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
+                            (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                                & 0xf0 as libc::c_int
+                                == 0xe0 as libc::c_int
                             {
                                 3 as libc::c_int
                             } else {
                                 (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                    as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
+                                    as libc::c_int
+                                    & 0xf8 as libc::c_int
+                                    == 0xf0 as libc::c_int
                                 {
                                     4 as libc::c_int
                                 } else {
@@ -2044,55 +2070,32 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                                 })
                             })
                         })
-                    }) as isize,
-                ) as libc::c_int == -62i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset(
-                        ((if *(string.pointer).offset(0 as libc::c_int as isize)
-                            as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
-                        {
-                            1 as libc::c_int
-                        } else {
-                            (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
-                            {
-                                2 as libc::c_int
-                            } else {
-                                (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                    as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
-                                {
-                                    3 as libc::c_int
-                                } else {
-                                    (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                        as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
-                                    {
-                                        4 as libc::c_int
-                                    } else {
-                                        0 as libc::c_int
-                                    })
-                                })
-                            })
-                        }) + 1 as libc::c_int) as isize,
-                    ) as libc::c_int == -123i32 as yaml_char_t as libc::c_int
-            || *(string.pointer)
-                .offset(
-                    (if *(string.pointer).offset(0 as libc::c_int as isize)
-                        as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
+                    }) + 1 as libc::c_int) as isize,
+                ) as libc::c_int
+                    == -128i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset(
+                    ((if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0x80 as libc::c_int
+                        == 0 as libc::c_int
                     {
                         1 as libc::c_int
                     } else {
-                        (if *(string.pointer).offset(0 as libc::c_int as isize)
-                            as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
+                        (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                            & 0xe0 as libc::c_int
+                            == 0xc0 as libc::c_int
                         {
                             2 as libc::c_int
                         } else {
-                            (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
+                            (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                                & 0xf0 as libc::c_int
+                                == 0xe0 as libc::c_int
                             {
                                 3 as libc::c_int
                             } else {
                                 (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                    as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
+                                    as libc::c_int
+                                    & 0xf8 as libc::c_int
+                                    == 0xf0 as libc::c_int
                                 {
                                     4 as libc::c_int
                                 } else {
@@ -2100,83 +2103,64 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                                 })
                             })
                         })
-                    }) as isize,
-                ) as libc::c_int == -30i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset(
-                        ((if *(string.pointer).offset(0 as libc::c_int as isize)
-                            as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
+                    }) + 2 as libc::c_int) as isize,
+                ) as libc::c_int
+                    == -88i32 as yaml_char_t as libc::c_int
+            || *(string.pointer).offset(
+                (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                    & 0x80 as libc::c_int
+                    == 0 as libc::c_int
+                {
+                    1 as libc::c_int
+                } else {
+                    (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0xe0 as libc::c_int
+                        == 0xc0 as libc::c_int
+                    {
+                        2 as libc::c_int
+                    } else {
+                        (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                            & 0xf0 as libc::c_int
+                            == 0xe0 as libc::c_int
                         {
-                            1 as libc::c_int
+                            3 as libc::c_int
                         } else {
-                            (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
+                            (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                                & 0xf8 as libc::c_int
+                                == 0xf0 as libc::c_int
                             {
-                                2 as libc::c_int
+                                4 as libc::c_int
                             } else {
-                                (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                    as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
-                                {
-                                    3 as libc::c_int
-                                } else {
-                                    (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                        as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
-                                    {
-                                        4 as libc::c_int
-                                    } else {
-                                        0 as libc::c_int
-                                    })
-                                })
+                                0 as libc::c_int
                             })
-                        }) + 1 as libc::c_int) as isize,
-                    ) as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset(
-                        ((if *(string.pointer).offset(0 as libc::c_int as isize)
-                            as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
-                        {
-                            1 as libc::c_int
-                        } else {
-                            (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
-                            {
-                                2 as libc::c_int
-                            } else {
-                                (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                    as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
-                                {
-                                    3 as libc::c_int
-                                } else {
-                                    (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                        as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
-                                    {
-                                        4 as libc::c_int
-                                    } else {
-                                        0 as libc::c_int
-                                    })
-                                })
-                            })
-                        }) + 2 as libc::c_int) as isize,
-                    ) as libc::c_int == -88i32 as yaml_char_t as libc::c_int
-            || *(string.pointer)
-                .offset(
-                    (if *(string.pointer).offset(0 as libc::c_int as isize)
-                        as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
+                        })
+                    })
+                }) as isize,
+            ) as libc::c_int
+                == -30i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset(
+                    ((if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0x80 as libc::c_int
+                        == 0 as libc::c_int
                     {
                         1 as libc::c_int
                     } else {
-                        (if *(string.pointer).offset(0 as libc::c_int as isize)
-                            as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
+                        (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                            & 0xe0 as libc::c_int
+                            == 0xc0 as libc::c_int
                         {
                             2 as libc::c_int
                         } else {
-                            (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
+                            (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                                & 0xf0 as libc::c_int
+                                == 0xe0 as libc::c_int
                             {
                                 3 as libc::c_int
                             } else {
                                 (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                    as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
+                                    as libc::c_int
+                                    & 0xf8 as libc::c_int
+                                    == 0xf0 as libc::c_int
                                 {
                                     4 as libc::c_int
                                 } else {
@@ -2184,83 +2168,32 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                                 })
                             })
                         })
-                    }) as isize,
-                ) as libc::c_int == -30i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset(
-                        ((if *(string.pointer).offset(0 as libc::c_int as isize)
-                            as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
-                        {
-                            1 as libc::c_int
-                        } else {
-                            (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
-                            {
-                                2 as libc::c_int
-                            } else {
-                                (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                    as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
-                                {
-                                    3 as libc::c_int
-                                } else {
-                                    (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                        as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
-                                    {
-                                        4 as libc::c_int
-                                    } else {
-                                        0 as libc::c_int
-                                    })
-                                })
-                            })
-                        }) + 1 as libc::c_int) as isize,
-                    ) as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset(
-                        ((if *(string.pointer).offset(0 as libc::c_int as isize)
-                            as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
-                        {
-                            1 as libc::c_int
-                        } else {
-                            (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
-                            {
-                                2 as libc::c_int
-                            } else {
-                                (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                    as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
-                                {
-                                    3 as libc::c_int
-                                } else {
-                                    (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                        as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
-                                    {
-                                        4 as libc::c_int
-                                    } else {
-                                        0 as libc::c_int
-                                    })
-                                })
-                            })
-                        }) + 2 as libc::c_int) as isize,
-                    ) as libc::c_int == -87i32 as yaml_char_t as libc::c_int
-            || *(string.pointer)
-                .offset(
-                    (if *(string.pointer).offset(0 as libc::c_int as isize)
-                        as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
+                    }) + 1 as libc::c_int) as isize,
+                ) as libc::c_int
+                    == -128i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset(
+                    ((if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0x80 as libc::c_int
+                        == 0 as libc::c_int
                     {
                         1 as libc::c_int
                     } else {
-                        (if *(string.pointer).offset(0 as libc::c_int as isize)
-                            as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
+                        (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                            & 0xe0 as libc::c_int
+                            == 0xc0 as libc::c_int
                         {
                             2 as libc::c_int
                         } else {
-                            (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
+                            (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                                & 0xf0 as libc::c_int
+                                == 0xe0 as libc::c_int
                             {
                                 3 as libc::c_int
                             } else {
                                 (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                    as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
+                                    as libc::c_int
+                                    & 0xf8 as libc::c_int
+                                    == 0xf0 as libc::c_int
                                 {
                                     4 as libc::c_int
                                 } else {
@@ -2268,8 +2201,41 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                                 })
                             })
                         })
-                    }) as isize,
-                ) as libc::c_int == '\0' as i32 as yaml_char_t as libc::c_int))
+                    }) + 2 as libc::c_int) as isize,
+                ) as libc::c_int
+                    == -87i32 as yaml_char_t as libc::c_int
+            || *(string.pointer).offset(
+                (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                    & 0x80 as libc::c_int
+                    == 0 as libc::c_int
+                {
+                    1 as libc::c_int
+                } else {
+                    (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0xe0 as libc::c_int
+                        == 0xc0 as libc::c_int
+                    {
+                        2 as libc::c_int
+                    } else {
+                        (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                            & 0xf0 as libc::c_int
+                            == 0xe0 as libc::c_int
+                        {
+                            3 as libc::c_int
+                        } else {
+                            (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                                & 0xf8 as libc::c_int
+                                == 0xf0 as libc::c_int
+                            {
+                                4 as libc::c_int
+                            } else {
+                                0 as libc::c_int
+                            })
+                        })
+                    })
+                }) as isize,
+            ) as libc::c_int
+                == '\0' as i32 as yaml_char_t as libc::c_int))
         as libc::c_int;
     while string.pointer != string.end {
         if string.start == string.pointer {
@@ -2366,37 +2332,37 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                     <= 0x7e as libc::c_int
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 == 0xc2 as libc::c_int
-                && *(string.pointer)
-                    .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                    as libc::c_int >= 0xa0 as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    >= 0xa0 as libc::c_int
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 > 0xc2 as libc::c_int
                 && (*(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int)
                     < 0xed as libc::c_int
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 == 0xed as libc::c_int
-                && (*(string.pointer)
-                    .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                    as libc::c_int) < 0xa0 as libc::c_int
+                && (*(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int)
+                    < 0xa0 as libc::c_int
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 == 0xee as libc::c_int
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 == 0xef as libc::c_int
-                && !(*(string.pointer)
-                    .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                    as libc::c_int == 0xbb as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                        as libc::c_int == 0xbf as libc::c_int)
-                && !(*(string.pointer)
-                    .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                    as libc::c_int == 0xbf as libc::c_int
-                    && (*(string.pointer)
-                        .offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                        as libc::c_int == 0xbe as libc::c_int
-                        || *(string.pointer)
-                            .offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                            as libc::c_int == 0xbf as libc::c_int)))
+                && !(*(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == 0xbb as libc::c_int
+                    && *(string.pointer).offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                        as libc::c_int
+                        == 0xbf as libc::c_int)
+                && !(*(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == 0xbf as libc::c_int
+                    && (*(string.pointer).offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                        as libc::c_int
+                        == 0xbe as libc::c_int
+                        || *(string.pointer).offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                            as libc::c_int
+                            == 0xbf as libc::c_int)))
             || !(*(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 <= '\u{7f}' as i32 as yaml_char_t as libc::c_int)
                 && (*emitter).unicode == 0
@@ -2409,25 +2375,25 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                 == '\n' as i32 as yaml_char_t as libc::c_int
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 == -62i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                    as libc::c_int == -123i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -123i32 as yaml_char_t as libc::c_int
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 == -30i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                    as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                    as libc::c_int == -88i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -128i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -88i32 as yaml_char_t as libc::c_int
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 == -30i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                    as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                    as libc::c_int == -87i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -128i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -87i32 as yaml_char_t as libc::c_int
         {
             line_breaks = 1 as libc::c_int;
         }
@@ -2437,34 +2403,37 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
             if string.start == string.pointer {
                 leading_space = 1 as libc::c_int;
             }
-            if (string.pointer)
-                .offset(
-                    (if *(string.pointer).offset(0 as libc::c_int as isize)
-                        as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
+            if (string.pointer).offset(
+                (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                    & 0x80 as libc::c_int
+                    == 0 as libc::c_int
+                {
+                    1 as libc::c_int
+                } else {
+                    (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0xe0 as libc::c_int
+                        == 0xc0 as libc::c_int
                     {
-                        1 as libc::c_int
+                        2 as libc::c_int
                     } else {
-                        (if *(string.pointer).offset(0 as libc::c_int as isize)
-                            as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
+                        (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                            & 0xf0 as libc::c_int
+                            == 0xe0 as libc::c_int
                         {
-                            2 as libc::c_int
+                            3 as libc::c_int
                         } else {
-                            (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
+                            (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                                & 0xf8 as libc::c_int
+                                == 0xf0 as libc::c_int
                             {
-                                3 as libc::c_int
+                                4 as libc::c_int
                             } else {
-                                (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                    as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
-                                {
-                                    4 as libc::c_int
-                                } else {
-                                    0 as libc::c_int
-                                })
+                                0 as libc::c_int
                             })
                         })
-                    }) as isize,
-                ) == string.end
+                    })
+                }) as isize,
+            ) == string.end
             {
                 trailing_space = 1 as libc::c_int;
             }
@@ -2474,62 +2443,65 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
             previous_space = 1 as libc::c_int;
             previous_break = 0 as libc::c_int;
         } else if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                == '\r' as i32 as yaml_char_t as libc::c_int
-                || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                    == '\n' as i32 as yaml_char_t as libc::c_int
-                || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                    == -62i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                        as libc::c_int == -123i32 as yaml_char_t as libc::c_int
-                || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                    == -30i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                        as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                        as libc::c_int == -88i32 as yaml_char_t as libc::c_int
-                || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                    == -30i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                        as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                        as libc::c_int == -87i32 as yaml_char_t as libc::c_int
-            {
+            == '\r' as i32 as yaml_char_t as libc::c_int
+            || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                == '\n' as i32 as yaml_char_t as libc::c_int
+            || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                == -62i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -123i32 as yaml_char_t as libc::c_int
+            || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                == -30i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -128i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -88i32 as yaml_char_t as libc::c_int
+            || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                == -30i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -128i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -87i32 as yaml_char_t as libc::c_int
+        {
             if string.start == string.pointer {
                 leading_break = 1 as libc::c_int;
             }
-            if (string.pointer)
-                .offset(
-                    (if *(string.pointer).offset(0 as libc::c_int as isize)
-                        as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
+            if (string.pointer).offset(
+                (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                    & 0x80 as libc::c_int
+                    == 0 as libc::c_int
+                {
+                    1 as libc::c_int
+                } else {
+                    (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0xe0 as libc::c_int
+                        == 0xc0 as libc::c_int
                     {
-                        1 as libc::c_int
+                        2 as libc::c_int
                     } else {
-                        (if *(string.pointer).offset(0 as libc::c_int as isize)
-                            as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
+                        (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                            & 0xf0 as libc::c_int
+                            == 0xe0 as libc::c_int
                         {
-                            2 as libc::c_int
+                            3 as libc::c_int
                         } else {
-                            (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
+                            (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                                & 0xf8 as libc::c_int
+                                == 0xf0 as libc::c_int
                             {
-                                3 as libc::c_int
+                                4 as libc::c_int
                             } else {
-                                (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                    as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
-                                {
-                                    4 as libc::c_int
-                                } else {
-                                    0 as libc::c_int
-                                })
+                                0 as libc::c_int
                             })
                         })
-                    }) as isize,
-                ) == string.end
+                    })
+                }) as isize,
+            ) == string.end
             {
                 trailing_break = 1 as libc::c_int;
             }
@@ -2542,80 +2514,119 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
             previous_space = 0 as libc::c_int;
             previous_break = 0 as libc::c_int;
         }
-        preceded_by_whitespace = (*(string.pointer).offset(0 as libc::c_int as isize)
-            as libc::c_int == ' ' as i32 as yaml_char_t as libc::c_int
-            || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                == '\t' as i32 as yaml_char_t as libc::c_int
-            || (*(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                == '\r' as i32 as yaml_char_t as libc::c_int
+        preceded_by_whitespace =
+            (*(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                == ' ' as i32 as yaml_char_t as libc::c_int
                 || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                    == '\n' as i32 as yaml_char_t as libc::c_int
-                || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                    == -62i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                        as libc::c_int == -123i32 as yaml_char_t as libc::c_int
-                || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                    == -30i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                        as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                        as libc::c_int == -88i32 as yaml_char_t as libc::c_int
-                || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                    == -30i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                        as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                        as libc::c_int == -87i32 as yaml_char_t as libc::c_int
-                || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                    == '\0' as i32 as yaml_char_t as libc::c_int)) as libc::c_int;
-        string
-            .pointer = (string.pointer)
-            .offset(
+                    == '\t' as i32 as yaml_char_t as libc::c_int
+                || (*(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                    == '\r' as i32 as yaml_char_t as libc::c_int
+                    || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        == '\n' as i32 as yaml_char_t as libc::c_int
+                    || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        == -62i32 as yaml_char_t as libc::c_int
+                        && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                            as libc::c_int
+                            == -123i32 as yaml_char_t as libc::c_int
+                    || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        == -30i32 as yaml_char_t as libc::c_int
+                        && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                            as libc::c_int
+                            == -128i32 as yaml_char_t as libc::c_int
+                        && *(string.pointer).offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                            as libc::c_int
+                            == -88i32 as yaml_char_t as libc::c_int
+                    || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        == -30i32 as yaml_char_t as libc::c_int
+                        && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                            as libc::c_int
+                            == -128i32 as yaml_char_t as libc::c_int
+                        && *(string.pointer).offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                            as libc::c_int
+                            == -87i32 as yaml_char_t as libc::c_int
+                    || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        == '\0' as i32 as yaml_char_t as libc::c_int)) as libc::c_int;
+        string.pointer = (string.pointer).offset(
+            (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                & 0x80 as libc::c_int
+                == 0 as libc::c_int
+            {
+                1 as libc::c_int
+            } else if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                & 0xe0 as libc::c_int
+                == 0xc0 as libc::c_int
+            {
+                2 as libc::c_int
+            } else if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                & 0xf0 as libc::c_int
+                == 0xe0 as libc::c_int
+            {
+                3 as libc::c_int
+            } else if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                & 0xf8 as libc::c_int
+                == 0xf0 as libc::c_int
+            {
+                4 as libc::c_int
+            } else {
+                0 as libc::c_int
+            }) as isize,
+        );
+        if string.pointer != string.end {
+            followed_by_whitespace = (*(string.pointer).offset(
                 (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                    & 0x80 as libc::c_int == 0 as libc::c_int
+                    & 0x80 as libc::c_int
+                    == 0 as libc::c_int
                 {
                     1 as libc::c_int
-                } else if *(string.pointer).offset(0 as libc::c_int as isize)
-                        as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
-                    {
-                    2 as libc::c_int
-                } else if *(string.pointer).offset(0 as libc::c_int as isize)
-                        as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
-                    {
-                    3 as libc::c_int
-                } else if *(string.pointer).offset(0 as libc::c_int as isize)
-                        as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
-                    {
-                    4 as libc::c_int
                 } else {
-                    0 as libc::c_int
+                    (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0xe0 as libc::c_int
+                        == 0xc0 as libc::c_int
+                    {
+                        2 as libc::c_int
+                    } else {
+                        (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                            & 0xf0 as libc::c_int
+                            == 0xe0 as libc::c_int
+                        {
+                            3 as libc::c_int
+                        } else {
+                            (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                                & 0xf8 as libc::c_int
+                                == 0xf0 as libc::c_int
+                            {
+                                4 as libc::c_int
+                            } else {
+                                0 as libc::c_int
+                            })
+                        })
+                    })
                 }) as isize,
-            );
-        if string.pointer != string.end {
-            followed_by_whitespace = (*(string.pointer)
-                .offset(
-                    (if *(string.pointer).offset(0 as libc::c_int as isize)
-                        as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
+            ) as libc::c_int
+                == ' ' as i32 as yaml_char_t as libc::c_int
+                || *(string.pointer).offset(
+                    (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0x80 as libc::c_int
+                        == 0 as libc::c_int
                     {
                         1 as libc::c_int
                     } else {
-                        (if *(string.pointer).offset(0 as libc::c_int as isize)
-                            as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
+                        (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                            & 0xe0 as libc::c_int
+                            == 0xc0 as libc::c_int
                         {
                             2 as libc::c_int
                         } else {
-                            (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
+                            (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                                & 0xf0 as libc::c_int
+                                == 0xe0 as libc::c_int
                             {
                                 3 as libc::c_int
                             } else {
                                 (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                    as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
+                                    as libc::c_int
+                                    & 0xf8 as libc::c_int
+                                    == 0xf0 as libc::c_int
                                 {
                                     4 as libc::c_int
                                 } else {
@@ -2624,26 +2635,65 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                             })
                         })
                     }) as isize,
-                ) as libc::c_int == ' ' as i32 as yaml_char_t as libc::c_int
-                || *(string.pointer)
-                    .offset(
-                        (if *(string.pointer).offset(0 as libc::c_int as isize)
-                            as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
+                ) as libc::c_int
+                    == '\t' as i32 as yaml_char_t as libc::c_int
+                || (*(string.pointer).offset(
+                    (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0x80 as libc::c_int
+                        == 0 as libc::c_int
+                    {
+                        1 as libc::c_int
+                    } else {
+                        (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                            & 0xe0 as libc::c_int
+                            == 0xc0 as libc::c_int
+                        {
+                            2 as libc::c_int
+                        } else {
+                            (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                                & 0xf0 as libc::c_int
+                                == 0xe0 as libc::c_int
+                            {
+                                3 as libc::c_int
+                            } else {
+                                (if *(string.pointer).offset(0 as libc::c_int as isize)
+                                    as libc::c_int
+                                    & 0xf8 as libc::c_int
+                                    == 0xf0 as libc::c_int
+                                {
+                                    4 as libc::c_int
+                                } else {
+                                    0 as libc::c_int
+                                })
+                            })
+                        })
+                    }) as isize,
+                ) as libc::c_int
+                    == '\r' as i32 as yaml_char_t as libc::c_int
+                    || *(string.pointer).offset(
+                        (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                            & 0x80 as libc::c_int
+                            == 0 as libc::c_int
                         {
                             1 as libc::c_int
                         } else {
-                            (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
+                            (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                                & 0xe0 as libc::c_int
+                                == 0xc0 as libc::c_int
                             {
                                 2 as libc::c_int
                             } else {
                                 (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                    as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
+                                    as libc::c_int
+                                    & 0xf0 as libc::c_int
+                                    == 0xe0 as libc::c_int
                                 {
                                     3 as libc::c_int
                                 } else {
                                     (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                        as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
+                                        as libc::c_int
+                                        & 0xf8 as libc::c_int
+                                        == 0xf0 as libc::c_int
                                     {
                                         4 as libc::c_int
                                     } else {
@@ -2652,26 +2702,32 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                                 })
                             })
                         }) as isize,
-                    ) as libc::c_int == '\t' as i32 as yaml_char_t as libc::c_int
-                || (*(string.pointer)
-                    .offset(
-                        (if *(string.pointer).offset(0 as libc::c_int as isize)
-                            as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
+                    ) as libc::c_int
+                        == '\n' as i32 as yaml_char_t as libc::c_int
+                    || *(string.pointer).offset(
+                        (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                            & 0x80 as libc::c_int
+                            == 0 as libc::c_int
                         {
                             1 as libc::c_int
                         } else {
-                            (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
+                            (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                                & 0xe0 as libc::c_int
+                                == 0xc0 as libc::c_int
                             {
                                 2 as libc::c_int
                             } else {
                                 (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                    as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
+                                    as libc::c_int
+                                    & 0xf0 as libc::c_int
+                                    == 0xe0 as libc::c_int
                                 {
                                     3 as libc::c_int
                                 } else {
                                     (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                        as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
+                                        as libc::c_int
+                                        & 0xf8 as libc::c_int
+                                        == 0xf0 as libc::c_int
                                     {
                                         4 as libc::c_int
                                     } else {
@@ -2680,26 +2736,33 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                                 })
                             })
                         }) as isize,
-                    ) as libc::c_int == '\r' as i32 as yaml_char_t as libc::c_int
-                    || *(string.pointer)
-                        .offset(
-                            (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
+                    ) as libc::c_int
+                        == -62i32 as yaml_char_t as libc::c_int
+                        && *(string.pointer).offset(
+                            ((if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                                & 0x80 as libc::c_int
+                                == 0 as libc::c_int
                             {
                                 1 as libc::c_int
                             } else {
                                 (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                    as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
+                                    as libc::c_int
+                                    & 0xe0 as libc::c_int
+                                    == 0xc0 as libc::c_int
                                 {
                                     2 as libc::c_int
                                 } else {
                                     (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                        as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
+                                        as libc::c_int
+                                        & 0xf0 as libc::c_int
+                                        == 0xe0 as libc::c_int
                                     {
                                         3 as libc::c_int
                                     } else {
                                         (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                            as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
+                                            as libc::c_int
+                                            & 0xf8 as libc::c_int
+                                            == 0xf0 as libc::c_int
                                         {
                                             4 as libc::c_int
                                         } else {
@@ -2707,27 +2770,68 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                                         })
                                     })
                                 })
-                            }) as isize,
-                        ) as libc::c_int == '\n' as i32 as yaml_char_t as libc::c_int
-                    || *(string.pointer)
-                        .offset(
-                            (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
+                            }) + 1 as libc::c_int) as isize,
+                        ) as libc::c_int
+                            == -123i32 as yaml_char_t as libc::c_int
+                    || *(string.pointer).offset(
+                        (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                            & 0x80 as libc::c_int
+                            == 0 as libc::c_int
+                        {
+                            1 as libc::c_int
+                        } else {
+                            (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                                & 0xe0 as libc::c_int
+                                == 0xc0 as libc::c_int
+                            {
+                                2 as libc::c_int
+                            } else {
+                                (if *(string.pointer).offset(0 as libc::c_int as isize)
+                                    as libc::c_int
+                                    & 0xf0 as libc::c_int
+                                    == 0xe0 as libc::c_int
+                                {
+                                    3 as libc::c_int
+                                } else {
+                                    (if *(string.pointer).offset(0 as libc::c_int as isize)
+                                        as libc::c_int
+                                        & 0xf8 as libc::c_int
+                                        == 0xf0 as libc::c_int
+                                    {
+                                        4 as libc::c_int
+                                    } else {
+                                        0 as libc::c_int
+                                    })
+                                })
+                            })
+                        }) as isize,
+                    ) as libc::c_int
+                        == -30i32 as yaml_char_t as libc::c_int
+                        && *(string.pointer).offset(
+                            ((if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                                & 0x80 as libc::c_int
+                                == 0 as libc::c_int
                             {
                                 1 as libc::c_int
                             } else {
                                 (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                    as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
+                                    as libc::c_int
+                                    & 0xe0 as libc::c_int
+                                    == 0xc0 as libc::c_int
                                 {
                                     2 as libc::c_int
                                 } else {
                                     (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                        as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
+                                        as libc::c_int
+                                        & 0xf0 as libc::c_int
+                                        == 0xe0 as libc::c_int
                                     {
                                         3 as libc::c_int
                                     } else {
                                         (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                            as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
+                                            as libc::c_int
+                                            & 0xf8 as libc::c_int
+                                            == 0xf0 as libc::c_int
                                         {
                                             4 as libc::c_int
                                         } else {
@@ -2735,55 +2839,34 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                                         })
                                     })
                                 })
-                            }) as isize,
-                        ) as libc::c_int == -62i32 as yaml_char_t as libc::c_int
-                        && *(string.pointer)
-                            .offset(
-                                ((if *(string.pointer).offset(0 as libc::c_int as isize)
-                                    as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
-                                {
-                                    1 as libc::c_int
-                                } else {
-                                    (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                        as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
-                                    {
-                                        2 as libc::c_int
-                                    } else {
-                                        (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                            as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
-                                        {
-                                            3 as libc::c_int
-                                        } else {
-                                            (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                                as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
-                                            {
-                                                4 as libc::c_int
-                                            } else {
-                                                0 as libc::c_int
-                                            })
-                                        })
-                                    })
-                                }) + 1 as libc::c_int) as isize,
-                            ) as libc::c_int == -123i32 as yaml_char_t as libc::c_int
-                    || *(string.pointer)
-                        .offset(
-                            (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
+                            }) + 1 as libc::c_int) as isize,
+                        ) as libc::c_int
+                            == -128i32 as yaml_char_t as libc::c_int
+                        && *(string.pointer).offset(
+                            ((if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                                & 0x80 as libc::c_int
+                                == 0 as libc::c_int
                             {
                                 1 as libc::c_int
                             } else {
                                 (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                    as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
+                                    as libc::c_int
+                                    & 0xe0 as libc::c_int
+                                    == 0xc0 as libc::c_int
                                 {
                                     2 as libc::c_int
                                 } else {
                                     (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                        as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
+                                        as libc::c_int
+                                        & 0xf0 as libc::c_int
+                                        == 0xe0 as libc::c_int
                                     {
                                         3 as libc::c_int
                                     } else {
                                         (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                            as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
+                                            as libc::c_int
+                                            & 0xf8 as libc::c_int
+                                            == 0xf0 as libc::c_int
                                         {
                                             4 as libc::c_int
                                         } else {
@@ -2791,83 +2874,68 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                                         })
                                     })
                                 })
-                            }) as isize,
-                        ) as libc::c_int == -30i32 as yaml_char_t as libc::c_int
-                        && *(string.pointer)
-                            .offset(
-                                ((if *(string.pointer).offset(0 as libc::c_int as isize)
-                                    as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
+                            }) + 2 as libc::c_int) as isize,
+                        ) as libc::c_int
+                            == -88i32 as yaml_char_t as libc::c_int
+                    || *(string.pointer).offset(
+                        (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                            & 0x80 as libc::c_int
+                            == 0 as libc::c_int
+                        {
+                            1 as libc::c_int
+                        } else {
+                            (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                                & 0xe0 as libc::c_int
+                                == 0xc0 as libc::c_int
+                            {
+                                2 as libc::c_int
+                            } else {
+                                (if *(string.pointer).offset(0 as libc::c_int as isize)
+                                    as libc::c_int
+                                    & 0xf0 as libc::c_int
+                                    == 0xe0 as libc::c_int
                                 {
-                                    1 as libc::c_int
+                                    3 as libc::c_int
                                 } else {
                                     (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                        as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
+                                        as libc::c_int
+                                        & 0xf8 as libc::c_int
+                                        == 0xf0 as libc::c_int
                                     {
-                                        2 as libc::c_int
+                                        4 as libc::c_int
                                     } else {
-                                        (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                            as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
-                                        {
-                                            3 as libc::c_int
-                                        } else {
-                                            (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                                as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
-                                            {
-                                                4 as libc::c_int
-                                            } else {
-                                                0 as libc::c_int
-                                            })
-                                        })
+                                        0 as libc::c_int
                                     })
-                                }) + 1 as libc::c_int) as isize,
-                            ) as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                        && *(string.pointer)
-                            .offset(
-                                ((if *(string.pointer).offset(0 as libc::c_int as isize)
-                                    as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
-                                {
-                                    1 as libc::c_int
-                                } else {
-                                    (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                        as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
-                                    {
-                                        2 as libc::c_int
-                                    } else {
-                                        (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                            as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
-                                        {
-                                            3 as libc::c_int
-                                        } else {
-                                            (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                                as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
-                                            {
-                                                4 as libc::c_int
-                                            } else {
-                                                0 as libc::c_int
-                                            })
-                                        })
-                                    })
-                                }) + 2 as libc::c_int) as isize,
-                            ) as libc::c_int == -88i32 as yaml_char_t as libc::c_int
-                    || *(string.pointer)
-                        .offset(
-                            (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
+                                })
+                            })
+                        }) as isize,
+                    ) as libc::c_int
+                        == -30i32 as yaml_char_t as libc::c_int
+                        && *(string.pointer).offset(
+                            ((if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                                & 0x80 as libc::c_int
+                                == 0 as libc::c_int
                             {
                                 1 as libc::c_int
                             } else {
                                 (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                    as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
+                                    as libc::c_int
+                                    & 0xe0 as libc::c_int
+                                    == 0xc0 as libc::c_int
                                 {
                                     2 as libc::c_int
                                 } else {
                                     (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                        as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
+                                        as libc::c_int
+                                        & 0xf0 as libc::c_int
+                                        == 0xe0 as libc::c_int
                                     {
                                         3 as libc::c_int
                                     } else {
                                         (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                            as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
+                                            as libc::c_int
+                                            & 0xf8 as libc::c_int
+                                            == 0xf0 as libc::c_int
                                         {
                                             4 as libc::c_int
                                         } else {
@@ -2875,83 +2943,34 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                                         })
                                     })
                                 })
-                            }) as isize,
-                        ) as libc::c_int == -30i32 as yaml_char_t as libc::c_int
-                        && *(string.pointer)
-                            .offset(
-                                ((if *(string.pointer).offset(0 as libc::c_int as isize)
-                                    as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
-                                {
-                                    1 as libc::c_int
-                                } else {
-                                    (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                        as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
-                                    {
-                                        2 as libc::c_int
-                                    } else {
-                                        (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                            as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
-                                        {
-                                            3 as libc::c_int
-                                        } else {
-                                            (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                                as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
-                                            {
-                                                4 as libc::c_int
-                                            } else {
-                                                0 as libc::c_int
-                                            })
-                                        })
-                                    })
-                                }) + 1 as libc::c_int) as isize,
-                            ) as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                        && *(string.pointer)
-                            .offset(
-                                ((if *(string.pointer).offset(0 as libc::c_int as isize)
-                                    as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
-                                {
-                                    1 as libc::c_int
-                                } else {
-                                    (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                        as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
-                                    {
-                                        2 as libc::c_int
-                                    } else {
-                                        (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                            as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
-                                        {
-                                            3 as libc::c_int
-                                        } else {
-                                            (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                                as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
-                                            {
-                                                4 as libc::c_int
-                                            } else {
-                                                0 as libc::c_int
-                                            })
-                                        })
-                                    })
-                                }) + 2 as libc::c_int) as isize,
-                            ) as libc::c_int == -87i32 as yaml_char_t as libc::c_int
-                    || *(string.pointer)
-                        .offset(
-                            (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
+                            }) + 1 as libc::c_int) as isize,
+                        ) as libc::c_int
+                            == -128i32 as yaml_char_t as libc::c_int
+                        && *(string.pointer).offset(
+                            ((if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                                & 0x80 as libc::c_int
+                                == 0 as libc::c_int
                             {
                                 1 as libc::c_int
                             } else {
                                 (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                    as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
+                                    as libc::c_int
+                                    & 0xe0 as libc::c_int
+                                    == 0xc0 as libc::c_int
                                 {
                                     2 as libc::c_int
                                 } else {
                                     (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                        as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
+                                        as libc::c_int
+                                        & 0xf0 as libc::c_int
+                                        == 0xe0 as libc::c_int
                                     {
                                         3 as libc::c_int
                                     } else {
                                         (if *(string.pointer).offset(0 as libc::c_int as isize)
-                                            as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
+                                            as libc::c_int
+                                            & 0xf8 as libc::c_int
+                                            == 0xf0 as libc::c_int
                                         {
                                             4 as libc::c_int
                                         } else {
@@ -2959,8 +2978,43 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                                         })
                                     })
                                 })
-                            }) as isize,
-                        ) as libc::c_int == '\0' as i32 as yaml_char_t as libc::c_int))
+                            }) + 2 as libc::c_int) as isize,
+                        ) as libc::c_int
+                            == -87i32 as yaml_char_t as libc::c_int
+                    || *(string.pointer).offset(
+                        (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                            & 0x80 as libc::c_int
+                            == 0 as libc::c_int
+                        {
+                            1 as libc::c_int
+                        } else {
+                            (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                                & 0xe0 as libc::c_int
+                                == 0xc0 as libc::c_int
+                            {
+                                2 as libc::c_int
+                            } else {
+                                (if *(string.pointer).offset(0 as libc::c_int as isize)
+                                    as libc::c_int
+                                    & 0xf0 as libc::c_int
+                                    == 0xe0 as libc::c_int
+                                {
+                                    3 as libc::c_int
+                                } else {
+                                    (if *(string.pointer).offset(0 as libc::c_int as isize)
+                                        as libc::c_int
+                                        & 0xf8 as libc::c_int
+                                        == 0xf0 as libc::c_int
+                                    {
+                                        4 as libc::c_int
+                                    } else {
+                                        0 as libc::c_int
+                                    })
+                                })
+                            })
+                        }) as isize,
+                    ) as libc::c_int
+                        == '\0' as i32 as yaml_char_t as libc::c_int))
                 as libc::c_int;
         }
     }
@@ -2969,9 +3023,7 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
     (*emitter).scalar_data.block_plain_allowed = 1 as libc::c_int;
     (*emitter).scalar_data.single_quoted_allowed = 1 as libc::c_int;
     (*emitter).scalar_data.block_allowed = 1 as libc::c_int;
-    if leading_space != 0 || leading_break != 0 || trailing_space != 0
-        || trailing_break != 0
-    {
+    if leading_space != 0 || leading_break != 0 || trailing_space != 0 || trailing_break != 0 {
         (*emitter).scalar_data.flow_plain_allowed = 0 as libc::c_int;
         (*emitter).scalar_data.block_plain_allowed = 0 as libc::c_int;
     }
@@ -3019,11 +3071,8 @@ unsafe extern "C" fn yaml_emitter_analyze_event(
     (*emitter).scalar_data.length = 0 as libc::c_int as size_t;
     match (*event).type_0 as libc::c_uint {
         5 => {
-            if yaml_emitter_analyze_anchor(
-                emitter,
-                (*event).data.alias.anchor,
-                1 as libc::c_int,
-            ) == 0
+            if yaml_emitter_analyze_anchor(emitter, (*event).data.alias.anchor, 1 as libc::c_int)
+                == 0
             {
                 return 0 as libc::c_int;
             }
@@ -3071,12 +3120,9 @@ unsafe extern "C" fn yaml_emitter_analyze_event(
                 }
             }
             if !((*event).data.sequence_start.tag).is_null()
-                && ((*emitter).canonical != 0
-                    || (*event).data.sequence_start.implicit == 0)
+                && ((*emitter).canonical != 0 || (*event).data.sequence_start.implicit == 0)
             {
-                if yaml_emitter_analyze_tag(emitter, (*event).data.sequence_start.tag)
-                    == 0
-                {
+                if yaml_emitter_analyze_tag(emitter, (*event).data.sequence_start.tag) == 0 {
                     return 0 as libc::c_int;
                 }
             }
@@ -3094,12 +3140,9 @@ unsafe extern "C" fn yaml_emitter_analyze_event(
                 }
             }
             if !((*event).data.mapping_start.tag).is_null()
-                && ((*emitter).canonical != 0
-                    || (*event).data.mapping_start.implicit == 0)
+                && ((*emitter).canonical != 0 || (*event).data.mapping_start.implicit == 0)
             {
-                if yaml_emitter_analyze_tag(emitter, (*event).data.mapping_start.tag)
-                    == 0
-                {
+                if yaml_emitter_analyze_tag(emitter, (*event).data.mapping_start.tag) == 0 {
                     return 0 as libc::c_int;
                 }
             }
@@ -3108,11 +3151,9 @@ unsafe extern "C" fn yaml_emitter_analyze_event(
         _ => return 1 as libc::c_int,
     };
 }
-unsafe extern "C" fn yaml_emitter_write_bom(
-    mut emitter: *mut yaml_emitter_t,
-) -> libc::c_int {
-    if !(((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-        < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+unsafe extern "C" fn yaml_emitter_write_bom(mut emitter: *mut yaml_emitter_t) -> libc::c_int {
+    if !(((*emitter).buffer.pointer).offset(5 as libc::c_int as isize) < (*emitter).buffer.end
+        || yaml_emitter_flush(emitter) != 0)
     {
         return 0 as libc::c_int;
     }
@@ -3130,19 +3171,19 @@ unsafe extern "C" fn yaml_emitter_write_bom(
     *fresh61 = -65i32 as yaml_char_t;
     return 1 as libc::c_int;
 }
-unsafe extern "C" fn yaml_emitter_write_indent(
-    mut emitter: *mut yaml_emitter_t,
-) -> libc::c_int {
+unsafe extern "C" fn yaml_emitter_write_indent(mut emitter: *mut yaml_emitter_t) -> libc::c_int {
     let mut indent: libc::c_int = if (*emitter).indent >= 0 as libc::c_int {
         (*emitter).indent
     } else {
         0 as libc::c_int
     };
-    if (*emitter).indention == 0 || (*emitter).column > indent
+    if (*emitter).indention == 0
+        || (*emitter).column > indent
         || (*emitter).column == indent && (*emitter).whitespace == 0
     {
         if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-            < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+            < (*emitter).buffer.end
+            || yaml_emitter_flush(emitter) != 0)
             && {
                 if (*emitter).line_break as libc::c_uint
                     == YAML_CR_BREAK as libc::c_int as libc::c_uint
@@ -3171,7 +3212,8 @@ unsafe extern "C" fn yaml_emitter_write_indent(
                             let fresh69 = *fresh68;
                             *fresh68 = (*fresh68).offset(1);
                             *fresh69 = '\n' as i32 as yaml_char_t;
-                        } else {};
+                        } else {
+                        };
                     };
                 };
                 (*emitter).column = 0 as libc::c_int;
@@ -3185,7 +3227,8 @@ unsafe extern "C" fn yaml_emitter_write_indent(
     }
     while (*emitter).column < indent {
         if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-            < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+            < (*emitter).buffer.end
+            || yaml_emitter_flush(emitter) != 0)
             && {
                 let ref mut fresh71 = (*emitter).buffer.pointer;
                 let fresh72 = *fresh71;
@@ -3222,7 +3265,8 @@ unsafe extern "C" fn yaml_emitter_write_indicator(
     string.pointer = indicator as *mut yaml_char_t;
     if need_whitespace != 0 && (*emitter).whitespace == 0 {
         if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-            < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+            < (*emitter).buffer.end
+            || yaml_emitter_flush(emitter) != 0)
             && {
                 let ref mut fresh74 = (*emitter).buffer.pointer;
                 let fresh75 = *fresh74;
@@ -3238,11 +3282,10 @@ unsafe extern "C" fn yaml_emitter_write_indicator(
     }
     while string.pointer != string.end {
         if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-            < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+            < (*emitter).buffer.end
+            || yaml_emitter_flush(emitter) != 0)
             && {
-                if *string.pointer as libc::c_int & 0x80 as libc::c_int
-                    == 0 as libc::c_int
-                {
+                if *string.pointer as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int {
                     let fresh77 = string.pointer;
                     string.pointer = (string.pointer).offset(1);
                     let ref mut fresh78 = (*emitter).buffer.pointer;
@@ -3250,9 +3293,7 @@ unsafe extern "C" fn yaml_emitter_write_indicator(
                     *fresh78 = (*fresh78).offset(1);
                     *fresh79 = *fresh77;
                 } else {
-                    if *string.pointer as libc::c_int & 0xe0 as libc::c_int
-                        == 0xc0 as libc::c_int
-                    {
+                    if *string.pointer as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int {
                         let fresh80 = string.pointer;
                         string.pointer = (string.pointer).offset(1);
                         let ref mut fresh81 = (*emitter).buffer.pointer;
@@ -3315,7 +3356,8 @@ unsafe extern "C" fn yaml_emitter_write_indicator(
                                 let fresh106 = *fresh105;
                                 *fresh105 = (*fresh105).offset(1);
                                 *fresh106 = *fresh104;
-                            } else {};
+                            } else {
+                            };
                         };
                     };
                 };
@@ -3328,8 +3370,7 @@ unsafe extern "C" fn yaml_emitter_write_indicator(
         }
     }
     (*emitter).whitespace = is_whitespace;
-    (*emitter)
-        .indention = ((*emitter).indention != 0 && is_indention != 0) as libc::c_int;
+    (*emitter).indention = ((*emitter).indention != 0 && is_indention != 0) as libc::c_int;
     return 1 as libc::c_int;
 }
 unsafe extern "C" fn yaml_emitter_write_anchor(
@@ -3347,11 +3388,10 @@ unsafe extern "C" fn yaml_emitter_write_anchor(
     string.pointer = value;
     while string.pointer != string.end {
         if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-            < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+            < (*emitter).buffer.end
+            || yaml_emitter_flush(emitter) != 0)
             && {
-                if *string.pointer as libc::c_int & 0x80 as libc::c_int
-                    == 0 as libc::c_int
-                {
+                if *string.pointer as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int {
                     let fresh108 = string.pointer;
                     string.pointer = (string.pointer).offset(1);
                     let ref mut fresh109 = (*emitter).buffer.pointer;
@@ -3359,9 +3399,7 @@ unsafe extern "C" fn yaml_emitter_write_anchor(
                     *fresh109 = (*fresh109).offset(1);
                     *fresh110 = *fresh108;
                 } else {
-                    if *string.pointer as libc::c_int & 0xe0 as libc::c_int
-                        == 0xc0 as libc::c_int
-                    {
+                    if *string.pointer as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int {
                         let fresh111 = string.pointer;
                         string.pointer = (string.pointer).offset(1);
                         let ref mut fresh112 = (*emitter).buffer.pointer;
@@ -3424,7 +3462,8 @@ unsafe extern "C" fn yaml_emitter_write_anchor(
                                 let fresh137 = *fresh136;
                                 *fresh136 = (*fresh136).offset(1);
                                 *fresh137 = *fresh135;
-                            } else {};
+                            } else {
+                            };
                         };
                     };
                 };
@@ -3455,7 +3494,8 @@ unsafe extern "C" fn yaml_emitter_write_tag_handle(
     string.pointer = value;
     if (*emitter).whitespace == 0 {
         if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-            < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+            < (*emitter).buffer.end
+            || yaml_emitter_flush(emitter) != 0)
             && {
                 let ref mut fresh139 = (*emitter).buffer.pointer;
                 let fresh140 = *fresh139;
@@ -3471,11 +3511,10 @@ unsafe extern "C" fn yaml_emitter_write_tag_handle(
     }
     while string.pointer != string.end {
         if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-            < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+            < (*emitter).buffer.end
+            || yaml_emitter_flush(emitter) != 0)
             && {
-                if *string.pointer as libc::c_int & 0x80 as libc::c_int
-                    == 0 as libc::c_int
-                {
+                if *string.pointer as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int {
                     let fresh142 = string.pointer;
                     string.pointer = (string.pointer).offset(1);
                     let ref mut fresh143 = (*emitter).buffer.pointer;
@@ -3483,9 +3522,7 @@ unsafe extern "C" fn yaml_emitter_write_tag_handle(
                     *fresh143 = (*fresh143).offset(1);
                     *fresh144 = *fresh142;
                 } else {
-                    if *string.pointer as libc::c_int & 0xe0 as libc::c_int
-                        == 0xc0 as libc::c_int
-                    {
+                    if *string.pointer as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int {
                         let fresh145 = string.pointer;
                         string.pointer = (string.pointer).offset(1);
                         let ref mut fresh146 = (*emitter).buffer.pointer;
@@ -3548,7 +3585,8 @@ unsafe extern "C" fn yaml_emitter_write_tag_handle(
                                 let fresh171 = *fresh170;
                                 *fresh170 = (*fresh170).offset(1);
                                 *fresh171 = *fresh169;
-                            } else {};
+                            } else {
+                            };
                         };
                     };
                 };
@@ -3580,7 +3618,8 @@ unsafe extern "C" fn yaml_emitter_write_tag_content(
     string.pointer = value;
     if need_whitespace != 0 && (*emitter).whitespace == 0 {
         if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-            < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+            < (*emitter).buffer.end
+            || yaml_emitter_flush(emitter) != 0)
             && {
                 let ref mut fresh173 = (*emitter).buffer.pointer;
                 let fresh174 = *fresh173;
@@ -3607,10 +3646,8 @@ unsafe extern "C" fn yaml_emitter_write_tag_content(
                 >= 'a' as i32 as yaml_char_t as libc::c_int
                 && *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                     <= 'z' as i32 as yaml_char_t as libc::c_int
-            || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                == '_' as i32
-            || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                == '-' as i32
+            || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int == '_' as i32
+            || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int == '-' as i32
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 == ';' as i32 as yaml_char_t as libc::c_int
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
@@ -3651,11 +3688,10 @@ unsafe extern "C" fn yaml_emitter_write_tag_content(
                 == ']' as i32 as yaml_char_t as libc::c_int
         {
             if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                < (*emitter).buffer.end
+                || yaml_emitter_flush(emitter) != 0)
                 && {
-                    if *string.pointer as libc::c_int & 0x80 as libc::c_int
-                        == 0 as libc::c_int
-                    {
+                    if *string.pointer as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int {
                         let fresh176 = string.pointer;
                         string.pointer = (string.pointer).offset(1);
                         let ref mut fresh177 = (*emitter).buffer.pointer;
@@ -3728,7 +3764,8 @@ unsafe extern "C" fn yaml_emitter_write_tag_content(
                                     let fresh205 = *fresh204;
                                     *fresh204 = (*fresh204).offset(1);
                                     *fresh205 = *fresh203;
-                                } else {};
+                                } else {
+                                };
                             };
                         };
                     };
@@ -3740,22 +3777,26 @@ unsafe extern "C" fn yaml_emitter_write_tag_content(
                 return 0 as libc::c_int;
             }
         } else {
-            let mut width: libc::c_int = if *(string.pointer)
-                .offset(0 as libc::c_int as isize) as libc::c_int & 0x80 as libc::c_int
+            let mut width: libc::c_int = if *(string.pointer).offset(0 as libc::c_int as isize)
+                as libc::c_int
+                & 0x80 as libc::c_int
                 == 0 as libc::c_int
             {
                 1 as libc::c_int
             } else if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                    & 0xe0 as libc::c_int == 0xc0 as libc::c_int
-                {
+                & 0xe0 as libc::c_int
+                == 0xc0 as libc::c_int
+            {
                 2 as libc::c_int
             } else if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                    & 0xf0 as libc::c_int == 0xe0 as libc::c_int
-                {
+                & 0xf0 as libc::c_int
+                == 0xe0 as libc::c_int
+            {
                 3 as libc::c_int
             } else if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                    & 0xf8 as libc::c_int == 0xf0 as libc::c_int
-                {
+                & 0xf8 as libc::c_int
+                == 0xf0 as libc::c_int
+            {
                 4 as libc::c_int
             } else {
                 0 as libc::c_int
@@ -3771,7 +3812,8 @@ unsafe extern "C" fn yaml_emitter_write_tag_content(
                 string.pointer = (string.pointer).offset(1);
                 value_0 = *fresh208 as libc::c_uint;
                 if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                    < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                    < (*emitter).buffer.end
+                    || yaml_emitter_flush(emitter) != 0)
                     && {
                         let ref mut fresh209 = (*emitter).buffer.pointer;
                         let fresh210 = *fresh209;
@@ -3785,21 +3827,19 @@ unsafe extern "C" fn yaml_emitter_write_tag_content(
                     return 0 as libc::c_int;
                 }
                 if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                    < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                    < (*emitter).buffer.end
+                    || yaml_emitter_flush(emitter) != 0)
                     && {
                         let ref mut fresh212 = (*emitter).buffer.pointer;
                         let fresh213 = *fresh212;
                         *fresh212 = (*fresh212).offset(1);
-                        *fresh213 = (value_0 >> 4 as libc::c_int)
-                            .wrapping_add(
-                                (if (value_0 >> 4 as libc::c_int)
-                                    < 10 as libc::c_int as libc::c_uint
-                                {
-                                    '0' as i32
-                                } else {
-                                    'A' as i32 - 10 as libc::c_int
-                                }) as libc::c_uint,
-                            ) as yaml_char_t;
+                        *fresh213 = (value_0 >> 4 as libc::c_int).wrapping_add(
+                            (if (value_0 >> 4 as libc::c_int) < 10 as libc::c_int as libc::c_uint {
+                                '0' as i32
+                            } else {
+                                'A' as i32 - 10 as libc::c_int
+                            }) as libc::c_uint,
+                        ) as yaml_char_t;
                         let ref mut fresh214 = (*emitter).column;
                         *fresh214 += 1;
                         1 as libc::c_int != 0
@@ -3808,21 +3848,21 @@ unsafe extern "C" fn yaml_emitter_write_tag_content(
                     return 0 as libc::c_int;
                 }
                 if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                    < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                    < (*emitter).buffer.end
+                    || yaml_emitter_flush(emitter) != 0)
                     && {
                         let ref mut fresh215 = (*emitter).buffer.pointer;
                         let fresh216 = *fresh215;
                         *fresh215 = (*fresh215).offset(1);
-                        *fresh216 = (value_0 & 0xf as libc::c_int as libc::c_uint)
-                            .wrapping_add(
-                                (if (value_0 & 0xf as libc::c_int as libc::c_uint)
-                                    < 10 as libc::c_int as libc::c_uint
-                                {
-                                    '0' as i32
-                                } else {
-                                    'A' as i32 - 10 as libc::c_int
-                                }) as libc::c_uint,
-                            ) as yaml_char_t;
+                        *fresh216 = (value_0 & 0xf as libc::c_int as libc::c_uint).wrapping_add(
+                            (if (value_0 & 0xf as libc::c_int as libc::c_uint)
+                                < 10 as libc::c_int as libc::c_uint
+                            {
+                                '0' as i32
+                            } else {
+                                'A' as i32 - 10 as libc::c_int
+                            }) as libc::c_uint,
+                        ) as yaml_char_t;
                         let ref mut fresh217 = (*emitter).column;
                         *fresh217 += 1;
                         1 as libc::c_int != 0
@@ -3855,7 +3895,8 @@ unsafe extern "C" fn yaml_emitter_write_plain_scalar(
     string.pointer = value;
     if (*emitter).whitespace == 0 && (length != 0 || (*emitter).flow_level != 0) {
         if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-            < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+            < (*emitter).buffer.end
+            || yaml_emitter_flush(emitter) != 0)
             && {
                 let ref mut fresh218 = (*emitter).buffer.pointer;
                 let fresh219 = *fresh218;
@@ -3873,7 +3914,8 @@ unsafe extern "C" fn yaml_emitter_write_plain_scalar(
         if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
             == ' ' as i32 as yaml_char_t as libc::c_int
         {
-            if allow_breaks != 0 && spaces == 0
+            if allow_breaks != 0
+                && spaces == 0
                 && (*emitter).column > (*emitter).best_width
                 && !(*(string.pointer).offset(1 as libc::c_int as isize) as libc::c_int
                     == ' ' as i32 as yaml_char_t as libc::c_int)
@@ -3881,151 +3923,154 @@ unsafe extern "C" fn yaml_emitter_write_plain_scalar(
                 if yaml_emitter_write_indent(emitter) == 0 {
                     return 0 as libc::c_int;
                 }
-                string
-                    .pointer = (string.pointer)
-                    .offset(
-                        (if *(string.pointer).offset(0 as libc::c_int as isize)
-                            as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
-                        {
-                            1 as libc::c_int
-                        } else if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
-                            {
-                            2 as libc::c_int
-                        } else if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
-                            {
-                            3 as libc::c_int
-                        } else if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
-                            {
-                            4 as libc::c_int
-                        } else {
-                            0 as libc::c_int
-                        }) as isize,
-                    );
+                string.pointer = (string.pointer).offset(
+                    (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0x80 as libc::c_int
+                        == 0 as libc::c_int
+                    {
+                        1 as libc::c_int
+                    } else if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0xe0 as libc::c_int
+                        == 0xc0 as libc::c_int
+                    {
+                        2 as libc::c_int
+                    } else if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0xf0 as libc::c_int
+                        == 0xe0 as libc::c_int
+                    {
+                        3 as libc::c_int
+                    } else if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0xf8 as libc::c_int
+                        == 0xf0 as libc::c_int
+                    {
+                        4 as libc::c_int
+                    } else {
+                        0 as libc::c_int
+                    }) as isize,
+                );
             } else if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                    < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
-                    && {
-                        if *string.pointer as libc::c_int & 0x80 as libc::c_int
-                            == 0 as libc::c_int
+                < (*emitter).buffer.end
+                || yaml_emitter_flush(emitter) != 0)
+                && {
+                    if *string.pointer as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int {
+                        let fresh221 = string.pointer;
+                        string.pointer = (string.pointer).offset(1);
+                        let ref mut fresh222 = (*emitter).buffer.pointer;
+                        let fresh223 = *fresh222;
+                        *fresh222 = (*fresh222).offset(1);
+                        *fresh223 = *fresh221;
+                    } else {
+                        if *string.pointer as libc::c_int & 0xe0 as libc::c_int
+                            == 0xc0 as libc::c_int
                         {
-                            let fresh221 = string.pointer;
+                            let fresh224 = string.pointer;
                             string.pointer = (string.pointer).offset(1);
-                            let ref mut fresh222 = (*emitter).buffer.pointer;
-                            let fresh223 = *fresh222;
-                            *fresh222 = (*fresh222).offset(1);
-                            *fresh223 = *fresh221;
+                            let ref mut fresh225 = (*emitter).buffer.pointer;
+                            let fresh226 = *fresh225;
+                            *fresh225 = (*fresh225).offset(1);
+                            *fresh226 = *fresh224;
+                            let fresh227 = string.pointer;
+                            string.pointer = (string.pointer).offset(1);
+                            let ref mut fresh228 = (*emitter).buffer.pointer;
+                            let fresh229 = *fresh228;
+                            *fresh228 = (*fresh228).offset(1);
+                            *fresh229 = *fresh227;
                         } else {
-                            if *string.pointer as libc::c_int & 0xe0 as libc::c_int
-                                == 0xc0 as libc::c_int
+                            if *string.pointer as libc::c_int & 0xf0 as libc::c_int
+                                == 0xe0 as libc::c_int
                             {
-                                let fresh224 = string.pointer;
+                                let fresh230 = string.pointer;
                                 string.pointer = (string.pointer).offset(1);
-                                let ref mut fresh225 = (*emitter).buffer.pointer;
-                                let fresh226 = *fresh225;
-                                *fresh225 = (*fresh225).offset(1);
-                                *fresh226 = *fresh224;
-                                let fresh227 = string.pointer;
+                                let ref mut fresh231 = (*emitter).buffer.pointer;
+                                let fresh232 = *fresh231;
+                                *fresh231 = (*fresh231).offset(1);
+                                *fresh232 = *fresh230;
+                                let fresh233 = string.pointer;
                                 string.pointer = (string.pointer).offset(1);
-                                let ref mut fresh228 = (*emitter).buffer.pointer;
-                                let fresh229 = *fresh228;
-                                *fresh228 = (*fresh228).offset(1);
-                                *fresh229 = *fresh227;
+                                let ref mut fresh234 = (*emitter).buffer.pointer;
+                                let fresh235 = *fresh234;
+                                *fresh234 = (*fresh234).offset(1);
+                                *fresh235 = *fresh233;
+                                let fresh236 = string.pointer;
+                                string.pointer = (string.pointer).offset(1);
+                                let ref mut fresh237 = (*emitter).buffer.pointer;
+                                let fresh238 = *fresh237;
+                                *fresh237 = (*fresh237).offset(1);
+                                *fresh238 = *fresh236;
                             } else {
-                                if *string.pointer as libc::c_int & 0xf0 as libc::c_int
-                                    == 0xe0 as libc::c_int
+                                if *string.pointer as libc::c_int & 0xf8 as libc::c_int
+                                    == 0xf0 as libc::c_int
                                 {
-                                    let fresh230 = string.pointer;
+                                    let fresh239 = string.pointer;
                                     string.pointer = (string.pointer).offset(1);
-                                    let ref mut fresh231 = (*emitter).buffer.pointer;
-                                    let fresh232 = *fresh231;
-                                    *fresh231 = (*fresh231).offset(1);
-                                    *fresh232 = *fresh230;
-                                    let fresh233 = string.pointer;
+                                    let ref mut fresh240 = (*emitter).buffer.pointer;
+                                    let fresh241 = *fresh240;
+                                    *fresh240 = (*fresh240).offset(1);
+                                    *fresh241 = *fresh239;
+                                    let fresh242 = string.pointer;
                                     string.pointer = (string.pointer).offset(1);
-                                    let ref mut fresh234 = (*emitter).buffer.pointer;
-                                    let fresh235 = *fresh234;
-                                    *fresh234 = (*fresh234).offset(1);
-                                    *fresh235 = *fresh233;
-                                    let fresh236 = string.pointer;
+                                    let ref mut fresh243 = (*emitter).buffer.pointer;
+                                    let fresh244 = *fresh243;
+                                    *fresh243 = (*fresh243).offset(1);
+                                    *fresh244 = *fresh242;
+                                    let fresh245 = string.pointer;
                                     string.pointer = (string.pointer).offset(1);
-                                    let ref mut fresh237 = (*emitter).buffer.pointer;
-                                    let fresh238 = *fresh237;
-                                    *fresh237 = (*fresh237).offset(1);
-                                    *fresh238 = *fresh236;
+                                    let ref mut fresh246 = (*emitter).buffer.pointer;
+                                    let fresh247 = *fresh246;
+                                    *fresh246 = (*fresh246).offset(1);
+                                    *fresh247 = *fresh245;
+                                    let fresh248 = string.pointer;
+                                    string.pointer = (string.pointer).offset(1);
+                                    let ref mut fresh249 = (*emitter).buffer.pointer;
+                                    let fresh250 = *fresh249;
+                                    *fresh249 = (*fresh249).offset(1);
+                                    *fresh250 = *fresh248;
                                 } else {
-                                    if *string.pointer as libc::c_int & 0xf8 as libc::c_int
-                                        == 0xf0 as libc::c_int
-                                    {
-                                        let fresh239 = string.pointer;
-                                        string.pointer = (string.pointer).offset(1);
-                                        let ref mut fresh240 = (*emitter).buffer.pointer;
-                                        let fresh241 = *fresh240;
-                                        *fresh240 = (*fresh240).offset(1);
-                                        *fresh241 = *fresh239;
-                                        let fresh242 = string.pointer;
-                                        string.pointer = (string.pointer).offset(1);
-                                        let ref mut fresh243 = (*emitter).buffer.pointer;
-                                        let fresh244 = *fresh243;
-                                        *fresh243 = (*fresh243).offset(1);
-                                        *fresh244 = *fresh242;
-                                        let fresh245 = string.pointer;
-                                        string.pointer = (string.pointer).offset(1);
-                                        let ref mut fresh246 = (*emitter).buffer.pointer;
-                                        let fresh247 = *fresh246;
-                                        *fresh246 = (*fresh246).offset(1);
-                                        *fresh247 = *fresh245;
-                                        let fresh248 = string.pointer;
-                                        string.pointer = (string.pointer).offset(1);
-                                        let ref mut fresh249 = (*emitter).buffer.pointer;
-                                        let fresh250 = *fresh249;
-                                        *fresh249 = (*fresh249).offset(1);
-                                        *fresh250 = *fresh248;
-                                    } else {};
                                 };
                             };
                         };
-                        let ref mut fresh251 = (*emitter).column;
-                        *fresh251 += 1;
-                        1 as libc::c_int != 0
-                    })
-                {
-                return 0 as libc::c_int
+                    };
+                    let ref mut fresh251 = (*emitter).column;
+                    *fresh251 += 1;
+                    1 as libc::c_int != 0
+                })
+            {
+                return 0 as libc::c_int;
             }
             spaces = 1 as libc::c_int;
         } else if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                == '\r' as i32 as yaml_char_t as libc::c_int
-                || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                    == '\n' as i32 as yaml_char_t as libc::c_int
-                || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                    == -62i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                        as libc::c_int == -123i32 as yaml_char_t as libc::c_int
-                || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                    == -30i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                        as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                        as libc::c_int == -88i32 as yaml_char_t as libc::c_int
-                || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                    == -30i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                        as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                        as libc::c_int == -87i32 as yaml_char_t as libc::c_int
-            {
+            == '\r' as i32 as yaml_char_t as libc::c_int
+            || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                == '\n' as i32 as yaml_char_t as libc::c_int
+            || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                == -62i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -123i32 as yaml_char_t as libc::c_int
+            || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                == -30i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -128i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -88i32 as yaml_char_t as libc::c_int
+            || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                == -30i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -128i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -87i32 as yaml_char_t as libc::c_int
+        {
             if breaks == 0
                 && *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                     == '\n' as i32 as yaml_char_t as libc::c_int
             {
                 if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                    < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                    < (*emitter).buffer.end
+                    || yaml_emitter_flush(emitter) != 0)
                     && {
                         if (*emitter).line_break as libc::c_uint
                             == YAML_CR_BREAK as libc::c_int as libc::c_uint
@@ -4054,7 +4099,8 @@ unsafe extern "C" fn yaml_emitter_write_plain_scalar(
                                     let fresh259 = *fresh258;
                                     *fresh258 = (*fresh258).offset(1);
                                     *fresh259 = '\n' as i32 as yaml_char_t;
-                                } else {};
+                                } else {
+                                };
                             };
                         };
                         (*emitter).column = 0 as libc::c_int;
@@ -4067,12 +4113,14 @@ unsafe extern "C" fn yaml_emitter_write_plain_scalar(
                 }
             }
             if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                < (*emitter).buffer.end
+                || yaml_emitter_flush(emitter) != 0)
                 && (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                     == '\n' as i32 as yaml_char_t as libc::c_int
                 {
                     ((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                        < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                        < (*emitter).buffer.end
+                        || yaml_emitter_flush(emitter) != 0)
                         && {
                             if (*emitter).line_break as libc::c_uint
                                 == YAML_CR_BREAK as libc::c_int as libc::c_uint
@@ -4101,7 +4149,8 @@ unsafe extern "C" fn yaml_emitter_write_plain_scalar(
                                         let fresh268 = *fresh267;
                                         *fresh267 = (*fresh267).offset(1);
                                         *fresh268 = '\n' as i32 as yaml_char_t;
-                                    } else {};
+                                    } else {
+                                    };
                                 };
                             };
                             (*emitter).column = 0 as libc::c_int;
@@ -4112,9 +4161,7 @@ unsafe extern "C" fn yaml_emitter_write_plain_scalar(
                     string.pointer = (string.pointer).offset(1);
                     1 as libc::c_int
                 } else {
-                    if *string.pointer as libc::c_int & 0x80 as libc::c_int
-                        == 0 as libc::c_int
-                    {
+                    if *string.pointer as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int {
                         let fresh270 = string.pointer;
                         string.pointer = (string.pointer).offset(1);
                         let ref mut fresh271 = (*emitter).buffer.pointer;
@@ -4187,7 +4234,8 @@ unsafe extern "C" fn yaml_emitter_write_plain_scalar(
                                     let fresh299 = *fresh298;
                                     *fresh298 = (*fresh298).offset(1);
                                     *fresh299 = *fresh297;
-                                } else {};
+                                } else {
+                                };
                             };
                         };
                     };
@@ -4208,11 +4256,10 @@ unsafe extern "C" fn yaml_emitter_write_plain_scalar(
                 }
             }
             if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                < (*emitter).buffer.end
+                || yaml_emitter_flush(emitter) != 0)
                 && {
-                    if *string.pointer as libc::c_int & 0x80 as libc::c_int
-                        == 0 as libc::c_int
-                    {
+                    if *string.pointer as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int {
                         let fresh301 = string.pointer;
                         string.pointer = (string.pointer).offset(1);
                         let ref mut fresh302 = (*emitter).buffer.pointer;
@@ -4285,7 +4332,8 @@ unsafe extern "C" fn yaml_emitter_write_plain_scalar(
                                     let fresh330 = *fresh329;
                                     *fresh329 = (*fresh329).offset(1);
                                     *fresh330 = *fresh328;
-                                } else {};
+                                } else {
+                                };
                             };
                         };
                     };
@@ -4335,7 +4383,8 @@ unsafe extern "C" fn yaml_emitter_write_single_quoted_scalar(
         if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
             == ' ' as i32 as yaml_char_t as libc::c_int
         {
-            if allow_breaks != 0 && spaces == 0
+            if allow_breaks != 0
+                && spaces == 0
                 && (*emitter).column > (*emitter).best_width
                 && string.pointer != string.start
                 && string.pointer != (string.end).offset(-(1 as libc::c_int as isize))
@@ -4345,151 +4394,154 @@ unsafe extern "C" fn yaml_emitter_write_single_quoted_scalar(
                 if yaml_emitter_write_indent(emitter) == 0 {
                     return 0 as libc::c_int;
                 }
-                string
-                    .pointer = (string.pointer)
-                    .offset(
-                        (if *(string.pointer).offset(0 as libc::c_int as isize)
-                            as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
-                        {
-                            1 as libc::c_int
-                        } else if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
-                            {
-                            2 as libc::c_int
-                        } else if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
-                            {
-                            3 as libc::c_int
-                        } else if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
-                            {
-                            4 as libc::c_int
-                        } else {
-                            0 as libc::c_int
-                        }) as isize,
-                    );
+                string.pointer = (string.pointer).offset(
+                    (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0x80 as libc::c_int
+                        == 0 as libc::c_int
+                    {
+                        1 as libc::c_int
+                    } else if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0xe0 as libc::c_int
+                        == 0xc0 as libc::c_int
+                    {
+                        2 as libc::c_int
+                    } else if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0xf0 as libc::c_int
+                        == 0xe0 as libc::c_int
+                    {
+                        3 as libc::c_int
+                    } else if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0xf8 as libc::c_int
+                        == 0xf0 as libc::c_int
+                    {
+                        4 as libc::c_int
+                    } else {
+                        0 as libc::c_int
+                    }) as isize,
+                );
             } else if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                    < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
-                    && {
-                        if *string.pointer as libc::c_int & 0x80 as libc::c_int
-                            == 0 as libc::c_int
+                < (*emitter).buffer.end
+                || yaml_emitter_flush(emitter) != 0)
+                && {
+                    if *string.pointer as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int {
+                        let fresh332 = string.pointer;
+                        string.pointer = (string.pointer).offset(1);
+                        let ref mut fresh333 = (*emitter).buffer.pointer;
+                        let fresh334 = *fresh333;
+                        *fresh333 = (*fresh333).offset(1);
+                        *fresh334 = *fresh332;
+                    } else {
+                        if *string.pointer as libc::c_int & 0xe0 as libc::c_int
+                            == 0xc0 as libc::c_int
                         {
-                            let fresh332 = string.pointer;
+                            let fresh335 = string.pointer;
                             string.pointer = (string.pointer).offset(1);
-                            let ref mut fresh333 = (*emitter).buffer.pointer;
-                            let fresh334 = *fresh333;
-                            *fresh333 = (*fresh333).offset(1);
-                            *fresh334 = *fresh332;
+                            let ref mut fresh336 = (*emitter).buffer.pointer;
+                            let fresh337 = *fresh336;
+                            *fresh336 = (*fresh336).offset(1);
+                            *fresh337 = *fresh335;
+                            let fresh338 = string.pointer;
+                            string.pointer = (string.pointer).offset(1);
+                            let ref mut fresh339 = (*emitter).buffer.pointer;
+                            let fresh340 = *fresh339;
+                            *fresh339 = (*fresh339).offset(1);
+                            *fresh340 = *fresh338;
                         } else {
-                            if *string.pointer as libc::c_int & 0xe0 as libc::c_int
-                                == 0xc0 as libc::c_int
+                            if *string.pointer as libc::c_int & 0xf0 as libc::c_int
+                                == 0xe0 as libc::c_int
                             {
-                                let fresh335 = string.pointer;
+                                let fresh341 = string.pointer;
                                 string.pointer = (string.pointer).offset(1);
-                                let ref mut fresh336 = (*emitter).buffer.pointer;
-                                let fresh337 = *fresh336;
-                                *fresh336 = (*fresh336).offset(1);
-                                *fresh337 = *fresh335;
-                                let fresh338 = string.pointer;
+                                let ref mut fresh342 = (*emitter).buffer.pointer;
+                                let fresh343 = *fresh342;
+                                *fresh342 = (*fresh342).offset(1);
+                                *fresh343 = *fresh341;
+                                let fresh344 = string.pointer;
                                 string.pointer = (string.pointer).offset(1);
-                                let ref mut fresh339 = (*emitter).buffer.pointer;
-                                let fresh340 = *fresh339;
-                                *fresh339 = (*fresh339).offset(1);
-                                *fresh340 = *fresh338;
+                                let ref mut fresh345 = (*emitter).buffer.pointer;
+                                let fresh346 = *fresh345;
+                                *fresh345 = (*fresh345).offset(1);
+                                *fresh346 = *fresh344;
+                                let fresh347 = string.pointer;
+                                string.pointer = (string.pointer).offset(1);
+                                let ref mut fresh348 = (*emitter).buffer.pointer;
+                                let fresh349 = *fresh348;
+                                *fresh348 = (*fresh348).offset(1);
+                                *fresh349 = *fresh347;
                             } else {
-                                if *string.pointer as libc::c_int & 0xf0 as libc::c_int
-                                    == 0xe0 as libc::c_int
+                                if *string.pointer as libc::c_int & 0xf8 as libc::c_int
+                                    == 0xf0 as libc::c_int
                                 {
-                                    let fresh341 = string.pointer;
+                                    let fresh350 = string.pointer;
                                     string.pointer = (string.pointer).offset(1);
-                                    let ref mut fresh342 = (*emitter).buffer.pointer;
-                                    let fresh343 = *fresh342;
-                                    *fresh342 = (*fresh342).offset(1);
-                                    *fresh343 = *fresh341;
-                                    let fresh344 = string.pointer;
+                                    let ref mut fresh351 = (*emitter).buffer.pointer;
+                                    let fresh352 = *fresh351;
+                                    *fresh351 = (*fresh351).offset(1);
+                                    *fresh352 = *fresh350;
+                                    let fresh353 = string.pointer;
                                     string.pointer = (string.pointer).offset(1);
-                                    let ref mut fresh345 = (*emitter).buffer.pointer;
-                                    let fresh346 = *fresh345;
-                                    *fresh345 = (*fresh345).offset(1);
-                                    *fresh346 = *fresh344;
-                                    let fresh347 = string.pointer;
+                                    let ref mut fresh354 = (*emitter).buffer.pointer;
+                                    let fresh355 = *fresh354;
+                                    *fresh354 = (*fresh354).offset(1);
+                                    *fresh355 = *fresh353;
+                                    let fresh356 = string.pointer;
                                     string.pointer = (string.pointer).offset(1);
-                                    let ref mut fresh348 = (*emitter).buffer.pointer;
-                                    let fresh349 = *fresh348;
-                                    *fresh348 = (*fresh348).offset(1);
-                                    *fresh349 = *fresh347;
+                                    let ref mut fresh357 = (*emitter).buffer.pointer;
+                                    let fresh358 = *fresh357;
+                                    *fresh357 = (*fresh357).offset(1);
+                                    *fresh358 = *fresh356;
+                                    let fresh359 = string.pointer;
+                                    string.pointer = (string.pointer).offset(1);
+                                    let ref mut fresh360 = (*emitter).buffer.pointer;
+                                    let fresh361 = *fresh360;
+                                    *fresh360 = (*fresh360).offset(1);
+                                    *fresh361 = *fresh359;
                                 } else {
-                                    if *string.pointer as libc::c_int & 0xf8 as libc::c_int
-                                        == 0xf0 as libc::c_int
-                                    {
-                                        let fresh350 = string.pointer;
-                                        string.pointer = (string.pointer).offset(1);
-                                        let ref mut fresh351 = (*emitter).buffer.pointer;
-                                        let fresh352 = *fresh351;
-                                        *fresh351 = (*fresh351).offset(1);
-                                        *fresh352 = *fresh350;
-                                        let fresh353 = string.pointer;
-                                        string.pointer = (string.pointer).offset(1);
-                                        let ref mut fresh354 = (*emitter).buffer.pointer;
-                                        let fresh355 = *fresh354;
-                                        *fresh354 = (*fresh354).offset(1);
-                                        *fresh355 = *fresh353;
-                                        let fresh356 = string.pointer;
-                                        string.pointer = (string.pointer).offset(1);
-                                        let ref mut fresh357 = (*emitter).buffer.pointer;
-                                        let fresh358 = *fresh357;
-                                        *fresh357 = (*fresh357).offset(1);
-                                        *fresh358 = *fresh356;
-                                        let fresh359 = string.pointer;
-                                        string.pointer = (string.pointer).offset(1);
-                                        let ref mut fresh360 = (*emitter).buffer.pointer;
-                                        let fresh361 = *fresh360;
-                                        *fresh360 = (*fresh360).offset(1);
-                                        *fresh361 = *fresh359;
-                                    } else {};
                                 };
                             };
                         };
-                        let ref mut fresh362 = (*emitter).column;
-                        *fresh362 += 1;
-                        1 as libc::c_int != 0
-                    })
-                {
-                return 0 as libc::c_int
+                    };
+                    let ref mut fresh362 = (*emitter).column;
+                    *fresh362 += 1;
+                    1 as libc::c_int != 0
+                })
+            {
+                return 0 as libc::c_int;
             }
             spaces = 1 as libc::c_int;
         } else if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                == '\r' as i32 as yaml_char_t as libc::c_int
-                || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                    == '\n' as i32 as yaml_char_t as libc::c_int
-                || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                    == -62i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                        as libc::c_int == -123i32 as yaml_char_t as libc::c_int
-                || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                    == -30i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                        as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                        as libc::c_int == -88i32 as yaml_char_t as libc::c_int
-                || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                    == -30i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                        as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                        as libc::c_int == -87i32 as yaml_char_t as libc::c_int
-            {
+            == '\r' as i32 as yaml_char_t as libc::c_int
+            || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                == '\n' as i32 as yaml_char_t as libc::c_int
+            || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                == -62i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -123i32 as yaml_char_t as libc::c_int
+            || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                == -30i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -128i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -88i32 as yaml_char_t as libc::c_int
+            || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                == -30i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -128i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -87i32 as yaml_char_t as libc::c_int
+        {
             if breaks == 0
                 && *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                     == '\n' as i32 as yaml_char_t as libc::c_int
             {
                 if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                    < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                    < (*emitter).buffer.end
+                    || yaml_emitter_flush(emitter) != 0)
                     && {
                         if (*emitter).line_break as libc::c_uint
                             == YAML_CR_BREAK as libc::c_int as libc::c_uint
@@ -4518,7 +4570,8 @@ unsafe extern "C" fn yaml_emitter_write_single_quoted_scalar(
                                     let fresh370 = *fresh369;
                                     *fresh369 = (*fresh369).offset(1);
                                     *fresh370 = '\n' as i32 as yaml_char_t;
-                                } else {};
+                                } else {
+                                };
                             };
                         };
                         (*emitter).column = 0 as libc::c_int;
@@ -4531,12 +4584,14 @@ unsafe extern "C" fn yaml_emitter_write_single_quoted_scalar(
                 }
             }
             if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                < (*emitter).buffer.end
+                || yaml_emitter_flush(emitter) != 0)
                 && (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                     == '\n' as i32 as yaml_char_t as libc::c_int
                 {
                     ((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                        < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                        < (*emitter).buffer.end
+                        || yaml_emitter_flush(emitter) != 0)
                         && {
                             if (*emitter).line_break as libc::c_uint
                                 == YAML_CR_BREAK as libc::c_int as libc::c_uint
@@ -4565,7 +4620,8 @@ unsafe extern "C" fn yaml_emitter_write_single_quoted_scalar(
                                         let fresh379 = *fresh378;
                                         *fresh378 = (*fresh378).offset(1);
                                         *fresh379 = '\n' as i32 as yaml_char_t;
-                                    } else {};
+                                    } else {
+                                    };
                                 };
                             };
                             (*emitter).column = 0 as libc::c_int;
@@ -4576,9 +4632,7 @@ unsafe extern "C" fn yaml_emitter_write_single_quoted_scalar(
                     string.pointer = (string.pointer).offset(1);
                     1 as libc::c_int
                 } else {
-                    if *string.pointer as libc::c_int & 0x80 as libc::c_int
-                        == 0 as libc::c_int
-                    {
+                    if *string.pointer as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int {
                         let fresh381 = string.pointer;
                         string.pointer = (string.pointer).offset(1);
                         let ref mut fresh382 = (*emitter).buffer.pointer;
@@ -4651,7 +4705,8 @@ unsafe extern "C" fn yaml_emitter_write_single_quoted_scalar(
                                     let fresh410 = *fresh409;
                                     *fresh409 = (*fresh409).offset(1);
                                     *fresh410 = *fresh408;
-                                } else {};
+                                } else {
+                                };
                             };
                         };
                     };
@@ -4675,7 +4730,8 @@ unsafe extern "C" fn yaml_emitter_write_single_quoted_scalar(
                 == '\'' as i32 as yaml_char_t as libc::c_int
             {
                 if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                    < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                    < (*emitter).buffer.end
+                    || yaml_emitter_flush(emitter) != 0)
                     && {
                         let ref mut fresh412 = (*emitter).buffer.pointer;
                         let fresh413 = *fresh412;
@@ -4690,11 +4746,10 @@ unsafe extern "C" fn yaml_emitter_write_single_quoted_scalar(
                 }
             }
             if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                < (*emitter).buffer.end
+                || yaml_emitter_flush(emitter) != 0)
                 && {
-                    if *string.pointer as libc::c_int & 0x80 as libc::c_int
-                        == 0 as libc::c_int
-                    {
+                    if *string.pointer as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int {
                         let fresh415 = string.pointer;
                         string.pointer = (string.pointer).offset(1);
                         let ref mut fresh416 = (*emitter).buffer.pointer;
@@ -4767,7 +4822,8 @@ unsafe extern "C" fn yaml_emitter_write_single_quoted_scalar(
                                     let fresh444 = *fresh443;
                                     *fresh443 = (*fresh443).offset(1);
                                     *fresh444 = *fresh442;
-                                } else {};
+                                } else {
+                                };
                             };
                         };
                     };
@@ -4836,73 +4892,73 @@ unsafe extern "C" fn yaml_emitter_write_double_quoted_scalar(
                     <= 0x7e as libc::c_int
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 == 0xc2 as libc::c_int
-                && *(string.pointer)
-                    .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                    as libc::c_int >= 0xa0 as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    >= 0xa0 as libc::c_int
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 > 0xc2 as libc::c_int
                 && (*(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int)
                     < 0xed as libc::c_int
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 == 0xed as libc::c_int
-                && (*(string.pointer)
-                    .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                    as libc::c_int) < 0xa0 as libc::c_int
+                && (*(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int)
+                    < 0xa0 as libc::c_int
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 == 0xee as libc::c_int
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 == 0xef as libc::c_int
-                && !(*(string.pointer)
-                    .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                    as libc::c_int == 0xbb as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                        as libc::c_int == 0xbf as libc::c_int)
-                && !(*(string.pointer)
-                    .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                    as libc::c_int == 0xbf as libc::c_int
-                    && (*(string.pointer)
-                        .offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                        as libc::c_int == 0xbe as libc::c_int
-                        || *(string.pointer)
-                            .offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                            as libc::c_int == 0xbf as libc::c_int)))
+                && !(*(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == 0xbb as libc::c_int
+                    && *(string.pointer).offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                        as libc::c_int
+                        == 0xbf as libc::c_int)
+                && !(*(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == 0xbf as libc::c_int
+                    && (*(string.pointer).offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                        as libc::c_int
+                        == 0xbe as libc::c_int
+                        || *(string.pointer).offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                            as libc::c_int
+                            == 0xbf as libc::c_int)))
             || (*emitter).unicode == 0
                 && !(*(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                     <= '\u{7f}' as i32 as yaml_char_t as libc::c_int)
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 == -17i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                    as libc::c_int == -69i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                    as libc::c_int == -65i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -69i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -65i32 as yaml_char_t as libc::c_int
             || (*(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 == '\r' as i32 as yaml_char_t as libc::c_int
                 || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                     == '\n' as i32 as yaml_char_t as libc::c_int
                 || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                     == -62i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                        as libc::c_int == -123i32 as yaml_char_t as libc::c_int
+                    && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                        as libc::c_int
+                        == -123i32 as yaml_char_t as libc::c_int
                 || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                     == -30i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                        as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                        as libc::c_int == -88i32 as yaml_char_t as libc::c_int
+                    && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                        as libc::c_int
+                        == -128i32 as yaml_char_t as libc::c_int
+                    && *(string.pointer).offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                        as libc::c_int
+                        == -88i32 as yaml_char_t as libc::c_int
                 || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                     == -30i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                        as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                        as libc::c_int == -87i32 as yaml_char_t as libc::c_int)
+                    && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                        as libc::c_int
+                        == -128i32 as yaml_char_t as libc::c_int
+                    && *(string.pointer).offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                        as libc::c_int
+                        == -87i32 as yaml_char_t as libc::c_int)
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 == '"' as i32 as yaml_char_t as libc::c_int
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
@@ -4924,8 +4980,7 @@ unsafe extern "C" fn yaml_emitter_write_double_quoted_scalar(
             } else {
                 0 as libc::c_int
             }) as libc::c_uint;
-            value_0 = (if octet as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
-            {
+            value_0 = (if octet as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int {
                 octet as libc::c_int & 0x7f as libc::c_int
             } else if octet as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int {
                 octet as libc::c_int & 0x1f as libc::c_int
@@ -4940,14 +4995,13 @@ unsafe extern "C" fn yaml_emitter_write_double_quoted_scalar(
             while k < width as libc::c_int {
                 octet = *(string.pointer).offset(k as isize);
                 value_0 = (value_0 << 6 as libc::c_int)
-                    .wrapping_add(
-                        (octet as libc::c_int & 0x3f as libc::c_int) as libc::c_uint,
-                    );
+                    .wrapping_add((octet as libc::c_int & 0x3f as libc::c_int) as libc::c_uint);
                 k += 1;
             }
             string.pointer = (string.pointer).offset(width as isize);
             if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                < (*emitter).buffer.end
+                || yaml_emitter_flush(emitter) != 0)
                 && {
                     let ref mut fresh446 = (*emitter).buffer.pointer;
                     let fresh447 = *fresh446;
@@ -4963,7 +5017,8 @@ unsafe extern "C" fn yaml_emitter_write_double_quoted_scalar(
             match value_0 {
                 0 => {
                     if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                        < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                        < (*emitter).buffer.end
+                        || yaml_emitter_flush(emitter) != 0)
                         && {
                             let ref mut fresh449 = (*emitter).buffer.pointer;
                             let fresh450 = *fresh449;
@@ -4979,7 +5034,8 @@ unsafe extern "C" fn yaml_emitter_write_double_quoted_scalar(
                 }
                 7 => {
                     if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                        < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                        < (*emitter).buffer.end
+                        || yaml_emitter_flush(emitter) != 0)
                         && {
                             let ref mut fresh452 = (*emitter).buffer.pointer;
                             let fresh453 = *fresh452;
@@ -4995,7 +5051,8 @@ unsafe extern "C" fn yaml_emitter_write_double_quoted_scalar(
                 }
                 8 => {
                     if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                        < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                        < (*emitter).buffer.end
+                        || yaml_emitter_flush(emitter) != 0)
                         && {
                             let ref mut fresh455 = (*emitter).buffer.pointer;
                             let fresh456 = *fresh455;
@@ -5011,7 +5068,8 @@ unsafe extern "C" fn yaml_emitter_write_double_quoted_scalar(
                 }
                 9 => {
                     if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                        < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                        < (*emitter).buffer.end
+                        || yaml_emitter_flush(emitter) != 0)
                         && {
                             let ref mut fresh458 = (*emitter).buffer.pointer;
                             let fresh459 = *fresh458;
@@ -5027,7 +5085,8 @@ unsafe extern "C" fn yaml_emitter_write_double_quoted_scalar(
                 }
                 10 => {
                     if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                        < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                        < (*emitter).buffer.end
+                        || yaml_emitter_flush(emitter) != 0)
                         && {
                             let ref mut fresh461 = (*emitter).buffer.pointer;
                             let fresh462 = *fresh461;
@@ -5043,7 +5102,8 @@ unsafe extern "C" fn yaml_emitter_write_double_quoted_scalar(
                 }
                 11 => {
                     if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                        < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                        < (*emitter).buffer.end
+                        || yaml_emitter_flush(emitter) != 0)
                         && {
                             let ref mut fresh464 = (*emitter).buffer.pointer;
                             let fresh465 = *fresh464;
@@ -5059,7 +5119,8 @@ unsafe extern "C" fn yaml_emitter_write_double_quoted_scalar(
                 }
                 12 => {
                     if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                        < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                        < (*emitter).buffer.end
+                        || yaml_emitter_flush(emitter) != 0)
                         && {
                             let ref mut fresh467 = (*emitter).buffer.pointer;
                             let fresh468 = *fresh467;
@@ -5075,7 +5136,8 @@ unsafe extern "C" fn yaml_emitter_write_double_quoted_scalar(
                 }
                 13 => {
                     if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                        < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                        < (*emitter).buffer.end
+                        || yaml_emitter_flush(emitter) != 0)
                         && {
                             let ref mut fresh470 = (*emitter).buffer.pointer;
                             let fresh471 = *fresh470;
@@ -5091,7 +5153,8 @@ unsafe extern "C" fn yaml_emitter_write_double_quoted_scalar(
                 }
                 27 => {
                     if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                        < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                        < (*emitter).buffer.end
+                        || yaml_emitter_flush(emitter) != 0)
                         && {
                             let ref mut fresh473 = (*emitter).buffer.pointer;
                             let fresh474 = *fresh473;
@@ -5107,7 +5170,8 @@ unsafe extern "C" fn yaml_emitter_write_double_quoted_scalar(
                 }
                 34 => {
                     if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                        < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                        < (*emitter).buffer.end
+                        || yaml_emitter_flush(emitter) != 0)
                         && {
                             let ref mut fresh476 = (*emitter).buffer.pointer;
                             let fresh477 = *fresh476;
@@ -5123,7 +5187,8 @@ unsafe extern "C" fn yaml_emitter_write_double_quoted_scalar(
                 }
                 92 => {
                     if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                        < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                        < (*emitter).buffer.end
+                        || yaml_emitter_flush(emitter) != 0)
                         && {
                             let ref mut fresh479 = (*emitter).buffer.pointer;
                             let fresh480 = *fresh479;
@@ -5139,7 +5204,8 @@ unsafe extern "C" fn yaml_emitter_write_double_quoted_scalar(
                 }
                 133 => {
                     if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                        < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                        < (*emitter).buffer.end
+                        || yaml_emitter_flush(emitter) != 0)
                         && {
                             let ref mut fresh482 = (*emitter).buffer.pointer;
                             let fresh483 = *fresh482;
@@ -5155,7 +5221,8 @@ unsafe extern "C" fn yaml_emitter_write_double_quoted_scalar(
                 }
                 160 => {
                     if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                        < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                        < (*emitter).buffer.end
+                        || yaml_emitter_flush(emitter) != 0)
                         && {
                             let ref mut fresh485 = (*emitter).buffer.pointer;
                             let fresh486 = *fresh485;
@@ -5171,7 +5238,8 @@ unsafe extern "C" fn yaml_emitter_write_double_quoted_scalar(
                 }
                 8232 => {
                     if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                        < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                        < (*emitter).buffer.end
+                        || yaml_emitter_flush(emitter) != 0)
                         && {
                             let ref mut fresh488 = (*emitter).buffer.pointer;
                             let fresh489 = *fresh488;
@@ -5187,7 +5255,8 @@ unsafe extern "C" fn yaml_emitter_write_double_quoted_scalar(
                 }
                 8233 => {
                     if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                        < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                        < (*emitter).buffer.end
+                        || yaml_emitter_flush(emitter) != 0)
                         && {
                             let ref mut fresh491 = (*emitter).buffer.pointer;
                             let fresh492 = *fresh491;
@@ -5203,8 +5272,8 @@ unsafe extern "C" fn yaml_emitter_write_double_quoted_scalar(
                 }
                 _ => {
                     if value_0 <= 0xff as libc::c_int as libc::c_uint {
-                        if !((((*emitter).buffer.pointer)
-                            .offset(5 as libc::c_int as isize) < (*emitter).buffer.end
+                        if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
+                            < (*emitter).buffer.end
                             || yaml_emitter_flush(emitter) != 0)
                             && {
                                 let ref mut fresh494 = (*emitter).buffer.pointer;
@@ -5220,8 +5289,8 @@ unsafe extern "C" fn yaml_emitter_write_double_quoted_scalar(
                         }
                         width = 2 as libc::c_int as libc::c_uint;
                     } else if value_0 <= 0xffff as libc::c_int as libc::c_uint {
-                        if !((((*emitter).buffer.pointer)
-                            .offset(5 as libc::c_int as isize) < (*emitter).buffer.end
+                        if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
+                            < (*emitter).buffer.end
                             || yaml_emitter_flush(emitter) != 0)
                             && {
                                 let ref mut fresh497 = (*emitter).buffer.pointer;
@@ -5237,8 +5306,8 @@ unsafe extern "C" fn yaml_emitter_write_double_quoted_scalar(
                         }
                         width = 4 as libc::c_int as libc::c_uint;
                     } else {
-                        if !((((*emitter).buffer.pointer)
-                            .offset(5 as libc::c_int as isize) < (*emitter).buffer.end
+                        if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
+                            < (*emitter).buffer.end
                             || yaml_emitter_flush(emitter) != 0)
                             && {
                                 let ref mut fresh500 = (*emitter).buffer.pointer;
@@ -5256,12 +5325,13 @@ unsafe extern "C" fn yaml_emitter_write_double_quoted_scalar(
                     }
                     k = width
                         .wrapping_sub(1 as libc::c_int as libc::c_uint)
-                        .wrapping_mul(4 as libc::c_int as libc::c_uint) as libc::c_int;
+                        .wrapping_mul(4 as libc::c_int as libc::c_uint)
+                        as libc::c_int;
                     while k >= 0 as libc::c_int {
-                        let mut digit: libc::c_int = (value_0 >> k
-                            & 0xf as libc::c_int as libc::c_uint) as libc::c_int;
-                        if !((((*emitter).buffer.pointer)
-                            .offset(5 as libc::c_int as isize) < (*emitter).buffer.end
+                        let mut digit: libc::c_int =
+                            (value_0 >> k & 0xf as libc::c_int as libc::c_uint) as libc::c_int;
+                        if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
+                            < (*emitter).buffer.end
                             || yaml_emitter_flush(emitter) != 0)
                             && {
                                 let ref mut fresh503 = (*emitter).buffer.pointer;
@@ -5286,9 +5356,10 @@ unsafe extern "C" fn yaml_emitter_write_double_quoted_scalar(
             }
             spaces = 0 as libc::c_int;
         } else if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                == ' ' as i32 as yaml_char_t as libc::c_int
-            {
-            if allow_breaks != 0 && spaces == 0
+            == ' ' as i32 as yaml_char_t as libc::c_int
+        {
+            if allow_breaks != 0
+                && spaces == 0
                 && (*emitter).column > (*emitter).best_width
                 && string.pointer != string.start
                 && string.pointer != (string.end).offset(-(1 as libc::c_int as isize))
@@ -5300,7 +5371,8 @@ unsafe extern "C" fn yaml_emitter_write_double_quoted_scalar(
                     == ' ' as i32 as yaml_char_t as libc::c_int
                 {
                     if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                        < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                        < (*emitter).buffer.end
+                        || yaml_emitter_flush(emitter) != 0)
                         && {
                             let ref mut fresh506 = (*emitter).buffer.pointer;
                             let fresh507 = *fresh506;
@@ -5314,126 +5386,127 @@ unsafe extern "C" fn yaml_emitter_write_double_quoted_scalar(
                         return 0 as libc::c_int;
                     }
                 }
-                string
-                    .pointer = (string.pointer)
-                    .offset(
-                        (if *(string.pointer).offset(0 as libc::c_int as isize)
-                            as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
-                        {
-                            1 as libc::c_int
-                        } else if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
-                            {
-                            2 as libc::c_int
-                        } else if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
-                            {
-                            3 as libc::c_int
-                        } else if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
-                            {
-                            4 as libc::c_int
-                        } else {
-                            0 as libc::c_int
-                        }) as isize,
-                    );
+                string.pointer = (string.pointer).offset(
+                    (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0x80 as libc::c_int
+                        == 0 as libc::c_int
+                    {
+                        1 as libc::c_int
+                    } else if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0xe0 as libc::c_int
+                        == 0xc0 as libc::c_int
+                    {
+                        2 as libc::c_int
+                    } else if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0xf0 as libc::c_int
+                        == 0xe0 as libc::c_int
+                    {
+                        3 as libc::c_int
+                    } else if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0xf8 as libc::c_int
+                        == 0xf0 as libc::c_int
+                    {
+                        4 as libc::c_int
+                    } else {
+                        0 as libc::c_int
+                    }) as isize,
+                );
             } else if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                    < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
-                    && {
-                        if *string.pointer as libc::c_int & 0x80 as libc::c_int
-                            == 0 as libc::c_int
+                < (*emitter).buffer.end
+                || yaml_emitter_flush(emitter) != 0)
+                && {
+                    if *string.pointer as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int {
+                        let fresh509 = string.pointer;
+                        string.pointer = (string.pointer).offset(1);
+                        let ref mut fresh510 = (*emitter).buffer.pointer;
+                        let fresh511 = *fresh510;
+                        *fresh510 = (*fresh510).offset(1);
+                        *fresh511 = *fresh509;
+                    } else {
+                        if *string.pointer as libc::c_int & 0xe0 as libc::c_int
+                            == 0xc0 as libc::c_int
                         {
-                            let fresh509 = string.pointer;
+                            let fresh512 = string.pointer;
                             string.pointer = (string.pointer).offset(1);
-                            let ref mut fresh510 = (*emitter).buffer.pointer;
-                            let fresh511 = *fresh510;
-                            *fresh510 = (*fresh510).offset(1);
-                            *fresh511 = *fresh509;
+                            let ref mut fresh513 = (*emitter).buffer.pointer;
+                            let fresh514 = *fresh513;
+                            *fresh513 = (*fresh513).offset(1);
+                            *fresh514 = *fresh512;
+                            let fresh515 = string.pointer;
+                            string.pointer = (string.pointer).offset(1);
+                            let ref mut fresh516 = (*emitter).buffer.pointer;
+                            let fresh517 = *fresh516;
+                            *fresh516 = (*fresh516).offset(1);
+                            *fresh517 = *fresh515;
                         } else {
-                            if *string.pointer as libc::c_int & 0xe0 as libc::c_int
-                                == 0xc0 as libc::c_int
+                            if *string.pointer as libc::c_int & 0xf0 as libc::c_int
+                                == 0xe0 as libc::c_int
                             {
-                                let fresh512 = string.pointer;
+                                let fresh518 = string.pointer;
                                 string.pointer = (string.pointer).offset(1);
-                                let ref mut fresh513 = (*emitter).buffer.pointer;
-                                let fresh514 = *fresh513;
-                                *fresh513 = (*fresh513).offset(1);
-                                *fresh514 = *fresh512;
-                                let fresh515 = string.pointer;
+                                let ref mut fresh519 = (*emitter).buffer.pointer;
+                                let fresh520 = *fresh519;
+                                *fresh519 = (*fresh519).offset(1);
+                                *fresh520 = *fresh518;
+                                let fresh521 = string.pointer;
                                 string.pointer = (string.pointer).offset(1);
-                                let ref mut fresh516 = (*emitter).buffer.pointer;
-                                let fresh517 = *fresh516;
-                                *fresh516 = (*fresh516).offset(1);
-                                *fresh517 = *fresh515;
+                                let ref mut fresh522 = (*emitter).buffer.pointer;
+                                let fresh523 = *fresh522;
+                                *fresh522 = (*fresh522).offset(1);
+                                *fresh523 = *fresh521;
+                                let fresh524 = string.pointer;
+                                string.pointer = (string.pointer).offset(1);
+                                let ref mut fresh525 = (*emitter).buffer.pointer;
+                                let fresh526 = *fresh525;
+                                *fresh525 = (*fresh525).offset(1);
+                                *fresh526 = *fresh524;
                             } else {
-                                if *string.pointer as libc::c_int & 0xf0 as libc::c_int
-                                    == 0xe0 as libc::c_int
+                                if *string.pointer as libc::c_int & 0xf8 as libc::c_int
+                                    == 0xf0 as libc::c_int
                                 {
-                                    let fresh518 = string.pointer;
+                                    let fresh527 = string.pointer;
                                     string.pointer = (string.pointer).offset(1);
-                                    let ref mut fresh519 = (*emitter).buffer.pointer;
-                                    let fresh520 = *fresh519;
-                                    *fresh519 = (*fresh519).offset(1);
-                                    *fresh520 = *fresh518;
-                                    let fresh521 = string.pointer;
+                                    let ref mut fresh528 = (*emitter).buffer.pointer;
+                                    let fresh529 = *fresh528;
+                                    *fresh528 = (*fresh528).offset(1);
+                                    *fresh529 = *fresh527;
+                                    let fresh530 = string.pointer;
                                     string.pointer = (string.pointer).offset(1);
-                                    let ref mut fresh522 = (*emitter).buffer.pointer;
-                                    let fresh523 = *fresh522;
-                                    *fresh522 = (*fresh522).offset(1);
-                                    *fresh523 = *fresh521;
-                                    let fresh524 = string.pointer;
+                                    let ref mut fresh531 = (*emitter).buffer.pointer;
+                                    let fresh532 = *fresh531;
+                                    *fresh531 = (*fresh531).offset(1);
+                                    *fresh532 = *fresh530;
+                                    let fresh533 = string.pointer;
                                     string.pointer = (string.pointer).offset(1);
-                                    let ref mut fresh525 = (*emitter).buffer.pointer;
-                                    let fresh526 = *fresh525;
-                                    *fresh525 = (*fresh525).offset(1);
-                                    *fresh526 = *fresh524;
+                                    let ref mut fresh534 = (*emitter).buffer.pointer;
+                                    let fresh535 = *fresh534;
+                                    *fresh534 = (*fresh534).offset(1);
+                                    *fresh535 = *fresh533;
+                                    let fresh536 = string.pointer;
+                                    string.pointer = (string.pointer).offset(1);
+                                    let ref mut fresh537 = (*emitter).buffer.pointer;
+                                    let fresh538 = *fresh537;
+                                    *fresh537 = (*fresh537).offset(1);
+                                    *fresh538 = *fresh536;
                                 } else {
-                                    if *string.pointer as libc::c_int & 0xf8 as libc::c_int
-                                        == 0xf0 as libc::c_int
-                                    {
-                                        let fresh527 = string.pointer;
-                                        string.pointer = (string.pointer).offset(1);
-                                        let ref mut fresh528 = (*emitter).buffer.pointer;
-                                        let fresh529 = *fresh528;
-                                        *fresh528 = (*fresh528).offset(1);
-                                        *fresh529 = *fresh527;
-                                        let fresh530 = string.pointer;
-                                        string.pointer = (string.pointer).offset(1);
-                                        let ref mut fresh531 = (*emitter).buffer.pointer;
-                                        let fresh532 = *fresh531;
-                                        *fresh531 = (*fresh531).offset(1);
-                                        *fresh532 = *fresh530;
-                                        let fresh533 = string.pointer;
-                                        string.pointer = (string.pointer).offset(1);
-                                        let ref mut fresh534 = (*emitter).buffer.pointer;
-                                        let fresh535 = *fresh534;
-                                        *fresh534 = (*fresh534).offset(1);
-                                        *fresh535 = *fresh533;
-                                        let fresh536 = string.pointer;
-                                        string.pointer = (string.pointer).offset(1);
-                                        let ref mut fresh537 = (*emitter).buffer.pointer;
-                                        let fresh538 = *fresh537;
-                                        *fresh537 = (*fresh537).offset(1);
-                                        *fresh538 = *fresh536;
-                                    } else {};
                                 };
                             };
                         };
-                        let ref mut fresh539 = (*emitter).column;
-                        *fresh539 += 1;
-                        1 as libc::c_int != 0
-                    })
-                {
-                return 0 as libc::c_int
+                    };
+                    let ref mut fresh539 = (*emitter).column;
+                    *fresh539 += 1;
+                    1 as libc::c_int != 0
+                })
+            {
+                return 0 as libc::c_int;
             }
             spaces = 1 as libc::c_int;
         } else {
             if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                < (*emitter).buffer.end
+                || yaml_emitter_flush(emitter) != 0)
                 && {
-                    if *string.pointer as libc::c_int & 0x80 as libc::c_int
-                        == 0 as libc::c_int
-                    {
+                    if *string.pointer as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int {
                         let fresh540 = string.pointer;
                         string.pointer = (string.pointer).offset(1);
                         let ref mut fresh541 = (*emitter).buffer.pointer;
@@ -5506,7 +5579,8 @@ unsafe extern "C" fn yaml_emitter_write_double_quoted_scalar(
                                     let fresh569 = *fresh568;
                                     *fresh568 = (*fresh568).offset(1);
                                     *fresh569 = *fresh567;
-                                } else {};
+                                } else {
+                                };
                             };
                         };
                     };
@@ -5548,29 +5622,28 @@ unsafe extern "C" fn yaml_emitter_write_block_scalar_hints(
                 == '\n' as i32 as yaml_char_t as libc::c_int
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 == -62i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                    as libc::c_int == -123i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -123i32 as yaml_char_t as libc::c_int
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 == -30i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                    as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                    as libc::c_int == -88i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -128i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -88i32 as yaml_char_t as libc::c_int
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 == -30i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                    as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                    as libc::c_int == -87i32 as yaml_char_t as libc::c_int)
+                && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -128i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -87i32 as yaml_char_t as libc::c_int)
     {
-        indent_hint[0 as libc::c_int
-            as usize] = ('0' as i32
-            + (*emitter).best_indent as libc::c_char as libc::c_int) as libc::c_char;
+        indent_hint[0 as libc::c_int as usize] =
+            ('0' as i32 + (*emitter).best_indent as libc::c_char as libc::c_int) as libc::c_char;
         indent_hint[1 as libc::c_int as usize] = '\0' as i32 as libc::c_char;
         if yaml_emitter_write_indicator(
             emitter,
@@ -5590,9 +5663,7 @@ unsafe extern "C" fn yaml_emitter_write_block_scalar_hints(
     } else {
         loop {
             string.pointer = (string.pointer).offset(-1);
-            if !(*string.pointer as libc::c_int & 0xc0 as libc::c_int
-                == 0x80 as libc::c_int)
-            {
+            if !(*string.pointer as libc::c_int & 0xc0 as libc::c_int == 0x80 as libc::c_int) {
                 break;
             }
         }
@@ -5602,25 +5673,25 @@ unsafe extern "C" fn yaml_emitter_write_block_scalar_hints(
                 == '\n' as i32 as yaml_char_t as libc::c_int
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 == -62i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                    as libc::c_int == -123i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -123i32 as yaml_char_t as libc::c_int
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 == -30i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                    as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                    as libc::c_int == -88i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -128i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -88i32 as yaml_char_t as libc::c_int
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 == -30i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                    as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                    as libc::c_int == -87i32 as yaml_char_t as libc::c_int)
+                && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -128i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -87i32 as yaml_char_t as libc::c_int)
         {
             chomp_hint = b"-\0" as *const u8 as *const libc::c_char;
         } else if string.start == string.pointer {
@@ -5629,9 +5700,7 @@ unsafe extern "C" fn yaml_emitter_write_block_scalar_hints(
         } else {
             loop {
                 string.pointer = (string.pointer).offset(-1);
-                if !(*string.pointer as libc::c_int & 0xc0 as libc::c_int
-                    == 0x80 as libc::c_int)
-                {
+                if !(*string.pointer as libc::c_int & 0xc0 as libc::c_int == 0x80 as libc::c_int) {
                     break;
                 }
             }
@@ -5641,25 +5710,25 @@ unsafe extern "C" fn yaml_emitter_write_block_scalar_hints(
                     == '\n' as i32 as yaml_char_t as libc::c_int
                 || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                     == -62i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                        as libc::c_int == -123i32 as yaml_char_t as libc::c_int
+                    && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                        as libc::c_int
+                        == -123i32 as yaml_char_t as libc::c_int
                 || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                     == -30i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                        as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                        as libc::c_int == -88i32 as yaml_char_t as libc::c_int
+                    && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                        as libc::c_int
+                        == -128i32 as yaml_char_t as libc::c_int
+                    && *(string.pointer).offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                        as libc::c_int
+                        == -88i32 as yaml_char_t as libc::c_int
                 || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                     == -30i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                        as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                    && *(string.pointer)
-                        .offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                        as libc::c_int == -87i32 as yaml_char_t as libc::c_int
+                    && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                        as libc::c_int
+                        == -128i32 as yaml_char_t as libc::c_int
+                    && *(string.pointer).offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                        as libc::c_int
+                        == -87i32 as yaml_char_t as libc::c_int
             {
                 chomp_hint = b"+\0" as *const u8 as *const libc::c_char;
                 (*emitter).open_ended = 2 as libc::c_int;
@@ -5707,11 +5776,10 @@ unsafe extern "C" fn yaml_emitter_write_literal_scalar(
     if yaml_emitter_write_block_scalar_hints(emitter, string) == 0 {
         return 0 as libc::c_int;
     }
-    if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-        < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+    if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize) < (*emitter).buffer.end
+        || yaml_emitter_flush(emitter) != 0)
         && {
-            if (*emitter).line_break as libc::c_uint
-                == YAML_CR_BREAK as libc::c_int as libc::c_uint
+            if (*emitter).line_break as libc::c_uint == YAML_CR_BREAK as libc::c_int as libc::c_uint
             {
                 let ref mut fresh571 = (*emitter).buffer.pointer;
                 let fresh572 = *fresh571;
@@ -5737,7 +5805,8 @@ unsafe extern "C" fn yaml_emitter_write_literal_scalar(
                         let fresh578 = *fresh577;
                         *fresh577 = (*fresh577).offset(1);
                         *fresh578 = '\n' as i32 as yaml_char_t;
-                    } else {};
+                    } else {
+                    };
                 };
             };
             (*emitter).column = 0 as libc::c_int;
@@ -5757,33 +5826,35 @@ unsafe extern "C" fn yaml_emitter_write_literal_scalar(
                 == '\n' as i32 as yaml_char_t as libc::c_int
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 == -62i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                    as libc::c_int == -123i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -123i32 as yaml_char_t as libc::c_int
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 == -30i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                    as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                    as libc::c_int == -88i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -128i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -88i32 as yaml_char_t as libc::c_int
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 == -30i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                    as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                    as libc::c_int == -87i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -128i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -87i32 as yaml_char_t as libc::c_int
         {
             if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                < (*emitter).buffer.end
+                || yaml_emitter_flush(emitter) != 0)
                 && (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                     == '\n' as i32 as yaml_char_t as libc::c_int
                 {
                     ((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                        < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                        < (*emitter).buffer.end
+                        || yaml_emitter_flush(emitter) != 0)
                         && {
                             if (*emitter).line_break as libc::c_uint
                                 == YAML_CR_BREAK as libc::c_int as libc::c_uint
@@ -5812,7 +5883,8 @@ unsafe extern "C" fn yaml_emitter_write_literal_scalar(
                                         let fresh587 = *fresh586;
                                         *fresh586 = (*fresh586).offset(1);
                                         *fresh587 = '\n' as i32 as yaml_char_t;
-                                    } else {};
+                                    } else {
+                                    };
                                 };
                             };
                             (*emitter).column = 0 as libc::c_int;
@@ -5823,9 +5895,7 @@ unsafe extern "C" fn yaml_emitter_write_literal_scalar(
                     string.pointer = (string.pointer).offset(1);
                     1 as libc::c_int
                 } else {
-                    if *string.pointer as libc::c_int & 0x80 as libc::c_int
-                        == 0 as libc::c_int
-                    {
+                    if *string.pointer as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int {
                         let fresh589 = string.pointer;
                         string.pointer = (string.pointer).offset(1);
                         let ref mut fresh590 = (*emitter).buffer.pointer;
@@ -5898,7 +5968,8 @@ unsafe extern "C" fn yaml_emitter_write_literal_scalar(
                                     let fresh618 = *fresh617;
                                     *fresh617 = (*fresh617).offset(1);
                                     *fresh618 = *fresh616;
-                                } else {};
+                                } else {
+                                };
                             };
                         };
                     };
@@ -5919,11 +5990,10 @@ unsafe extern "C" fn yaml_emitter_write_literal_scalar(
                 }
             }
             if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                < (*emitter).buffer.end
+                || yaml_emitter_flush(emitter) != 0)
                 && {
-                    if *string.pointer as libc::c_int & 0x80 as libc::c_int
-                        == 0 as libc::c_int
-                    {
+                    if *string.pointer as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int {
                         let fresh620 = string.pointer;
                         string.pointer = (string.pointer).offset(1);
                         let ref mut fresh621 = (*emitter).buffer.pointer;
@@ -5996,7 +6066,8 @@ unsafe extern "C" fn yaml_emitter_write_literal_scalar(
                                     let fresh649 = *fresh648;
                                     *fresh648 = (*fresh648).offset(1);
                                     *fresh649 = *fresh647;
-                                } else {};
+                                } else {
+                                };
                             };
                         };
                     };
@@ -6041,11 +6112,10 @@ unsafe extern "C" fn yaml_emitter_write_folded_scalar(
     if yaml_emitter_write_block_scalar_hints(emitter, string) == 0 {
         return 0 as libc::c_int;
     }
-    if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-        < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+    if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize) < (*emitter).buffer.end
+        || yaml_emitter_flush(emitter) != 0)
         && {
-            if (*emitter).line_break as libc::c_uint
-                == YAML_CR_BREAK as libc::c_int as libc::c_uint
+            if (*emitter).line_break as libc::c_uint == YAML_CR_BREAK as libc::c_int as libc::c_uint
             {
                 let ref mut fresh651 = (*emitter).buffer.pointer;
                 let fresh652 = *fresh651;
@@ -6071,7 +6141,8 @@ unsafe extern "C" fn yaml_emitter_write_folded_scalar(
                         let fresh658 = *fresh657;
                         *fresh657 = (*fresh657).offset(1);
                         *fresh658 = '\n' as i32 as yaml_char_t;
-                    } else {};
+                    } else {
+                    };
                 };
             };
             (*emitter).column = 0 as libc::c_int;
@@ -6091,27 +6162,28 @@ unsafe extern "C" fn yaml_emitter_write_folded_scalar(
                 == '\n' as i32 as yaml_char_t as libc::c_int
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 == -62i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                    as libc::c_int == -123i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -123i32 as yaml_char_t as libc::c_int
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 == -30i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                    as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                    as libc::c_int == -88i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -128i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -88i32 as yaml_char_t as libc::c_int
             || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                 == -30i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                    as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                && *(string.pointer)
-                    .offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                    as libc::c_int == -87i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -128i32 as yaml_char_t as libc::c_int
+                && *(string.pointer).offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -87i32 as yaml_char_t as libc::c_int
         {
-            if breaks == 0 && leading_spaces == 0
+            if breaks == 0
+                && leading_spaces == 0
                 && *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                     == '\n' as i32 as yaml_char_t as libc::c_int
             {
@@ -6122,41 +6194,44 @@ unsafe extern "C" fn yaml_emitter_write_folded_scalar(
                         == '\n' as i32 as yaml_char_t as libc::c_int
                     || *(string.pointer).offset(k as isize) as libc::c_int
                         == -62i32 as yaml_char_t as libc::c_int
-                        && *(string.pointer).offset((k + 1 as libc::c_int) as isize)
-                            as libc::c_int == -123i32 as yaml_char_t as libc::c_int
+                        && *(string.pointer).offset((k + 1 as libc::c_int) as isize) as libc::c_int
+                            == -123i32 as yaml_char_t as libc::c_int
                     || *(string.pointer).offset(k as isize) as libc::c_int
                         == -30i32 as yaml_char_t as libc::c_int
-                        && *(string.pointer).offset((k + 1 as libc::c_int) as isize)
-                            as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                        && *(string.pointer).offset((k + 2 as libc::c_int) as isize)
-                            as libc::c_int == -88i32 as yaml_char_t as libc::c_int
+                        && *(string.pointer).offset((k + 1 as libc::c_int) as isize) as libc::c_int
+                            == -128i32 as yaml_char_t as libc::c_int
+                        && *(string.pointer).offset((k + 2 as libc::c_int) as isize) as libc::c_int
+                            == -88i32 as yaml_char_t as libc::c_int
                     || *(string.pointer).offset(k as isize) as libc::c_int
                         == -30i32 as yaml_char_t as libc::c_int
-                        && *(string.pointer).offset((k + 1 as libc::c_int) as isize)
-                            as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                        && *(string.pointer).offset((k + 2 as libc::c_int) as isize)
-                            as libc::c_int == -87i32 as yaml_char_t as libc::c_int
+                        && *(string.pointer).offset((k + 1 as libc::c_int) as isize) as libc::c_int
+                            == -128i32 as yaml_char_t as libc::c_int
+                        && *(string.pointer).offset((k + 2 as libc::c_int) as isize) as libc::c_int
+                            == -87i32 as yaml_char_t as libc::c_int
                 {
-                    k
-                        += if *(string.pointer).offset(k as isize) as libc::c_int
-                            & 0x80 as libc::c_int == 0 as libc::c_int
-                        {
-                            1 as libc::c_int
-                        } else if *(string.pointer).offset(k as isize) as libc::c_int
-                                & 0xe0 as libc::c_int == 0xc0 as libc::c_int
-                            {
-                            2 as libc::c_int
-                        } else if *(string.pointer).offset(k as isize) as libc::c_int
-                                & 0xf0 as libc::c_int == 0xe0 as libc::c_int
-                            {
-                            3 as libc::c_int
-                        } else if *(string.pointer).offset(k as isize) as libc::c_int
-                                & 0xf8 as libc::c_int == 0xf0 as libc::c_int
-                            {
-                            4 as libc::c_int
-                        } else {
-                            0 as libc::c_int
-                        };
+                    k += if *(string.pointer).offset(k as isize) as libc::c_int
+                        & 0x80 as libc::c_int
+                        == 0 as libc::c_int
+                    {
+                        1 as libc::c_int
+                    } else if *(string.pointer).offset(k as isize) as libc::c_int
+                        & 0xe0 as libc::c_int
+                        == 0xc0 as libc::c_int
+                    {
+                        2 as libc::c_int
+                    } else if *(string.pointer).offset(k as isize) as libc::c_int
+                        & 0xf0 as libc::c_int
+                        == 0xe0 as libc::c_int
+                    {
+                        3 as libc::c_int
+                    } else if *(string.pointer).offset(k as isize) as libc::c_int
+                        & 0xf8 as libc::c_int
+                        == 0xf0 as libc::c_int
+                    {
+                        4 as libc::c_int
+                    } else {
+                        0 as libc::c_int
+                    };
                 }
                 if !(*(string.pointer).offset(k as isize) as libc::c_int
                     == ' ' as i32 as yaml_char_t as libc::c_int
@@ -6169,24 +6244,30 @@ unsafe extern "C" fn yaml_emitter_write_folded_scalar(
                         || *(string.pointer).offset(k as isize) as libc::c_int
                             == -62i32 as yaml_char_t as libc::c_int
                             && *(string.pointer).offset((k + 1 as libc::c_int) as isize)
-                                as libc::c_int == -123i32 as yaml_char_t as libc::c_int
+                                as libc::c_int
+                                == -123i32 as yaml_char_t as libc::c_int
                         || *(string.pointer).offset(k as isize) as libc::c_int
                             == -30i32 as yaml_char_t as libc::c_int
                             && *(string.pointer).offset((k + 1 as libc::c_int) as isize)
-                                as libc::c_int == -128i32 as yaml_char_t as libc::c_int
+                                as libc::c_int
+                                == -128i32 as yaml_char_t as libc::c_int
                             && *(string.pointer).offset((k + 2 as libc::c_int) as isize)
-                                as libc::c_int == -88i32 as yaml_char_t as libc::c_int
+                                as libc::c_int
+                                == -88i32 as yaml_char_t as libc::c_int
                         || *(string.pointer).offset(k as isize) as libc::c_int
                             == -30i32 as yaml_char_t as libc::c_int
                             && *(string.pointer).offset((k + 1 as libc::c_int) as isize)
-                                as libc::c_int == -128i32 as yaml_char_t as libc::c_int
+                                as libc::c_int
+                                == -128i32 as yaml_char_t as libc::c_int
                             && *(string.pointer).offset((k + 2 as libc::c_int) as isize)
-                                as libc::c_int == -87i32 as yaml_char_t as libc::c_int
+                                as libc::c_int
+                                == -87i32 as yaml_char_t as libc::c_int
                         || *(string.pointer).offset(k as isize) as libc::c_int
                             == '\0' as i32 as yaml_char_t as libc::c_int))
                 {
                     if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                        < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                        < (*emitter).buffer.end
+                        || yaml_emitter_flush(emitter) != 0)
                         && {
                             if (*emitter).line_break as libc::c_uint
                                 == YAML_CR_BREAK as libc::c_int as libc::c_uint
@@ -6215,7 +6296,8 @@ unsafe extern "C" fn yaml_emitter_write_folded_scalar(
                                         let fresh667 = *fresh666;
                                         *fresh666 = (*fresh666).offset(1);
                                         *fresh667 = '\n' as i32 as yaml_char_t;
-                                    } else {};
+                                    } else {
+                                    };
                                 };
                             };
                             (*emitter).column = 0 as libc::c_int;
@@ -6229,12 +6311,14 @@ unsafe extern "C" fn yaml_emitter_write_folded_scalar(
                 }
             }
             if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                < (*emitter).buffer.end
+                || yaml_emitter_flush(emitter) != 0)
                 && (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
                     == '\n' as i32 as yaml_char_t as libc::c_int
                 {
                     ((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                        < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
+                        < (*emitter).buffer.end
+                        || yaml_emitter_flush(emitter) != 0)
                         && {
                             if (*emitter).line_break as libc::c_uint
                                 == YAML_CR_BREAK as libc::c_int as libc::c_uint
@@ -6263,7 +6347,8 @@ unsafe extern "C" fn yaml_emitter_write_folded_scalar(
                                         let fresh676 = *fresh675;
                                         *fresh675 = (*fresh675).offset(1);
                                         *fresh676 = '\n' as i32 as yaml_char_t;
-                                    } else {};
+                                    } else {
+                                    };
                                 };
                             };
                             (*emitter).column = 0 as libc::c_int;
@@ -6274,9 +6359,7 @@ unsafe extern "C" fn yaml_emitter_write_folded_scalar(
                     string.pointer = (string.pointer).offset(1);
                     1 as libc::c_int
                 } else {
-                    if *string.pointer as libc::c_int & 0x80 as libc::c_int
-                        == 0 as libc::c_int
-                    {
+                    if *string.pointer as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int {
                         let fresh678 = string.pointer;
                         string.pointer = (string.pointer).offset(1);
                         let ref mut fresh679 = (*emitter).buffer.pointer;
@@ -6349,7 +6432,8 @@ unsafe extern "C" fn yaml_emitter_write_folded_scalar(
                                     let fresh707 = *fresh706;
                                     *fresh706 = (*fresh706).offset(1);
                                     *fresh707 = *fresh705;
-                                } else {};
+                                } else {
+                                };
                             };
                         };
                     };
@@ -6369,9 +6453,11 @@ unsafe extern "C" fn yaml_emitter_write_folded_scalar(
                     return 0 as libc::c_int;
                 }
                 leading_spaces = (*(string.pointer).offset(0 as libc::c_int as isize)
-                    as libc::c_int == ' ' as i32 as yaml_char_t as libc::c_int
+                    as libc::c_int
+                    == ' ' as i32 as yaml_char_t as libc::c_int
                     || *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
-                        == '\t' as i32 as yaml_char_t as libc::c_int) as libc::c_int;
+                        == '\t' as i32 as yaml_char_t as libc::c_int)
+                    as libc::c_int;
             }
             if breaks == 0
                 && *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
@@ -6383,117 +6469,119 @@ unsafe extern "C" fn yaml_emitter_write_folded_scalar(
                 if yaml_emitter_write_indent(emitter) == 0 {
                     return 0 as libc::c_int;
                 }
-                string
-                    .pointer = (string.pointer)
-                    .offset(
-                        (if *(string.pointer).offset(0 as libc::c_int as isize)
-                            as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
-                        {
-                            1 as libc::c_int
-                        } else if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int
-                            {
-                            2 as libc::c_int
-                        } else if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int
-                            {
-                            3 as libc::c_int
-                        } else if *(string.pointer).offset(0 as libc::c_int as isize)
-                                as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int
-                            {
-                            4 as libc::c_int
-                        } else {
-                            0 as libc::c_int
-                        }) as isize,
-                    );
+                string.pointer = (string.pointer).offset(
+                    (if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0x80 as libc::c_int
+                        == 0 as libc::c_int
+                    {
+                        1 as libc::c_int
+                    } else if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0xe0 as libc::c_int
+                        == 0xc0 as libc::c_int
+                    {
+                        2 as libc::c_int
+                    } else if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0xf0 as libc::c_int
+                        == 0xe0 as libc::c_int
+                    {
+                        3 as libc::c_int
+                    } else if *(string.pointer).offset(0 as libc::c_int as isize) as libc::c_int
+                        & 0xf8 as libc::c_int
+                        == 0xf0 as libc::c_int
+                    {
+                        4 as libc::c_int
+                    } else {
+                        0 as libc::c_int
+                    }) as isize,
+                );
             } else if !((((*emitter).buffer.pointer).offset(5 as libc::c_int as isize)
-                    < (*emitter).buffer.end || yaml_emitter_flush(emitter) != 0)
-                    && {
-                        if *string.pointer as libc::c_int & 0x80 as libc::c_int
-                            == 0 as libc::c_int
+                < (*emitter).buffer.end
+                || yaml_emitter_flush(emitter) != 0)
+                && {
+                    if *string.pointer as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int {
+                        let fresh709 = string.pointer;
+                        string.pointer = (string.pointer).offset(1);
+                        let ref mut fresh710 = (*emitter).buffer.pointer;
+                        let fresh711 = *fresh710;
+                        *fresh710 = (*fresh710).offset(1);
+                        *fresh711 = *fresh709;
+                    } else {
+                        if *string.pointer as libc::c_int & 0xe0 as libc::c_int
+                            == 0xc0 as libc::c_int
                         {
-                            let fresh709 = string.pointer;
+                            let fresh712 = string.pointer;
                             string.pointer = (string.pointer).offset(1);
-                            let ref mut fresh710 = (*emitter).buffer.pointer;
-                            let fresh711 = *fresh710;
-                            *fresh710 = (*fresh710).offset(1);
-                            *fresh711 = *fresh709;
+                            let ref mut fresh713 = (*emitter).buffer.pointer;
+                            let fresh714 = *fresh713;
+                            *fresh713 = (*fresh713).offset(1);
+                            *fresh714 = *fresh712;
+                            let fresh715 = string.pointer;
+                            string.pointer = (string.pointer).offset(1);
+                            let ref mut fresh716 = (*emitter).buffer.pointer;
+                            let fresh717 = *fresh716;
+                            *fresh716 = (*fresh716).offset(1);
+                            *fresh717 = *fresh715;
                         } else {
-                            if *string.pointer as libc::c_int & 0xe0 as libc::c_int
-                                == 0xc0 as libc::c_int
+                            if *string.pointer as libc::c_int & 0xf0 as libc::c_int
+                                == 0xe0 as libc::c_int
                             {
-                                let fresh712 = string.pointer;
+                                let fresh718 = string.pointer;
                                 string.pointer = (string.pointer).offset(1);
-                                let ref mut fresh713 = (*emitter).buffer.pointer;
-                                let fresh714 = *fresh713;
-                                *fresh713 = (*fresh713).offset(1);
-                                *fresh714 = *fresh712;
-                                let fresh715 = string.pointer;
+                                let ref mut fresh719 = (*emitter).buffer.pointer;
+                                let fresh720 = *fresh719;
+                                *fresh719 = (*fresh719).offset(1);
+                                *fresh720 = *fresh718;
+                                let fresh721 = string.pointer;
                                 string.pointer = (string.pointer).offset(1);
-                                let ref mut fresh716 = (*emitter).buffer.pointer;
-                                let fresh717 = *fresh716;
-                                *fresh716 = (*fresh716).offset(1);
-                                *fresh717 = *fresh715;
+                                let ref mut fresh722 = (*emitter).buffer.pointer;
+                                let fresh723 = *fresh722;
+                                *fresh722 = (*fresh722).offset(1);
+                                *fresh723 = *fresh721;
+                                let fresh724 = string.pointer;
+                                string.pointer = (string.pointer).offset(1);
+                                let ref mut fresh725 = (*emitter).buffer.pointer;
+                                let fresh726 = *fresh725;
+                                *fresh725 = (*fresh725).offset(1);
+                                *fresh726 = *fresh724;
                             } else {
-                                if *string.pointer as libc::c_int & 0xf0 as libc::c_int
-                                    == 0xe0 as libc::c_int
+                                if *string.pointer as libc::c_int & 0xf8 as libc::c_int
+                                    == 0xf0 as libc::c_int
                                 {
-                                    let fresh718 = string.pointer;
+                                    let fresh727 = string.pointer;
                                     string.pointer = (string.pointer).offset(1);
-                                    let ref mut fresh719 = (*emitter).buffer.pointer;
-                                    let fresh720 = *fresh719;
-                                    *fresh719 = (*fresh719).offset(1);
-                                    *fresh720 = *fresh718;
-                                    let fresh721 = string.pointer;
+                                    let ref mut fresh728 = (*emitter).buffer.pointer;
+                                    let fresh729 = *fresh728;
+                                    *fresh728 = (*fresh728).offset(1);
+                                    *fresh729 = *fresh727;
+                                    let fresh730 = string.pointer;
                                     string.pointer = (string.pointer).offset(1);
-                                    let ref mut fresh722 = (*emitter).buffer.pointer;
-                                    let fresh723 = *fresh722;
-                                    *fresh722 = (*fresh722).offset(1);
-                                    *fresh723 = *fresh721;
-                                    let fresh724 = string.pointer;
+                                    let ref mut fresh731 = (*emitter).buffer.pointer;
+                                    let fresh732 = *fresh731;
+                                    *fresh731 = (*fresh731).offset(1);
+                                    *fresh732 = *fresh730;
+                                    let fresh733 = string.pointer;
                                     string.pointer = (string.pointer).offset(1);
-                                    let ref mut fresh725 = (*emitter).buffer.pointer;
-                                    let fresh726 = *fresh725;
-                                    *fresh725 = (*fresh725).offset(1);
-                                    *fresh726 = *fresh724;
+                                    let ref mut fresh734 = (*emitter).buffer.pointer;
+                                    let fresh735 = *fresh734;
+                                    *fresh734 = (*fresh734).offset(1);
+                                    *fresh735 = *fresh733;
+                                    let fresh736 = string.pointer;
+                                    string.pointer = (string.pointer).offset(1);
+                                    let ref mut fresh737 = (*emitter).buffer.pointer;
+                                    let fresh738 = *fresh737;
+                                    *fresh737 = (*fresh737).offset(1);
+                                    *fresh738 = *fresh736;
                                 } else {
-                                    if *string.pointer as libc::c_int & 0xf8 as libc::c_int
-                                        == 0xf0 as libc::c_int
-                                    {
-                                        let fresh727 = string.pointer;
-                                        string.pointer = (string.pointer).offset(1);
-                                        let ref mut fresh728 = (*emitter).buffer.pointer;
-                                        let fresh729 = *fresh728;
-                                        *fresh728 = (*fresh728).offset(1);
-                                        *fresh729 = *fresh727;
-                                        let fresh730 = string.pointer;
-                                        string.pointer = (string.pointer).offset(1);
-                                        let ref mut fresh731 = (*emitter).buffer.pointer;
-                                        let fresh732 = *fresh731;
-                                        *fresh731 = (*fresh731).offset(1);
-                                        *fresh732 = *fresh730;
-                                        let fresh733 = string.pointer;
-                                        string.pointer = (string.pointer).offset(1);
-                                        let ref mut fresh734 = (*emitter).buffer.pointer;
-                                        let fresh735 = *fresh734;
-                                        *fresh734 = (*fresh734).offset(1);
-                                        *fresh735 = *fresh733;
-                                        let fresh736 = string.pointer;
-                                        string.pointer = (string.pointer).offset(1);
-                                        let ref mut fresh737 = (*emitter).buffer.pointer;
-                                        let fresh738 = *fresh737;
-                                        *fresh737 = (*fresh737).offset(1);
-                                        *fresh738 = *fresh736;
-                                    } else {};
                                 };
                             };
                         };
-                        let ref mut fresh739 = (*emitter).column;
-                        *fresh739 += 1;
-                        1 as libc::c_int != 0
-                    })
-                {
-                return 0 as libc::c_int
+                    };
+                    let ref mut fresh739 = (*emitter).column;
+                    *fresh739 += 1;
+                    1 as libc::c_int != 0
+                })
+            {
+                return 0 as libc::c_int;
             }
             (*emitter).indention = 0 as libc::c_int;
             breaks = 0 as libc::c_int;

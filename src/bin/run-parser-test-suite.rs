@@ -1,17 +1,14 @@
 #![feature(extern_types)]
-#![allow(
-    non_camel_case_types,
-    non_snake_case,
-    unused_assignments,
-    unused_mut,
-)]
+#![allow(non_camel_case_types, non_snake_case, unused_assignments, unused_mut)]
 
 use std::cmp;
 use std::env;
 use std::fs;
 use std::process::ExitCode;
 use std::ptr;
-use unsafe_libyaml::api::{yaml_event_delete, yaml_parser_delete, yaml_parser_initialize, yaml_parser_set_input};
+use unsafe_libyaml::api::{
+    yaml_event_delete, yaml_parser_delete, yaml_parser_initialize, yaml_parser_set_input,
+};
 use unsafe_libyaml::externs::__assert_fail;
 use unsafe_libyaml::parser::yaml_parser_parse;
 use unsafe_libyaml::*;
@@ -140,24 +137,22 @@ unsafe fn unsafe_main() -> ExitCode {
             input = fs::read(arg).ok();
             foundfile = 1 as libc::c_int;
         } else {
-            return usage(ExitCode::FAILURE)
+            return usage(ExitCode::FAILURE);
         }
     }
-    let input = input.unwrap_or_else(|| __assert_fail(
-        b"input\0" as *const u8 as *const libc::c_char,
-        b"run-parser-test-suite.c\0" as *const u8 as *const libc::c_char,
-        46 as libc::c_int as libc::c_uint,
-        (*::std::mem::transmute::<
-            &[u8; 23],
-            &[libc::c_char; 23],
-        >(b"int main(int, char **)\0"))
-            .as_ptr(),
-    ));
+    let input = input.unwrap_or_else(|| {
+        __assert_fail(
+            b"input\0" as *const u8 as *const libc::c_char,
+            b"run-parser-test-suite.c\0" as *const u8 as *const libc::c_char,
+            46 as libc::c_int as libc::c_uint,
+            (*::std::mem::transmute::<&[u8; 23], &[libc::c_char; 23]>(b"int main(int, char **)\0"))
+                .as_ptr(),
+        )
+    });
     if yaml_parser_initialize(&mut parser) == 0 {
         fprintf(
             stderr,
-            b"Could not initialize the parser object\n\0" as *const u8
-                as *const libc::c_char,
+            b"Could not initialize the parser object\n\0" as *const u8 as *const libc::c_char,
         );
         return ExitCode::FAILURE;
     }
@@ -175,7 +170,11 @@ unsafe fn unsafe_main() -> ExitCode {
         1 as libc::c_int
     }
     let mut remaining = input.as_slice();
-    yaml_parser_set_input(&mut parser, Some(read_from_file), ptr::addr_of_mut!(remaining).cast());
+    yaml_parser_set_input(
+        &mut parser,
+        Some(read_from_file),
+        ptr::addr_of_mut!(remaining).cast(),
+    );
     loop {
         let mut type_0: yaml_event_type_t = YAML_NO_EVENT;
         if yaml_parser_parse(&mut parser, &mut event) == 0 {
@@ -185,10 +184,8 @@ unsafe fn unsafe_main() -> ExitCode {
                     b"Parse error: %s\nLine: %lu Column: %lu\n\0" as *const u8
                         as *const libc::c_char,
                     parser.problem,
-                    (parser.problem_mark.line)
-                        .wrapping_add(1 as libc::c_int as libc::c_ulong),
-                    (parser.problem_mark.column)
-                        .wrapping_add(1 as libc::c_int as libc::c_ulong),
+                    (parser.problem_mark.line).wrapping_add(1 as libc::c_int as libc::c_ulong),
+                    (parser.problem_mark.column).wrapping_add(1 as libc::c_int as libc::c_ulong),
                 );
             } else {
                 fprintf(
@@ -202,33 +199,25 @@ unsafe fn unsafe_main() -> ExitCode {
         type_0 = event.type_0;
         if type_0 as libc::c_uint == YAML_NO_EVENT as libc::c_int as libc::c_uint {
             printf(b"???\n\0" as *const u8 as *const libc::c_char);
-        } else if type_0 as libc::c_uint
-                == YAML_STREAM_START_EVENT as libc::c_int as libc::c_uint
-            {
+        } else if type_0 as libc::c_uint == YAML_STREAM_START_EVENT as libc::c_int as libc::c_uint {
             printf(b"+STR\n\0" as *const u8 as *const libc::c_char);
-        } else if type_0 as libc::c_uint
-                == YAML_STREAM_END_EVENT as libc::c_int as libc::c_uint
-            {
+        } else if type_0 as libc::c_uint == YAML_STREAM_END_EVENT as libc::c_int as libc::c_uint {
             printf(b"-STR\n\0" as *const u8 as *const libc::c_char);
-        } else if type_0 as libc::c_uint
-                == YAML_DOCUMENT_START_EVENT as libc::c_int as libc::c_uint
-            {
+        } else if type_0 as libc::c_uint == YAML_DOCUMENT_START_EVENT as libc::c_int as libc::c_uint
+        {
             printf(b"+DOC\0" as *const u8 as *const libc::c_char);
             if event.data.document_start.implicit == 0 {
                 printf(b" ---\0" as *const u8 as *const libc::c_char);
             }
             printf(b"\n\0" as *const u8 as *const libc::c_char);
-        } else if type_0 as libc::c_uint
-                == YAML_DOCUMENT_END_EVENT as libc::c_int as libc::c_uint
-            {
+        } else if type_0 as libc::c_uint == YAML_DOCUMENT_END_EVENT as libc::c_int as libc::c_uint {
             printf(b"-DOC\0" as *const u8 as *const libc::c_char);
             if event.data.document_end.implicit == 0 {
                 printf(b" ...\0" as *const u8 as *const libc::c_char);
             }
             printf(b"\n\0" as *const u8 as *const libc::c_char);
-        } else if type_0 as libc::c_uint
-                == YAML_MAPPING_START_EVENT as libc::c_int as libc::c_uint
-            {
+        } else if type_0 as libc::c_uint == YAML_MAPPING_START_EVENT as libc::c_int as libc::c_uint
+        {
             printf(b"+MAP\0" as *const u8 as *const libc::c_char);
             if !(event.data.mapping_start.anchor).is_null() {
                 printf(
@@ -243,13 +232,10 @@ unsafe fn unsafe_main() -> ExitCode {
                 );
             }
             printf(b"\n\0" as *const u8 as *const libc::c_char);
-        } else if type_0 as libc::c_uint
-                == YAML_MAPPING_END_EVENT as libc::c_int as libc::c_uint
-            {
+        } else if type_0 as libc::c_uint == YAML_MAPPING_END_EVENT as libc::c_int as libc::c_uint {
             printf(b"-MAP\n\0" as *const u8 as *const libc::c_char);
-        } else if type_0 as libc::c_uint
-                == YAML_SEQUENCE_START_EVENT as libc::c_int as libc::c_uint
-            {
+        } else if type_0 as libc::c_uint == YAML_SEQUENCE_START_EVENT as libc::c_int as libc::c_uint
+        {
             printf(b"+SEQ\0" as *const u8 as *const libc::c_char);
             if !(event.data.sequence_start.anchor).is_null() {
                 printf(
@@ -264,13 +250,9 @@ unsafe fn unsafe_main() -> ExitCode {
                 );
             }
             printf(b"\n\0" as *const u8 as *const libc::c_char);
-        } else if type_0 as libc::c_uint
-                == YAML_SEQUENCE_END_EVENT as libc::c_int as libc::c_uint
-            {
+        } else if type_0 as libc::c_uint == YAML_SEQUENCE_END_EVENT as libc::c_int as libc::c_uint {
             printf(b"-SEQ\n\0" as *const u8 as *const libc::c_char);
-        } else if type_0 as libc::c_uint
-                == YAML_SCALAR_EVENT as libc::c_int as libc::c_uint
-            {
+        } else if type_0 as libc::c_uint == YAML_SCALAR_EVENT as libc::c_int as libc::c_uint {
             printf(b"=VAL\0" as *const u8 as *const libc::c_char);
             if !(event.data.scalar.anchor).is_null() {
                 printf(
@@ -307,9 +289,7 @@ unsafe fn unsafe_main() -> ExitCode {
             }
             print_escaped(event.data.scalar.value, event.data.scalar.length);
             printf(b"\n\0" as *const u8 as *const libc::c_char);
-        } else if type_0 as libc::c_uint
-                == YAML_ALIAS_EVENT as libc::c_int as libc::c_uint
-            {
+        } else if type_0 as libc::c_uint == YAML_ALIAS_EVENT as libc::c_int as libc::c_uint {
             printf(
                 b"=ALI *%s\n\0" as *const u8 as *const libc::c_char,
                 event.data.alias.anchor,
@@ -318,8 +298,7 @@ unsafe fn unsafe_main() -> ExitCode {
             abort();
         }
         yaml_event_delete(&mut event);
-        if type_0 as libc::c_uint == YAML_STREAM_END_EVENT as libc::c_int as libc::c_uint
-        {
+        if type_0 as libc::c_uint == YAML_STREAM_END_EVENT as libc::c_int as libc::c_uint {
             break;
         }
     }
@@ -346,7 +325,10 @@ pub unsafe extern "C" fn print_escaped(mut str: *mut yaml_char_t, mut length: si
         } else if c as libc::c_int == '\t' as i32 {
             printf(b"\\t\0" as *const u8 as *const libc::c_char);
         } else {
-            printf(b"%c\0" as *const u8 as *const libc::c_char, c as libc::c_int);
+            printf(
+                b"%c\0" as *const u8 as *const libc::c_char,
+                c as libc::c_int,
+            );
         }
         i += 1;
     }
@@ -354,8 +336,7 @@ pub unsafe extern "C" fn print_escaped(mut str: *mut yaml_char_t, mut length: si
 unsafe fn usage(ret: ExitCode) -> ExitCode {
     fprintf(
         stderr,
-        b"Usage: libyaml-parser [<input-file>]\n\0" as *const u8
-            as *const libc::c_char,
+        b"Usage: libyaml-parser [<input-file>]\n\0" as *const u8 as *const libc::c_char,
     );
     return ret;
 }

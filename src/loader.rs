@@ -48,28 +48,28 @@ pub unsafe extern "C" fn yaml_parser_load(
             column: 0,
         },
     };
-    if !parser.is_null() {} else {
+    if !parser.is_null() {
+    } else {
         __assert_fail(
             b"parser\0" as *const u8 as *const libc::c_char,
             b"loader.c\0" as *const u8 as *const libc::c_char,
             91 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<
-                &[u8; 57],
-                &[libc::c_char; 57],
-            >(b"int yaml_parser_load(yaml_parser_t *, yaml_document_t *)\0"))
-                .as_ptr(),
+            (*::std::mem::transmute::<&[u8; 57], &[libc::c_char; 57]>(
+                b"int yaml_parser_load(yaml_parser_t *, yaml_document_t *)\0",
+            ))
+            .as_ptr(),
         );
     }
-    if !document.is_null() {} else {
+    if !document.is_null() {
+    } else {
         __assert_fail(
             b"document\0" as *const u8 as *const libc::c_char,
             b"loader.c\0" as *const u8 as *const libc::c_char,
             92 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<
-                &[u8; 57],
-                &[libc::c_char; 57],
-            >(b"int yaml_parser_load(yaml_parser_t *, yaml_document_t *)\0"))
-                .as_ptr(),
+            (*::std::mem::transmute::<&[u8; 57], &[libc::c_char; 57]>(
+                b"int yaml_parser_load(yaml_parser_t *, yaml_document_t *)\0",
+            ))
+            .as_ptr(),
         );
     }
     memset(
@@ -99,17 +99,17 @@ pub unsafe extern "C" fn yaml_parser_load(
             } else {
                 if event.type_0 as libc::c_uint
                     == YAML_STREAM_START_EVENT as libc::c_int as libc::c_uint
-                {} else {
+                {
+                } else {
                     __assert_fail(
                         b"event.type == YAML_STREAM_START_EVENT\0" as *const u8
                             as *const libc::c_char,
                         b"loader.c\0" as *const u8 as *const libc::c_char,
                         100 as libc::c_int as libc::c_uint,
-                        (*::std::mem::transmute::<
-                            &[u8; 57],
-                            &[libc::c_char; 57],
-                        >(b"int yaml_parser_load(yaml_parser_t *, yaml_document_t *)\0"))
-                            .as_ptr(),
+                        (*::std::mem::transmute::<&[u8; 57], &[libc::c_char; 57]>(
+                            b"int yaml_parser_load(yaml_parser_t *, yaml_document_t *)\0",
+                        ))
+                        .as_ptr(),
                     );
                 }
                 current_block = 7815301370352969686;
@@ -130,18 +130,15 @@ pub unsafe extern "C" fn yaml_parser_load(
                         return 1 as libc::c_int;
                     }
                     let ref mut fresh3 = (*parser).aliases.start;
-                    *fresh3 = yaml_malloc(
-                        (16 as libc::c_int as libc::c_ulong)
-                            .wrapping_mul(
-                                ::std::mem::size_of::<yaml_alias_data_t>() as libc::c_ulong,
-                            ),
-                    ) as *mut yaml_alias_data_t;
+                    *fresh3 =
+                        yaml_malloc((16 as libc::c_int as libc::c_ulong).wrapping_mul(
+                            ::std::mem::size_of::<yaml_alias_data_t>() as libc::c_ulong,
+                        )) as *mut yaml_alias_data_t;
                     if !(if !(*fresh3).is_null() {
                         let ref mut fresh4 = (*parser).aliases.top;
                         *fresh4 = (*parser).aliases.start;
                         let ref mut fresh5 = (*parser).aliases.end;
-                        *fresh5 = ((*parser).aliases.start)
-                            .offset(16 as libc::c_int as isize);
+                        *fresh5 = ((*parser).aliases.start).offset(16 as libc::c_int as isize);
                         1 as libc::c_int
                     } else {
                         (*parser).error = YAML_MEMORY_ERROR;
@@ -220,19 +217,16 @@ unsafe extern "C" fn yaml_parser_load_document(
         };
         init
     };
-    if (*event).type_0 as libc::c_uint
-        == YAML_DOCUMENT_START_EVENT as libc::c_int as libc::c_uint
-    {} else {
+    if (*event).type_0 as libc::c_uint == YAML_DOCUMENT_START_EVENT as libc::c_int as libc::c_uint {
+    } else {
         __assert_fail(
-            b"event->type == YAML_DOCUMENT_START_EVENT\0" as *const u8
-                as *const libc::c_char,
+            b"event->type == YAML_DOCUMENT_START_EVENT\0" as *const u8 as *const libc::c_char,
             b"loader.c\0" as *const u8 as *const libc::c_char,
             189 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<
-                &[u8; 63],
-                &[libc::c_char; 63],
-            >(b"int yaml_parser_load_document(yaml_parser_t *, yaml_event_t *)\0"))
-                .as_ptr(),
+            (*::std::mem::transmute::<&[u8; 63], &[libc::c_char; 63]>(
+                b"int yaml_parser_load_document(yaml_parser_t *, yaml_event_t *)\0",
+            ))
+            .as_ptr(),
         );
     }
     let ref mut fresh16 = (*(*parser).document).version_directive;
@@ -243,8 +237,7 @@ unsafe extern "C" fn yaml_parser_load_document(
     *fresh18 = (*event).data.document_start.tag_directives.end;
     (*(*parser).document).start_implicit = (*event).data.document_start.implicit;
     (*(*parser).document).start_mark = (*event).start_mark;
-    ctx
-        .start = yaml_malloc(
+    ctx.start = yaml_malloc(
         (16 as libc::c_int as libc::c_ulong)
             .wrapping_mul(::std::mem::size_of::<libc::c_int>() as libc::c_ulong),
     ) as *mut libc::c_int;
@@ -335,19 +328,15 @@ unsafe extern "C" fn yaml_parser_load_nodes(
                     b"0\0" as *const u8 as *const libc::c_char,
                     b"loader.c\0" as *const u8 as *const libc::c_char,
                     246 as libc::c_int as libc::c_uint,
-                    (*::std::mem::transmute::<
-                        &[u8; 65],
-                        &[libc::c_char; 65],
-                    >(
+                    (*::std::mem::transmute::<&[u8; 65], &[libc::c_char; 65]>(
                         b"int yaml_parser_load_nodes(yaml_parser_t *, struct loader_ctx *)\0",
                     ))
-                        .as_ptr(),
+                    .as_ptr(),
                 );
                 return 0 as libc::c_int;
             }
         }
-        if !(event.type_0 as libc::c_uint
-            != YAML_DOCUMENT_END_EVENT as libc::c_int as libc::c_uint)
+        if !(event.type_0 as libc::c_uint != YAML_DOCUMENT_END_EVENT as libc::c_int as libc::c_uint)
         {
             break;
         }
@@ -376,20 +365,19 @@ unsafe extern "C" fn yaml_parser_register_anchor(
     }
     data.anchor = anchor;
     data.index = index;
-    data
-        .mark = (*((*(*parser).document).nodes.start)
-        .offset((index - 1 as libc::c_int) as isize))
+    data.mark = (*((*(*parser).document).nodes.start).offset((index - 1 as libc::c_int) as isize))
         .start_mark;
     alias_data = (*parser).aliases.start;
     while alias_data != (*parser).aliases.top {
-        if strcmp((*alias_data).anchor as *mut libc::c_char, anchor as *mut libc::c_char)
-            == 0 as libc::c_int
+        if strcmp(
+            (*alias_data).anchor as *mut libc::c_char,
+            anchor as *mut libc::c_char,
+        ) == 0 as libc::c_int
         {
             yaml_free(anchor as *mut libc::c_void);
             return yaml_parser_set_composer_error_context(
                 parser,
-                b"found duplicate anchor; first occurrence\0" as *const u8
-                    as *const libc::c_char,
+                b"found duplicate anchor; first occurrence\0" as *const u8 as *const libc::c_char,
                 (*alias_data).mark,
                 b"second occurrence\0" as *const u8 as *const libc::c_char,
                 data.mark,
@@ -399,12 +387,9 @@ unsafe extern "C" fn yaml_parser_register_anchor(
     }
     if if (*parser).aliases.top != (*parser).aliases.end
         || yaml_stack_extend(
-            &mut (*parser).aliases.start as *mut *mut yaml_alias_data_t
-                as *mut *mut libc::c_void,
-            &mut (*parser).aliases.top as *mut *mut yaml_alias_data_t
-                as *mut *mut libc::c_void,
-            &mut (*parser).aliases.end as *mut *mut yaml_alias_data_t
-                as *mut *mut libc::c_void,
+            &mut (*parser).aliases.start as *mut *mut yaml_alias_data_t as *mut *mut libc::c_void,
+            &mut (*parser).aliases.top as *mut *mut yaml_alias_data_t as *mut *mut libc::c_void,
+            &mut (*parser).aliases.end as *mut *mut yaml_alias_data_t as *mut *mut libc::c_void,
         ) != 0
     {
         let ref mut fresh19 = (*parser).aliases.top;
@@ -439,7 +424,8 @@ unsafe extern "C" fn yaml_parser_load_node_add(
     match (*parent).type_0 as libc::c_uint {
         2 => {
             if if (((*parent).data.sequence.items.top)
-                .offset_from((*parent).data.sequence.items.start) as libc::c_long)
+                .offset_from((*parent).data.sequence.items.start)
+                as libc::c_long)
                 < (2147483647 as libc::c_int - 1 as libc::c_int) as libc::c_long
             {
                 1 as libc::c_int
@@ -452,8 +438,8 @@ unsafe extern "C" fn yaml_parser_load_node_add(
             }
             if if (*parent).data.sequence.items.top != (*parent).data.sequence.items.end
                 || yaml_stack_extend(
-                    &mut (*parent).data.sequence.items.start
-                        as *mut *mut yaml_node_item_t as *mut *mut libc::c_void,
+                    &mut (*parent).data.sequence.items.start as *mut *mut yaml_node_item_t
+                        as *mut *mut libc::c_void,
                     &mut (*parent).data.sequence.items.top as *mut *mut yaml_node_item_t
                         as *mut *mut libc::c_void,
                     &mut (*parent).data.sequence.items.end as *mut *mut yaml_node_item_t
@@ -474,14 +460,10 @@ unsafe extern "C" fn yaml_parser_load_node_add(
             }
         }
         3 => {
-            let mut pair: yaml_node_pair_t = yaml_node_pair_t {
-                key: 0,
-                value: 0,
-            };
-            if !((*parent).data.mapping.pairs.start == (*parent).data.mapping.pairs.top)
-            {
-                let mut p: *mut yaml_node_pair_t = ((*parent).data.mapping.pairs.top)
-                    .offset(-(1 as libc::c_int as isize));
+            let mut pair: yaml_node_pair_t = yaml_node_pair_t { key: 0, value: 0 };
+            if !((*parent).data.mapping.pairs.start == (*parent).data.mapping.pairs.top) {
+                let mut p: *mut yaml_node_pair_t =
+                    ((*parent).data.mapping.pairs.top).offset(-(1 as libc::c_int as isize));
                 if (*p).key != 0 as libc::c_int && (*p).value == 0 as libc::c_int {
                     (*p).value = index;
                     current_block_17 = 11307063007268554308;
@@ -497,7 +479,8 @@ unsafe extern "C" fn yaml_parser_load_node_add(
                     pair.key = index;
                     pair.value = 0 as libc::c_int;
                     if if (((*parent).data.mapping.pairs.top)
-                        .offset_from((*parent).data.mapping.pairs.start) as libc::c_long)
+                        .offset_from((*parent).data.mapping.pairs.start)
+                        as libc::c_long)
                         < (2147483647 as libc::c_int - 1 as libc::c_int) as libc::c_long
                     {
                         1 as libc::c_int
@@ -508,15 +491,14 @@ unsafe extern "C" fn yaml_parser_load_node_add(
                     {
                         return 0 as libc::c_int;
                     }
-                    if if (*parent).data.mapping.pairs.top
-                        != (*parent).data.mapping.pairs.end
+                    if if (*parent).data.mapping.pairs.top != (*parent).data.mapping.pairs.end
                         || yaml_stack_extend(
-                            &mut (*parent).data.mapping.pairs.start
-                                as *mut *mut yaml_node_pair_t as *mut *mut libc::c_void,
-                            &mut (*parent).data.mapping.pairs.top
-                                as *mut *mut yaml_node_pair_t as *mut *mut libc::c_void,
-                            &mut (*parent).data.mapping.pairs.end
-                                as *mut *mut yaml_node_pair_t as *mut *mut libc::c_void,
+                            &mut (*parent).data.mapping.pairs.start as *mut *mut yaml_node_pair_t
+                                as *mut *mut libc::c_void,
+                            &mut (*parent).data.mapping.pairs.top as *mut *mut yaml_node_pair_t
+                                as *mut *mut libc::c_void,
+                            &mut (*parent).data.mapping.pairs.end as *mut *mut yaml_node_pair_t
+                                as *mut *mut libc::c_void,
                         ) != 0
                     {
                         let ref mut fresh23 = (*parent).data.mapping.pairs.top;
@@ -539,13 +521,10 @@ unsafe extern "C" fn yaml_parser_load_node_add(
                 b"0\0" as *const u8 as *const libc::c_char,
                 b"loader.c\0" as *const u8 as *const libc::c_char,
                 340 as libc::c_int as libc::c_uint,
-                (*::std::mem::transmute::<
-                    &[u8; 73],
-                    &[libc::c_char; 73],
-                >(
+                (*::std::mem::transmute::<&[u8; 73], &[libc::c_char; 73]>(
                     b"int yaml_parser_load_node_add(yaml_parser_t *, struct loader_ctx *, int)\0",
                 ))
-                    .as_ptr(),
+                .as_ptr(),
             );
             return 0 as libc::c_int;
         }
@@ -561,8 +540,10 @@ unsafe extern "C" fn yaml_parser_load_alias(
     let mut alias_data: *mut yaml_alias_data_t = 0 as *mut yaml_alias_data_t;
     alias_data = (*parser).aliases.start;
     while alias_data != (*parser).aliases.top {
-        if strcmp((*alias_data).anchor as *mut libc::c_char, anchor as *mut libc::c_char)
-            == 0 as libc::c_int
+        if strcmp(
+            (*alias_data).anchor as *mut libc::c_char,
+            anchor as *mut libc::c_char,
+        ) == 0 as libc::c_int
         {
             yaml_free(anchor as *mut libc::c_void);
             return yaml_parser_load_node_add(parser, ctx, (*alias_data).index);
@@ -605,8 +586,8 @@ unsafe extern "C" fn yaml_parser_load_scalar(
     };
     let mut index: libc::c_int = 0;
     let mut tag: *mut yaml_char_t = (*event).data.scalar.tag;
-    if !(if (((*(*parser).document).nodes.top)
-        .offset_from((*(*parser).document).nodes.start) as libc::c_long)
+    if !(if (((*(*parser).document).nodes.top).offset_from((*(*parser).document).nodes.start)
+        as libc::c_long)
         < (2147483647 as libc::c_int - 1 as libc::c_int) as libc::c_long
     {
         1 as libc::c_int
@@ -623,8 +604,7 @@ unsafe extern "C" fn yaml_parser_load_scalar(
         {
             yaml_free(tag as *mut libc::c_void);
             tag = yaml_strdup(
-                b"tag:yaml.org,2002:str\0" as *const u8 as *const libc::c_char
-                    as *mut yaml_char_t,
+                b"tag:yaml.org,2002:str\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
             );
             if tag.is_null() {
                 current_block = 10579931339944277179;
@@ -649,8 +629,7 @@ unsafe extern "C" fn yaml_parser_load_scalar(
                 node.data.scalar.value = (*event).data.scalar.value;
                 node.data.scalar.length = (*event).data.scalar.length;
                 node.data.scalar.style = (*event).data.scalar.style;
-                if !(if (*(*parser).document).nodes.top
-                    != (*(*parser).document).nodes.end
+                if !(if (*(*parser).document).nodes.top != (*(*parser).document).nodes.end
                     || yaml_stack_extend(
                         &mut (*(*parser).document).nodes.start as *mut *mut yaml_node_t
                             as *mut *mut libc::c_void,
@@ -671,13 +650,9 @@ unsafe extern "C" fn yaml_parser_load_scalar(
                 } == 0)
                 {
                     index = ((*(*parser).document).nodes.top)
-                        .offset_from((*(*parser).document).nodes.start) as libc::c_long
-                        as libc::c_int;
-                    if yaml_parser_register_anchor(
-                        parser,
-                        index,
-                        (*event).data.scalar.anchor,
-                    ) == 0
+                        .offset_from((*(*parser).document).nodes.start)
+                        as libc::c_long as libc::c_int;
+                    if yaml_parser_register_anchor(parser, index, (*event).data.scalar.anchor) == 0
                     {
                         return 0 as libc::c_int;
                     }
@@ -728,8 +703,8 @@ unsafe extern "C" fn yaml_parser_load_sequence(
     };
     let mut index: libc::c_int = 0;
     let mut tag: *mut yaml_char_t = (*event).data.sequence_start.tag;
-    if !(if (((*(*parser).document).nodes.top)
-        .offset_from((*(*parser).document).nodes.start) as libc::c_long)
+    if !(if (((*(*parser).document).nodes.top).offset_from((*(*parser).document).nodes.start)
+        as libc::c_long)
         < (2147483647 as libc::c_int - 1 as libc::c_int) as libc::c_long
     {
         1 as libc::c_int
@@ -746,8 +721,7 @@ unsafe extern "C" fn yaml_parser_load_sequence(
         {
             yaml_free(tag as *mut libc::c_void);
             tag = yaml_strdup(
-                b"tag:yaml.org,2002:seq\0" as *const u8 as *const libc::c_char
-                    as *mut yaml_char_t,
+                b"tag:yaml.org,2002:seq\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
             );
             if tag.is_null() {
                 current_block = 13474536459355229096;
@@ -760,12 +734,9 @@ unsafe extern "C" fn yaml_parser_load_sequence(
         match current_block {
             13474536459355229096 => {}
             _ => {
-                items
-                    .start = yaml_malloc(
+                items.start = yaml_malloc(
                     (16 as libc::c_int as libc::c_ulong)
-                        .wrapping_mul(
-                            ::std::mem::size_of::<yaml_node_item_t>() as libc::c_ulong,
-                        ),
+                        .wrapping_mul(::std::mem::size_of::<yaml_node_item_t>() as libc::c_ulong),
                 ) as *mut yaml_node_item_t;
                 if !(if !(items.start).is_null() {
                     items.top = items.start;
@@ -789,11 +760,10 @@ unsafe extern "C" fn yaml_parser_load_sequence(
                     node.data.sequence.items.end = items.end;
                     node.data.sequence.items.top = items.start;
                     node.data.sequence.style = (*event).data.sequence_start.style;
-                    if !(if (*(*parser).document).nodes.top
-                        != (*(*parser).document).nodes.end
+                    if !(if (*(*parser).document).nodes.top != (*(*parser).document).nodes.end
                         || yaml_stack_extend(
-                            &mut (*(*parser).document).nodes.start
-                                as *mut *mut yaml_node_t as *mut *mut libc::c_void,
+                            &mut (*(*parser).document).nodes.start as *mut *mut yaml_node_t
+                                as *mut *mut libc::c_void,
                             &mut (*(*parser).document).nodes.top as *mut *mut yaml_node_t
                                 as *mut *mut libc::c_void,
                             &mut (*(*parser).document).nodes.end as *mut *mut yaml_node_t
@@ -825,8 +795,7 @@ unsafe extern "C" fn yaml_parser_load_sequence(
                             return 0 as libc::c_int;
                         }
                         if if (((*ctx).top).offset_from((*ctx).start) as libc::c_long)
-                            < (2147483647 as libc::c_int - 1 as libc::c_int)
-                                as libc::c_long
+                            < (2147483647 as libc::c_int - 1 as libc::c_int) as libc::c_long
                         {
                             1 as libc::c_int
                         } else {
@@ -840,10 +809,8 @@ unsafe extern "C" fn yaml_parser_load_sequence(
                             || yaml_stack_extend(
                                 &mut (*ctx).start as *mut *mut libc::c_int
                                     as *mut *mut libc::c_void,
-                                &mut (*ctx).top as *mut *mut libc::c_int
-                                    as *mut *mut libc::c_void,
-                                &mut (*ctx).end as *mut *mut libc::c_int
-                                    as *mut *mut libc::c_void,
+                                &mut (*ctx).top as *mut *mut libc::c_int as *mut *mut libc::c_void,
+                                &mut (*ctx).end as *mut *mut libc::c_int as *mut *mut libc::c_void,
                             ) != 0
                         {
                             let ref mut fresh29 = (*ctx).top;
@@ -874,9 +841,8 @@ unsafe extern "C" fn yaml_parser_load_sequence_end(
     mut ctx: *mut loader_ctx,
 ) -> libc::c_int {
     let mut index: libc::c_int = 0;
-    if ((*ctx).top).offset_from((*ctx).start) as libc::c_long
-        > 0 as libc::c_int as libc::c_long
-    {} else {
+    if ((*ctx).top).offset_from((*ctx).start) as libc::c_long > 0 as libc::c_int as libc::c_long {
+    } else {
         __assert_fail(
             b"((*ctx).top - (*ctx).start) > 0\0" as *const u8 as *const libc::c_char,
             b"loader.c\0" as *const u8 as *const libc::c_char,
@@ -891,9 +857,11 @@ unsafe extern "C" fn yaml_parser_load_sequence_end(
         );
     }
     index = *((*ctx).top).offset(-(1 as libc::c_int as isize));
-    if (*((*(*parser).document).nodes.start).offset((index - 1 as libc::c_int) as isize))
-        .type_0 as libc::c_uint == YAML_SEQUENCE_NODE as libc::c_int as libc::c_uint
-    {} else {
+    if (*((*(*parser).document).nodes.start).offset((index - 1 as libc::c_int) as isize)).type_0
+        as libc::c_uint
+        == YAML_SEQUENCE_NODE as libc::c_int as libc::c_uint
+    {
+    } else {
         __assert_fail(
             b"parser->document->nodes.start[index-1].type == YAML_SEQUENCE_NODE\0"
                 as *const u8 as *const libc::c_char,
@@ -908,8 +876,8 @@ unsafe extern "C" fn yaml_parser_load_sequence_end(
                 .as_ptr(),
         );
     }
-    (*((*(*parser).document).nodes.start).offset((index - 1 as libc::c_int) as isize))
-        .end_mark = (*event).end_mark;
+    (*((*(*parser).document).nodes.start).offset((index - 1 as libc::c_int) as isize)).end_mark =
+        (*event).end_mark;
     let ref mut fresh31 = (*ctx).top;
     *fresh31 = (*fresh31).offset(-1);
     return 1 as libc::c_int;
@@ -951,8 +919,8 @@ unsafe extern "C" fn yaml_parser_load_mapping(
     };
     let mut index: libc::c_int = 0;
     let mut tag: *mut yaml_char_t = (*event).data.mapping_start.tag;
-    if !(if (((*(*parser).document).nodes.top)
-        .offset_from((*(*parser).document).nodes.start) as libc::c_long)
+    if !(if (((*(*parser).document).nodes.top).offset_from((*(*parser).document).nodes.start)
+        as libc::c_long)
         < (2147483647 as libc::c_int - 1 as libc::c_int) as libc::c_long
     {
         1 as libc::c_int
@@ -969,8 +937,7 @@ unsafe extern "C" fn yaml_parser_load_mapping(
         {
             yaml_free(tag as *mut libc::c_void);
             tag = yaml_strdup(
-                b"tag:yaml.org,2002:map\0" as *const u8 as *const libc::c_char
-                    as *mut yaml_char_t,
+                b"tag:yaml.org,2002:map\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
             );
             if tag.is_null() {
                 current_block = 13635467803606088781;
@@ -983,12 +950,9 @@ unsafe extern "C" fn yaml_parser_load_mapping(
         match current_block {
             13635467803606088781 => {}
             _ => {
-                pairs
-                    .start = yaml_malloc(
+                pairs.start = yaml_malloc(
                     (16 as libc::c_int as libc::c_ulong)
-                        .wrapping_mul(
-                            ::std::mem::size_of::<yaml_node_pair_t>() as libc::c_ulong,
-                        ),
+                        .wrapping_mul(::std::mem::size_of::<yaml_node_pair_t>() as libc::c_ulong),
                 ) as *mut yaml_node_pair_t;
                 if !(if !(pairs.start).is_null() {
                     pairs.top = pairs.start;
@@ -1012,11 +976,10 @@ unsafe extern "C" fn yaml_parser_load_mapping(
                     node.data.mapping.pairs.end = pairs.end;
                     node.data.mapping.pairs.top = pairs.start;
                     node.data.mapping.style = (*event).data.mapping_start.style;
-                    if !(if (*(*parser).document).nodes.top
-                        != (*(*parser).document).nodes.end
+                    if !(if (*(*parser).document).nodes.top != (*(*parser).document).nodes.end
                         || yaml_stack_extend(
-                            &mut (*(*parser).document).nodes.start
-                                as *mut *mut yaml_node_t as *mut *mut libc::c_void,
+                            &mut (*(*parser).document).nodes.start as *mut *mut yaml_node_t
+                                as *mut *mut libc::c_void,
                             &mut (*(*parser).document).nodes.top as *mut *mut yaml_node_t
                                 as *mut *mut libc::c_void,
                             &mut (*(*parser).document).nodes.end as *mut *mut yaml_node_t
@@ -1048,8 +1011,7 @@ unsafe extern "C" fn yaml_parser_load_mapping(
                             return 0 as libc::c_int;
                         }
                         if if (((*ctx).top).offset_from((*ctx).start) as libc::c_long)
-                            < (2147483647 as libc::c_int - 1 as libc::c_int)
-                                as libc::c_long
+                            < (2147483647 as libc::c_int - 1 as libc::c_int) as libc::c_long
                         {
                             1 as libc::c_int
                         } else {
@@ -1063,10 +1025,8 @@ unsafe extern "C" fn yaml_parser_load_mapping(
                             || yaml_stack_extend(
                                 &mut (*ctx).start as *mut *mut libc::c_int
                                     as *mut *mut libc::c_void,
-                                &mut (*ctx).top as *mut *mut libc::c_int
-                                    as *mut *mut libc::c_void,
-                                &mut (*ctx).end as *mut *mut libc::c_int
-                                    as *mut *mut libc::c_void,
+                                &mut (*ctx).top as *mut *mut libc::c_int as *mut *mut libc::c_void,
+                                &mut (*ctx).end as *mut *mut libc::c_int as *mut *mut libc::c_void,
                             ) != 0
                         {
                             let ref mut fresh34 = (*ctx).top;
@@ -1097,9 +1057,8 @@ unsafe extern "C" fn yaml_parser_load_mapping_end(
     mut ctx: *mut loader_ctx,
 ) -> libc::c_int {
     let mut index: libc::c_int = 0;
-    if ((*ctx).top).offset_from((*ctx).start) as libc::c_long
-        > 0 as libc::c_int as libc::c_long
-    {} else {
+    if ((*ctx).top).offset_from((*ctx).start) as libc::c_long > 0 as libc::c_int as libc::c_long {
+    } else {
         __assert_fail(
             b"((*ctx).top - (*ctx).start) > 0\0" as *const u8 as *const libc::c_char,
             b"loader.c\0" as *const u8 as *const libc::c_char,
@@ -1114,9 +1073,11 @@ unsafe extern "C" fn yaml_parser_load_mapping_end(
         );
     }
     index = *((*ctx).top).offset(-(1 as libc::c_int as isize));
-    if (*((*(*parser).document).nodes.start).offset((index - 1 as libc::c_int) as isize))
-        .type_0 as libc::c_uint == YAML_MAPPING_NODE as libc::c_int as libc::c_uint
-    {} else {
+    if (*((*(*parser).document).nodes.start).offset((index - 1 as libc::c_int) as isize)).type_0
+        as libc::c_uint
+        == YAML_MAPPING_NODE as libc::c_int as libc::c_uint
+    {
+    } else {
         __assert_fail(
             b"parser->document->nodes.start[index-1].type == YAML_MAPPING_NODE\0"
                 as *const u8 as *const libc::c_char,
@@ -1131,8 +1092,8 @@ unsafe extern "C" fn yaml_parser_load_mapping_end(
                 .as_ptr(),
         );
     }
-    (*((*(*parser).document).nodes.start).offset((index - 1 as libc::c_int) as isize))
-        .end_mark = (*event).end_mark;
+    (*((*(*parser).document).nodes.start).offset((index - 1 as libc::c_int) as isize)).end_mark =
+        (*event).end_mark;
     let ref mut fresh36 = (*ctx).top;
     *fresh36 = (*fresh36).offset(-1);
     return 1 as libc::c_int;
