@@ -5,6 +5,7 @@ use std::env;
 use std::ffi::CString;
 use std::io::{self, Write as _};
 use std::process::ExitCode;
+use std::ptr;
 use std::slice;
 use unsafe_libyaml::api::{
     yaml_alias_event_initialize, yaml_document_end_event_initialize,
@@ -30,30 +31,30 @@ extern "C" {
 }
 unsafe fn unsafe_main() -> ExitCode {
     let mut current_block: u64;
-    let mut input: *mut FILE = 0 as *mut FILE;
+    let mut input: *mut FILE = ptr::null_mut::<FILE>();
     let mut emitter: yaml_emitter_t = yaml_emitter_t {
         error: YAML_NO_ERROR,
-        problem: 0 as *const libc::c_char,
+        problem: ptr::null::<libc::c_char>(),
         write_handler: None,
-        write_handler_data: 0 as *mut libc::c_void,
+        write_handler_data: ptr::null_mut::<libc::c_void>(),
         output: unnamed_yaml_emitter_s_output {
             string: unnamed_yaml_emitter_s_output_string {
-                buffer: 0 as *mut libc::c_uchar,
+                buffer: ptr::null_mut::<libc::c_uchar>(),
                 size: 0,
-                size_written: 0 as *mut size_t,
+                size_written: ptr::null_mut::<size_t>(),
             },
         },
         buffer: unnamed_yaml_emitter_s_buffer {
-            start: 0 as *mut yaml_char_t,
-            end: 0 as *mut yaml_char_t,
-            pointer: 0 as *mut yaml_char_t,
-            last: 0 as *mut yaml_char_t,
+            start: ptr::null_mut::<yaml_char_t>(),
+            end: ptr::null_mut::<yaml_char_t>(),
+            pointer: ptr::null_mut::<yaml_char_t>(),
+            last: ptr::null_mut::<yaml_char_t>(),
         },
         raw_buffer: unnamed_yaml_emitter_s_raw_buffer {
-            start: 0 as *mut libc::c_uchar,
-            end: 0 as *mut libc::c_uchar,
-            pointer: 0 as *mut libc::c_uchar,
-            last: 0 as *mut libc::c_uchar,
+            start: ptr::null_mut::<libc::c_uchar>(),
+            end: ptr::null_mut::<libc::c_uchar>(),
+            pointer: ptr::null_mut::<libc::c_uchar>(),
+            last: ptr::null_mut::<libc::c_uchar>(),
         },
         encoding: YAML_ANY_ENCODING,
         canonical: 0,
@@ -62,26 +63,26 @@ unsafe fn unsafe_main() -> ExitCode {
         unicode: 0,
         line_break: YAML_ANY_BREAK,
         states: unnamed_yaml_emitter_s_states {
-            start: 0 as *mut yaml_emitter_state_t,
-            end: 0 as *mut yaml_emitter_state_t,
-            top: 0 as *mut yaml_emitter_state_t,
+            start: ptr::null_mut::<yaml_emitter_state_t>(),
+            end: ptr::null_mut::<yaml_emitter_state_t>(),
+            top: ptr::null_mut::<yaml_emitter_state_t>(),
         },
         state: YAML_EMIT_STREAM_START_STATE,
         events: unnamed_yaml_emitter_s_events {
-            start: 0 as *mut yaml_event_t,
-            end: 0 as *mut yaml_event_t,
-            head: 0 as *mut yaml_event_t,
-            tail: 0 as *mut yaml_event_t,
+            start: ptr::null_mut::<yaml_event_t>(),
+            end: ptr::null_mut::<yaml_event_t>(),
+            head: ptr::null_mut::<yaml_event_t>(),
+            tail: ptr::null_mut::<yaml_event_t>(),
         },
         indents: unnamed_yaml_emitter_s_indents {
-            start: 0 as *mut libc::c_int,
-            end: 0 as *mut libc::c_int,
-            top: 0 as *mut libc::c_int,
+            start: ptr::null_mut::<libc::c_int>(),
+            end: ptr::null_mut::<libc::c_int>(),
+            top: ptr::null_mut::<libc::c_int>(),
         },
         tag_directives: unnamed_yaml_emitter_s_tag_directives {
-            start: 0 as *mut yaml_tag_directive_t,
-            end: 0 as *mut yaml_tag_directive_t,
-            top: 0 as *mut yaml_tag_directive_t,
+            start: ptr::null_mut::<yaml_tag_directive_t>(),
+            end: ptr::null_mut::<yaml_tag_directive_t>(),
+            top: ptr::null_mut::<yaml_tag_directive_t>(),
         },
         indent: 0,
         flow_level: 0,
@@ -95,18 +96,18 @@ unsafe fn unsafe_main() -> ExitCode {
         indention: 0,
         open_ended: 0,
         anchor_data: unnamed_yaml_emitter_s_anchor_data {
-            anchor: 0 as *mut yaml_char_t,
+            anchor: ptr::null_mut::<yaml_char_t>(),
             anchor_length: 0,
             alias: 0,
         },
         tag_data: unnamed_yaml_emitter_s_tag_data {
-            handle: 0 as *mut yaml_char_t,
+            handle: ptr::null_mut::<yaml_char_t>(),
             handle_length: 0,
-            suffix: 0 as *mut yaml_char_t,
+            suffix: ptr::null_mut::<yaml_char_t>(),
             suffix_length: 0,
         },
         scalar_data: unnamed_yaml_emitter_s_scalar_data {
-            value: 0 as *mut yaml_char_t,
+            value: ptr::null_mut::<yaml_char_t>(),
             length: 0,
             multiline: 0,
             flow_plain_allowed: 0,
@@ -117,9 +118,9 @@ unsafe fn unsafe_main() -> ExitCode {
         },
         opened: 0,
         closed: 0,
-        anchors: 0 as *mut yaml_anchors_t,
+        anchors: ptr::null_mut::<yaml_anchors_t>(),
         last_anchor_id: 0,
-        document: 0 as *mut yaml_document_t,
+        document: ptr::null_mut::<yaml_document_t>(),
     };
     let mut event: yaml_event_t = yaml_event_t {
         type_0: YAML_NO_EVENT,
@@ -139,7 +140,8 @@ unsafe fn unsafe_main() -> ExitCode {
             column: 0,
         },
     };
-    let mut version_directive: *mut yaml_version_directive_t = 0 as *mut yaml_version_directive_t;
+    let mut version_directive: *mut yaml_version_directive_t =
+        ptr::null_mut::<yaml_version_directive_t>();
     let mut canonical: libc::c_int = 0 as libc::c_int;
     let mut unicode: libc::c_int = 0 as libc::c_int;
     let mut line: [libc::c_char; 1024] = [0; 1024];
@@ -180,7 +182,11 @@ unsafe fn unsafe_main() -> ExitCode {
         let _ = io::stdout().write_all(bytes);
         size as libc::c_int
     }
-    yaml_emitter_set_output(&mut emitter, Some(write_to_stdout), 0 as *mut libc::c_void);
+    yaml_emitter_set_output(
+        &mut emitter,
+        Some(write_to_stdout),
+        ptr::null_mut::<libc::c_void>(),
+    );
     yaml_emitter_set_canonical(&mut emitter, canonical);
     yaml_emitter_set_unicode(&mut emitter, unicode);
     loop {
@@ -221,8 +227,8 @@ unsafe fn unsafe_main() -> ExitCode {
             ok = yaml_document_start_event_initialize(
                 &mut event,
                 version_directive,
-                0 as *mut yaml_tag_directive_t,
-                0 as *mut yaml_tag_directive_t,
+                ptr::null_mut::<yaml_tag_directive_t>(),
+                ptr::null_mut::<yaml_tag_directive_t>(),
                 implicit,
             );
         } else if strncmp(
@@ -297,7 +303,7 @@ unsafe fn unsafe_main() -> ExitCode {
             let mut style_0: libc::c_int = 0;
             get_value(line.as_mut_ptr(), value.as_mut_ptr(), &mut style_0);
             implicit = (get_tag(line.as_mut_ptr(), tag.as_mut_ptr())
-                == 0 as *mut libc::c_void as *mut libc::c_char)
+                == ptr::null_mut::<libc::c_void>() as *mut libc::c_char)
                 as libc::c_int;
             ok = yaml_scalar_event_initialize(
                 &mut event,
@@ -410,7 +416,7 @@ pub unsafe extern "C" fn get_line(
     mut input: *mut FILE,
     mut line: *mut libc::c_char,
 ) -> libc::c_int {
-    let mut newline: *mut libc::c_char = 0 as *mut libc::c_char;
+    let mut newline: *mut libc::c_char = ptr::null_mut::<libc::c_char>();
     if (fgets(line, 1024 as libc::c_int - 1 as libc::c_int, input)).is_null() {
         return 0 as libc::c_int;
     }
@@ -432,11 +438,11 @@ pub unsafe extern "C" fn get_anchor(
     mut line: *mut libc::c_char,
     mut anchor: *mut libc::c_char,
 ) -> *mut libc::c_char {
-    let mut start: *mut libc::c_char = 0 as *mut libc::c_char;
-    let mut end: *mut libc::c_char = 0 as *mut libc::c_char;
+    let mut start: *mut libc::c_char = ptr::null_mut::<libc::c_char>();
+    let mut end: *mut libc::c_char = ptr::null_mut::<libc::c_char>();
     start = strchr(line, sigil as libc::c_int);
     if start.is_null() {
-        return 0 as *mut libc::c_char;
+        return ptr::null_mut::<libc::c_char>();
     }
     start = start.offset(1);
     end = strchr(start, ' ' as i32);
@@ -456,15 +462,15 @@ pub unsafe extern "C" fn get_tag(
     mut line: *mut libc::c_char,
     mut tag: *mut libc::c_char,
 ) -> *mut libc::c_char {
-    let mut start: *mut libc::c_char = 0 as *mut libc::c_char;
-    let mut end: *mut libc::c_char = 0 as *mut libc::c_char;
+    let mut start: *mut libc::c_char = ptr::null_mut::<libc::c_char>();
+    let mut end: *mut libc::c_char = ptr::null_mut::<libc::c_char>();
     start = strchr(line, '<' as i32);
     if start.is_null() {
-        return 0 as *mut libc::c_char;
+        return ptr::null_mut::<libc::c_char>();
     }
     end = strchr(line, '>' as i32);
     if end.is_null() {
-        return 0 as *mut libc::c_char;
+        return ptr::null_mut::<libc::c_char>();
     }
     memcpy(
         tag as *mut libc::c_void,
@@ -484,8 +490,8 @@ pub unsafe extern "C" fn get_value(
     mut style: *mut libc::c_int,
 ) {
     let mut i: libc::c_int = 0 as libc::c_int;
-    let mut c: *mut libc::c_char = 0 as *mut libc::c_char;
-    let mut start: *mut libc::c_char = 0 as *mut libc::c_char;
+    let mut c: *mut libc::c_char = ptr::null_mut::<libc::c_char>();
+    let mut start: *mut libc::c_char = ptr::null_mut::<libc::c_char>();
     let mut end: *mut libc::c_char = line.offset(strlen(line) as isize);
     let mut current_block_8: u64;
     c = line.offset(4 as libc::c_int as isize);
@@ -508,7 +514,7 @@ pub unsafe extern "C" fn get_value(
                 *style = YAML_FOLDED_SCALAR_STYLE as libc::c_int;
                 current_block_8 = 17407779659766490442;
             } else {
-                start = 0 as *mut libc::c_char;
+                start = ptr::null_mut::<libc::c_char>();
                 current_block_8 = 12675440807659640239;
             }
             match current_block_8 {
