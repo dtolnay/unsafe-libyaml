@@ -14,9 +14,6 @@ use unsafe_libyaml::api::{
 use unsafe_libyaml::externs::__assert_fail;
 use unsafe_libyaml::parser::yaml_parser_parse;
 use unsafe_libyaml::*;
-extern "C" {
-    fn printf(_: *const libc::c_char, _: ...) -> libc::c_int;
-}
 unsafe fn unsafe_main() -> ExitCode {
     let mut input = None;
     let mut parser = MaybeUninit::<yaml_parser_t>::uninit();
@@ -84,89 +81,101 @@ unsafe fn unsafe_main() -> ExitCode {
         }
         type_0 = (*event).type_0;
         if type_0 as libc::c_uint == YAML_NO_EVENT as libc::c_int as libc::c_uint {
-            printf(b"???\n\0" as *const u8 as *const libc::c_char);
+            let _ = writeln!(io::stdout(), "???");
         } else if type_0 as libc::c_uint == YAML_STREAM_START_EVENT as libc::c_int as libc::c_uint {
-            printf(b"+STR\n\0" as *const u8 as *const libc::c_char);
+            let _ = writeln!(io::stdout(), "+STR");
         } else if type_0 as libc::c_uint == YAML_STREAM_END_EVENT as libc::c_int as libc::c_uint {
-            printf(b"-STR\n\0" as *const u8 as *const libc::c_char);
+            let _ = writeln!(io::stdout(), "-STR");
         } else if type_0 as libc::c_uint == YAML_DOCUMENT_START_EVENT as libc::c_int as libc::c_uint
         {
-            printf(b"+DOC\0" as *const u8 as *const libc::c_char);
+            let _ = write!(io::stdout(), "+DOC");
             if (*event).data.document_start.implicit == 0 {
-                printf(b" ---\0" as *const u8 as *const libc::c_char);
+                let _ = write!(io::stdout(), " ---");
             }
-            printf(b"\n\0" as *const u8 as *const libc::c_char);
+            let _ = writeln!(io::stdout());
         } else if type_0 as libc::c_uint == YAML_DOCUMENT_END_EVENT as libc::c_int as libc::c_uint {
-            printf(b"-DOC\0" as *const u8 as *const libc::c_char);
+            let _ = write!(io::stdout(), "-DOC");
             if (*event).data.document_end.implicit == 0 {
-                printf(b" ...\0" as *const u8 as *const libc::c_char);
+                let _ = write!(io::stdout(), " ...");
             }
-            printf(b"\n\0" as *const u8 as *const libc::c_char);
+            let _ = writeln!(io::stdout());
         } else if type_0 as libc::c_uint == YAML_MAPPING_START_EVENT as libc::c_int as libc::c_uint
         {
-            printf(b"+MAP\0" as *const u8 as *const libc::c_char);
+            let _ = write!(io::stdout(), "+MAP");
             if !((*event).data.mapping_start.anchor).is_null() {
-                printf(
-                    b" &%s\0" as *const u8 as *const libc::c_char,
-                    (*event).data.mapping_start.anchor,
+                let _ = write!(
+                    io::stdout(),
+                    " &{}",
+                    CStr::from_ptr((*event).data.mapping_start.anchor as *const libc::c_char)
+                        .to_string_lossy(),
                 );
             }
             if !((*event).data.mapping_start.tag).is_null() {
-                printf(
-                    b" <%s>\0" as *const u8 as *const libc::c_char,
-                    (*event).data.mapping_start.tag,
+                let _ = write!(
+                    io::stdout(),
+                    " <{}>",
+                    CStr::from_ptr((*event).data.mapping_start.tag as *const libc::c_char)
+                        .to_string_lossy(),
                 );
             }
-            printf(b"\n\0" as *const u8 as *const libc::c_char);
+            let _ = writeln!(io::stdout());
         } else if type_0 as libc::c_uint == YAML_MAPPING_END_EVENT as libc::c_int as libc::c_uint {
-            printf(b"-MAP\n\0" as *const u8 as *const libc::c_char);
+            let _ = writeln!(io::stdout(), "-MAP");
         } else if type_0 as libc::c_uint == YAML_SEQUENCE_START_EVENT as libc::c_int as libc::c_uint
         {
-            printf(b"+SEQ\0" as *const u8 as *const libc::c_char);
+            let _ = write!(io::stdout(), "+SEQ");
             if !((*event).data.sequence_start.anchor).is_null() {
-                printf(
-                    b" &%s\0" as *const u8 as *const libc::c_char,
-                    (*event).data.sequence_start.anchor,
+                let _ = write!(
+                    io::stdout(),
+                    " &{}",
+                    CStr::from_ptr((*event).data.sequence_start.anchor as *const libc::c_char)
+                        .to_string_lossy(),
                 );
             }
             if !((*event).data.sequence_start.tag).is_null() {
-                printf(
-                    b" <%s>\0" as *const u8 as *const libc::c_char,
-                    (*event).data.sequence_start.tag,
+                let _ = write!(
+                    io::stdout(),
+                    " <{}>",
+                    CStr::from_ptr((*event).data.sequence_start.tag as *const libc::c_char)
+                        .to_string_lossy(),
                 );
             }
-            printf(b"\n\0" as *const u8 as *const libc::c_char);
+            let _ = writeln!(io::stdout());
         } else if type_0 as libc::c_uint == YAML_SEQUENCE_END_EVENT as libc::c_int as libc::c_uint {
-            printf(b"-SEQ\n\0" as *const u8 as *const libc::c_char);
+            let _ = writeln!(io::stdout(), "-SEQ");
         } else if type_0 as libc::c_uint == YAML_SCALAR_EVENT as libc::c_int as libc::c_uint {
-            printf(b"=VAL\0" as *const u8 as *const libc::c_char);
+            let _ = write!(io::stdout(), "=VAL");
             if !((*event).data.scalar.anchor).is_null() {
-                printf(
-                    b" &%s\0" as *const u8 as *const libc::c_char,
-                    (*event).data.scalar.anchor,
+                let _ = write!(
+                    io::stdout(),
+                    " &{}",
+                    CStr::from_ptr((*event).data.scalar.anchor as *const libc::c_char)
+                        .to_string_lossy(),
                 );
             }
             if !((*event).data.scalar.tag).is_null() {
-                printf(
-                    b" <%s>\0" as *const u8 as *const libc::c_char,
-                    (*event).data.scalar.tag,
+                let _ = write!(
+                    io::stdout(),
+                    " <{}>",
+                    CStr::from_ptr((*event).data.scalar.tag as *const libc::c_char)
+                        .to_string_lossy(),
                 );
             }
             match (*event).data.scalar.style as libc::c_uint {
                 1 => {
-                    printf(b" :\0" as *const u8 as *const libc::c_char);
+                    let _ = write!(io::stdout(), " :");
                 }
                 2 => {
-                    printf(b" '\0" as *const u8 as *const libc::c_char);
+                    let _ = write!(io::stdout(), " '");
                 }
                 3 => {
-                    printf(b" \"\0" as *const u8 as *const libc::c_char);
+                    let _ = write!(io::stdout(), " \"");
                 }
                 4 => {
-                    printf(b" |\0" as *const u8 as *const libc::c_char);
+                    let _ = write!(io::stdout(), " |");
                 }
                 5 => {
-                    printf(b" >\0" as *const u8 as *const libc::c_char);
+                    let _ = write!(io::stdout(), " >");
                 }
                 0 => {
                     process::abort();
@@ -174,11 +183,12 @@ unsafe fn unsafe_main() -> ExitCode {
                 _ => {}
             }
             print_escaped((*event).data.scalar.value, (*event).data.scalar.length);
-            printf(b"\n\0" as *const u8 as *const libc::c_char);
+            let _ = writeln!(io::stdout());
         } else if type_0 as libc::c_uint == YAML_ALIAS_EVENT as libc::c_int as libc::c_uint {
-            printf(
-                b"=ALI *%s\n\0" as *const u8 as *const libc::c_char,
-                (*event).data.alias.anchor,
+            let _ = writeln!(
+                io::stdout(),
+                "=ALI *{}",
+                CStr::from_ptr((*event).data.alias.anchor as *const libc::c_char).to_string_lossy(),
             );
         } else {
             process::abort();
@@ -199,22 +209,19 @@ pub unsafe extern "C" fn print_escaped(mut str: *mut yaml_char_t, mut length: si
     while (i as libc::c_ulong) < length {
         c = *str.offset(i as isize) as libc::c_char;
         if c as libc::c_int == '\\' as i32 {
-            printf(b"\\\\\0" as *const u8 as *const libc::c_char);
+            let _ = write!(io::stdout(), "\\\\");
         } else if c as libc::c_int == '\0' as i32 {
-            printf(b"\\0\0" as *const u8 as *const libc::c_char);
+            let _ = write!(io::stdout(), "\\0");
         } else if c as libc::c_int == '\u{8}' as i32 {
-            printf(b"\\b\0" as *const u8 as *const libc::c_char);
+            let _ = write!(io::stdout(), "\\b");
         } else if c as libc::c_int == '\n' as i32 {
-            printf(b"\\n\0" as *const u8 as *const libc::c_char);
+            let _ = write!(io::stdout(), "\\n");
         } else if c as libc::c_int == '\r' as i32 {
-            printf(b"\\r\0" as *const u8 as *const libc::c_char);
+            let _ = write!(io::stdout(), "\\r");
         } else if c as libc::c_int == '\t' as i32 {
-            printf(b"\\t\0" as *const u8 as *const libc::c_char);
+            let _ = write!(io::stdout(), "\\t");
         } else {
-            printf(
-                b"%c\0" as *const u8 as *const libc::c_char,
-                c as libc::c_int,
-            );
+            let _ = io::stdout().write_all(&[c as u8]);
         }
         i += 1;
     }
