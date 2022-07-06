@@ -72,20 +72,17 @@ unsafe fn unsafe_main() -> ExitCode {
     loop {
         let mut type_0: yaml_event_type_t = YAML_NO_EVENT;
         if yaml_parser_parse(parser, event) == 0 {
+            fprintf(
+                stderr,
+                b"Parse error: %s\n\0" as *const u8 as *const libc::c_char,
+                (*parser).problem,
+            );
             if (*parser).problem_mark.line != 0 || (*parser).problem_mark.column != 0 {
                 fprintf(
                     stderr,
-                    b"Parse error: %s\nLine: %lu Column: %lu\n\0" as *const u8
-                        as *const libc::c_char,
-                    (*parser).problem,
+                    b"Line: %lu Column: %lu\n\0" as *const u8 as *const libc::c_char,
                     ((*parser).problem_mark.line).wrapping_add(1 as libc::c_int as libc::c_ulong),
                     ((*parser).problem_mark.column).wrapping_add(1 as libc::c_int as libc::c_ulong),
-                );
-            } else {
-                fprintf(
-                    stderr,
-                    b"Parse error: %s\n\0" as *const u8 as *const libc::c_char,
-                    (*parser).problem,
                 );
             }
             return ExitCode::FAILURE;
