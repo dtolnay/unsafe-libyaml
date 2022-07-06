@@ -25,7 +25,6 @@ extern "C" {
     fn fclose(__stream: *mut FILE) -> libc::c_int;
     fn fopen(_: *const libc::c_char, _: *const libc::c_char) -> *mut FILE;
     fn fgets(__s: *mut libc::c_char, __n: libc::c_int, __stream: *mut FILE) -> *mut libc::c_char;
-    fn strchr(_: *const libc::c_char, _: libc::c_int) -> *mut libc::c_char;
 }
 unsafe fn unsafe_main() -> ExitCode {
     let mut current_block: u64;
@@ -452,6 +451,15 @@ pub unsafe extern "C" fn get_value(
         c = c.offset(1);
     }
     *value.offset(i as isize) = '\0' as i32 as libc::c_char;
+}
+unsafe fn strchr(mut str: *const libc::c_char, c: libc::c_int) -> *mut libc::c_char {
+    loop {
+        match *str {
+            0 => return ptr::null_mut(),
+            curr if curr == c as libc::c_char => return str as *mut libc::c_char,
+            _ => str = str.offset(1),
+        }
+    }
 }
 fn main() -> ExitCode {
     unsafe { unsafe_main() }
