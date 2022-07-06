@@ -5,7 +5,7 @@ use std::env;
 use std::ffi::CString;
 use std::io::{self, Write as _};
 use std::mem::MaybeUninit;
-use std::process::ExitCode;
+use std::process::{self, ExitCode};
 use std::ptr;
 use std::slice;
 use unsafe_libyaml::api::{
@@ -26,7 +26,6 @@ extern "C" {
     fn fclose(__stream: *mut FILE) -> libc::c_int;
     fn fopen(_: *const libc::c_char, _: *const libc::c_char) -> *mut FILE;
     fn fprintf(_: *mut FILE, _: *const libc::c_char, _: ...) -> libc::c_int;
-    fn abort() -> !;
     fn fgets(__s: *mut libc::c_char, __n: libc::c_int, __stream: *mut FILE) -> *mut libc::c_char;
     fn strchr(_: *const libc::c_char, _: libc::c_int) -> *mut libc::c_char;
 }
@@ -324,7 +323,7 @@ pub unsafe extern "C" fn get_line(
             b"Line too long: '%s'\0" as *const u8 as *const libc::c_char,
             line,
         );
-        abort();
+        process::abort();
     }
     *newline = '\0' as i32 as libc::c_char;
     return 1 as libc::c_int;
@@ -425,7 +424,7 @@ pub unsafe extern "C" fn get_value(
         c = c.offset(1);
     }
     if start.is_null() {
-        abort();
+        process::abort();
     }
     c = start;
     while c < end {
@@ -456,7 +455,7 @@ pub unsafe extern "C" fn get_value(
                 i = i + 1;
                 *value.offset(fresh5 as isize) = '\t' as i32 as libc::c_char;
             } else {
-                abort();
+                process::abort();
             }
         } else {
             let fresh6 = i;

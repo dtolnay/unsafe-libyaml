@@ -5,7 +5,7 @@ use std::cmp;
 use std::env;
 use std::fs;
 use std::mem::MaybeUninit;
-use std::process::ExitCode;
+use std::process::{self, ExitCode};
 use std::ptr;
 use unsafe_libyaml::api::{
     yaml_event_delete, yaml_parser_delete, yaml_parser_initialize, yaml_parser_set_input,
@@ -18,7 +18,6 @@ extern "C" {
     static mut stderr: *mut FILE;
     fn fprintf(_: *mut FILE, _: *const libc::c_char, _: ...) -> libc::c_int;
     fn printf(_: *const libc::c_char, _: ...) -> libc::c_int;
-    fn abort() -> !;
 }
 unsafe fn unsafe_main() -> ExitCode {
     let mut input = None;
@@ -178,7 +177,7 @@ unsafe fn unsafe_main() -> ExitCode {
                     printf(b" >\0" as *const u8 as *const libc::c_char);
                 }
                 0 => {
-                    abort();
+                    process::abort();
                 }
                 _ => {}
             }
@@ -190,7 +189,7 @@ unsafe fn unsafe_main() -> ExitCode {
                 (*event).data.alias.anchor,
             );
         } else {
-            abort();
+            process::abort();
         }
         yaml_event_delete(event);
         if type_0 as libc::c_uint == YAML_STREAM_END_EVENT as libc::c_int as libc::c_uint {
