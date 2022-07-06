@@ -1,9 +1,10 @@
-#![feature(extern_types)]
 #![allow(non_camel_case_types, non_snake_case, unused_assignments, unused_mut)]
 
 use std::cmp;
 use std::env;
+use std::ffi::CStr;
 use std::fs;
+use std::io::{self, Write as _};
 use std::mem::MaybeUninit;
 use std::process::{self, ExitCode};
 use std::ptr;
@@ -14,9 +15,6 @@ use unsafe_libyaml::externs::__assert_fail;
 use unsafe_libyaml::parser::yaml_parser_parse;
 use unsafe_libyaml::*;
 extern "C" {
-    pub type FILE;
-    static mut stderr: *mut FILE;
-    fn fprintf(_: *mut FILE, _: *const libc::c_char, _: ...) -> libc::c_int;
     fn printf(_: *const libc::c_char, _: ...) -> libc::c_int;
 }
 unsafe fn unsafe_main() -> ExitCode {
@@ -44,10 +42,7 @@ unsafe fn unsafe_main() -> ExitCode {
         )
     });
     if yaml_parser_initialize(parser) == 0 {
-        fprintf(
-            stderr,
-            b"Could not initialize the parser object\n\0" as *const u8 as *const libc::c_char,
-        );
+        let _ = writeln!(io::stderr(), "Could not initialize the parser object");
         return ExitCode::FAILURE;
     }
     unsafe extern "C" fn read_from_file(
@@ -72,15 +67,15 @@ unsafe fn unsafe_main() -> ExitCode {
     loop {
         let mut type_0: yaml_event_type_t = YAML_NO_EVENT;
         if yaml_parser_parse(parser, event) == 0 {
-            fprintf(
-                stderr,
-                b"Parse error: %s\n\0" as *const u8 as *const libc::c_char,
-                (*parser).problem,
+            let _ = writeln!(
+                io::stderr(),
+                "Parse error: {}",
+                CStr::from_ptr((*parser).problem).to_string_lossy(),
             );
             if (*parser).problem_mark.line != 0 || (*parser).problem_mark.column != 0 {
-                fprintf(
-                    stderr,
-                    b"Line: %lu Column: %lu\n\0" as *const u8 as *const libc::c_char,
+                let _ = writeln!(
+                    io::stderr(),
+                    "Line: {} Column: {}",
                     ((*parser).problem_mark.line).wrapping_add(1 as libc::c_int as libc::c_ulong),
                     ((*parser).problem_mark.column).wrapping_add(1 as libc::c_int as libc::c_ulong),
                 );
@@ -225,10 +220,7 @@ pub unsafe extern "C" fn print_escaped(mut str: *mut yaml_char_t, mut length: si
     }
 }
 unsafe fn usage(ret: ExitCode) -> ExitCode {
-    fprintf(
-        stderr,
-        b"Usage: libyaml-parser [<input-file>]\n\0" as *const u8 as *const libc::c_char,
-    );
+    let _ = writeln!(io::stderr(), "Usage: libyaml-parser [<input-file>]");
     return ret;
 }
 fn main() -> ExitCode {

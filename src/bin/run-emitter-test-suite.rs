@@ -2,7 +2,7 @@
 #![allow(non_camel_case_types, non_snake_case, unused_assignments, unused_mut)]
 
 use std::env;
-use std::ffi::CString;
+use std::ffi::{CStr, CString};
 use std::io::{self, Write as _};
 use std::mem::MaybeUninit;
 use std::process::{self, ExitCode};
@@ -22,10 +22,8 @@ use unsafe_libyaml::externs::{__assert_fail, memcpy, strlen, strncmp};
 use unsafe_libyaml::*;
 extern "C" {
     pub type FILE;
-    static mut stderr: *mut FILE;
     fn fclose(__stream: *mut FILE) -> libc::c_int;
     fn fopen(_: *const libc::c_char, _: *const libc::c_char) -> *mut FILE;
-    fn fprintf(_: *mut FILE, _: *const libc::c_char, _: ...) -> libc::c_int;
     fn fgets(__s: *mut libc::c_char, __n: libc::c_int, __stream: *mut FILE) -> *mut libc::c_char;
     fn strchr(_: *const libc::c_char, _: libc::c_int) -> *mut libc::c_char;
 }
@@ -63,10 +61,7 @@ unsafe fn unsafe_main() -> ExitCode {
         );
     }
     if yaml_emitter_initialize(emitter) == 0 {
-        fprintf(
-            stderr,
-            b"Could not initalize the emitter object\n\0" as *const u8 as *const libc::c_char,
-        );
+        let _ = writeln!(io::stderr(), "Could not initalize the emitter object");
         return ExitCode::FAILURE;
     }
     unsafe extern "C" fn write_to_stdout(
@@ -230,10 +225,10 @@ unsafe fn unsafe_main() -> ExitCode {
                 ) as *mut yaml_char_t,
             );
         } else {
-            fprintf(
-                stderr,
-                b"Unknown event: '%s'\n\0" as *const u8 as *const libc::c_char,
-                line.as_mut_ptr(),
+            let _ = writeln!(
+                io::stderr(),
+                "Unknown event: '{}'",
+                CStr::from_ptr(line.as_mut_ptr()).to_string_lossy(),
             );
             return ExitCode::FAILURE;
         }
@@ -248,10 +243,9 @@ unsafe fn unsafe_main() -> ExitCode {
     }
     match current_block {
         13850764817919632987 => {
-            fprintf(
-                stderr,
-                b"Memory error: Not enough memory for creating an event\n\0" as *const u8
-                    as *const libc::c_char,
+            let _ = writeln!(
+                io::stderr(),
+                "Memory error: Not enough memory for creating an event",
             );
             yaml_emitter_delete(emitter);
             return ExitCode::FAILURE;
@@ -259,31 +253,24 @@ unsafe fn unsafe_main() -> ExitCode {
         6684355725484023210 => {
             match (*emitter).error as libc::c_uint {
                 1 => {
-                    fprintf(
-                        stderr,
-                        b"Memory error: Not enough memory for emitting\n\0" as *const u8
-                            as *const libc::c_char,
-                    );
+                    let _ = writeln!(io::stderr(), "Memory error: Not enough memory for emitting");
                 }
                 6 => {
-                    fprintf(
-                        stderr,
-                        b"Writer error: %s\n\0" as *const u8 as *const libc::c_char,
-                        (*emitter).problem,
+                    let _ = writeln!(
+                        io::stderr(),
+                        "Writer error: {}",
+                        CStr::from_ptr((*emitter).problem).to_string_lossy(),
                     );
                 }
                 7 => {
-                    fprintf(
-                        stderr,
-                        b"Emitter error: %s\n\0" as *const u8 as *const libc::c_char,
-                        (*emitter).problem,
+                    let _ = writeln!(
+                        io::stderr(),
+                        "Emitter error: {}",
+                        CStr::from_ptr((*emitter).problem).to_string_lossy(),
                     );
                 }
                 _ => {
-                    fprintf(
-                        stderr,
-                        b"Internal error\n\0" as *const u8 as *const libc::c_char,
-                    );
+                    let _ = writeln!(io::stderr(), "Internal error");
                 }
             }
             yaml_emitter_delete(emitter);
@@ -318,10 +305,10 @@ pub unsafe extern "C" fn get_line(
     }
     newline = strchr(line, '\n' as i32);
     if newline.is_null() {
-        fprintf(
-            stderr,
-            b"Line too long: '%s'\0" as *const u8 as *const libc::c_char,
-            line,
+        let _ = writeln!(
+            io::stderr(),
+            "Line too long: '{}'",
+            CStr::from_ptr(line).to_string_lossy(),
         );
         process::abort();
     }
