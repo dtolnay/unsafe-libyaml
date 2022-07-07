@@ -1,4 +1,4 @@
-#![allow(non_camel_case_types, non_snake_case, unused_assignments, unused_mut)]
+#![allow(unused_assignments, unused_mut)]
 
 use std::cmp;
 use std::env;
