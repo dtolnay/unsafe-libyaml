@@ -89,7 +89,7 @@ pub unsafe extern "C" fn yaml_string_join(
     a_end: *mut *mut yaml_char_t,
     b_start: *mut *mut yaml_char_t,
     b_pointer: *mut *mut yaml_char_t,
-    b_end: *mut *mut yaml_char_t,
+    _b_end: *mut *mut yaml_char_t,
 ) -> libc::c_int {
     if *b_start == *b_pointer {
         return 1 as libc::c_int;

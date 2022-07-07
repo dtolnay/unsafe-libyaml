@@ -1143,7 +1143,7 @@ unsafe extern "C" fn yaml_emitter_emit_node(
 }
 unsafe extern "C" fn yaml_emitter_emit_alias(
     mut emitter: *mut yaml_emitter_t,
-    event: *mut yaml_event_t,
+    _event: *mut yaml_event_t,
 ) -> libc::c_int {
     if yaml_emitter_process_anchor(emitter) == 0 {
         return 0 as libc::c_int;
@@ -1242,7 +1242,7 @@ unsafe extern "C" fn yaml_emitter_emit_mapping_start(
     return 1 as libc::c_int;
 }
 unsafe extern "C" fn yaml_emitter_check_empty_document(
-    emitter: *mut yaml_emitter_t,
+    _emitter: *mut yaml_emitter_t,
 ) -> libc::c_int {
     return 0 as libc::c_int;
 }

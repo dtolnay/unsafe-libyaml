@@ -293,7 +293,7 @@ unsafe extern "C" fn yaml_emitter_anchor_node(emitter: *mut yaml_emitter_t, inde
     }
 }
 unsafe extern "C" fn yaml_emitter_generate_anchor(
-    emitter: *mut yaml_emitter_t,
+    _emitter: *mut yaml_emitter_t,
     anchor_id: libc::c_int,
 ) -> *mut yaml_char_t {
     let anchor: *mut yaml_char_t = yaml_malloc(16 as libc::c_int as size_t) as *mut yaml_char_t;
