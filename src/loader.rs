@@ -1,17 +1,14 @@
 use crate::externs::{memset, strcmp};
-use crate::yaml::{
-    unnamed_yaml_event_s_data, unnamed_yaml_event_s_data_stream_start, unnamed_yaml_node_s_data,
-    unnamed_yaml_node_s_data_scalar,
-};
+use crate::yaml::{unnamed_yaml_node_s_data, unnamed_yaml_node_s_data_scalar};
 use crate::{
     libc, yaml_alias_data_t, yaml_char_t, yaml_document_delete, yaml_document_t, yaml_event_t,
     yaml_free, yaml_malloc, yaml_mark_t, yaml_node_item_t, yaml_node_pair_t, yaml_node_t,
     yaml_parser_parse, yaml_parser_t, yaml_stack_extend, yaml_strdup, PointerExt,
-    YAML_ANY_ENCODING, YAML_ANY_SCALAR_STYLE, YAML_COMPOSER_ERROR, YAML_DOCUMENT_END_EVENT,
-    YAML_DOCUMENT_START_EVENT, YAML_MAPPING_NODE, YAML_MEMORY_ERROR, YAML_NO_EVENT, YAML_NO_NODE,
-    YAML_SCALAR_NODE, YAML_SEQUENCE_NODE, YAML_STREAM_END_EVENT, YAML_STREAM_START_EVENT,
+    YAML_ANY_SCALAR_STYLE, YAML_COMPOSER_ERROR, YAML_DOCUMENT_END_EVENT, YAML_DOCUMENT_START_EVENT,
+    YAML_MAPPING_NODE, YAML_MEMORY_ERROR, YAML_NO_NODE, YAML_SCALAR_NODE, YAML_SEQUENCE_NODE,
+    YAML_STREAM_END_EVENT, YAML_STREAM_START_EVENT,
 };
-use std::mem::size_of;
+use std::mem::{size_of, MaybeUninit};
 use std::ptr::{self, addr_of_mut};
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -42,24 +39,8 @@ pub unsafe fn yaml_parser_load(
     document: *mut yaml_document_t,
 ) -> libc::c_int {
     let current_block: u64;
-    let mut event = yaml_event_t {
-        type_0: YAML_NO_EVENT,
-        data: unnamed_yaml_event_s_data {
-            stream_start: unnamed_yaml_event_s_data_stream_start {
-                encoding: YAML_ANY_ENCODING,
-            },
-        },
-        start_mark: yaml_mark_t {
-            index: 0,
-            line: 0,
-            column: 0,
-        },
-        end_mark: yaml_mark_t {
-            index: 0,
-            line: 0,
-            column: 0,
-        },
-    };
+    let mut event = MaybeUninit::<yaml_event_t>::uninit();
+    let event = event.as_mut_ptr();
     __assert!(!parser.is_null());
     __assert!(!document.is_null());
     memset(
@@ -84,11 +65,11 @@ pub unsafe fn yaml_parser_load(
     } == 0)
     {
         if (*parser).stream_start_produced == 0 {
-            if yaml_parser_parse(parser, &mut event) == 0 {
+            if yaml_parser_parse(parser, event) == 0 {
                 current_block = 6234624449317607669;
             } else {
                 __assert!(
-                    event.type_0 as libc::c_uint
+                    (*event).type_0 as libc::c_uint
                         == YAML_STREAM_START_EVENT as libc::c_int as libc::c_uint
                 );
                 current_block = 7815301370352969686;
@@ -102,8 +83,8 @@ pub unsafe fn yaml_parser_load(
                 if (*parser).stream_end_produced != 0 {
                     return 1 as libc::c_int;
                 }
-                if !(yaml_parser_parse(parser, &mut event) == 0) {
-                    if event.type_0 as libc::c_uint
+                if !(yaml_parser_parse(parser, event) == 0) {
+                    if (*event).type_0 as libc::c_uint
                         == YAML_STREAM_END_EVENT as libc::c_int as libc::c_uint
                     {
                         return 1 as libc::c_int;
@@ -128,7 +109,7 @@ pub unsafe fn yaml_parser_load(
                     {
                         let fresh6 = &mut (*parser).document;
                         *fresh6 = document;
-                        if !(yaml_parser_load_document(parser, &mut event) == 0) {
+                        if !(yaml_parser_load_document(parser, event) == 0) {
                             yaml_parser_delete_aliases(parser);
                             let fresh7 = &mut (*parser).document;
                             *fresh7 = ptr::null_mut::<yaml_document_t>();
@@ -238,56 +219,40 @@ unsafe fn yaml_parser_load_nodes(
     mut parser: *mut yaml_parser_t,
     ctx: *mut loader_ctx,
 ) -> libc::c_int {
-    let mut event = yaml_event_t {
-        type_0: YAML_NO_EVENT,
-        data: unnamed_yaml_event_s_data {
-            stream_start: unnamed_yaml_event_s_data_stream_start {
-                encoding: YAML_ANY_ENCODING,
-            },
-        },
-        start_mark: yaml_mark_t {
-            index: 0,
-            line: 0,
-            column: 0,
-        },
-        end_mark: yaml_mark_t {
-            index: 0,
-            line: 0,
-            column: 0,
-        },
-    };
+    let mut event = MaybeUninit::<yaml_event_t>::uninit();
+    let event = event.as_mut_ptr();
     loop {
-        if yaml_parser_parse(parser, &mut event) == 0 {
+        if yaml_parser_parse(parser, event) == 0 {
             return 0 as libc::c_int;
         }
-        match event.type_0 as libc::c_uint {
+        match (*event).type_0 as libc::c_uint {
             5 => {
-                if yaml_parser_load_alias(parser, &mut event, ctx) == 0 {
+                if yaml_parser_load_alias(parser, event, ctx) == 0 {
                     return 0 as libc::c_int;
                 }
             }
             6 => {
-                if yaml_parser_load_scalar(parser, &mut event, ctx) == 0 {
+                if yaml_parser_load_scalar(parser, event, ctx) == 0 {
                     return 0 as libc::c_int;
                 }
             }
             7 => {
-                if yaml_parser_load_sequence(parser, &mut event, ctx) == 0 {
+                if yaml_parser_load_sequence(parser, event, ctx) == 0 {
                     return 0 as libc::c_int;
                 }
             }
             8 => {
-                if yaml_parser_load_sequence_end(parser, &mut event, ctx) == 0 {
+                if yaml_parser_load_sequence_end(parser, event, ctx) == 0 {
                     return 0 as libc::c_int;
                 }
             }
             9 => {
-                if yaml_parser_load_mapping(parser, &mut event, ctx) == 0 {
+                if yaml_parser_load_mapping(parser, event, ctx) == 0 {
                     return 0 as libc::c_int;
                 }
             }
             10 => {
-                if yaml_parser_load_mapping_end(parser, &mut event, ctx) == 0 {
+                if yaml_parser_load_mapping_end(parser, event, ctx) == 0 {
                     return 0 as libc::c_int;
                 }
             }
@@ -296,13 +261,14 @@ unsafe fn yaml_parser_load_nodes(
                 __assert!(false);
             }
         }
-        if !(event.type_0 as libc::c_uint != YAML_DOCUMENT_END_EVENT as libc::c_int as libc::c_uint)
+        if !((*event).type_0 as libc::c_uint
+            != YAML_DOCUMENT_END_EVENT as libc::c_int as libc::c_uint)
         {
             break;
         }
     }
-    (*(*parser).document).end_implicit = event.data.document_end.implicit;
-    (*(*parser).document).end_mark = event.end_mark;
+    (*(*parser).document).end_implicit = (*event).data.document_end.implicit;
+    (*(*parser).document).end_mark = (*event).end_mark;
     1 as libc::c_int
 }
 unsafe fn yaml_parser_register_anchor(

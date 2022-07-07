@@ -15,7 +15,7 @@ use crate::{
     YAML_STREAM_START_TOKEN, YAML_TAG_DIRECTIVE_TOKEN, YAML_TAG_TOKEN, YAML_VALUE_TOKEN,
     YAML_VERSION_DIRECTIVE_TOKEN,
 };
-use std::mem::size_of;
+use std::mem::{size_of, MaybeUninit};
 use std::ptr::{self, addr_of_mut};
 pub unsafe fn yaml_parser_scan(
     mut parser: *mut yaml_parser_t,
@@ -1001,24 +1001,8 @@ unsafe fn yaml_parser_fetch_stream_end(mut parser: *mut yaml_parser_t) -> libc::
     1 as libc::c_int
 }
 unsafe fn yaml_parser_fetch_directive(mut parser: *mut yaml_parser_t) -> libc::c_int {
-    let mut token = yaml_token_t {
-        type_0: YAML_NO_TOKEN,
-        data: unnamed_yaml_token_s_data {
-            stream_start: unnamed_yaml_token_s_data_stream_start {
-                encoding: YAML_ANY_ENCODING,
-            },
-        },
-        start_mark: yaml_mark_t {
-            index: 0,
-            line: 0,
-            column: 0,
-        },
-        end_mark: yaml_mark_t {
-            index: 0,
-            line: 0,
-            column: 0,
-        },
-    };
+    let mut token = MaybeUninit::<yaml_token_t>::uninit();
+    let token = token.as_mut_ptr();
     if yaml_parser_unroll_indent(parser, -(1 as libc::c_int) as ptrdiff_t) == 0 {
         return 0 as libc::c_int;
     }
@@ -1026,7 +1010,7 @@ unsafe fn yaml_parser_fetch_directive(mut parser: *mut yaml_parser_t) -> libc::c
         return 0 as libc::c_int;
     }
     (*parser).simple_key_allowed = 0 as libc::c_int;
-    if yaml_parser_scan_directive(parser, &mut token) == 0 {
+    if yaml_parser_scan_directive(parser, token) == 0 {
         return 0 as libc::c_int;
     }
     if if (*parser).tokens.tail != (*parser).tokens.end
@@ -1040,14 +1024,14 @@ unsafe fn yaml_parser_fetch_directive(mut parser: *mut yaml_parser_t) -> libc::c
         let fresh25 = &mut (*parser).tokens.tail;
         let fresh26 = *fresh25;
         *fresh25 = (*fresh25).c_offset(1);
-        *fresh26 = token;
+        ptr::copy(token, fresh26, 1);
         1 as libc::c_int
     } else {
         (*parser).error = YAML_MEMORY_ERROR;
         0 as libc::c_int
     } == 0
     {
-        yaml_token_delete(&mut token);
+        yaml_token_delete(token);
         return 0 as libc::c_int;
     }
     1 as libc::c_int
@@ -1869,29 +1853,13 @@ unsafe fn yaml_parser_fetch_anchor(
     mut parser: *mut yaml_parser_t,
     type_0: yaml_token_type_t,
 ) -> libc::c_int {
-    let mut token = yaml_token_t {
-        type_0: YAML_NO_TOKEN,
-        data: unnamed_yaml_token_s_data {
-            stream_start: unnamed_yaml_token_s_data_stream_start {
-                encoding: YAML_ANY_ENCODING,
-            },
-        },
-        start_mark: yaml_mark_t {
-            index: 0,
-            line: 0,
-            column: 0,
-        },
-        end_mark: yaml_mark_t {
-            index: 0,
-            line: 0,
-            column: 0,
-        },
-    };
+    let mut token = MaybeUninit::<yaml_token_t>::uninit();
+    let token = token.as_mut_ptr();
     if yaml_parser_save_simple_key(parser) == 0 {
         return 0 as libc::c_int;
     }
     (*parser).simple_key_allowed = 0 as libc::c_int;
-    if yaml_parser_scan_anchor(parser, &mut token, type_0) == 0 {
+    if yaml_parser_scan_anchor(parser, token, type_0) == 0 {
         return 0 as libc::c_int;
     }
     if if (*parser).tokens.tail != (*parser).tokens.end
@@ -1905,42 +1873,26 @@ unsafe fn yaml_parser_fetch_anchor(
         let fresh78 = &mut (*parser).tokens.tail;
         let fresh79 = *fresh78;
         *fresh78 = (*fresh78).c_offset(1);
-        *fresh79 = token;
+        ptr::copy(token, fresh79, 1);
         1 as libc::c_int
     } else {
         (*parser).error = YAML_MEMORY_ERROR;
         0 as libc::c_int
     } == 0
     {
-        yaml_token_delete(&mut token);
+        yaml_token_delete(token);
         return 0 as libc::c_int;
     }
     1 as libc::c_int
 }
 unsafe fn yaml_parser_fetch_tag(mut parser: *mut yaml_parser_t) -> libc::c_int {
-    let mut token = yaml_token_t {
-        type_0: YAML_NO_TOKEN,
-        data: unnamed_yaml_token_s_data {
-            stream_start: unnamed_yaml_token_s_data_stream_start {
-                encoding: YAML_ANY_ENCODING,
-            },
-        },
-        start_mark: yaml_mark_t {
-            index: 0,
-            line: 0,
-            column: 0,
-        },
-        end_mark: yaml_mark_t {
-            index: 0,
-            line: 0,
-            column: 0,
-        },
-    };
+    let mut token = MaybeUninit::<yaml_token_t>::uninit();
+    let token = token.as_mut_ptr();
     if yaml_parser_save_simple_key(parser) == 0 {
         return 0 as libc::c_int;
     }
     (*parser).simple_key_allowed = 0 as libc::c_int;
-    if yaml_parser_scan_tag(parser, &mut token) == 0 {
+    if yaml_parser_scan_tag(parser, token) == 0 {
         return 0 as libc::c_int;
     }
     if if (*parser).tokens.tail != (*parser).tokens.end
@@ -1954,14 +1906,14 @@ unsafe fn yaml_parser_fetch_tag(mut parser: *mut yaml_parser_t) -> libc::c_int {
         let fresh80 = &mut (*parser).tokens.tail;
         let fresh81 = *fresh80;
         *fresh80 = (*fresh80).c_offset(1);
-        *fresh81 = token;
+        ptr::copy(token, fresh81, 1);
         1 as libc::c_int
     } else {
         (*parser).error = YAML_MEMORY_ERROR;
         0 as libc::c_int
     } == 0
     {
-        yaml_token_delete(&mut token);
+        yaml_token_delete(token);
         return 0 as libc::c_int;
     }
     1 as libc::c_int
@@ -1970,29 +1922,13 @@ unsafe fn yaml_parser_fetch_block_scalar(
     mut parser: *mut yaml_parser_t,
     literal: libc::c_int,
 ) -> libc::c_int {
-    let mut token = yaml_token_t {
-        type_0: YAML_NO_TOKEN,
-        data: unnamed_yaml_token_s_data {
-            stream_start: unnamed_yaml_token_s_data_stream_start {
-                encoding: YAML_ANY_ENCODING,
-            },
-        },
-        start_mark: yaml_mark_t {
-            index: 0,
-            line: 0,
-            column: 0,
-        },
-        end_mark: yaml_mark_t {
-            index: 0,
-            line: 0,
-            column: 0,
-        },
-    };
+    let mut token = MaybeUninit::<yaml_token_t>::uninit();
+    let token = token.as_mut_ptr();
     if yaml_parser_remove_simple_key(parser) == 0 {
         return 0 as libc::c_int;
     }
     (*parser).simple_key_allowed = 1 as libc::c_int;
-    if yaml_parser_scan_block_scalar(parser, &mut token, literal) == 0 {
+    if yaml_parser_scan_block_scalar(parser, token, literal) == 0 {
         return 0 as libc::c_int;
     }
     if if (*parser).tokens.tail != (*parser).tokens.end
@@ -2006,14 +1942,14 @@ unsafe fn yaml_parser_fetch_block_scalar(
         let fresh82 = &mut (*parser).tokens.tail;
         let fresh83 = *fresh82;
         *fresh82 = (*fresh82).c_offset(1);
-        *fresh83 = token;
+        ptr::copy(token, fresh83, 1);
         1 as libc::c_int
     } else {
         (*parser).error = YAML_MEMORY_ERROR;
         0 as libc::c_int
     } == 0
     {
-        yaml_token_delete(&mut token);
+        yaml_token_delete(token);
         return 0 as libc::c_int;
     }
     1 as libc::c_int
@@ -2022,29 +1958,13 @@ unsafe fn yaml_parser_fetch_flow_scalar(
     mut parser: *mut yaml_parser_t,
     single: libc::c_int,
 ) -> libc::c_int {
-    let mut token = yaml_token_t {
-        type_0: YAML_NO_TOKEN,
-        data: unnamed_yaml_token_s_data {
-            stream_start: unnamed_yaml_token_s_data_stream_start {
-                encoding: YAML_ANY_ENCODING,
-            },
-        },
-        start_mark: yaml_mark_t {
-            index: 0,
-            line: 0,
-            column: 0,
-        },
-        end_mark: yaml_mark_t {
-            index: 0,
-            line: 0,
-            column: 0,
-        },
-    };
+    let mut token = MaybeUninit::<yaml_token_t>::uninit();
+    let token = token.as_mut_ptr();
     if yaml_parser_save_simple_key(parser) == 0 {
         return 0 as libc::c_int;
     }
     (*parser).simple_key_allowed = 0 as libc::c_int;
-    if yaml_parser_scan_flow_scalar(parser, &mut token, single) == 0 {
+    if yaml_parser_scan_flow_scalar(parser, token, single) == 0 {
         return 0 as libc::c_int;
     }
     if if (*parser).tokens.tail != (*parser).tokens.end
@@ -2058,42 +1978,26 @@ unsafe fn yaml_parser_fetch_flow_scalar(
         let fresh84 = &mut (*parser).tokens.tail;
         let fresh85 = *fresh84;
         *fresh84 = (*fresh84).c_offset(1);
-        *fresh85 = token;
+        ptr::copy(token, fresh85, 1);
         1 as libc::c_int
     } else {
         (*parser).error = YAML_MEMORY_ERROR;
         0 as libc::c_int
     } == 0
     {
-        yaml_token_delete(&mut token);
+        yaml_token_delete(token);
         return 0 as libc::c_int;
     }
     1 as libc::c_int
 }
 unsafe fn yaml_parser_fetch_plain_scalar(mut parser: *mut yaml_parser_t) -> libc::c_int {
-    let mut token = yaml_token_t {
-        type_0: YAML_NO_TOKEN,
-        data: unnamed_yaml_token_s_data {
-            stream_start: unnamed_yaml_token_s_data_stream_start {
-                encoding: YAML_ANY_ENCODING,
-            },
-        },
-        start_mark: yaml_mark_t {
-            index: 0,
-            line: 0,
-            column: 0,
-        },
-        end_mark: yaml_mark_t {
-            index: 0,
-            line: 0,
-            column: 0,
-        },
-    };
+    let mut token = MaybeUninit::<yaml_token_t>::uninit();
+    let token = token.as_mut_ptr();
     if yaml_parser_save_simple_key(parser) == 0 {
         return 0 as libc::c_int;
     }
     (*parser).simple_key_allowed = 0 as libc::c_int;
-    if yaml_parser_scan_plain_scalar(parser, &mut token) == 0 {
+    if yaml_parser_scan_plain_scalar(parser, token) == 0 {
         return 0 as libc::c_int;
     }
     if if (*parser).tokens.tail != (*parser).tokens.end
@@ -2107,14 +2011,14 @@ unsafe fn yaml_parser_fetch_plain_scalar(mut parser: *mut yaml_parser_t) -> libc
         let fresh86 = &mut (*parser).tokens.tail;
         let fresh87 = *fresh86;
         *fresh86 = (*fresh86).c_offset(1);
-        *fresh87 = token;
+        ptr::copy(token, fresh87, 1);
         1 as libc::c_int
     } else {
         (*parser).error = YAML_MEMORY_ERROR;
         0 as libc::c_int
     } == 0
     {
-        yaml_token_delete(&mut token);
+        yaml_token_delete(token);
         return 0 as libc::c_int;
     }
     1 as libc::c_int
