@@ -17,7 +17,7 @@ use std::fs;
 use std::io::{self, Write as _};
 use std::mem::MaybeUninit;
 use std::process::{self, ExitCode};
-use std::ptr;
+use std::ptr::{self, addr_of_mut};
 use unsafe_libyaml::{
     __assert, libc, size_t, yaml_char_t, yaml_event_delete, yaml_event_t, yaml_event_type_t,
     yaml_parser_delete, yaml_parser_initialize, yaml_parser_parse, yaml_parser_set_input,
@@ -60,11 +60,7 @@ unsafe fn unsafe_main() -> ExitCode {
         1 as libc::c_int
     }
     let mut remaining = input.as_slice();
-    yaml_parser_set_input(
-        parser,
-        Some(read_from_file),
-        ptr::addr_of_mut!(remaining).cast(),
-    );
+    yaml_parser_set_input(parser, Some(read_from_file), addr_of_mut!(remaining).cast());
     loop {
         if yaml_parser_parse(parser, event) == 0 {
             let _ = writeln!(

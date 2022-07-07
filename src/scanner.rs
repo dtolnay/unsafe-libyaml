@@ -15,8 +15,8 @@ use crate::{
     YAML_STREAM_START_TOKEN, YAML_TAG_DIRECTIVE_TOKEN, YAML_TAG_TOKEN, YAML_VALUE_TOKEN,
     YAML_VERSION_DIRECTIVE_TOKEN,
 };
-use std::mem;
-use std::ptr;
+use std::mem::size_of;
+use std::ptr::{self, addr_of_mut};
 pub unsafe fn yaml_parser_scan(
     mut parser: *mut yaml_parser_t,
     token: *mut yaml_token_t,
@@ -26,7 +26,7 @@ pub unsafe fn yaml_parser_scan(
     memset(
         token as *mut libc::c_void,
         0 as libc::c_int,
-        mem::size_of::<yaml_token_t>() as libc::c_ulong,
+        size_of::<yaml_token_t>() as libc::c_ulong,
     );
     if (*parser).stream_end_produced != 0 || (*parser).error as libc::c_uint != 0 {
         return 1 as libc::c_int;
@@ -643,9 +643,9 @@ unsafe fn yaml_parser_increase_flow_level(mut parser: *mut yaml_parser_t) -> lib
     };
     if if (*parser).simple_keys.top != (*parser).simple_keys.end
         || yaml_stack_extend(
-            ptr::addr_of_mut!((*parser).simple_keys.start) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).simple_keys.top) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).simple_keys.end) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).simple_keys.start) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).simple_keys.top) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).simple_keys.end) as *mut *mut libc::c_void,
         ) != 0
     {
         let fresh5 = &mut (*parser).simple_keys.top;
@@ -708,9 +708,9 @@ unsafe fn yaml_parser_roll_indent(
     if ((*parser).indent as libc::c_long) < column {
         if if (*parser).indents.top != (*parser).indents.end
             || yaml_stack_extend(
-                ptr::addr_of_mut!((*parser).indents.start) as *mut *mut libc::c_void,
-                ptr::addr_of_mut!((*parser).indents.top) as *mut *mut libc::c_void,
-                ptr::addr_of_mut!((*parser).indents.end) as *mut *mut libc::c_void,
+                addr_of_mut!((*parser).indents.start) as *mut *mut libc::c_void,
+                addr_of_mut!((*parser).indents.top) as *mut *mut libc::c_void,
+                addr_of_mut!((*parser).indents.end) as *mut *mut libc::c_void,
             ) != 0
         {
             let fresh10 = &mut (*parser).indents.top;
@@ -731,9 +731,9 @@ unsafe fn yaml_parser_roll_indent(
         }
         (*parser).indent = column as libc::c_int;
         memset(
-            ptr::addr_of_mut!(token) as *mut libc::c_void,
+            addr_of_mut!(token) as *mut libc::c_void,
             0 as libc::c_int,
-            mem::size_of::<yaml_token_t>() as libc::c_ulong,
+            size_of::<yaml_token_t>() as libc::c_ulong,
         );
         token.type_0 = type_0;
         token.start_mark = mark;
@@ -741,10 +741,10 @@ unsafe fn yaml_parser_roll_indent(
         if number == -(1 as libc::c_int) as libc::c_long {
             if if (*parser).tokens.tail != (*parser).tokens.end
                 || yaml_queue_extend(
-                    ptr::addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-                    ptr::addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-                    ptr::addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-                    ptr::addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
+                    addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
+                    addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
+                    addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
+                    addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
                 ) != 0
             {
                 let fresh12 = &mut (*parser).tokens.tail;
@@ -761,10 +761,10 @@ unsafe fn yaml_parser_roll_indent(
             }
         } else if if (*parser).tokens.tail != (*parser).tokens.end
             || yaml_queue_extend(
-                ptr::addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-                ptr::addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-                ptr::addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-                ptr::addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
+                addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
+                addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
+                addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
+                addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
             ) != 0
         {
             memmove(
@@ -779,7 +779,7 @@ unsafe fn yaml_parser_roll_indent(
                 (((*parser).tokens.tail).c_offset_from((*parser).tokens.head) as libc::c_long
                     as libc::c_ulong)
                     .wrapping_sub((number as libc::c_ulong).wrapping_sub((*parser).tokens_parsed))
-                    .wrapping_mul(mem::size_of::<yaml_token_t>() as libc::c_ulong),
+                    .wrapping_mul(size_of::<yaml_token_t>() as libc::c_ulong),
             );
             *((*parser).tokens.head).c_offset(
                 (number as libc::c_ulong).wrapping_sub((*parser).tokens_parsed) as isize,
@@ -824,19 +824,19 @@ unsafe fn yaml_parser_unroll_indent(
     }
     while (*parser).indent as libc::c_long > column {
         memset(
-            ptr::addr_of_mut!(token) as *mut libc::c_void,
+            addr_of_mut!(token) as *mut libc::c_void,
             0 as libc::c_int,
-            mem::size_of::<yaml_token_t>() as libc::c_ulong,
+            size_of::<yaml_token_t>() as libc::c_ulong,
         );
         token.type_0 = YAML_BLOCK_END_TOKEN;
         token.start_mark = (*parser).mark;
         token.end_mark = (*parser).mark;
         if if (*parser).tokens.tail != (*parser).tokens.end
             || yaml_queue_extend(
-                ptr::addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-                ptr::addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-                ptr::addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-                ptr::addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
+                addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
+                addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
+                addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
+                addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
             ) != 0
         {
             let fresh15 = &mut (*parser).tokens.tail;
@@ -889,9 +889,9 @@ unsafe fn yaml_parser_fetch_stream_start(mut parser: *mut yaml_parser_t) -> libc
     (*parser).indent = -(1 as libc::c_int);
     if if (*parser).simple_keys.top != (*parser).simple_keys.end
         || yaml_stack_extend(
-            ptr::addr_of_mut!((*parser).simple_keys.start) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).simple_keys.top) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).simple_keys.end) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).simple_keys.start) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).simple_keys.top) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).simple_keys.end) as *mut *mut libc::c_void,
         ) != 0
     {
         let fresh18 = &mut (*parser).simple_keys.top;
@@ -909,9 +909,9 @@ unsafe fn yaml_parser_fetch_stream_start(mut parser: *mut yaml_parser_t) -> libc
     (*parser).simple_key_allowed = 1 as libc::c_int;
     (*parser).stream_start_produced = 1 as libc::c_int;
     memset(
-        ptr::addr_of_mut!(token) as *mut libc::c_void,
+        addr_of_mut!(token) as *mut libc::c_void,
         0 as libc::c_int,
-        mem::size_of::<yaml_token_t>() as libc::c_ulong,
+        size_of::<yaml_token_t>() as libc::c_ulong,
     );
     token.type_0 = YAML_STREAM_START_TOKEN;
     token.start_mark = (*parser).mark;
@@ -919,10 +919,10 @@ unsafe fn yaml_parser_fetch_stream_start(mut parser: *mut yaml_parser_t) -> libc
     token.data.stream_start.encoding = (*parser).encoding;
     if if (*parser).tokens.tail != (*parser).tokens.end
         || yaml_queue_extend(
-            ptr::addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
         ) != 0
     {
         let fresh20 = &mut (*parser).tokens.tail;
@@ -971,19 +971,19 @@ unsafe fn yaml_parser_fetch_stream_end(mut parser: *mut yaml_parser_t) -> libc::
     }
     (*parser).simple_key_allowed = 0 as libc::c_int;
     memset(
-        ptr::addr_of_mut!(token) as *mut libc::c_void,
+        addr_of_mut!(token) as *mut libc::c_void,
         0 as libc::c_int,
-        mem::size_of::<yaml_token_t>() as libc::c_ulong,
+        size_of::<yaml_token_t>() as libc::c_ulong,
     );
     token.type_0 = YAML_STREAM_END_TOKEN;
     token.start_mark = (*parser).mark;
     token.end_mark = (*parser).mark;
     if if (*parser).tokens.tail != (*parser).tokens.end
         || yaml_queue_extend(
-            ptr::addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
         ) != 0
     {
         let fresh23 = &mut (*parser).tokens.tail;
@@ -1031,10 +1031,10 @@ unsafe fn yaml_parser_fetch_directive(mut parser: *mut yaml_parser_t) -> libc::c
     }
     if if (*parser).tokens.tail != (*parser).tokens.end
         || yaml_queue_extend(
-            ptr::addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
         ) != 0
     {
         let fresh25 = &mut (*parser).tokens.tail;
@@ -1180,19 +1180,19 @@ unsafe fn yaml_parser_fetch_document_indicator(
     );
     let end_mark: yaml_mark_t = (*parser).mark;
     memset(
-        ptr::addr_of_mut!(token) as *mut libc::c_void,
+        addr_of_mut!(token) as *mut libc::c_void,
         0 as libc::c_int,
-        mem::size_of::<yaml_token_t>() as libc::c_ulong,
+        size_of::<yaml_token_t>() as libc::c_ulong,
     );
     token.type_0 = type_0;
     token.start_mark = start_mark;
     token.end_mark = end_mark;
     if if (*parser).tokens.tail != (*parser).tokens.end
         || yaml_queue_extend(
-            ptr::addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
         ) != 0
     {
         let fresh39 = &mut (*parser).tokens.tail;
@@ -1273,19 +1273,19 @@ unsafe fn yaml_parser_fetch_flow_collection_start(
     );
     let end_mark: yaml_mark_t = (*parser).mark;
     memset(
-        ptr::addr_of_mut!(token) as *mut libc::c_void,
+        addr_of_mut!(token) as *mut libc::c_void,
         0 as libc::c_int,
-        mem::size_of::<yaml_token_t>() as libc::c_ulong,
+        size_of::<yaml_token_t>() as libc::c_ulong,
     );
     token.type_0 = type_0;
     token.start_mark = start_mark;
     token.end_mark = end_mark;
     if if (*parser).tokens.tail != (*parser).tokens.end
         || yaml_queue_extend(
-            ptr::addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
         ) != 0
     {
         let fresh45 = &mut (*parser).tokens.tail;
@@ -1366,19 +1366,19 @@ unsafe fn yaml_parser_fetch_flow_collection_end(
     );
     let end_mark: yaml_mark_t = (*parser).mark;
     memset(
-        ptr::addr_of_mut!(token) as *mut libc::c_void,
+        addr_of_mut!(token) as *mut libc::c_void,
         0 as libc::c_int,
-        mem::size_of::<yaml_token_t>() as libc::c_ulong,
+        size_of::<yaml_token_t>() as libc::c_ulong,
     );
     token.type_0 = type_0;
     token.start_mark = start_mark;
     token.end_mark = end_mark;
     if if (*parser).tokens.tail != (*parser).tokens.end
         || yaml_queue_extend(
-            ptr::addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
         ) != 0
     {
         let fresh51 = &mut (*parser).tokens.tail;
@@ -1453,19 +1453,19 @@ unsafe fn yaml_parser_fetch_flow_entry(mut parser: *mut yaml_parser_t) -> libc::
     );
     let end_mark: yaml_mark_t = (*parser).mark;
     memset(
-        ptr::addr_of_mut!(token) as *mut libc::c_void,
+        addr_of_mut!(token) as *mut libc::c_void,
         0 as libc::c_int,
-        mem::size_of::<yaml_token_t>() as libc::c_ulong,
+        size_of::<yaml_token_t>() as libc::c_ulong,
     );
     token.type_0 = YAML_FLOW_ENTRY_TOKEN;
     token.start_mark = start_mark;
     token.end_mark = end_mark;
     if if (*parser).tokens.tail != (*parser).tokens.end
         || yaml_queue_extend(
-            ptr::addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
         ) != 0
     {
         let fresh57 = &mut (*parser).tokens.tail;
@@ -1561,19 +1561,19 @@ unsafe fn yaml_parser_fetch_block_entry(mut parser: *mut yaml_parser_t) -> libc:
     );
     let end_mark: yaml_mark_t = (*parser).mark;
     memset(
-        ptr::addr_of_mut!(token) as *mut libc::c_void,
+        addr_of_mut!(token) as *mut libc::c_void,
         0 as libc::c_int,
-        mem::size_of::<yaml_token_t>() as libc::c_ulong,
+        size_of::<yaml_token_t>() as libc::c_ulong,
     );
     token.type_0 = YAML_BLOCK_ENTRY_TOKEN;
     token.start_mark = start_mark;
     token.end_mark = end_mark;
     if if (*parser).tokens.tail != (*parser).tokens.end
         || yaml_queue_extend(
-            ptr::addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
         ) != 0
     {
         let fresh63 = &mut (*parser).tokens.tail;
@@ -1669,19 +1669,19 @@ unsafe fn yaml_parser_fetch_key(mut parser: *mut yaml_parser_t) -> libc::c_int {
     );
     let end_mark: yaml_mark_t = (*parser).mark;
     memset(
-        ptr::addr_of_mut!(token) as *mut libc::c_void,
+        addr_of_mut!(token) as *mut libc::c_void,
         0 as libc::c_int,
-        mem::size_of::<yaml_token_t>() as libc::c_ulong,
+        size_of::<yaml_token_t>() as libc::c_ulong,
     );
     token.type_0 = YAML_KEY_TOKEN;
     token.start_mark = start_mark;
     token.end_mark = end_mark;
     if if (*parser).tokens.tail != (*parser).tokens.end
         || yaml_queue_extend(
-            ptr::addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
         ) != 0
     {
         let fresh69 = &mut (*parser).tokens.tail;
@@ -1721,19 +1721,19 @@ unsafe fn yaml_parser_fetch_value(mut parser: *mut yaml_parser_t) -> libc::c_int
         ((*parser).simple_keys.top).c_offset(-(1 as libc::c_int as isize));
     if (*simple_key).possible != 0 {
         memset(
-            ptr::addr_of_mut!(token) as *mut libc::c_void,
+            addr_of_mut!(token) as *mut libc::c_void,
             0 as libc::c_int,
-            mem::size_of::<yaml_token_t>() as libc::c_ulong,
+            size_of::<yaml_token_t>() as libc::c_ulong,
         );
         token.type_0 = YAML_KEY_TOKEN;
         token.start_mark = (*simple_key).mark;
         token.end_mark = (*simple_key).mark;
         if if (*parser).tokens.tail != (*parser).tokens.end
             || yaml_queue_extend(
-                ptr::addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-                ptr::addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-                ptr::addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-                ptr::addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
+                addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
+                addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
+                addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
+                addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
             ) != 0
         {
             memmove(
@@ -1750,7 +1750,7 @@ unsafe fn yaml_parser_fetch_value(mut parser: *mut yaml_parser_t) -> libc::c_int
                     .wrapping_sub(
                         ((*simple_key).token_number).wrapping_sub((*parser).tokens_parsed),
                     )
-                    .wrapping_mul(mem::size_of::<yaml_token_t>() as libc::c_ulong),
+                    .wrapping_mul(size_of::<yaml_token_t>() as libc::c_ulong),
             );
             *((*parser).tokens.head).c_offset(
                 ((*simple_key).token_number).wrapping_sub((*parser).tokens_parsed) as isize,
@@ -1836,19 +1836,19 @@ unsafe fn yaml_parser_fetch_value(mut parser: *mut yaml_parser_t) -> libc::c_int
     );
     let end_mark: yaml_mark_t = (*parser).mark;
     memset(
-        ptr::addr_of_mut!(token) as *mut libc::c_void,
+        addr_of_mut!(token) as *mut libc::c_void,
         0 as libc::c_int,
-        mem::size_of::<yaml_token_t>() as libc::c_ulong,
+        size_of::<yaml_token_t>() as libc::c_ulong,
     );
     token.type_0 = YAML_VALUE_TOKEN;
     token.start_mark = start_mark;
     token.end_mark = end_mark;
     if if (*parser).tokens.tail != (*parser).tokens.end
         || yaml_queue_extend(
-            ptr::addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
         ) != 0
     {
         let fresh76 = &mut (*parser).tokens.tail;
@@ -1896,10 +1896,10 @@ unsafe fn yaml_parser_fetch_anchor(
     }
     if if (*parser).tokens.tail != (*parser).tokens.end
         || yaml_queue_extend(
-            ptr::addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
         ) != 0
     {
         let fresh78 = &mut (*parser).tokens.tail;
@@ -1945,10 +1945,10 @@ unsafe fn yaml_parser_fetch_tag(mut parser: *mut yaml_parser_t) -> libc::c_int {
     }
     if if (*parser).tokens.tail != (*parser).tokens.end
         || yaml_queue_extend(
-            ptr::addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
         ) != 0
     {
         let fresh80 = &mut (*parser).tokens.tail;
@@ -1997,10 +1997,10 @@ unsafe fn yaml_parser_fetch_block_scalar(
     }
     if if (*parser).tokens.tail != (*parser).tokens.end
         || yaml_queue_extend(
-            ptr::addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
         ) != 0
     {
         let fresh82 = &mut (*parser).tokens.tail;
@@ -2049,10 +2049,10 @@ unsafe fn yaml_parser_fetch_flow_scalar(
     }
     if if (*parser).tokens.tail != (*parser).tokens.end
         || yaml_queue_extend(
-            ptr::addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
         ) != 0
     {
         let fresh84 = &mut (*parser).tokens.tail;
@@ -2098,10 +2098,10 @@ unsafe fn yaml_parser_fetch_plain_scalar(mut parser: *mut yaml_parser_t) -> libc
     }
     if if (*parser).tokens.tail != (*parser).tokens.end
         || yaml_queue_extend(
-            ptr::addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            ptr::addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
+            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
         ) != 0
     {
         let fresh86 = &mut (*parser).tokens.tail;
@@ -2508,7 +2508,7 @@ unsafe fn yaml_parser_scan_directive(
                 memset(
                     token as *mut libc::c_void,
                     0 as libc::c_int,
-                    mem::size_of::<yaml_token_t>() as libc::c_ulong,
+                    size_of::<yaml_token_t>() as libc::c_ulong,
                 );
                 (*token).type_0 = YAML_VERSION_DIRECTIVE_TOKEN;
                 (*token).start_mark = start_mark;
@@ -2531,7 +2531,7 @@ unsafe fn yaml_parser_scan_directive(
                 memset(
                     token as *mut libc::c_void,
                     0 as libc::c_int,
-                    mem::size_of::<yaml_token_t>() as libc::c_ulong,
+                    size_of::<yaml_token_t>() as libc::c_ulong,
                 );
                 (*token).type_0 = YAML_TAG_DIRECTIVE_TOKEN;
                 (*token).start_mark = start_mark;
@@ -4006,7 +4006,7 @@ unsafe fn yaml_parser_scan_anchor(
                             memset(
                                 token as *mut libc::c_void,
                                 0 as libc::c_int,
-                                mem::size_of::<yaml_token_t>() as libc::c_ulong,
+                                size_of::<yaml_token_t>() as libc::c_ulong,
                             );
                             (*token).type_0 = YAML_ANCHOR_TOKEN;
                             (*token).start_mark = start_mark;
@@ -4017,7 +4017,7 @@ unsafe fn yaml_parser_scan_anchor(
                             memset(
                                 token as *mut libc::c_void,
                                 0 as libc::c_int,
-                                mem::size_of::<yaml_token_t>() as libc::c_ulong,
+                                size_of::<yaml_token_t>() as libc::c_ulong,
                             );
                             (*token).type_0 = YAML_ALIAS_TOKEN;
                             (*token).start_mark = start_mark;
@@ -4324,7 +4324,7 @@ unsafe fn yaml_parser_scan_tag(
                             memset(
                                 token as *mut libc::c_void,
                                 0 as libc::c_int,
-                                mem::size_of::<yaml_token_t>() as libc::c_ulong,
+                                size_of::<yaml_token_t>() as libc::c_ulong,
                             );
                             (*token).type_0 = YAML_TAG_TOKEN;
                             (*token).start_mark = start_mark;
@@ -6798,7 +6798,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                                             memset(
                                                                                                 token as *mut libc::c_void,
                                                                                                 0 as libc::c_int,
-                                                                                                mem::size_of::<yaml_token_t>() as libc::c_ulong,
+                                                                                                size_of::<yaml_token_t>() as libc::c_ulong,
                                                                                             );
                                                                                             (*token).type_0 = YAML_SCALAR_TOKEN;
                                                                                             (*token).start_mark = start_mark;
@@ -9123,7 +9123,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                             memset(
                                 token as *mut libc::c_void,
                                 0 as libc::c_int,
-                                mem::size_of::<yaml_token_t>() as libc::c_ulong,
+                                size_of::<yaml_token_t>() as libc::c_ulong,
                             );
                             (*token).type_0 = YAML_SCALAR_TOKEN;
                             (*token).start_mark = start_mark;
@@ -10406,7 +10406,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
                             memset(
                                 token as *mut libc::c_void,
                                 0 as libc::c_int,
-                                mem::size_of::<yaml_token_t>() as libc::c_ulong,
+                                size_of::<yaml_token_t>() as libc::c_ulong,
                             );
                             (*token).type_0 = YAML_SCALAR_TOKEN;
                             (*token).start_mark = start_mark;
