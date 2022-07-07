@@ -1,4 +1,4 @@
-#![allow(non_camel_case_types)]
+#![allow(non_camel_case_types, unused_must_use)]
 #![warn(clippy::pedantic)]
 #![allow(
     clippy::cast_lossless,
@@ -16,12 +16,12 @@
     clippy::nonminimal_bool,
     clippy::ptr_as_ptr,
     clippy::redundant_else,
+    clippy::short_circuit_statement,
     clippy::similar_names,
     clippy::single_match,
     clippy::single_match_else,
     clippy::too_many_arguments,
     clippy::too_many_lines,
-    clippy::unnecessary_operation,
     clippy::unreadable_literal,
     clippy::wildcard_imports
 )]

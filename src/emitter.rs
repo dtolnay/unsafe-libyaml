@@ -3917,7 +3917,7 @@ unsafe extern "C" fn yaml_emitter_write_plain_scalar(
                             let fresh269 = &mut (*emitter).line;
                             *fresh269 += 1;
                             1 as libc::c_int != 0
-                        }) as libc::c_int;
+                        });
                     string.pointer = (string.pointer).c_offset(1);
                     1 as libc::c_int
                 } else {
@@ -4362,7 +4362,7 @@ unsafe extern "C" fn yaml_emitter_write_single_quoted_scalar(
                             let fresh380 = &mut (*emitter).line;
                             *fresh380 += 1;
                             1 as libc::c_int != 0
-                        }) as libc::c_int;
+                        });
                     string.pointer = (string.pointer).c_offset(1);
                     1 as libc::c_int
                 } else {
@@ -5594,7 +5594,7 @@ unsafe extern "C" fn yaml_emitter_write_literal_scalar(
                             let fresh588 = &mut (*emitter).line;
                             *fresh588 += 1;
                             1 as libc::c_int != 0
-                        }) as libc::c_int;
+                        });
                     string.pointer = (string.pointer).c_offset(1);
                     1 as libc::c_int
                 } else {
@@ -6039,7 +6039,7 @@ unsafe extern "C" fn yaml_emitter_write_folded_scalar(
                             let fresh677 = &mut (*emitter).line;
                             *fresh677 += 1;
                             1 as libc::c_int != 0
-                        }) as libc::c_int;
+                        });
                     string.pointer = (string.pointer).c_offset(1);
                     1 as libc::c_int
                 } else {
