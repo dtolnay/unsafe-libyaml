@@ -8,7 +8,7 @@ unsafe extern "C" fn yaml_emitter_set_writer_error(
     (*emitter).error = YAML_WRITER_ERROR;
     let ref mut fresh0 = (*emitter).problem;
     *fresh0 = problem;
-    return 0 as libc::c_int;
+    0 as libc::c_int
 }
 #[no_mangle]
 pub unsafe extern "C" fn yaml_emitter_flush(emitter: *mut yaml_emitter_t) -> libc::c_int {
@@ -132,11 +132,11 @@ pub unsafe extern "C" fn yaml_emitter_flush(emitter: *mut yaml_emitter_t) -> lib
         *fresh10 = (*emitter).raw_buffer.start;
         let ref mut fresh11 = (*emitter).raw_buffer.pointer;
         *fresh11 = (*emitter).raw_buffer.start;
-        return 1 as libc::c_int;
+        1 as libc::c_int
     } else {
-        return yaml_emitter_set_writer_error(
+        yaml_emitter_set_writer_error(
             emitter,
             b"write error\0" as *const u8 as *const libc::c_char,
-        );
-    };
+        )
+    }
 }

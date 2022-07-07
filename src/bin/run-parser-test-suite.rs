@@ -187,7 +187,7 @@ unsafe fn unsafe_main() -> ExitCode {
         }
     }
     yaml_parser_delete(parser);
-    return ExitCode::SUCCESS;
+    ExitCode::SUCCESS
 }
 #[no_mangle]
 pub unsafe extern "C" fn print_escaped(str: *mut yaml_char_t, length: size_t) {
@@ -216,7 +216,7 @@ pub unsafe extern "C" fn print_escaped(str: *mut yaml_char_t, length: size_t) {
 }
 unsafe fn usage(ret: ExitCode) -> ExitCode {
     let _ = writeln!(io::stderr(), "Usage: libyaml-parser [<input-file>]");
-    return ret;
+    ret
 }
 fn main() -> ExitCode {
     unsafe { unsafe_main() }

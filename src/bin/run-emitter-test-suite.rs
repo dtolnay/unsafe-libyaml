@@ -218,7 +218,7 @@ unsafe fn unsafe_main() -> ExitCode {
                 "Memory error: Not enough memory for creating an event",
             );
             yaml_emitter_delete(emitter);
-            return ExitCode::FAILURE;
+            ExitCode::FAILURE
         }
         6684355725484023210 => {
             match (*emitter).error as libc::c_uint {
@@ -244,13 +244,13 @@ unsafe fn unsafe_main() -> ExitCode {
                 }
             }
             yaml_emitter_delete(emitter);
-            return ExitCode::FAILURE;
+            ExitCode::FAILURE
         }
         _ => {
             yaml_emitter_delete(emitter);
-            return ExitCode::SUCCESS;
+            ExitCode::SUCCESS
         }
-    };
+    }
 }
 struct ReadBuf {
     buf: [u8; 1024],
@@ -321,7 +321,7 @@ pub unsafe extern "C" fn get_anchor(
         end.offset_from(start) as libc::c_long as libc::c_ulong,
     );
     *anchor.offset(end.offset_from(start) as libc::c_long as isize) = '\0' as i32 as libc::c_char;
-    return anchor;
+    anchor
 }
 #[no_mangle]
 pub unsafe extern "C" fn get_tag(
@@ -345,7 +345,7 @@ pub unsafe extern "C" fn get_tag(
     *tag.offset(
         (end.offset_from(start) as libc::c_long - 1 as libc::c_int as libc::c_long) as isize,
     ) = '\0' as i32 as libc::c_char;
-    return tag;
+    tag
 }
 #[no_mangle]
 pub unsafe extern "C" fn get_value(

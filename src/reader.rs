@@ -13,7 +13,7 @@ unsafe extern "C" fn yaml_parser_set_reader_error(
     *fresh0 = problem;
     (*parser).problem_offset = offset;
     (*parser).problem_value = value;
-    return 0 as libc::c_int;
+    0 as libc::c_int
 }
 unsafe extern "C" fn yaml_parser_determine_encoding(mut parser: *mut yaml_parser_t) -> libc::c_int {
     while (*parser).eof == 0
@@ -71,7 +71,7 @@ unsafe extern "C" fn yaml_parser_determine_encoding(mut parser: *mut yaml_parser
     } else {
         (*parser).encoding = YAML_UTF8_ENCODING;
     }
-    return 1 as libc::c_int;
+    1 as libc::c_int
 }
 unsafe extern "C" fn yaml_parser_update_raw_buffer(mut parser: *mut yaml_parser_t) -> libc::c_int {
     let mut size_read: size_t = 0 as libc::c_int as size_t;
@@ -120,7 +120,7 @@ unsafe extern "C" fn yaml_parser_update_raw_buffer(mut parser: *mut yaml_parser_
     if size_read == 0 {
         (*parser).eof = 1 as libc::c_int;
     }
-    return 1 as libc::c_int;
+    1 as libc::c_int
 }
 #[no_mangle]
 pub unsafe extern "C" fn yaml_parser_update_buffer(
@@ -481,5 +481,5 @@ pub unsafe extern "C" fn yaml_parser_update_buffer(
             -(1 as libc::c_int),
         );
     }
-    return 1 as libc::c_int;
+    1 as libc::c_int
 }

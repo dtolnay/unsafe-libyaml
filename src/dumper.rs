@@ -49,7 +49,7 @@ pub unsafe extern "C" fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> 
         return 0 as libc::c_int;
     }
     (*emitter).opened = 1 as libc::c_int;
-    return 1 as libc::c_int;
+    1 as libc::c_int
 }
 #[no_mangle]
 pub unsafe extern "C" fn yaml_emitter_close(mut emitter: *mut yaml_emitter_t) -> libc::c_int {
@@ -96,7 +96,7 @@ pub unsafe extern "C" fn yaml_emitter_close(mut emitter: *mut yaml_emitter_t) ->
         return 0 as libc::c_int;
     }
     (*emitter).closed = 1 as libc::c_int;
-    return 1 as libc::c_int;
+    1 as libc::c_int
 }
 #[no_mangle]
 pub unsafe extern "C" fn yaml_emitter_dump(
@@ -205,7 +205,7 @@ pub unsafe extern "C" fn yaml_emitter_dump(
         _ => {}
     }
     yaml_emitter_delete_document_and_anchors(emitter);
-    return 0 as libc::c_int;
+    0 as libc::c_int
 }
 unsafe extern "C" fn yaml_emitter_delete_document_and_anchors(mut emitter: *mut yaml_emitter_t) {
     let mut index: libc::c_int;
@@ -302,7 +302,7 @@ unsafe extern "C" fn yaml_emitter_generate_anchor(
     }
     let mut buffer = slice::from_raw_parts_mut(anchor.cast(), 16);
     let _ = write!(buffer, "id{:03}\0", anchor_id);
-    return anchor;
+    anchor
 }
 unsafe extern "C" fn yaml_emitter_dump_node(
     emitter: *mut yaml_emitter_t,
@@ -326,9 +326,9 @@ unsafe extern "C" fn yaml_emitter_dump_node(
     (*((*emitter).anchors).c_offset((index - 1 as libc::c_int) as isize)).serialized =
         1 as libc::c_int;
     match (*node).type_0 as libc::c_uint {
-        1 => return yaml_emitter_dump_scalar(emitter, node, anchor),
-        2 => return yaml_emitter_dump_sequence(emitter, node, anchor),
-        3 => return yaml_emitter_dump_mapping(emitter, node, anchor),
+        1 => yaml_emitter_dump_scalar(emitter, node, anchor),
+        2 => yaml_emitter_dump_sequence(emitter, node, anchor),
+        3 => yaml_emitter_dump_mapping(emitter, node, anchor),
         _ => __assert!(false),
     }
 }
@@ -371,7 +371,7 @@ unsafe extern "C" fn yaml_emitter_dump_alias(
     event.start_mark = mark;
     event.end_mark = mark;
     event.data.alias.anchor = anchor;
-    return yaml_emitter_emit(emitter, &mut event);
+    yaml_emitter_emit(emitter, &mut event)
 }
 unsafe extern "C" fn yaml_emitter_dump_scalar(
     emitter: *mut yaml_emitter_t,
@@ -427,7 +427,7 @@ unsafe extern "C" fn yaml_emitter_dump_scalar(
     event.data.scalar.plain_implicit = plain_implicit;
     event.data.scalar.quoted_implicit = quoted_implicit;
     event.data.scalar.style = (*node).data.scalar.style;
-    return yaml_emitter_emit(emitter, &mut event);
+    yaml_emitter_emit(emitter, &mut event)
 }
 unsafe extern "C" fn yaml_emitter_dump_sequence(
     emitter: *mut yaml_emitter_t,
@@ -498,7 +498,7 @@ unsafe extern "C" fn yaml_emitter_dump_sequence(
     if yaml_emitter_emit(emitter, &mut event) == 0 {
         return 0 as libc::c_int;
     }
-    return 1 as libc::c_int;
+    1 as libc::c_int
 }
 unsafe extern "C" fn yaml_emitter_dump_mapping(
     emitter: *mut yaml_emitter_t,
@@ -572,5 +572,5 @@ unsafe extern "C" fn yaml_emitter_dump_mapping(
     if yaml_emitter_emit(emitter, &mut event) == 0 {
         return 0 as libc::c_int;
     }
-    return 1 as libc::c_int;
+    1 as libc::c_int
 }
