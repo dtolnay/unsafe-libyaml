@@ -7,12 +7,14 @@ use crate::PointerExt;
 use std::ptr;
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct Unnamed_35 {
     pub start: *mut yaml_tag_directive_t,
     pub end: *mut yaml_tag_directive_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct Unnamed_36 {
     pub start: *mut yaml_tag_directive_t,
     pub end: *mut yaml_tag_directive_t,

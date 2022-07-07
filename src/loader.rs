@@ -7,6 +7,7 @@ use crate::PointerExt;
 use std::ptr;
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct loader_ctx {
     pub start: *mut libc::c_int,
     pub end: *mut libc::c_int,
@@ -14,6 +15,7 @@ pub struct loader_ctx {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct Unnamed_35 {
     pub start: *mut yaml_node_pair_t,
     pub end: *mut yaml_node_pair_t,
@@ -21,6 +23,7 @@ pub struct Unnamed_35 {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct Unnamed_36 {
     pub start: *mut yaml_node_item_t,
     pub end: *mut yaml_node_item_t,

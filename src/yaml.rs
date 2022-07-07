@@ -5,6 +5,7 @@ pub type __off64_t = libc::c_long;
 pub type yaml_char_t = libc::c_uchar;
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct yaml_version_directive_s {
     pub major: libc::c_int,
     pub minor: libc::c_int,
@@ -12,6 +13,7 @@ pub struct yaml_version_directive_s {
 pub type yaml_version_directive_t = yaml_version_directive_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct yaml_tag_directive_s {
     pub handle: *mut yaml_char_t,
     pub prefix: *mut yaml_char_t,
@@ -41,6 +43,7 @@ pub const YAML_NO_ERROR: yaml_error_type_e = 0;
 pub type yaml_error_type_t = yaml_error_type_e;
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct yaml_mark_s {
     pub index: size_t,
     pub line: size_t,
@@ -91,6 +94,7 @@ pub const YAML_NO_TOKEN: yaml_token_type_e = 0;
 pub type yaml_token_type_t = yaml_token_type_e;
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct yaml_token_s {
     pub type_0: yaml_token_type_t,
     pub data: unnamed_yaml_token_s_data,
@@ -110,18 +114,21 @@ pub union unnamed_yaml_token_s_data {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_token_s_data_tag_directive {
     pub handle: *mut yaml_char_t,
     pub prefix: *mut yaml_char_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_token_s_data_version_directive {
     pub major: libc::c_int,
     pub minor: libc::c_int,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_token_s_data_scalar {
     pub value: *mut yaml_char_t,
     pub length: size_t,
@@ -129,22 +136,26 @@ pub struct unnamed_yaml_token_s_data_scalar {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_token_s_data_tag {
     pub handle: *mut yaml_char_t,
     pub suffix: *mut yaml_char_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_token_s_data_anchor {
     pub value: *mut yaml_char_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_token_s_data_alias {
     pub value: *mut yaml_char_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_token_s_data_stream_start {
     pub encoding: yaml_encoding_t,
 }
@@ -164,6 +175,7 @@ pub const YAML_NO_EVENT: yaml_event_type_e = 0;
 pub type yaml_event_type_t = yaml_event_type_e;
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct yaml_event_s {
     pub type_0: yaml_event_type_t,
     pub data: unnamed_yaml_event_s_data,
@@ -183,6 +195,7 @@ pub union unnamed_yaml_event_s_data {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_event_s_data_mapping_start {
     pub anchor: *mut yaml_char_t,
     pub tag: *mut yaml_char_t,
@@ -191,6 +204,7 @@ pub struct unnamed_yaml_event_s_data_mapping_start {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_event_s_data_sequence_start {
     pub anchor: *mut yaml_char_t,
     pub tag: *mut yaml_char_t,
@@ -199,6 +213,7 @@ pub struct unnamed_yaml_event_s_data_sequence_start {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_event_s_data_scalar {
     pub anchor: *mut yaml_char_t,
     pub tag: *mut yaml_char_t,
@@ -210,16 +225,19 @@ pub struct unnamed_yaml_event_s_data_scalar {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_event_s_data_alias {
     pub anchor: *mut yaml_char_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_event_s_data_document_end {
     pub implicit: libc::c_int,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_event_s_data_document_start {
     pub version_directive: *mut yaml_version_directive_t,
     pub tag_directives: unnamed_yaml_event_s_data_document_start_tag_directives,
@@ -227,18 +245,21 @@ pub struct unnamed_yaml_event_s_data_document_start {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_event_s_data_document_start_tag_directives {
     pub start: *mut yaml_tag_directive_t,
     pub end: *mut yaml_tag_directive_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_event_s_data_stream_start {
     pub encoding: yaml_encoding_t,
 }
 pub type yaml_event_t = yaml_event_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct Unnamed_16 {
     pub start: *mut yaml_tag_directive_t,
     pub end: *mut yaml_tag_directive_t,
@@ -246,6 +267,7 @@ pub struct Unnamed_16 {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct Unnamed_17 {
     pub error: yaml_error_type_t,
 }
@@ -257,6 +279,7 @@ pub const YAML_NO_NODE: yaml_node_type_e = 0;
 pub type yaml_node_type_t = yaml_node_type_e;
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct yaml_node_s {
     pub type_0: yaml_node_type_t,
     pub tag: *mut yaml_char_t,
@@ -273,12 +296,14 @@ pub union unnamed_yaml_node_s_data {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_node_s_data_mapping {
     pub pairs: unnamed_yaml_node_s_data_mapping_pairs,
     pub style: yaml_mapping_style_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_node_s_data_mapping_pairs {
     pub start: *mut yaml_node_pair_t,
     pub end: *mut yaml_node_pair_t,
@@ -287,18 +312,21 @@ pub struct unnamed_yaml_node_s_data_mapping_pairs {
 pub type yaml_node_pair_t = yaml_node_pair_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct yaml_node_pair_s {
     pub key: libc::c_int,
     pub value: libc::c_int,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_node_s_data_sequence {
     pub items: unnamed_yaml_node_s_data_sequence_items,
     pub style: yaml_sequence_style_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_node_s_data_sequence_items {
     pub start: *mut yaml_node_item_t,
     pub end: *mut yaml_node_item_t,
@@ -307,6 +335,7 @@ pub struct unnamed_yaml_node_s_data_sequence_items {
 pub type yaml_node_item_t = libc::c_int;
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_node_s_data_scalar {
     pub value: *mut yaml_char_t,
     pub length: size_t,
@@ -315,6 +344,7 @@ pub struct unnamed_yaml_node_s_data_scalar {
 pub type yaml_node_t = yaml_node_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct yaml_document_s {
     pub nodes: unnamed_yaml_document_s_nodes,
     pub version_directive: *mut yaml_version_directive_t,
@@ -326,12 +356,14 @@ pub struct yaml_document_s {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_document_s_tag_directives {
     pub start: *mut yaml_tag_directive_t,
     pub end: *mut yaml_tag_directive_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_document_s_nodes {
     pub start: *mut yaml_node_t,
     pub end: *mut yaml_node_t,
@@ -340,6 +372,7 @@ pub struct unnamed_yaml_document_s_nodes {
 pub type yaml_document_t = yaml_document_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct Unnamed_26 {
     pub start: *mut yaml_tag_directive_t,
     pub end: *mut yaml_tag_directive_t,
@@ -347,6 +380,7 @@ pub struct Unnamed_26 {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct Unnamed_27 {
     pub start: *mut yaml_node_t,
     pub end: *mut yaml_node_t,
@@ -354,16 +388,19 @@ pub struct Unnamed_27 {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct Unnamed_28 {
     pub error: yaml_error_type_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct Unnamed_29 {
     pub error: yaml_error_type_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct Unnamed_30 {
     pub start: *mut yaml_node_item_t,
     pub end: *mut yaml_node_item_t,
@@ -371,11 +408,13 @@ pub struct Unnamed_30 {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct Unnamed_31 {
     pub error: yaml_error_type_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct Unnamed_32 {
     pub start: *mut yaml_node_pair_t,
     pub end: *mut yaml_node_pair_t,
@@ -383,16 +422,19 @@ pub struct Unnamed_32 {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct Unnamed_33 {
     pub error: yaml_error_type_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct Unnamed_34 {
     pub error: yaml_error_type_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct Unnamed_35 {
     pub error: yaml_error_type_t,
 }
@@ -400,6 +442,7 @@ pub type yaml_read_handler_t =
     unsafe extern "C" fn(*mut libc::c_void, *mut libc::c_uchar, size_t, *mut size_t) -> libc::c_int;
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct yaml_simple_key_s {
     pub possible: libc::c_int,
     pub required: libc::c_int,
@@ -435,6 +478,7 @@ pub const YAML_PARSE_STREAM_START_STATE: yaml_parser_state_e = 0;
 pub type yaml_parser_state_t = yaml_parser_state_e;
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct yaml_alias_data_s {
     pub anchor: *mut yaml_char_t,
     pub index: libc::c_int,
@@ -443,6 +487,7 @@ pub struct yaml_alias_data_s {
 pub type yaml_alias_data_t = yaml_alias_data_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct yaml_parser_s {
     pub error: yaml_error_type_t,
     pub problem: *const libc::c_char,
@@ -480,6 +525,7 @@ pub struct yaml_parser_s {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_parser_s_aliases {
     pub start: *mut yaml_alias_data_t,
     pub end: *mut yaml_alias_data_t,
@@ -487,6 +533,7 @@ pub struct unnamed_yaml_parser_s_aliases {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_parser_s_tag_directives {
     pub start: *mut yaml_tag_directive_t,
     pub end: *mut yaml_tag_directive_t,
@@ -494,6 +541,7 @@ pub struct unnamed_yaml_parser_s_tag_directives {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_parser_s_marks {
     pub start: *mut yaml_mark_t,
     pub end: *mut yaml_mark_t,
@@ -501,6 +549,7 @@ pub struct unnamed_yaml_parser_s_marks {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_parser_s_states {
     pub start: *mut yaml_parser_state_t,
     pub end: *mut yaml_parser_state_t,
@@ -508,6 +557,7 @@ pub struct unnamed_yaml_parser_s_states {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_parser_s_simple_keys {
     pub start: *mut yaml_simple_key_t,
     pub end: *mut yaml_simple_key_t,
@@ -515,6 +565,7 @@ pub struct unnamed_yaml_parser_s_simple_keys {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_parser_s_indents {
     pub start: *mut libc::c_int,
     pub end: *mut libc::c_int,
@@ -522,6 +573,7 @@ pub struct unnamed_yaml_parser_s_indents {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_parser_s_tokens {
     pub start: *mut yaml_token_t,
     pub end: *mut yaml_token_t,
@@ -530,6 +582,7 @@ pub struct unnamed_yaml_parser_s_tokens {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_parser_s_raw_buffer {
     pub start: *mut libc::c_uchar,
     pub end: *mut libc::c_uchar,
@@ -538,6 +591,7 @@ pub struct unnamed_yaml_parser_s_raw_buffer {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_parser_s_buffer {
     pub start: *mut yaml_char_t,
     pub end: *mut yaml_char_t,
@@ -551,6 +605,7 @@ pub union unnamed_yaml_parser_s_input {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_parser_s_input_string {
     pub start: *const libc::c_uchar,
     pub end: *const libc::c_uchar,
@@ -581,6 +636,7 @@ pub const YAML_EMIT_STREAM_START_STATE: yaml_emitter_state_e = 0;
 pub type yaml_emitter_state_t = yaml_emitter_state_e;
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct yaml_anchors_s {
     pub references: libc::c_int,
     pub anchor: libc::c_int,
@@ -589,6 +645,7 @@ pub struct yaml_anchors_s {
 pub type yaml_anchors_t = yaml_anchors_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct yaml_emitter_s {
     pub error: yaml_error_type_t,
     pub problem: *const libc::c_char,
@@ -630,6 +687,7 @@ pub struct yaml_emitter_s {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_emitter_s_scalar_data {
     pub value: *mut yaml_char_t,
     pub length: size_t,
@@ -642,6 +700,7 @@ pub struct unnamed_yaml_emitter_s_scalar_data {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_emitter_s_tag_data {
     pub handle: *mut yaml_char_t,
     pub handle_length: size_t,
@@ -650,6 +709,7 @@ pub struct unnamed_yaml_emitter_s_tag_data {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_emitter_s_anchor_data {
     pub anchor: *mut yaml_char_t,
     pub anchor_length: size_t,
@@ -657,6 +717,7 @@ pub struct unnamed_yaml_emitter_s_anchor_data {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_emitter_s_tag_directives {
     pub start: *mut yaml_tag_directive_t,
     pub end: *mut yaml_tag_directive_t,
@@ -664,6 +725,7 @@ pub struct unnamed_yaml_emitter_s_tag_directives {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_emitter_s_indents {
     pub start: *mut libc::c_int,
     pub end: *mut libc::c_int,
@@ -671,6 +733,7 @@ pub struct unnamed_yaml_emitter_s_indents {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_emitter_s_events {
     pub start: *mut yaml_event_t,
     pub end: *mut yaml_event_t,
@@ -679,6 +742,7 @@ pub struct unnamed_yaml_emitter_s_events {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_emitter_s_states {
     pub start: *mut yaml_emitter_state_t,
     pub end: *mut yaml_emitter_state_t,
@@ -686,6 +750,7 @@ pub struct unnamed_yaml_emitter_s_states {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_emitter_s_raw_buffer {
     pub start: *mut libc::c_uchar,
     pub end: *mut libc::c_uchar,
@@ -694,6 +759,7 @@ pub struct unnamed_yaml_emitter_s_raw_buffer {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_emitter_s_buffer {
     pub start: *mut yaml_char_t,
     pub end: *mut yaml_char_t,
@@ -707,6 +773,7 @@ pub union unnamed_yaml_emitter_s_output {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct unnamed_yaml_emitter_s_output_string {
     pub buffer: *mut libc::c_uchar,
     pub size: size_t,
@@ -715,6 +782,7 @@ pub struct unnamed_yaml_emitter_s_output_string {
 pub type yaml_emitter_t = yaml_emitter_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
+#[non_exhaustive]
 pub struct yaml_string_t {
     pub start: *mut yaml_char_t,
     pub end: *mut yaml_char_t,
