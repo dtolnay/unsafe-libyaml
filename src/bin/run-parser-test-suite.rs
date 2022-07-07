@@ -1,5 +1,3 @@
-#![allow(unused_assignments)]
-
 use std::cmp;
 use std::env;
 use std::ffi::CStr;
@@ -53,7 +51,7 @@ unsafe fn unsafe_main() -> ExitCode {
         ptr::addr_of_mut!(remaining).cast(),
     );
     loop {
-        let mut type_0: yaml_event_type_t = YAML_NO_EVENT;
+        let type_0: yaml_event_type_t;
         if yaml_parser_parse(parser, event) == 0 {
             let _ = writeln!(
                 io::stderr(),
@@ -194,8 +192,8 @@ unsafe fn unsafe_main() -> ExitCode {
 }
 #[no_mangle]
 pub unsafe extern "C" fn print_escaped(str: *mut yaml_char_t, length: size_t) {
-    let mut i: libc::c_int = 0;
-    let mut c: libc::c_char = 0;
+    let mut i: libc::c_int;
+    let mut c: libc::c_char;
     i = 0 as libc::c_int;
     while (i as libc::c_ulong) < length {
         c = *str.offset(i as isize) as libc::c_char;

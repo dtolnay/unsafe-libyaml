@@ -1,9 +1,4 @@
-#![allow(
-    non_camel_case_types,
-    unused_assignments,
-    unused_parens,
-    unused_variables
-)]
+#![allow(non_camel_case_types, unused_parens, unused_variables)]
 
 use std::mem;
 

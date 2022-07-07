@@ -116,7 +116,7 @@ pub unsafe extern "C" fn yaml_stack_extend(
     top: *mut *mut libc::c_void,
     end: *mut *mut libc::c_void,
 ) -> libc::c_int {
-    let mut new_start: *mut libc::c_void = 0 as *mut libc::c_void;
+    let new_start: *mut libc::c_void;
     if (*end as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
         >= (2147483647 as libc::c_int / 2 as libc::c_int) as libc::c_long
     {
@@ -944,10 +944,10 @@ unsafe extern "C" fn yaml_check_utf8(start: *const yaml_char_t, length: size_t) 
     let end: *const yaml_char_t = start.c_offset(length as isize);
     let mut pointer: *const yaml_char_t = start;
     while pointer < end {
-        let mut octet: libc::c_uchar = 0;
-        let mut width: libc::c_uint = 0;
-        let mut value: libc::c_uint = 0;
-        let mut k: size_t = 0;
+        let mut octet: libc::c_uchar;
+        let width: libc::c_uint;
+        let mut value: libc::c_uint;
+        let mut k: size_t;
         octet = *pointer.c_offset(0 as libc::c_int as isize);
         width = (if octet as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int {
             1 as libc::c_int
@@ -1108,7 +1108,7 @@ pub unsafe extern "C" fn yaml_document_start_event_initialize(
     match current_block {
         1394248824506584008 => {
             if tag_directives_start != tag_directives_end {
-                let mut tag_directive: *mut yaml_tag_directive_t = 0 as *mut yaml_tag_directive_t;
+                let mut tag_directive: *mut yaml_tag_directive_t;
                 tag_directives_copy.start =
                     yaml_malloc((16 as libc::c_int as libc::c_ulong).wrapping_mul(
                         ::std::mem::size_of::<yaml_tag_directive_t>() as libc::c_ulong,
@@ -1262,7 +1262,7 @@ pub unsafe extern "C" fn yaml_alias_event_initialize(
         };
         init
     };
-    let mut anchor_copy: *mut yaml_char_t = 0 as *mut yaml_char_t;
+    let anchor_copy: *mut yaml_char_t;
     __assert!(!event.is_null());
     __assert!(!anchor.is_null());
     if yaml_check_utf8(anchor, strlen(anchor as *mut libc::c_char)) == 0 {
@@ -1588,7 +1588,7 @@ pub unsafe extern "C" fn yaml_mapping_end_event_initialize(
 }
 #[no_mangle]
 pub unsafe extern "C" fn yaml_event_delete(event: *mut yaml_event_t) {
-    let mut tag_directive: *mut yaml_tag_directive_t = 0 as *mut yaml_tag_directive_t;
+    let mut tag_directive: *mut yaml_tag_directive_t;
     __assert!(!event.is_null());
     match (*event).type_0 as libc::c_uint {
         3 => {
@@ -1707,8 +1707,7 @@ pub unsafe extern "C" fn yaml_document_initialize(
             8142820162064489797 => {}
             _ => {
                 if tag_directives_start != tag_directives_end {
-                    let mut tag_directive: *mut yaml_tag_directive_t =
-                        0 as *mut yaml_tag_directive_t;
+                    let mut tag_directive: *mut yaml_tag_directive_t;
                     tag_directives_copy.start =
                         yaml_malloc((16 as libc::c_int as libc::c_ulong).wrapping_mul(
                             ::std::mem::size_of::<yaml_tag_directive_t>() as libc::c_ulong,
@@ -1836,7 +1835,7 @@ pub unsafe extern "C" fn yaml_document_initialize(
 }
 #[no_mangle]
 pub unsafe extern "C" fn yaml_document_delete(document: *mut yaml_document_t) {
-    let mut tag_directive: *mut yaml_tag_directive_t = 0 as *mut yaml_tag_directive_t;
+    let mut tag_directive: *mut yaml_tag_directive_t;
     __assert!(!document.is_null());
     while !((*document).nodes.start == (*document).nodes.top) {
         let ref mut fresh182 = (*document).nodes.top;

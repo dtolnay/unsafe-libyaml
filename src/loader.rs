@@ -309,7 +309,7 @@ unsafe extern "C" fn yaml_parser_register_anchor(
             column: 0,
         },
     };
-    let mut alias_data: *mut yaml_alias_data_t = 0 as *mut yaml_alias_data_t;
+    let mut alias_data: *mut yaml_alias_data_t;
     if anchor.is_null() {
         return 1 as libc::c_int;
     }
@@ -363,8 +363,8 @@ unsafe extern "C" fn yaml_parser_load_node_add(
     ctx: *mut loader_ctx,
     index: libc::c_int,
 ) -> libc::c_int {
-    let mut parent: *mut yaml_node_s = 0 as *mut yaml_node_s;
-    let mut parent_index: libc::c_int = 0;
+    let parent: *mut yaml_node_s;
+    let parent_index: libc::c_int;
     if (*ctx).start == (*ctx).top {
         return 1 as libc::c_int;
     }
@@ -479,7 +479,7 @@ unsafe extern "C" fn yaml_parser_load_alias(
     ctx: *mut loader_ctx,
 ) -> libc::c_int {
     let anchor: *mut yaml_char_t = (*event).data.alias.anchor;
-    let mut alias_data: *mut yaml_alias_data_t = 0 as *mut yaml_alias_data_t;
+    let mut alias_data: *mut yaml_alias_data_t;
     alias_data = (*parser).aliases.start;
     while alias_data != (*parser).aliases.top {
         if strcmp(
@@ -526,7 +526,7 @@ unsafe extern "C" fn yaml_parser_load_scalar(
             column: 0,
         },
     };
-    let mut index: libc::c_int = 0;
+    let index: libc::c_int;
     let mut tag: *mut yaml_char_t = (*event).data.scalar.tag;
     if !(if (((*(*parser).document).nodes.top).c_offset_from((*(*parser).document).nodes.start)
         as libc::c_long)
@@ -643,7 +643,7 @@ unsafe extern "C" fn yaml_parser_load_sequence(
         };
         init
     };
-    let mut index: libc::c_int = 0;
+    let index: libc::c_int;
     let mut tag: *mut yaml_char_t = (*event).data.sequence_start.tag;
     if !(if (((*(*parser).document).nodes.top).c_offset_from((*(*parser).document).nodes.start)
         as libc::c_long)
@@ -782,7 +782,7 @@ unsafe extern "C" fn yaml_parser_load_sequence_end(
     event: *mut yaml_event_t,
     ctx: *mut loader_ctx,
 ) -> libc::c_int {
-    let mut index: libc::c_int = 0;
+    let index: libc::c_int;
     __assert!(
         ((*ctx).top).c_offset_from((*ctx).start) as libc::c_long > 0 as libc::c_int as libc::c_long
     );
@@ -833,7 +833,7 @@ unsafe extern "C" fn yaml_parser_load_mapping(
         };
         init
     };
-    let mut index: libc::c_int = 0;
+    let index: libc::c_int;
     let mut tag: *mut yaml_char_t = (*event).data.mapping_start.tag;
     if !(if (((*(*parser).document).nodes.top).c_offset_from((*(*parser).document).nodes.start)
         as libc::c_long)
@@ -972,7 +972,7 @@ unsafe extern "C" fn yaml_parser_load_mapping_end(
     event: *mut yaml_event_t,
     ctx: *mut loader_ctx,
 ) -> libc::c_int {
-    let mut index: libc::c_int = 0;
+    let index: libc::c_int;
     __assert!(
         ((*ctx).top).c_offset_from((*ctx).start) as libc::c_long > 0 as libc::c_int as libc::c_long
     );

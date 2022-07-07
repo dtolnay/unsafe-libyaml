@@ -55,8 +55,8 @@ pub unsafe extern "C" fn yaml_emitter_emit(
 }
 unsafe extern "C" fn yaml_emitter_need_more_events(emitter: *mut yaml_emitter_t) -> libc::c_int {
     let mut level: libc::c_int = 0 as libc::c_int;
-    let mut accumulate: libc::c_int = 0 as libc::c_int;
-    let mut event: *mut yaml_event_t = 0 as *mut yaml_event_t;
+    let accumulate: libc::c_int;
+    let mut event: *mut yaml_event_t;
     if (*emitter).events.head == (*emitter).events.tail {
         return 1 as libc::c_int;
     }
@@ -100,7 +100,7 @@ unsafe extern "C" fn yaml_emitter_append_tag_directive(
     value: yaml_tag_directive_t,
     allow_duplicates: libc::c_int,
 ) -> libc::c_int {
-    let mut tag_directive: *mut yaml_tag_directive_t = 0 as *mut yaml_tag_directive_t;
+    let mut tag_directive: *mut yaml_tag_directive_t;
     let mut copy: yaml_tag_directive_t = {
         let init = yaml_tag_directive_s {
             handle: 0 as *mut yaml_char_t,
@@ -317,8 +317,8 @@ unsafe extern "C" fn yaml_emitter_emit_document_start(
                 init
             },
         ];
-        let mut tag_directive: *mut yaml_tag_directive_t = 0 as *mut yaml_tag_directive_t;
-        let mut implicit: libc::c_int = 0;
+        let mut tag_directive: *mut yaml_tag_directive_t;
+        let mut implicit: libc::c_int;
         if !((*event).data.document_start.version_directive).is_null() {
             if yaml_emitter_analyze_version_directive(
                 emitter,
@@ -1536,8 +1536,8 @@ unsafe extern "C" fn yaml_emitter_analyze_tag_directive(
         end: 0 as *mut yaml_char_t,
         pointer: 0 as *mut yaml_char_t,
     };
-    let mut handle_length: size_t = 0;
-    let mut prefix_length: size_t = 0;
+    let handle_length: size_t;
+    let prefix_length: size_t;
     handle_length = strlen(tag_directive.handle as *mut libc::c_char);
     prefix_length = strlen(tag_directive.prefix as *mut libc::c_char);
     handle.start = tag_directive.handle;
@@ -1626,7 +1626,7 @@ unsafe extern "C" fn yaml_emitter_analyze_anchor(
     anchor: *mut yaml_char_t,
     alias: libc::c_int,
 ) -> libc::c_int {
-    let mut anchor_length: size_t = 0;
+    let anchor_length: size_t;
     let mut string: yaml_string_t = yaml_string_t {
         start: 0 as *mut yaml_char_t,
         end: 0 as *mut yaml_char_t,
@@ -1710,13 +1710,13 @@ unsafe extern "C" fn yaml_emitter_analyze_tag(
     mut emitter: *mut yaml_emitter_t,
     tag: *mut yaml_char_t,
 ) -> libc::c_int {
-    let mut tag_length: size_t = 0;
+    let tag_length: size_t;
     let mut string: yaml_string_t = yaml_string_t {
         start: 0 as *mut yaml_char_t,
         end: 0 as *mut yaml_char_t,
         pointer: 0 as *mut yaml_char_t,
     };
-    let mut tag_directive: *mut yaml_tag_directive_t = 0 as *mut yaml_tag_directive_t;
+    let mut tag_directive: *mut yaml_tag_directive_t;
     tag_length = strlen(tag as *mut libc::c_char);
     string.start = tag;
     string.end = tag.c_offset(tag_length as isize);
@@ -1776,8 +1776,8 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
     let mut trailing_break: libc::c_int = 0 as libc::c_int;
     let mut break_space: libc::c_int = 0 as libc::c_int;
     let mut space_break: libc::c_int = 0 as libc::c_int;
-    let mut preceded_by_whitespace: libc::c_int = 0 as libc::c_int;
-    let mut followed_by_whitespace: libc::c_int = 0 as libc::c_int;
+    let mut preceded_by_whitespace: libc::c_int;
+    let mut followed_by_whitespace: libc::c_int;
     let mut previous_space: libc::c_int = 0 as libc::c_int;
     let mut previous_break: libc::c_int = 0 as libc::c_int;
     string.start = value;
@@ -3256,7 +3256,7 @@ unsafe extern "C" fn yaml_emitter_write_indicator(
     is_whitespace: libc::c_int,
     is_indention: libc::c_int,
 ) -> libc::c_int {
-    let mut indicator_length: size_t = 0;
+    let indicator_length: size_t;
     let mut string: yaml_string_t = yaml_string_t {
         start: 0 as *mut yaml_char_t,
         end: 0 as *mut yaml_char_t,
@@ -3804,7 +3804,7 @@ unsafe extern "C" fn yaml_emitter_write_tag_content(
             } else {
                 0 as libc::c_int
             };
-            let mut value_0: libc::c_uint = 0;
+            let mut value_0: libc::c_uint;
             loop {
                 let fresh207 = width;
                 width = width - 1;
@@ -4968,10 +4968,10 @@ unsafe extern "C" fn yaml_emitter_write_double_quoted_scalar(
             || *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                 == '\\' as i32 as yaml_char_t as libc::c_int
         {
-            let mut octet: libc::c_uchar = 0;
-            let mut width: libc::c_uint = 0;
-            let mut value_0: libc::c_uint = 0;
-            let mut k: libc::c_int = 0;
+            let mut octet: libc::c_uchar;
+            let mut width: libc::c_uint;
+            let mut value_0: libc::c_uint;
+            let mut k: libc::c_int;
             octet = *(string.pointer).c_offset(0 as libc::c_int as isize);
             width = (if octet as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int {
                 1 as libc::c_int

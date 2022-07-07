@@ -169,13 +169,13 @@ pub unsafe extern "C" fn yaml_parser_update_buffer(
         first = 0 as libc::c_int;
         while (*parser).raw_buffer.pointer != (*parser).raw_buffer.last {
             let mut value: libc::c_uint = 0 as libc::c_int as libc::c_uint;
-            let mut value2: libc::c_uint = 0 as libc::c_int as libc::c_uint;
+            let value2: libc::c_uint;
             let mut incomplete: libc::c_int = 0 as libc::c_int;
-            let mut octet: libc::c_uchar = 0;
+            let mut octet: libc::c_uchar;
             let mut width: libc::c_uint = 0 as libc::c_int as libc::c_uint;
-            let mut low: libc::c_int = 0;
-            let mut high: libc::c_int = 0;
-            let mut k: size_t = 0;
+            let low: libc::c_int;
+            let high: libc::c_int;
+            let mut k: size_t;
             let raw_unread: size_t = ((*parser).raw_buffer.last)
                 .c_offset_from((*parser).raw_buffer.pointer)
                 as libc::c_long as size_t;

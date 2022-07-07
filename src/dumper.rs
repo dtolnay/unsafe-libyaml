@@ -208,7 +208,7 @@ pub unsafe extern "C" fn yaml_emitter_dump(
     return 0 as libc::c_int;
 }
 unsafe extern "C" fn yaml_emitter_delete_document_and_anchors(mut emitter: *mut yaml_emitter_t) {
-    let mut index: libc::c_int = 0;
+    let mut index: libc::c_int;
     if ((*emitter).anchors).is_null() {
         yaml_document_delete((*emitter).document);
         let ref mut fresh2 = (*emitter).document;
@@ -258,8 +258,8 @@ unsafe extern "C" fn yaml_emitter_anchor_node(emitter: *mut yaml_emitter_t, inde
     let node: *mut yaml_node_t = ((*(*emitter).document).nodes.start)
         .c_offset(index as isize)
         .c_offset(-(1 as libc::c_int as isize));
-    let mut item: *mut yaml_node_item_t = 0 as *mut yaml_node_item_t;
-    let mut pair: *mut yaml_node_pair_t = 0 as *mut yaml_node_pair_t;
+    let mut item: *mut yaml_node_item_t;
+    let mut pair: *mut yaml_node_pair_t;
     let ref mut fresh8 =
         (*((*emitter).anchors).c_offset((index - 1 as libc::c_int) as isize)).references;
     *fresh8 += 1;
@@ -464,7 +464,7 @@ unsafe extern "C" fn yaml_emitter_dump_sequence(
         (*node).tag as *mut libc::c_char,
         b"tag:yaml.org,2002:seq\0" as *const u8 as *const libc::c_char,
     ) == 0 as libc::c_int) as libc::c_int;
-    let mut item: *mut yaml_node_item_t = 0 as *mut yaml_node_item_t;
+    let mut item: *mut yaml_node_item_t;
     memset(
         &mut event as *mut yaml_event_t as *mut libc::c_void,
         0 as libc::c_int,
@@ -535,7 +535,7 @@ unsafe extern "C" fn yaml_emitter_dump_mapping(
         (*node).tag as *mut libc::c_char,
         b"tag:yaml.org,2002:map\0" as *const u8 as *const libc::c_char,
     ) == 0 as libc::c_int) as libc::c_int;
-    let mut pair: *mut yaml_node_pair_t = 0 as *mut yaml_node_pair_t;
+    let mut pair: *mut yaml_node_pair_t;
     memset(
         &mut event as *mut yaml_event_t as *mut libc::c_void,
         0 as libc::c_int,

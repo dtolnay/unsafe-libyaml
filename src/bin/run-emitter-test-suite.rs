@@ -1,5 +1,3 @@
-#![allow(unused_assignments)]
-
 use std::env;
 use std::ffi::CStr;
 use std::fs::File;
@@ -69,11 +67,11 @@ unsafe fn unsafe_main() -> ExitCode {
             }
         };
         let line = line as *mut [u8] as *mut libc::c_char;
-        let mut ok: libc::c_int = 0;
+        let ok: libc::c_int;
         let mut anchor: [libc::c_char; 256] = [0; 256];
         let mut tag: [libc::c_char; 256] = [0; 256];
-        let mut implicit: libc::c_int = 0;
-        let mut style: libc::c_int = 0;
+        let implicit: libc::c_int;
+        let style: libc::c_int;
         if strncmp(
             line,
             b"+STR\0" as *const u8 as *const libc::c_char,
@@ -306,8 +304,8 @@ pub unsafe extern "C" fn get_anchor(
     line: *mut libc::c_char,
     anchor: *mut libc::c_char,
 ) -> *mut libc::c_char {
-    let mut start: *mut libc::c_char = ptr::null_mut::<libc::c_char>();
-    let mut end: *mut libc::c_char = ptr::null_mut::<libc::c_char>();
+    let mut start: *mut libc::c_char;
+    let mut end: *mut libc::c_char;
     start = strchr(line, sigil as libc::c_int);
     if start.is_null() {
         return ptr::null_mut::<libc::c_char>();
@@ -330,8 +328,8 @@ pub unsafe extern "C" fn get_tag(
     line: *mut libc::c_char,
     tag: *mut libc::c_char,
 ) -> *mut libc::c_char {
-    let mut start: *mut libc::c_char = ptr::null_mut::<libc::c_char>();
-    let mut end: *mut libc::c_char = ptr::null_mut::<libc::c_char>();
+    let start: *mut libc::c_char;
+    let end: *mut libc::c_char;
     start = strchr(line, '<' as i32);
     if start.is_null() {
         return ptr::null_mut::<libc::c_char>();
@@ -358,7 +356,7 @@ pub unsafe extern "C" fn get_value(
     style: *mut libc::c_int,
 ) {
     let mut i: libc::c_int = 0 as libc::c_int;
-    let mut c: *mut libc::c_char = ptr::null_mut::<libc::c_char>();
+    let mut c: *mut libc::c_char;
     let mut start: *mut libc::c_char = ptr::null_mut::<libc::c_char>();
     let end: *mut libc::c_char = line.offset(strlen(line) as isize);
     let mut current_block_8: u64;
