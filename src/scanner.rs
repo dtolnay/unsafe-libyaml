@@ -1100,30 +1100,23 @@ unsafe extern "C" fn yaml_parser_fetch_document_indicator(
             == 0 as libc::c_int
         {
             1 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xe0 as libc::c_int
+            == 0xc0 as libc::c_int
+        {
+            2 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xf0 as libc::c_int
+            == 0xe0 as libc::c_int
+        {
+            3 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xf8 as libc::c_int
+            == 0xf0 as libc::c_int
+        {
+            4 as libc::c_int
         } else {
-            if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                & 0xe0 as libc::c_int
-                == 0xc0 as libc::c_int
-            {
-                2 as libc::c_int
-            } else {
-                if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                    & 0xf0 as libc::c_int
-                    == 0xe0 as libc::c_int
-                {
-                    3 as libc::c_int
-                } else {
-                    if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                        as libc::c_int
-                        & 0xf8 as libc::c_int
-                        == 0xf0 as libc::c_int
-                    {
-                        4 as libc::c_int
-                    } else {
-                        0 as libc::c_int
-                    }
-                }
-            }
+            0 as libc::c_int
         }) as isize,
     );
     let fresh31 = &mut (*parser).mark.index;
@@ -1139,30 +1132,23 @@ unsafe extern "C" fn yaml_parser_fetch_document_indicator(
             == 0 as libc::c_int
         {
             1 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xe0 as libc::c_int
+            == 0xc0 as libc::c_int
+        {
+            2 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xf0 as libc::c_int
+            == 0xe0 as libc::c_int
+        {
+            3 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xf8 as libc::c_int
+            == 0xf0 as libc::c_int
+        {
+            4 as libc::c_int
         } else {
-            if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                & 0xe0 as libc::c_int
-                == 0xc0 as libc::c_int
-            {
-                2 as libc::c_int
-            } else {
-                if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                    & 0xf0 as libc::c_int
-                    == 0xe0 as libc::c_int
-                {
-                    3 as libc::c_int
-                } else {
-                    if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                        as libc::c_int
-                        & 0xf8 as libc::c_int
-                        == 0xf0 as libc::c_int
-                    {
-                        4 as libc::c_int
-                    } else {
-                        0 as libc::c_int
-                    }
-                }
-            }
+            0 as libc::c_int
         }) as isize,
     );
     let fresh35 = &mut (*parser).mark.index;
@@ -1178,30 +1164,23 @@ unsafe extern "C" fn yaml_parser_fetch_document_indicator(
             == 0 as libc::c_int
         {
             1 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xe0 as libc::c_int
+            == 0xc0 as libc::c_int
+        {
+            2 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xf0 as libc::c_int
+            == 0xe0 as libc::c_int
+        {
+            3 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xf8 as libc::c_int
+            == 0xf0 as libc::c_int
+        {
+            4 as libc::c_int
         } else {
-            if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                & 0xe0 as libc::c_int
-                == 0xc0 as libc::c_int
-            {
-                2 as libc::c_int
-            } else {
-                if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                    & 0xf0 as libc::c_int
-                    == 0xe0 as libc::c_int
-                {
-                    3 as libc::c_int
-                } else {
-                    if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                        as libc::c_int
-                        & 0xf8 as libc::c_int
-                        == 0xf0 as libc::c_int
-                    {
-                        4 as libc::c_int
-                    } else {
-                        0 as libc::c_int
-                    }
-                }
-            }
+            0 as libc::c_int
         }) as isize,
     );
     let end_mark: yaml_mark_t = (*parser).mark;
@@ -1278,30 +1257,23 @@ unsafe extern "C" fn yaml_parser_fetch_flow_collection_start(
             == 0 as libc::c_int
         {
             1 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xe0 as libc::c_int
+            == 0xc0 as libc::c_int
+        {
+            2 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xf0 as libc::c_int
+            == 0xe0 as libc::c_int
+        {
+            3 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xf8 as libc::c_int
+            == 0xf0 as libc::c_int
+        {
+            4 as libc::c_int
         } else {
-            if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                & 0xe0 as libc::c_int
-                == 0xc0 as libc::c_int
-            {
-                2 as libc::c_int
-            } else {
-                if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                    & 0xf0 as libc::c_int
-                    == 0xe0 as libc::c_int
-                {
-                    3 as libc::c_int
-                } else {
-                    if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                        as libc::c_int
-                        & 0xf8 as libc::c_int
-                        == 0xf0 as libc::c_int
-                    {
-                        4 as libc::c_int
-                    } else {
-                        0 as libc::c_int
-                    }
-                }
-            }
+            0 as libc::c_int
         }) as isize,
     );
     let end_mark: yaml_mark_t = (*parser).mark;
@@ -1378,30 +1350,23 @@ unsafe extern "C" fn yaml_parser_fetch_flow_collection_end(
             == 0 as libc::c_int
         {
             1 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xe0 as libc::c_int
+            == 0xc0 as libc::c_int
+        {
+            2 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xf0 as libc::c_int
+            == 0xe0 as libc::c_int
+        {
+            3 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xf8 as libc::c_int
+            == 0xf0 as libc::c_int
+        {
+            4 as libc::c_int
         } else {
-            if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                & 0xe0 as libc::c_int
-                == 0xc0 as libc::c_int
-            {
-                2 as libc::c_int
-            } else {
-                if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                    & 0xf0 as libc::c_int
-                    == 0xe0 as libc::c_int
-                {
-                    3 as libc::c_int
-                } else {
-                    if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                        as libc::c_int
-                        & 0xf8 as libc::c_int
-                        == 0xf0 as libc::c_int
-                    {
-                        4 as libc::c_int
-                    } else {
-                        0 as libc::c_int
-                    }
-                }
-            }
+            0 as libc::c_int
         }) as isize,
     );
     let end_mark: yaml_mark_t = (*parser).mark;
@@ -1472,30 +1437,23 @@ unsafe extern "C" fn yaml_parser_fetch_flow_entry(mut parser: *mut yaml_parser_t
             == 0 as libc::c_int
         {
             1 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xe0 as libc::c_int
+            == 0xc0 as libc::c_int
+        {
+            2 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xf0 as libc::c_int
+            == 0xe0 as libc::c_int
+        {
+            3 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xf8 as libc::c_int
+            == 0xf0 as libc::c_int
+        {
+            4 as libc::c_int
         } else {
-            if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                & 0xe0 as libc::c_int
-                == 0xc0 as libc::c_int
-            {
-                2 as libc::c_int
-            } else {
-                if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                    & 0xf0 as libc::c_int
-                    == 0xe0 as libc::c_int
-                {
-                    3 as libc::c_int
-                } else {
-                    if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                        as libc::c_int
-                        & 0xf8 as libc::c_int
-                        == 0xf0 as libc::c_int
-                    {
-                        4 as libc::c_int
-                    } else {
-                        0 as libc::c_int
-                    }
-                }
-            }
+            0 as libc::c_int
         }) as isize,
     );
     let end_mark: yaml_mark_t = (*parser).mark;
@@ -1587,30 +1545,23 @@ unsafe extern "C" fn yaml_parser_fetch_block_entry(mut parser: *mut yaml_parser_
             == 0 as libc::c_int
         {
             1 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xe0 as libc::c_int
+            == 0xc0 as libc::c_int
+        {
+            2 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xf0 as libc::c_int
+            == 0xe0 as libc::c_int
+        {
+            3 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xf8 as libc::c_int
+            == 0xf0 as libc::c_int
+        {
+            4 as libc::c_int
         } else {
-            if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                & 0xe0 as libc::c_int
-                == 0xc0 as libc::c_int
-            {
-                2 as libc::c_int
-            } else {
-                if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                    & 0xf0 as libc::c_int
-                    == 0xe0 as libc::c_int
-                {
-                    3 as libc::c_int
-                } else {
-                    if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                        as libc::c_int
-                        & 0xf8 as libc::c_int
-                        == 0xf0 as libc::c_int
-                    {
-                        4 as libc::c_int
-                    } else {
-                        0 as libc::c_int
-                    }
-                }
-            }
+            0 as libc::c_int
         }) as isize,
     );
     let end_mark: yaml_mark_t = (*parser).mark;
@@ -1702,30 +1653,23 @@ unsafe extern "C" fn yaml_parser_fetch_key(mut parser: *mut yaml_parser_t) -> li
             == 0 as libc::c_int
         {
             1 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xe0 as libc::c_int
+            == 0xc0 as libc::c_int
+        {
+            2 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xf0 as libc::c_int
+            == 0xe0 as libc::c_int
+        {
+            3 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xf8 as libc::c_int
+            == 0xf0 as libc::c_int
+        {
+            4 as libc::c_int
         } else {
-            if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                & 0xe0 as libc::c_int
-                == 0xc0 as libc::c_int
-            {
-                2 as libc::c_int
-            } else {
-                if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                    & 0xf0 as libc::c_int
-                    == 0xe0 as libc::c_int
-                {
-                    3 as libc::c_int
-                } else {
-                    if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                        as libc::c_int
-                        & 0xf8 as libc::c_int
-                        == 0xf0 as libc::c_int
-                    {
-                        4 as libc::c_int
-                    } else {
-                        0 as libc::c_int
-                    }
-                }
-            }
+            0 as libc::c_int
         }) as isize,
     );
     let end_mark: yaml_mark_t = (*parser).mark;
@@ -1876,30 +1820,23 @@ unsafe extern "C" fn yaml_parser_fetch_value(mut parser: *mut yaml_parser_t) -> 
             == 0 as libc::c_int
         {
             1 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xe0 as libc::c_int
+            == 0xc0 as libc::c_int
+        {
+            2 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xf0 as libc::c_int
+            == 0xe0 as libc::c_int
+        {
+            3 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xf8 as libc::c_int
+            == 0xf0 as libc::c_int
+        {
+            4 as libc::c_int
         } else {
-            if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                & 0xe0 as libc::c_int
-                == 0xc0 as libc::c_int
-            {
-                2 as libc::c_int
-            } else {
-                if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                    & 0xf0 as libc::c_int
-                    == 0xe0 as libc::c_int
-                {
-                    3 as libc::c_int
-                } else {
-                    if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                        as libc::c_int
-                        & 0xf8 as libc::c_int
-                        == 0xf0 as libc::c_int
-                    {
-                        4 as libc::c_int
-                    } else {
-                        0 as libc::c_int
-                    }
-                }
-            }
+            0 as libc::c_int
         }) as isize,
     );
     let end_mark: yaml_mark_t = (*parser).mark;
@@ -2222,32 +2159,26 @@ unsafe extern "C" fn yaml_parser_scan_to_next_token(mut parser: *mut yaml_parser
                     == 0 as libc::c_int
                 {
                     1 as libc::c_int
+                } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                    as libc::c_int
+                    & 0xe0 as libc::c_int
+                    == 0xc0 as libc::c_int
+                {
+                    2 as libc::c_int
+                } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                    as libc::c_int
+                    & 0xf0 as libc::c_int
+                    == 0xe0 as libc::c_int
+                {
+                    3 as libc::c_int
+                } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                    as libc::c_int
+                    & 0xf8 as libc::c_int
+                    == 0xf0 as libc::c_int
+                {
+                    4 as libc::c_int
                 } else {
-                    if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                        as libc::c_int
-                        & 0xe0 as libc::c_int
-                        == 0xc0 as libc::c_int
-                    {
-                        2 as libc::c_int
-                    } else {
-                        if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                            as libc::c_int
-                            & 0xf0 as libc::c_int
-                            == 0xe0 as libc::c_int
-                        {
-                            3 as libc::c_int
-                        } else {
-                            if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                                as libc::c_int
-                                & 0xf8 as libc::c_int
-                                == 0xf0 as libc::c_int
-                            {
-                                4 as libc::c_int
-                            } else {
-                                0 as libc::c_int
-                            }
-                        }
-                    }
+                    0 as libc::c_int
                 }) as isize,
             );
         }
@@ -2278,32 +2209,26 @@ unsafe extern "C" fn yaml_parser_scan_to_next_token(mut parser: *mut yaml_parser
                     == 0 as libc::c_int
                 {
                     1 as libc::c_int
+                } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                    as libc::c_int
+                    & 0xe0 as libc::c_int
+                    == 0xc0 as libc::c_int
+                {
+                    2 as libc::c_int
+                } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                    as libc::c_int
+                    & 0xf0 as libc::c_int
+                    == 0xe0 as libc::c_int
+                {
+                    3 as libc::c_int
+                } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                    as libc::c_int
+                    & 0xf8 as libc::c_int
+                    == 0xf0 as libc::c_int
+                {
+                    4 as libc::c_int
                 } else {
-                    if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                        as libc::c_int
-                        & 0xe0 as libc::c_int
-                        == 0xc0 as libc::c_int
-                    {
-                        2 as libc::c_int
-                    } else {
-                        if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                            as libc::c_int
-                            & 0xf0 as libc::c_int
-                            == 0xe0 as libc::c_int
-                        {
-                            3 as libc::c_int
-                        } else {
-                            if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                                as libc::c_int
-                                & 0xf8 as libc::c_int
-                                == 0xf0 as libc::c_int
-                            {
-                                4 as libc::c_int
-                            } else {
-                                0 as libc::c_int
-                            }
-                        }
-                    }
+                    0 as libc::c_int
                 }) as isize,
             );
             if if (*parser).unread >= 1 as libc::c_int as libc::c_ulong {
@@ -2365,32 +2290,26 @@ unsafe extern "C" fn yaml_parser_scan_to_next_token(mut parser: *mut yaml_parser
                         == 0 as libc::c_int
                     {
                         1 as libc::c_int
+                    } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                        as libc::c_int
+                        & 0xe0 as libc::c_int
+                        == 0xc0 as libc::c_int
+                    {
+                        2 as libc::c_int
+                    } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                        as libc::c_int
+                        & 0xf0 as libc::c_int
+                        == 0xe0 as libc::c_int
+                    {
+                        3 as libc::c_int
+                    } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                        as libc::c_int
+                        & 0xf8 as libc::c_int
+                        == 0xf0 as libc::c_int
+                    {
+                        4 as libc::c_int
                     } else {
-                        if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                            as libc::c_int
-                            & 0xe0 as libc::c_int
-                            == 0xc0 as libc::c_int
-                        {
-                            2 as libc::c_int
-                        } else {
-                            if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                                as libc::c_int
-                                & 0xf0 as libc::c_int
-                                == 0xe0 as libc::c_int
-                            {
-                                3 as libc::c_int
-                            } else {
-                                if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                                    as libc::c_int
-                                    & 0xf8 as libc::c_int
-                                    == 0xf0 as libc::c_int
-                                {
-                                    4 as libc::c_int
-                                } else {
-                                    0 as libc::c_int
-                                }
-                            }
-                        }
+                        0 as libc::c_int
                     }) as isize,
                 );
                 if if (*parser).unread >= 1 as libc::c_int as libc::c_ulong {
@@ -2461,83 +2380,74 @@ unsafe extern "C" fn yaml_parser_scan_to_next_token(mut parser: *mut yaml_parser
                 as size_t as size_t;
             let fresh103 = &mut (*parser).buffer.pointer;
             *fresh103 = (*fresh103).c_offset(2 as libc::c_int as isize);
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            == '\r' as i32 as yaml_char_t as libc::c_int
+            || *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                == '\n' as i32 as yaml_char_t as libc::c_int
+            || *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                == -62i32 as yaml_char_t as libc::c_int
+                && *((*parser).buffer.pointer)
+                    .c_offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -123i32 as yaml_char_t as libc::c_int
+            || *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                == -30i32 as yaml_char_t as libc::c_int
+                && *((*parser).buffer.pointer)
+                    .c_offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -128i32 as yaml_char_t as libc::c_int
+                && *((*parser).buffer.pointer)
+                    .c_offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -88i32 as yaml_char_t as libc::c_int
+            || *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                == -30i32 as yaml_char_t as libc::c_int
+                && *((*parser).buffer.pointer)
+                    .c_offset((0 as libc::c_int + 1 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -128i32 as yaml_char_t as libc::c_int
+                && *((*parser).buffer.pointer)
+                    .c_offset((0 as libc::c_int + 2 as libc::c_int) as isize)
+                    as libc::c_int
+                    == -87i32 as yaml_char_t as libc::c_int
+        {
+            let fresh104 = &mut (*parser).mark.index;
+            *fresh104 = (*fresh104).wrapping_add(1);
+            (*parser).mark.column = 0 as libc::c_int as size_t;
+            let fresh105 = &mut (*parser).mark.line;
+            *fresh105 = (*fresh105).wrapping_add(1);
+            let fresh106 = &mut (*parser).unread;
+            *fresh106 = (*fresh106).wrapping_sub(1);
+            let fresh107 = &mut (*parser).buffer.pointer;
+            *fresh107 = (*fresh107).c_offset(
+                (if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                    & 0x80 as libc::c_int
+                    == 0 as libc::c_int
+                {
+                    1 as libc::c_int
+                } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                    as libc::c_int
+                    & 0xe0 as libc::c_int
+                    == 0xc0 as libc::c_int
+                {
+                    2 as libc::c_int
+                } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                    as libc::c_int
+                    & 0xf0 as libc::c_int
+                    == 0xe0 as libc::c_int
+                {
+                    3 as libc::c_int
+                } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                    as libc::c_int
+                    & 0xf8 as libc::c_int
+                    == 0xf0 as libc::c_int
+                {
+                    4 as libc::c_int
+                } else {
+                    0 as libc::c_int
+                }) as isize,
+            );
         } else {
-            if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                == '\r' as i32 as yaml_char_t as libc::c_int
-                || *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                    == '\n' as i32 as yaml_char_t as libc::c_int
-                || *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                    == -62i32 as yaml_char_t as libc::c_int
-                    && *((*parser).buffer.pointer)
-                        .c_offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                        as libc::c_int
-                        == -123i32 as yaml_char_t as libc::c_int
-                || *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                    == -30i32 as yaml_char_t as libc::c_int
-                    && *((*parser).buffer.pointer)
-                        .c_offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                        as libc::c_int
-                        == -128i32 as yaml_char_t as libc::c_int
-                    && *((*parser).buffer.pointer)
-                        .c_offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                        as libc::c_int
-                        == -88i32 as yaml_char_t as libc::c_int
-                || *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                    == -30i32 as yaml_char_t as libc::c_int
-                    && *((*parser).buffer.pointer)
-                        .c_offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                        as libc::c_int
-                        == -128i32 as yaml_char_t as libc::c_int
-                    && *((*parser).buffer.pointer)
-                        .c_offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                        as libc::c_int
-                        == -87i32 as yaml_char_t as libc::c_int
-            {
-                let fresh104 = &mut (*parser).mark.index;
-                *fresh104 = (*fresh104).wrapping_add(1);
-                (*parser).mark.column = 0 as libc::c_int as size_t;
-                let fresh105 = &mut (*parser).mark.line;
-                *fresh105 = (*fresh105).wrapping_add(1);
-                let fresh106 = &mut (*parser).unread;
-                *fresh106 = (*fresh106).wrapping_sub(1);
-                let fresh107 = &mut (*parser).buffer.pointer;
-                *fresh107 = (*fresh107).c_offset(
-                    (if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                        as libc::c_int
-                        & 0x80 as libc::c_int
-                        == 0 as libc::c_int
-                    {
-                        1 as libc::c_int
-                    } else {
-                        if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                            as libc::c_int
-                            & 0xe0 as libc::c_int
-                            == 0xc0 as libc::c_int
-                        {
-                            2 as libc::c_int
-                        } else {
-                            if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                                as libc::c_int
-                                & 0xf0 as libc::c_int
-                                == 0xe0 as libc::c_int
-                            {
-                                3 as libc::c_int
-                            } else {
-                                if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                                    as libc::c_int
-                                    & 0xf8 as libc::c_int
-                                    == 0xf0 as libc::c_int
-                                {
-                                    4 as libc::c_int
-                                } else {
-                                    0 as libc::c_int
-                                }
-                            }
-                        }
-                    }) as isize,
-                );
-            } else {
-            };
         };
         if (*parser).flow_level == 0 {
             (*parser).simple_key_allowed = 1 as libc::c_int;
@@ -2570,30 +2480,23 @@ unsafe extern "C" fn yaml_parser_scan_directive(
             == 0 as libc::c_int
         {
             1 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xe0 as libc::c_int
+            == 0xc0 as libc::c_int
+        {
+            2 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xf0 as libc::c_int
+            == 0xe0 as libc::c_int
+        {
+            3 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xf8 as libc::c_int
+            == 0xf0 as libc::c_int
+        {
+            4 as libc::c_int
         } else {
-            if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                & 0xe0 as libc::c_int
-                == 0xc0 as libc::c_int
-            {
-                2 as libc::c_int
-            } else {
-                if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                    & 0xf0 as libc::c_int
-                    == 0xe0 as libc::c_int
-                {
-                    3 as libc::c_int
-                } else {
-                    if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                        as libc::c_int
-                        & 0xf8 as libc::c_int
-                        == 0xf0 as libc::c_int
-                    {
-                        4 as libc::c_int
-                    } else {
-                        0 as libc::c_int
-                    }
-                }
-            }
+            0 as libc::c_int
         }) as isize,
     );
     if !(yaml_parser_scan_directive_name(parser, start_mark, &mut name) == 0) {
@@ -2688,34 +2591,29 @@ unsafe extern "C" fn yaml_parser_scan_directive(
                                 == 0 as libc::c_int
                             {
                                 1 as libc::c_int
+                            } else if *((*parser).buffer.pointer)
+                                .c_offset(0 as libc::c_int as isize)
+                                as libc::c_int
+                                & 0xe0 as libc::c_int
+                                == 0xc0 as libc::c_int
+                            {
+                                2 as libc::c_int
+                            } else if *((*parser).buffer.pointer)
+                                .c_offset(0 as libc::c_int as isize)
+                                as libc::c_int
+                                & 0xf0 as libc::c_int
+                                == 0xe0 as libc::c_int
+                            {
+                                3 as libc::c_int
+                            } else if *((*parser).buffer.pointer)
+                                .c_offset(0 as libc::c_int as isize)
+                                as libc::c_int
+                                & 0xf8 as libc::c_int
+                                == 0xf0 as libc::c_int
+                            {
+                                4 as libc::c_int
                             } else {
-                                if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                                    as libc::c_int
-                                    & 0xe0 as libc::c_int
-                                    == 0xc0 as libc::c_int
-                                {
-                                    2 as libc::c_int
-                                } else {
-                                    if *((*parser).buffer.pointer)
-                                        .c_offset(0 as libc::c_int as isize)
-                                        as libc::c_int
-                                        & 0xf0 as libc::c_int
-                                        == 0xe0 as libc::c_int
-                                    {
-                                        3 as libc::c_int
-                                    } else {
-                                        if *((*parser).buffer.pointer)
-                                            .c_offset(0 as libc::c_int as isize)
-                                            as libc::c_int
-                                            & 0xf8 as libc::c_int
-                                            == 0xf0 as libc::c_int
-                                        {
-                                            4 as libc::c_int
-                                        } else {
-                                            0 as libc::c_int
-                                        }
-                                    }
-                                }
+                                0 as libc::c_int
                             }) as isize,
                         );
                         if if (*parser).unread >= 1 as libc::c_int as libc::c_ulong {
@@ -2804,35 +2702,29 @@ unsafe extern "C" fn yaml_parser_scan_directive(
                                             == 0 as libc::c_int
                                         {
                                             1 as libc::c_int
+                                        } else if *((*parser).buffer.pointer)
+                                            .c_offset(0 as libc::c_int as isize)
+                                            as libc::c_int
+                                            & 0xe0 as libc::c_int
+                                            == 0xc0 as libc::c_int
+                                        {
+                                            2 as libc::c_int
+                                        } else if *((*parser).buffer.pointer)
+                                            .c_offset(0 as libc::c_int as isize)
+                                            as libc::c_int
+                                            & 0xf0 as libc::c_int
+                                            == 0xe0 as libc::c_int
+                                        {
+                                            3 as libc::c_int
+                                        } else if *((*parser).buffer.pointer)
+                                            .c_offset(0 as libc::c_int as isize)
+                                            as libc::c_int
+                                            & 0xf8 as libc::c_int
+                                            == 0xf0 as libc::c_int
+                                        {
+                                            4 as libc::c_int
                                         } else {
-                                            if *((*parser).buffer.pointer)
-                                                .c_offset(0 as libc::c_int as isize)
-                                                as libc::c_int
-                                                & 0xe0 as libc::c_int
-                                                == 0xc0 as libc::c_int
-                                            {
-                                                2 as libc::c_int
-                                            } else {
-                                                if *((*parser).buffer.pointer)
-                                                    .c_offset(0 as libc::c_int as isize)
-                                                    as libc::c_int
-                                                    & 0xf0 as libc::c_int
-                                                    == 0xe0 as libc::c_int
-                                                {
-                                                    3 as libc::c_int
-                                                } else {
-                                                    if *((*parser).buffer.pointer)
-                                                        .c_offset(0 as libc::c_int as isize)
-                                                        as libc::c_int
-                                                        & 0xf8 as libc::c_int
-                                                        == 0xf0 as libc::c_int
-                                                    {
-                                                        4 as libc::c_int
-                                                    } else {
-                                                        0 as libc::c_int
-                                                    }
-                                                }
-                                            }
+                                            0 as libc::c_int
                                         }) as isize,
                                     );
                                     if if (*parser).unread >= 1 as libc::c_int as libc::c_ulong {
@@ -3005,131 +2897,101 @@ unsafe extern "C" fn yaml_parser_scan_directive(
                                                     let fresh125 = &mut (*parser).buffer.pointer;
                                                     *fresh125 = (*fresh125)
                                                         .c_offset(2 as libc::c_int as isize);
-                                                } else {
-                                                    if *((*parser).buffer.pointer)
+                                                } else if *((*parser).buffer.pointer)
+                                                    .c_offset(0 as libc::c_int as isize)
+                                                    as libc::c_int
+                                                    == '\r' as i32 as yaml_char_t as libc::c_int
+                                                    || *((*parser).buffer.pointer)
                                                         .c_offset(0 as libc::c_int as isize)
                                                         as libc::c_int
-                                                        == '\r' as i32 as yaml_char_t as libc::c_int
-                                                        || *((*parser).buffer.pointer)
-                                                            .c_offset(0 as libc::c_int as isize)
-                                                            as libc::c_int
-                                                            == '\n' as i32 as yaml_char_t
-                                                                as libc::c_int
-                                                        || *((*parser).buffer.pointer)
-                                                            .c_offset(0 as libc::c_int as isize)
-                                                            as libc::c_int
-                                                            == -62i32 as yaml_char_t as libc::c_int
-                                                            && *((*parser).buffer.pointer).c_offset(
-                                                                (0 as libc::c_int
-                                                                    + 1 as libc::c_int)
-                                                                    as isize,
-                                                            )
-                                                                as libc::c_int
-                                                                == -123i32 as yaml_char_t
-                                                                    as libc::c_int
-                                                        || *((*parser).buffer.pointer)
-                                                            .c_offset(0 as libc::c_int as isize)
-                                                            as libc::c_int
-                                                            == -30i32 as yaml_char_t as libc::c_int
-                                                            && *((*parser).buffer.pointer).c_offset(
-                                                                (0 as libc::c_int
-                                                                    + 1 as libc::c_int)
-                                                                    as isize,
-                                                            )
-                                                                as libc::c_int
-                                                                == -128i32 as yaml_char_t
-                                                                    as libc::c_int
-                                                            && *((*parser).buffer.pointer).c_offset(
-                                                                (0 as libc::c_int
-                                                                    + 2 as libc::c_int)
-                                                                    as isize,
-                                                            )
-                                                                as libc::c_int
-                                                                == -88i32 as yaml_char_t
-                                                                    as libc::c_int
-                                                        || *((*parser).buffer.pointer)
-                                                            .c_offset(0 as libc::c_int as isize)
-                                                            as libc::c_int
-                                                            == -30i32 as yaml_char_t as libc::c_int
-                                                            && *((*parser).buffer.pointer).c_offset(
-                                                                (0 as libc::c_int
-                                                                    + 1 as libc::c_int)
-                                                                    as isize,
-                                                            )
-                                                                as libc::c_int
-                                                                == -128i32 as yaml_char_t
-                                                                    as libc::c_int
-                                                            && *((*parser).buffer.pointer).c_offset(
-                                                                (0 as libc::c_int
-                                                                    + 2 as libc::c_int)
-                                                                    as isize,
-                                                            )
-                                                                as libc::c_int
-                                                                == -87i32 as yaml_char_t
-                                                                    as libc::c_int
-                                                    {
-                                                        let fresh126 = &mut (*parser).mark.index;
-                                                        *fresh126 = (*fresh126).wrapping_add(1);
-                                                        (*parser).mark.column =
-                                                            0 as libc::c_int as size_t;
-                                                        let fresh127 = &mut (*parser).mark.line;
-                                                        *fresh127 = (*fresh127).wrapping_add(1);
-                                                        let fresh128 = &mut (*parser).unread;
-                                                        *fresh128 = (*fresh128).wrapping_sub(1);
-                                                        let fresh129 =
-                                                            &mut (*parser).buffer.pointer;
-                                                        *fresh129 = (*fresh129).c_offset(
-                                                            (if *((*parser).buffer.pointer)
-                                                                .c_offset(0 as libc::c_int as isize)
-                                                                as libc::c_int
-                                                                & 0x80 as libc::c_int
-                                                                == 0 as libc::c_int
-                                                            {
-                                                                1 as libc::c_int
-                                                            } else {
-                                                                if *((*parser).buffer.pointer)
-                                                                    .c_offset(
-                                                                        0 as libc::c_int as isize,
-                                                                    )
-                                                                    as libc::c_int
-                                                                    & 0xe0 as libc::c_int
-                                                                    == 0xc0 as libc::c_int
-                                                                {
-                                                                    2 as libc::c_int
-                                                                } else {
-                                                                    if *((*parser).buffer.pointer)
-                                                                        .c_offset(
-                                                                            0 as libc::c_int
-                                                                                as isize,
-                                                                        )
-                                                                        as libc::c_int
-                                                                        & 0xf0 as libc::c_int
-                                                                        == 0xe0 as libc::c_int
-                                                                    {
-                                                                        3 as libc::c_int
-                                                                    } else {
-                                                                        if *((*parser)
-                                                                            .buffer
-                                                                            .pointer)
-                                                                            .c_offset(
-                                                                                0 as libc::c_int
-                                                                                    as isize,
-                                                                            )
-                                                                            as libc::c_int
-                                                                            & 0xf8 as libc::c_int
-                                                                            == 0xf0 as libc::c_int
-                                                                        {
-                                                                            4 as libc::c_int
-                                                                        } else {
-                                                                            0 as libc::c_int
-                                                                        }
-                                                                    }
-                                                                }
-                                                            })
+                                                        == '\n' as i32 as yaml_char_t as libc::c_int
+                                                    || *((*parser).buffer.pointer)
+                                                        .c_offset(0 as libc::c_int as isize)
+                                                        as libc::c_int
+                                                        == -62i32 as yaml_char_t as libc::c_int
+                                                        && *((*parser).buffer.pointer).c_offset(
+                                                            (0 as libc::c_int + 1 as libc::c_int)
                                                                 as isize,
-                                                        );
-                                                    } else {
-                                                    };
+                                                        )
+                                                            as libc::c_int
+                                                            == -123i32 as yaml_char_t as libc::c_int
+                                                    || *((*parser).buffer.pointer)
+                                                        .c_offset(0 as libc::c_int as isize)
+                                                        as libc::c_int
+                                                        == -30i32 as yaml_char_t as libc::c_int
+                                                        && *((*parser).buffer.pointer).c_offset(
+                                                            (0 as libc::c_int + 1 as libc::c_int)
+                                                                as isize,
+                                                        )
+                                                            as libc::c_int
+                                                            == -128i32 as yaml_char_t as libc::c_int
+                                                        && *((*parser).buffer.pointer).c_offset(
+                                                            (0 as libc::c_int + 2 as libc::c_int)
+                                                                as isize,
+                                                        )
+                                                            as libc::c_int
+                                                            == -88i32 as yaml_char_t as libc::c_int
+                                                    || *((*parser).buffer.pointer)
+                                                        .c_offset(0 as libc::c_int as isize)
+                                                        as libc::c_int
+                                                        == -30i32 as yaml_char_t as libc::c_int
+                                                        && *((*parser).buffer.pointer).c_offset(
+                                                            (0 as libc::c_int + 1 as libc::c_int)
+                                                                as isize,
+                                                        )
+                                                            as libc::c_int
+                                                            == -128i32 as yaml_char_t as libc::c_int
+                                                        && *((*parser).buffer.pointer).c_offset(
+                                                            (0 as libc::c_int + 2 as libc::c_int)
+                                                                as isize,
+                                                        )
+                                                            as libc::c_int
+                                                            == -87i32 as yaml_char_t as libc::c_int
+                                                {
+                                                    let fresh126 = &mut (*parser).mark.index;
+                                                    *fresh126 = (*fresh126).wrapping_add(1);
+                                                    (*parser).mark.column =
+                                                        0 as libc::c_int as size_t;
+                                                    let fresh127 = &mut (*parser).mark.line;
+                                                    *fresh127 = (*fresh127).wrapping_add(1);
+                                                    let fresh128 = &mut (*parser).unread;
+                                                    *fresh128 = (*fresh128).wrapping_sub(1);
+                                                    let fresh129 = &mut (*parser).buffer.pointer;
+                                                    *fresh129 = (*fresh129).c_offset(
+                                                        (if *((*parser).buffer.pointer)
+                                                            .c_offset(0 as libc::c_int as isize)
+                                                            as libc::c_int
+                                                            & 0x80 as libc::c_int
+                                                            == 0 as libc::c_int
+                                                        {
+                                                            1 as libc::c_int
+                                                        } else if *((*parser).buffer.pointer)
+                                                            .c_offset(0 as libc::c_int as isize)
+                                                            as libc::c_int
+                                                            & 0xe0 as libc::c_int
+                                                            == 0xc0 as libc::c_int
+                                                        {
+                                                            2 as libc::c_int
+                                                        } else if *((*parser).buffer.pointer)
+                                                            .c_offset(0 as libc::c_int as isize)
+                                                            as libc::c_int
+                                                            & 0xf0 as libc::c_int
+                                                            == 0xe0 as libc::c_int
+                                                        {
+                                                            3 as libc::c_int
+                                                        } else if *((*parser).buffer.pointer)
+                                                            .c_offset(0 as libc::c_int as isize)
+                                                            as libc::c_int
+                                                            & 0xf8 as libc::c_int
+                                                            == 0xf0 as libc::c_int
+                                                        {
+                                                            4 as libc::c_int
+                                                        } else {
+                                                            0 as libc::c_int
+                                                        })
+                                                            as isize,
+                                                    );
+                                                } else {
                                                 };
                                                 current_block = 652864300344834934;
                                             }
@@ -3238,76 +3100,70 @@ unsafe extern "C" fn yaml_parser_scan_directive_name(
                         let fresh132 = string.pointer;
                         string.pointer = (string.pointer).c_offset(1);
                         *fresh132 = *fresh131;
+                    } else if *(*parser).buffer.pointer as libc::c_int & 0xe0 as libc::c_int
+                        == 0xc0 as libc::c_int
+                    {
+                        let fresh133 = &mut (*parser).buffer.pointer;
+                        let fresh134 = *fresh133;
+                        *fresh133 = (*fresh133).c_offset(1);
+                        let fresh135 = string.pointer;
+                        string.pointer = (string.pointer).c_offset(1);
+                        *fresh135 = *fresh134;
+                        let fresh136 = &mut (*parser).buffer.pointer;
+                        let fresh137 = *fresh136;
+                        *fresh136 = (*fresh136).c_offset(1);
+                        let fresh138 = string.pointer;
+                        string.pointer = (string.pointer).c_offset(1);
+                        *fresh138 = *fresh137;
+                    } else if *(*parser).buffer.pointer as libc::c_int & 0xf0 as libc::c_int
+                        == 0xe0 as libc::c_int
+                    {
+                        let fresh139 = &mut (*parser).buffer.pointer;
+                        let fresh140 = *fresh139;
+                        *fresh139 = (*fresh139).c_offset(1);
+                        let fresh141 = string.pointer;
+                        string.pointer = (string.pointer).c_offset(1);
+                        *fresh141 = *fresh140;
+                        let fresh142 = &mut (*parser).buffer.pointer;
+                        let fresh143 = *fresh142;
+                        *fresh142 = (*fresh142).c_offset(1);
+                        let fresh144 = string.pointer;
+                        string.pointer = (string.pointer).c_offset(1);
+                        *fresh144 = *fresh143;
+                        let fresh145 = &mut (*parser).buffer.pointer;
+                        let fresh146 = *fresh145;
+                        *fresh145 = (*fresh145).c_offset(1);
+                        let fresh147 = string.pointer;
+                        string.pointer = (string.pointer).c_offset(1);
+                        *fresh147 = *fresh146;
+                    } else if *(*parser).buffer.pointer as libc::c_int & 0xf8 as libc::c_int
+                        == 0xf0 as libc::c_int
+                    {
+                        let fresh148 = &mut (*parser).buffer.pointer;
+                        let fresh149 = *fresh148;
+                        *fresh148 = (*fresh148).c_offset(1);
+                        let fresh150 = string.pointer;
+                        string.pointer = (string.pointer).c_offset(1);
+                        *fresh150 = *fresh149;
+                        let fresh151 = &mut (*parser).buffer.pointer;
+                        let fresh152 = *fresh151;
+                        *fresh151 = (*fresh151).c_offset(1);
+                        let fresh153 = string.pointer;
+                        string.pointer = (string.pointer).c_offset(1);
+                        *fresh153 = *fresh152;
+                        let fresh154 = &mut (*parser).buffer.pointer;
+                        let fresh155 = *fresh154;
+                        *fresh154 = (*fresh154).c_offset(1);
+                        let fresh156 = string.pointer;
+                        string.pointer = (string.pointer).c_offset(1);
+                        *fresh156 = *fresh155;
+                        let fresh157 = &mut (*parser).buffer.pointer;
+                        let fresh158 = *fresh157;
+                        *fresh157 = (*fresh157).c_offset(1);
+                        let fresh159 = string.pointer;
+                        string.pointer = (string.pointer).c_offset(1);
+                        *fresh159 = *fresh158;
                     } else {
-                        if *(*parser).buffer.pointer as libc::c_int & 0xe0 as libc::c_int
-                            == 0xc0 as libc::c_int
-                        {
-                            let fresh133 = &mut (*parser).buffer.pointer;
-                            let fresh134 = *fresh133;
-                            *fresh133 = (*fresh133).c_offset(1);
-                            let fresh135 = string.pointer;
-                            string.pointer = (string.pointer).c_offset(1);
-                            *fresh135 = *fresh134;
-                            let fresh136 = &mut (*parser).buffer.pointer;
-                            let fresh137 = *fresh136;
-                            *fresh136 = (*fresh136).c_offset(1);
-                            let fresh138 = string.pointer;
-                            string.pointer = (string.pointer).c_offset(1);
-                            *fresh138 = *fresh137;
-                        } else {
-                            if *(*parser).buffer.pointer as libc::c_int & 0xf0 as libc::c_int
-                                == 0xe0 as libc::c_int
-                            {
-                                let fresh139 = &mut (*parser).buffer.pointer;
-                                let fresh140 = *fresh139;
-                                *fresh139 = (*fresh139).c_offset(1);
-                                let fresh141 = string.pointer;
-                                string.pointer = (string.pointer).c_offset(1);
-                                *fresh141 = *fresh140;
-                                let fresh142 = &mut (*parser).buffer.pointer;
-                                let fresh143 = *fresh142;
-                                *fresh142 = (*fresh142).c_offset(1);
-                                let fresh144 = string.pointer;
-                                string.pointer = (string.pointer).c_offset(1);
-                                *fresh144 = *fresh143;
-                                let fresh145 = &mut (*parser).buffer.pointer;
-                                let fresh146 = *fresh145;
-                                *fresh145 = (*fresh145).c_offset(1);
-                                let fresh147 = string.pointer;
-                                string.pointer = (string.pointer).c_offset(1);
-                                *fresh147 = *fresh146;
-                            } else {
-                                if *(*parser).buffer.pointer as libc::c_int & 0xf8 as libc::c_int
-                                    == 0xf0 as libc::c_int
-                                {
-                                    let fresh148 = &mut (*parser).buffer.pointer;
-                                    let fresh149 = *fresh148;
-                                    *fresh148 = (*fresh148).c_offset(1);
-                                    let fresh150 = string.pointer;
-                                    string.pointer = (string.pointer).c_offset(1);
-                                    *fresh150 = *fresh149;
-                                    let fresh151 = &mut (*parser).buffer.pointer;
-                                    let fresh152 = *fresh151;
-                                    *fresh151 = (*fresh151).c_offset(1);
-                                    let fresh153 = string.pointer;
-                                    string.pointer = (string.pointer).c_offset(1);
-                                    *fresh153 = *fresh152;
-                                    let fresh154 = &mut (*parser).buffer.pointer;
-                                    let fresh155 = *fresh154;
-                                    *fresh154 = (*fresh154).c_offset(1);
-                                    let fresh156 = string.pointer;
-                                    string.pointer = (string.pointer).c_offset(1);
-                                    *fresh156 = *fresh155;
-                                    let fresh157 = &mut (*parser).buffer.pointer;
-                                    let fresh158 = *fresh157;
-                                    *fresh157 = (*fresh157).c_offset(1);
-                                    let fresh159 = string.pointer;
-                                    string.pointer = (string.pointer).c_offset(1);
-                                    *fresh159 = *fresh158;
-                                } else {
-                                };
-                            };
-                        };
                     };
                     let fresh160 = &mut (*parser).mark.index;
                     *fresh160 = (*fresh160).wrapping_add(1);
@@ -3442,31 +3298,23 @@ unsafe extern "C" fn yaml_parser_scan_version_directive_value(
                 == 0 as libc::c_int
             {
                 1 as libc::c_int
+            } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                & 0xe0 as libc::c_int
+                == 0xc0 as libc::c_int
+            {
+                2 as libc::c_int
+            } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                & 0xf0 as libc::c_int
+                == 0xe0 as libc::c_int
+            {
+                3 as libc::c_int
+            } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                & 0xf8 as libc::c_int
+                == 0xf0 as libc::c_int
+            {
+                4 as libc::c_int
             } else {
-                if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                    & 0xe0 as libc::c_int
-                    == 0xc0 as libc::c_int
-                {
-                    2 as libc::c_int
-                } else {
-                    if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                        as libc::c_int
-                        & 0xf0 as libc::c_int
-                        == 0xe0 as libc::c_int
-                    {
-                        3 as libc::c_int
-                    } else {
-                        if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                            as libc::c_int
-                            & 0xf8 as libc::c_int
-                            == 0xf0 as libc::c_int
-                        {
-                            4 as libc::c_int
-                        } else {
-                            0 as libc::c_int
-                        }
-                    }
-                }
+                0 as libc::c_int
             }) as isize,
         );
         if if (*parser).unread >= 1 as libc::c_int as libc::c_ulong {
@@ -3504,30 +3352,23 @@ unsafe extern "C" fn yaml_parser_scan_version_directive_value(
             == 0 as libc::c_int
         {
             1 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xe0 as libc::c_int
+            == 0xc0 as libc::c_int
+        {
+            2 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xf0 as libc::c_int
+            == 0xe0 as libc::c_int
+        {
+            3 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            & 0xf8 as libc::c_int
+            == 0xf0 as libc::c_int
+        {
+            4 as libc::c_int
         } else {
-            if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                & 0xe0 as libc::c_int
-                == 0xc0 as libc::c_int
-            {
-                2 as libc::c_int
-            } else {
-                if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                    & 0xf0 as libc::c_int
-                    == 0xe0 as libc::c_int
-                {
-                    3 as libc::c_int
-                } else {
-                    if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                        as libc::c_int
-                        & 0xf8 as libc::c_int
-                        == 0xf0 as libc::c_int
-                    {
-                        4 as libc::c_int
-                    } else {
-                        0 as libc::c_int
-                    }
-                }
-            }
+            0 as libc::c_int
         }) as isize,
     );
     if yaml_parser_scan_version_directive_number(parser, start_mark, minor) == 0 {
@@ -3580,31 +3421,23 @@ unsafe extern "C" fn yaml_parser_scan_version_directive_number(
                 == 0 as libc::c_int
             {
                 1 as libc::c_int
+            } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                & 0xe0 as libc::c_int
+                == 0xc0 as libc::c_int
+            {
+                2 as libc::c_int
+            } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                & 0xf0 as libc::c_int
+                == 0xe0 as libc::c_int
+            {
+                3 as libc::c_int
+            } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                & 0xf8 as libc::c_int
+                == 0xf0 as libc::c_int
+            {
+                4 as libc::c_int
             } else {
-                if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                    & 0xe0 as libc::c_int
-                    == 0xc0 as libc::c_int
-                {
-                    2 as libc::c_int
-                } else {
-                    if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                        as libc::c_int
-                        & 0xf0 as libc::c_int
-                        == 0xe0 as libc::c_int
-                    {
-                        3 as libc::c_int
-                    } else {
-                        if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                            as libc::c_int
-                            & 0xf8 as libc::c_int
-                            == 0xf0 as libc::c_int
-                        {
-                            4 as libc::c_int
-                        } else {
-                            0 as libc::c_int
-                        }
-                    }
-                }
+                0 as libc::c_int
             }) as isize,
         );
         if if (*parser).unread >= 1 as libc::c_int as libc::c_ulong {
@@ -3674,33 +3507,26 @@ unsafe extern "C" fn yaml_parser_scan_tag_directive_value(
                             == 0 as libc::c_int
                         {
                             1 as libc::c_int
+                        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                            as libc::c_int
+                            & 0xe0 as libc::c_int
+                            == 0xc0 as libc::c_int
+                        {
+                            2 as libc::c_int
+                        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                            as libc::c_int
+                            & 0xf0 as libc::c_int
+                            == 0xe0 as libc::c_int
+                        {
+                            3 as libc::c_int
+                        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                            as libc::c_int
+                            & 0xf8 as libc::c_int
+                            == 0xf0 as libc::c_int
+                        {
+                            4 as libc::c_int
                         } else {
-                            if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                                as libc::c_int
-                                & 0xe0 as libc::c_int
-                                == 0xc0 as libc::c_int
-                            {
-                                2 as libc::c_int
-                            } else {
-                                if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                                    as libc::c_int
-                                    & 0xf0 as libc::c_int
-                                    == 0xe0 as libc::c_int
-                                {
-                                    3 as libc::c_int
-                                } else {
-                                    if *((*parser).buffer.pointer)
-                                        .c_offset(0 as libc::c_int as isize)
-                                        as libc::c_int
-                                        & 0xf8 as libc::c_int
-                                        == 0xf0 as libc::c_int
-                                    {
-                                        4 as libc::c_int
-                                    } else {
-                                        0 as libc::c_int
-                                    }
-                                }
-                            }
+                            0 as libc::c_int
                         }) as isize,
                     );
                     if if (*parser).unread >= 1 as libc::c_int as libc::c_ulong {
@@ -3771,35 +3597,29 @@ unsafe extern "C" fn yaml_parser_scan_tag_directive_value(
                                     == 0 as libc::c_int
                                 {
                                     1 as libc::c_int
+                                } else if *((*parser).buffer.pointer)
+                                    .c_offset(0 as libc::c_int as isize)
+                                    as libc::c_int
+                                    & 0xe0 as libc::c_int
+                                    == 0xc0 as libc::c_int
+                                {
+                                    2 as libc::c_int
+                                } else if *((*parser).buffer.pointer)
+                                    .c_offset(0 as libc::c_int as isize)
+                                    as libc::c_int
+                                    & 0xf0 as libc::c_int
+                                    == 0xe0 as libc::c_int
+                                {
+                                    3 as libc::c_int
+                                } else if *((*parser).buffer.pointer)
+                                    .c_offset(0 as libc::c_int as isize)
+                                    as libc::c_int
+                                    & 0xf8 as libc::c_int
+                                    == 0xf0 as libc::c_int
+                                {
+                                    4 as libc::c_int
                                 } else {
-                                    if *((*parser).buffer.pointer)
-                                        .c_offset(0 as libc::c_int as isize)
-                                        as libc::c_int
-                                        & 0xe0 as libc::c_int
-                                        == 0xc0 as libc::c_int
-                                    {
-                                        2 as libc::c_int
-                                    } else {
-                                        if *((*parser).buffer.pointer)
-                                            .c_offset(0 as libc::c_int as isize)
-                                            as libc::c_int
-                                            & 0xf0 as libc::c_int
-                                            == 0xe0 as libc::c_int
-                                        {
-                                            3 as libc::c_int
-                                        } else {
-                                            if *((*parser).buffer.pointer)
-                                                .c_offset(0 as libc::c_int as isize)
-                                                as libc::c_int
-                                                & 0xf8 as libc::c_int
-                                                == 0xf0 as libc::c_int
-                                            {
-                                                4 as libc::c_int
-                                            } else {
-                                                0 as libc::c_int
-                                            }
-                                        }
-                                    }
+                                    0 as libc::c_int
                                 }) as isize,
                             );
                             if if (*parser).unread >= 1 as libc::c_int as libc::c_ulong {
@@ -3943,31 +3763,23 @@ unsafe extern "C" fn yaml_parser_scan_anchor(
                 == 0 as libc::c_int
             {
                 1 as libc::c_int
+            } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                & 0xe0 as libc::c_int
+                == 0xc0 as libc::c_int
+            {
+                2 as libc::c_int
+            } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                & 0xf0 as libc::c_int
+                == 0xe0 as libc::c_int
+            {
+                3 as libc::c_int
+            } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                & 0xf8 as libc::c_int
+                == 0xf0 as libc::c_int
+            {
+                4 as libc::c_int
             } else {
-                if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                    & 0xe0 as libc::c_int
-                    == 0xc0 as libc::c_int
-                {
-                    2 as libc::c_int
-                } else {
-                    if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                        as libc::c_int
-                        & 0xf0 as libc::c_int
-                        == 0xe0 as libc::c_int
-                    {
-                        3 as libc::c_int
-                    } else {
-                        if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                            as libc::c_int
-                            & 0xf8 as libc::c_int
-                            == 0xf0 as libc::c_int
-                        {
-                            4 as libc::c_int
-                        } else {
-                            0 as libc::c_int
-                        }
-                    }
-                }
+                0 as libc::c_int
             }) as isize,
         );
         if !(if (*parser).unread >= 1 as libc::c_int as libc::c_ulong {
@@ -4023,76 +3835,70 @@ unsafe extern "C" fn yaml_parser_scan_anchor(
                         let fresh189 = string.pointer;
                         string.pointer = (string.pointer).c_offset(1);
                         *fresh189 = *fresh188;
+                    } else if *(*parser).buffer.pointer as libc::c_int & 0xe0 as libc::c_int
+                        == 0xc0 as libc::c_int
+                    {
+                        let fresh190 = &mut (*parser).buffer.pointer;
+                        let fresh191 = *fresh190;
+                        *fresh190 = (*fresh190).c_offset(1);
+                        let fresh192 = string.pointer;
+                        string.pointer = (string.pointer).c_offset(1);
+                        *fresh192 = *fresh191;
+                        let fresh193 = &mut (*parser).buffer.pointer;
+                        let fresh194 = *fresh193;
+                        *fresh193 = (*fresh193).c_offset(1);
+                        let fresh195 = string.pointer;
+                        string.pointer = (string.pointer).c_offset(1);
+                        *fresh195 = *fresh194;
+                    } else if *(*parser).buffer.pointer as libc::c_int & 0xf0 as libc::c_int
+                        == 0xe0 as libc::c_int
+                    {
+                        let fresh196 = &mut (*parser).buffer.pointer;
+                        let fresh197 = *fresh196;
+                        *fresh196 = (*fresh196).c_offset(1);
+                        let fresh198 = string.pointer;
+                        string.pointer = (string.pointer).c_offset(1);
+                        *fresh198 = *fresh197;
+                        let fresh199 = &mut (*parser).buffer.pointer;
+                        let fresh200 = *fresh199;
+                        *fresh199 = (*fresh199).c_offset(1);
+                        let fresh201 = string.pointer;
+                        string.pointer = (string.pointer).c_offset(1);
+                        *fresh201 = *fresh200;
+                        let fresh202 = &mut (*parser).buffer.pointer;
+                        let fresh203 = *fresh202;
+                        *fresh202 = (*fresh202).c_offset(1);
+                        let fresh204 = string.pointer;
+                        string.pointer = (string.pointer).c_offset(1);
+                        *fresh204 = *fresh203;
+                    } else if *(*parser).buffer.pointer as libc::c_int & 0xf8 as libc::c_int
+                        == 0xf0 as libc::c_int
+                    {
+                        let fresh205 = &mut (*parser).buffer.pointer;
+                        let fresh206 = *fresh205;
+                        *fresh205 = (*fresh205).c_offset(1);
+                        let fresh207 = string.pointer;
+                        string.pointer = (string.pointer).c_offset(1);
+                        *fresh207 = *fresh206;
+                        let fresh208 = &mut (*parser).buffer.pointer;
+                        let fresh209 = *fresh208;
+                        *fresh208 = (*fresh208).c_offset(1);
+                        let fresh210 = string.pointer;
+                        string.pointer = (string.pointer).c_offset(1);
+                        *fresh210 = *fresh209;
+                        let fresh211 = &mut (*parser).buffer.pointer;
+                        let fresh212 = *fresh211;
+                        *fresh211 = (*fresh211).c_offset(1);
+                        let fresh213 = string.pointer;
+                        string.pointer = (string.pointer).c_offset(1);
+                        *fresh213 = *fresh212;
+                        let fresh214 = &mut (*parser).buffer.pointer;
+                        let fresh215 = *fresh214;
+                        *fresh214 = (*fresh214).c_offset(1);
+                        let fresh216 = string.pointer;
+                        string.pointer = (string.pointer).c_offset(1);
+                        *fresh216 = *fresh215;
                     } else {
-                        if *(*parser).buffer.pointer as libc::c_int & 0xe0 as libc::c_int
-                            == 0xc0 as libc::c_int
-                        {
-                            let fresh190 = &mut (*parser).buffer.pointer;
-                            let fresh191 = *fresh190;
-                            *fresh190 = (*fresh190).c_offset(1);
-                            let fresh192 = string.pointer;
-                            string.pointer = (string.pointer).c_offset(1);
-                            *fresh192 = *fresh191;
-                            let fresh193 = &mut (*parser).buffer.pointer;
-                            let fresh194 = *fresh193;
-                            *fresh193 = (*fresh193).c_offset(1);
-                            let fresh195 = string.pointer;
-                            string.pointer = (string.pointer).c_offset(1);
-                            *fresh195 = *fresh194;
-                        } else {
-                            if *(*parser).buffer.pointer as libc::c_int & 0xf0 as libc::c_int
-                                == 0xe0 as libc::c_int
-                            {
-                                let fresh196 = &mut (*parser).buffer.pointer;
-                                let fresh197 = *fresh196;
-                                *fresh196 = (*fresh196).c_offset(1);
-                                let fresh198 = string.pointer;
-                                string.pointer = (string.pointer).c_offset(1);
-                                *fresh198 = *fresh197;
-                                let fresh199 = &mut (*parser).buffer.pointer;
-                                let fresh200 = *fresh199;
-                                *fresh199 = (*fresh199).c_offset(1);
-                                let fresh201 = string.pointer;
-                                string.pointer = (string.pointer).c_offset(1);
-                                *fresh201 = *fresh200;
-                                let fresh202 = &mut (*parser).buffer.pointer;
-                                let fresh203 = *fresh202;
-                                *fresh202 = (*fresh202).c_offset(1);
-                                let fresh204 = string.pointer;
-                                string.pointer = (string.pointer).c_offset(1);
-                                *fresh204 = *fresh203;
-                            } else {
-                                if *(*parser).buffer.pointer as libc::c_int & 0xf8 as libc::c_int
-                                    == 0xf0 as libc::c_int
-                                {
-                                    let fresh205 = &mut (*parser).buffer.pointer;
-                                    let fresh206 = *fresh205;
-                                    *fresh205 = (*fresh205).c_offset(1);
-                                    let fresh207 = string.pointer;
-                                    string.pointer = (string.pointer).c_offset(1);
-                                    *fresh207 = *fresh206;
-                                    let fresh208 = &mut (*parser).buffer.pointer;
-                                    let fresh209 = *fresh208;
-                                    *fresh208 = (*fresh208).c_offset(1);
-                                    let fresh210 = string.pointer;
-                                    string.pointer = (string.pointer).c_offset(1);
-                                    *fresh210 = *fresh209;
-                                    let fresh211 = &mut (*parser).buffer.pointer;
-                                    let fresh212 = *fresh211;
-                                    *fresh211 = (*fresh211).c_offset(1);
-                                    let fresh213 = string.pointer;
-                                    string.pointer = (string.pointer).c_offset(1);
-                                    *fresh213 = *fresh212;
-                                    let fresh214 = &mut (*parser).buffer.pointer;
-                                    let fresh215 = *fresh214;
-                                    *fresh214 = (*fresh214).c_offset(1);
-                                    let fresh216 = string.pointer;
-                                    string.pointer = (string.pointer).c_offset(1);
-                                    *fresh216 = *fresh215;
-                                } else {
-                                };
-                            };
-                        };
                     };
                     let fresh217 = &mut (*parser).mark.index;
                     *fresh217 = (*fresh217).wrapping_add(1);
@@ -4281,32 +4087,26 @@ unsafe extern "C" fn yaml_parser_scan_tag(
                         == 0 as libc::c_int
                     {
                         1 as libc::c_int
+                    } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                        as libc::c_int
+                        & 0xe0 as libc::c_int
+                        == 0xc0 as libc::c_int
+                    {
+                        2 as libc::c_int
+                    } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                        as libc::c_int
+                        & 0xf0 as libc::c_int
+                        == 0xe0 as libc::c_int
+                    {
+                        3 as libc::c_int
+                    } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                        as libc::c_int
+                        & 0xf8 as libc::c_int
+                        == 0xf0 as libc::c_int
+                    {
+                        4 as libc::c_int
                     } else {
-                        if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                            as libc::c_int
-                            & 0xe0 as libc::c_int
-                            == 0xc0 as libc::c_int
-                        {
-                            2 as libc::c_int
-                        } else {
-                            if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                                as libc::c_int
-                                & 0xf0 as libc::c_int
-                                == 0xe0 as libc::c_int
-                            {
-                                3 as libc::c_int
-                            } else {
-                                if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                                    as libc::c_int
-                                    & 0xf8 as libc::c_int
-                                    == 0xf0 as libc::c_int
-                                {
-                                    4 as libc::c_int
-                                } else {
-                                    0 as libc::c_int
-                                }
-                            }
-                        }
+                        0 as libc::c_int
                     }) as isize,
                 );
                 let fresh226 = &mut (*parser).mark.index;
@@ -4323,32 +4123,26 @@ unsafe extern "C" fn yaml_parser_scan_tag(
                         == 0 as libc::c_int
                     {
                         1 as libc::c_int
+                    } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                        as libc::c_int
+                        & 0xe0 as libc::c_int
+                        == 0xc0 as libc::c_int
+                    {
+                        2 as libc::c_int
+                    } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                        as libc::c_int
+                        & 0xf0 as libc::c_int
+                        == 0xe0 as libc::c_int
+                    {
+                        3 as libc::c_int
+                    } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                        as libc::c_int
+                        & 0xf8 as libc::c_int
+                        == 0xf0 as libc::c_int
+                    {
+                        4 as libc::c_int
                     } else {
-                        if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                            as libc::c_int
-                            & 0xe0 as libc::c_int
-                            == 0xc0 as libc::c_int
-                        {
-                            2 as libc::c_int
-                        } else {
-                            if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                                as libc::c_int
-                                & 0xf0 as libc::c_int
-                                == 0xe0 as libc::c_int
-                            {
-                                3 as libc::c_int
-                            } else {
-                                if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                                    as libc::c_int
-                                    & 0xf8 as libc::c_int
-                                    == 0xf0 as libc::c_int
-                                {
-                                    4 as libc::c_int
-                                } else {
-                                    0 as libc::c_int
-                                }
-                            }
-                        }
+                        0 as libc::c_int
                     }) as isize,
                 );
                 if yaml_parser_scan_tag_uri(
@@ -4387,33 +4181,26 @@ unsafe extern "C" fn yaml_parser_scan_tag(
                             == 0 as libc::c_int
                         {
                             1 as libc::c_int
+                        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                            as libc::c_int
+                            & 0xe0 as libc::c_int
+                            == 0xc0 as libc::c_int
+                        {
+                            2 as libc::c_int
+                        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                            as libc::c_int
+                            & 0xf0 as libc::c_int
+                            == 0xe0 as libc::c_int
+                        {
+                            3 as libc::c_int
+                        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                            as libc::c_int
+                            & 0xf8 as libc::c_int
+                            == 0xf0 as libc::c_int
+                        {
+                            4 as libc::c_int
                         } else {
-                            if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                                as libc::c_int
-                                & 0xe0 as libc::c_int
-                                == 0xc0 as libc::c_int
-                            {
-                                2 as libc::c_int
-                            } else {
-                                if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                                    as libc::c_int
-                                    & 0xf0 as libc::c_int
-                                    == 0xe0 as libc::c_int
-                                {
-                                    3 as libc::c_int
-                                } else {
-                                    if *((*parser).buffer.pointer)
-                                        .c_offset(0 as libc::c_int as isize)
-                                        as libc::c_int
-                                        & 0xf8 as libc::c_int
-                                        == 0xf0 as libc::c_int
-                                    {
-                                        4 as libc::c_int
-                                    } else {
-                                        0 as libc::c_int
-                                    }
-                                }
-                            }
+                            0 as libc::c_int
                         }) as isize,
                     );
                     current_block = 4488286894823169796;
@@ -4636,76 +4423,70 @@ unsafe extern "C" fn yaml_parser_scan_tag_handle(
                     let fresh238 = string.pointer;
                     string.pointer = (string.pointer).c_offset(1);
                     *fresh238 = *fresh237;
+                } else if *(*parser).buffer.pointer as libc::c_int & 0xe0 as libc::c_int
+                    == 0xc0 as libc::c_int
+                {
+                    let fresh239 = &mut (*parser).buffer.pointer;
+                    let fresh240 = *fresh239;
+                    *fresh239 = (*fresh239).c_offset(1);
+                    let fresh241 = string.pointer;
+                    string.pointer = (string.pointer).c_offset(1);
+                    *fresh241 = *fresh240;
+                    let fresh242 = &mut (*parser).buffer.pointer;
+                    let fresh243 = *fresh242;
+                    *fresh242 = (*fresh242).c_offset(1);
+                    let fresh244 = string.pointer;
+                    string.pointer = (string.pointer).c_offset(1);
+                    *fresh244 = *fresh243;
+                } else if *(*parser).buffer.pointer as libc::c_int & 0xf0 as libc::c_int
+                    == 0xe0 as libc::c_int
+                {
+                    let fresh245 = &mut (*parser).buffer.pointer;
+                    let fresh246 = *fresh245;
+                    *fresh245 = (*fresh245).c_offset(1);
+                    let fresh247 = string.pointer;
+                    string.pointer = (string.pointer).c_offset(1);
+                    *fresh247 = *fresh246;
+                    let fresh248 = &mut (*parser).buffer.pointer;
+                    let fresh249 = *fresh248;
+                    *fresh248 = (*fresh248).c_offset(1);
+                    let fresh250 = string.pointer;
+                    string.pointer = (string.pointer).c_offset(1);
+                    *fresh250 = *fresh249;
+                    let fresh251 = &mut (*parser).buffer.pointer;
+                    let fresh252 = *fresh251;
+                    *fresh251 = (*fresh251).c_offset(1);
+                    let fresh253 = string.pointer;
+                    string.pointer = (string.pointer).c_offset(1);
+                    *fresh253 = *fresh252;
+                } else if *(*parser).buffer.pointer as libc::c_int & 0xf8 as libc::c_int
+                    == 0xf0 as libc::c_int
+                {
+                    let fresh254 = &mut (*parser).buffer.pointer;
+                    let fresh255 = *fresh254;
+                    *fresh254 = (*fresh254).c_offset(1);
+                    let fresh256 = string.pointer;
+                    string.pointer = (string.pointer).c_offset(1);
+                    *fresh256 = *fresh255;
+                    let fresh257 = &mut (*parser).buffer.pointer;
+                    let fresh258 = *fresh257;
+                    *fresh257 = (*fresh257).c_offset(1);
+                    let fresh259 = string.pointer;
+                    string.pointer = (string.pointer).c_offset(1);
+                    *fresh259 = *fresh258;
+                    let fresh260 = &mut (*parser).buffer.pointer;
+                    let fresh261 = *fresh260;
+                    *fresh260 = (*fresh260).c_offset(1);
+                    let fresh262 = string.pointer;
+                    string.pointer = (string.pointer).c_offset(1);
+                    *fresh262 = *fresh261;
+                    let fresh263 = &mut (*parser).buffer.pointer;
+                    let fresh264 = *fresh263;
+                    *fresh263 = (*fresh263).c_offset(1);
+                    let fresh265 = string.pointer;
+                    string.pointer = (string.pointer).c_offset(1);
+                    *fresh265 = *fresh264;
                 } else {
-                    if *(*parser).buffer.pointer as libc::c_int & 0xe0 as libc::c_int
-                        == 0xc0 as libc::c_int
-                    {
-                        let fresh239 = &mut (*parser).buffer.pointer;
-                        let fresh240 = *fresh239;
-                        *fresh239 = (*fresh239).c_offset(1);
-                        let fresh241 = string.pointer;
-                        string.pointer = (string.pointer).c_offset(1);
-                        *fresh241 = *fresh240;
-                        let fresh242 = &mut (*parser).buffer.pointer;
-                        let fresh243 = *fresh242;
-                        *fresh242 = (*fresh242).c_offset(1);
-                        let fresh244 = string.pointer;
-                        string.pointer = (string.pointer).c_offset(1);
-                        *fresh244 = *fresh243;
-                    } else {
-                        if *(*parser).buffer.pointer as libc::c_int & 0xf0 as libc::c_int
-                            == 0xe0 as libc::c_int
-                        {
-                            let fresh245 = &mut (*parser).buffer.pointer;
-                            let fresh246 = *fresh245;
-                            *fresh245 = (*fresh245).c_offset(1);
-                            let fresh247 = string.pointer;
-                            string.pointer = (string.pointer).c_offset(1);
-                            *fresh247 = *fresh246;
-                            let fresh248 = &mut (*parser).buffer.pointer;
-                            let fresh249 = *fresh248;
-                            *fresh248 = (*fresh248).c_offset(1);
-                            let fresh250 = string.pointer;
-                            string.pointer = (string.pointer).c_offset(1);
-                            *fresh250 = *fresh249;
-                            let fresh251 = &mut (*parser).buffer.pointer;
-                            let fresh252 = *fresh251;
-                            *fresh251 = (*fresh251).c_offset(1);
-                            let fresh253 = string.pointer;
-                            string.pointer = (string.pointer).c_offset(1);
-                            *fresh253 = *fresh252;
-                        } else {
-                            if *(*parser).buffer.pointer as libc::c_int & 0xf8 as libc::c_int
-                                == 0xf0 as libc::c_int
-                            {
-                                let fresh254 = &mut (*parser).buffer.pointer;
-                                let fresh255 = *fresh254;
-                                *fresh254 = (*fresh254).c_offset(1);
-                                let fresh256 = string.pointer;
-                                string.pointer = (string.pointer).c_offset(1);
-                                *fresh256 = *fresh255;
-                                let fresh257 = &mut (*parser).buffer.pointer;
-                                let fresh258 = *fresh257;
-                                *fresh257 = (*fresh257).c_offset(1);
-                                let fresh259 = string.pointer;
-                                string.pointer = (string.pointer).c_offset(1);
-                                *fresh259 = *fresh258;
-                                let fresh260 = &mut (*parser).buffer.pointer;
-                                let fresh261 = *fresh260;
-                                *fresh260 = (*fresh260).c_offset(1);
-                                let fresh262 = string.pointer;
-                                string.pointer = (string.pointer).c_offset(1);
-                                *fresh262 = *fresh261;
-                                let fresh263 = &mut (*parser).buffer.pointer;
-                                let fresh264 = *fresh263;
-                                *fresh263 = (*fresh263).c_offset(1);
-                                let fresh265 = string.pointer;
-                                string.pointer = (string.pointer).c_offset(1);
-                                *fresh265 = *fresh264;
-                            } else {
-                            };
-                        };
-                    };
                 };
                 let fresh266 = &mut (*parser).mark.index;
                 *fresh266 = (*fresh266).wrapping_add(1);
@@ -4775,78 +4556,70 @@ unsafe extern "C" fn yaml_parser_scan_tag_handle(
                                 let fresh271 = string.pointer;
                                 string.pointer = (string.pointer).c_offset(1);
                                 *fresh271 = *fresh270;
+                            } else if *(*parser).buffer.pointer as libc::c_int & 0xe0 as libc::c_int
+                                == 0xc0 as libc::c_int
+                            {
+                                let fresh272 = &mut (*parser).buffer.pointer;
+                                let fresh273 = *fresh272;
+                                *fresh272 = (*fresh272).c_offset(1);
+                                let fresh274 = string.pointer;
+                                string.pointer = (string.pointer).c_offset(1);
+                                *fresh274 = *fresh273;
+                                let fresh275 = &mut (*parser).buffer.pointer;
+                                let fresh276 = *fresh275;
+                                *fresh275 = (*fresh275).c_offset(1);
+                                let fresh277 = string.pointer;
+                                string.pointer = (string.pointer).c_offset(1);
+                                *fresh277 = *fresh276;
+                            } else if *(*parser).buffer.pointer as libc::c_int & 0xf0 as libc::c_int
+                                == 0xe0 as libc::c_int
+                            {
+                                let fresh278 = &mut (*parser).buffer.pointer;
+                                let fresh279 = *fresh278;
+                                *fresh278 = (*fresh278).c_offset(1);
+                                let fresh280 = string.pointer;
+                                string.pointer = (string.pointer).c_offset(1);
+                                *fresh280 = *fresh279;
+                                let fresh281 = &mut (*parser).buffer.pointer;
+                                let fresh282 = *fresh281;
+                                *fresh281 = (*fresh281).c_offset(1);
+                                let fresh283 = string.pointer;
+                                string.pointer = (string.pointer).c_offset(1);
+                                *fresh283 = *fresh282;
+                                let fresh284 = &mut (*parser).buffer.pointer;
+                                let fresh285 = *fresh284;
+                                *fresh284 = (*fresh284).c_offset(1);
+                                let fresh286 = string.pointer;
+                                string.pointer = (string.pointer).c_offset(1);
+                                *fresh286 = *fresh285;
+                            } else if *(*parser).buffer.pointer as libc::c_int & 0xf8 as libc::c_int
+                                == 0xf0 as libc::c_int
+                            {
+                                let fresh287 = &mut (*parser).buffer.pointer;
+                                let fresh288 = *fresh287;
+                                *fresh287 = (*fresh287).c_offset(1);
+                                let fresh289 = string.pointer;
+                                string.pointer = (string.pointer).c_offset(1);
+                                *fresh289 = *fresh288;
+                                let fresh290 = &mut (*parser).buffer.pointer;
+                                let fresh291 = *fresh290;
+                                *fresh290 = (*fresh290).c_offset(1);
+                                let fresh292 = string.pointer;
+                                string.pointer = (string.pointer).c_offset(1);
+                                *fresh292 = *fresh291;
+                                let fresh293 = &mut (*parser).buffer.pointer;
+                                let fresh294 = *fresh293;
+                                *fresh293 = (*fresh293).c_offset(1);
+                                let fresh295 = string.pointer;
+                                string.pointer = (string.pointer).c_offset(1);
+                                *fresh295 = *fresh294;
+                                let fresh296 = &mut (*parser).buffer.pointer;
+                                let fresh297 = *fresh296;
+                                *fresh296 = (*fresh296).c_offset(1);
+                                let fresh298 = string.pointer;
+                                string.pointer = (string.pointer).c_offset(1);
+                                *fresh298 = *fresh297;
                             } else {
-                                if *(*parser).buffer.pointer as libc::c_int & 0xe0 as libc::c_int
-                                    == 0xc0 as libc::c_int
-                                {
-                                    let fresh272 = &mut (*parser).buffer.pointer;
-                                    let fresh273 = *fresh272;
-                                    *fresh272 = (*fresh272).c_offset(1);
-                                    let fresh274 = string.pointer;
-                                    string.pointer = (string.pointer).c_offset(1);
-                                    *fresh274 = *fresh273;
-                                    let fresh275 = &mut (*parser).buffer.pointer;
-                                    let fresh276 = *fresh275;
-                                    *fresh275 = (*fresh275).c_offset(1);
-                                    let fresh277 = string.pointer;
-                                    string.pointer = (string.pointer).c_offset(1);
-                                    *fresh277 = *fresh276;
-                                } else {
-                                    if *(*parser).buffer.pointer as libc::c_int
-                                        & 0xf0 as libc::c_int
-                                        == 0xe0 as libc::c_int
-                                    {
-                                        let fresh278 = &mut (*parser).buffer.pointer;
-                                        let fresh279 = *fresh278;
-                                        *fresh278 = (*fresh278).c_offset(1);
-                                        let fresh280 = string.pointer;
-                                        string.pointer = (string.pointer).c_offset(1);
-                                        *fresh280 = *fresh279;
-                                        let fresh281 = &mut (*parser).buffer.pointer;
-                                        let fresh282 = *fresh281;
-                                        *fresh281 = (*fresh281).c_offset(1);
-                                        let fresh283 = string.pointer;
-                                        string.pointer = (string.pointer).c_offset(1);
-                                        *fresh283 = *fresh282;
-                                        let fresh284 = &mut (*parser).buffer.pointer;
-                                        let fresh285 = *fresh284;
-                                        *fresh284 = (*fresh284).c_offset(1);
-                                        let fresh286 = string.pointer;
-                                        string.pointer = (string.pointer).c_offset(1);
-                                        *fresh286 = *fresh285;
-                                    } else {
-                                        if *(*parser).buffer.pointer as libc::c_int
-                                            & 0xf8 as libc::c_int
-                                            == 0xf0 as libc::c_int
-                                        {
-                                            let fresh287 = &mut (*parser).buffer.pointer;
-                                            let fresh288 = *fresh287;
-                                            *fresh287 = (*fresh287).c_offset(1);
-                                            let fresh289 = string.pointer;
-                                            string.pointer = (string.pointer).c_offset(1);
-                                            *fresh289 = *fresh288;
-                                            let fresh290 = &mut (*parser).buffer.pointer;
-                                            let fresh291 = *fresh290;
-                                            *fresh290 = (*fresh290).c_offset(1);
-                                            let fresh292 = string.pointer;
-                                            string.pointer = (string.pointer).c_offset(1);
-                                            *fresh292 = *fresh291;
-                                            let fresh293 = &mut (*parser).buffer.pointer;
-                                            let fresh294 = *fresh293;
-                                            *fresh293 = (*fresh293).c_offset(1);
-                                            let fresh295 = string.pointer;
-                                            string.pointer = (string.pointer).c_offset(1);
-                                            *fresh295 = *fresh294;
-                                            let fresh296 = &mut (*parser).buffer.pointer;
-                                            let fresh297 = *fresh296;
-                                            *fresh296 = (*fresh296).c_offset(1);
-                                            let fresh298 = string.pointer;
-                                            string.pointer = (string.pointer).c_offset(1);
-                                            *fresh298 = *fresh297;
-                                        } else {
-                                        };
-                                    };
-                                };
                             };
                             let fresh299 = &mut (*parser).mark.index;
                             *fresh299 = (*fresh299).wrapping_add(1);
@@ -4903,79 +4676,73 @@ unsafe extern "C" fn yaml_parser_scan_tag_handle(
                                         let fresh304 = string.pointer;
                                         string.pointer = (string.pointer).c_offset(1);
                                         *fresh304 = *fresh303;
+                                    } else if *(*parser).buffer.pointer as libc::c_int
+                                        & 0xe0 as libc::c_int
+                                        == 0xc0 as libc::c_int
+                                    {
+                                        let fresh305 = &mut (*parser).buffer.pointer;
+                                        let fresh306 = *fresh305;
+                                        *fresh305 = (*fresh305).c_offset(1);
+                                        let fresh307 = string.pointer;
+                                        string.pointer = (string.pointer).c_offset(1);
+                                        *fresh307 = *fresh306;
+                                        let fresh308 = &mut (*parser).buffer.pointer;
+                                        let fresh309 = *fresh308;
+                                        *fresh308 = (*fresh308).c_offset(1);
+                                        let fresh310 = string.pointer;
+                                        string.pointer = (string.pointer).c_offset(1);
+                                        *fresh310 = *fresh309;
+                                    } else if *(*parser).buffer.pointer as libc::c_int
+                                        & 0xf0 as libc::c_int
+                                        == 0xe0 as libc::c_int
+                                    {
+                                        let fresh311 = &mut (*parser).buffer.pointer;
+                                        let fresh312 = *fresh311;
+                                        *fresh311 = (*fresh311).c_offset(1);
+                                        let fresh313 = string.pointer;
+                                        string.pointer = (string.pointer).c_offset(1);
+                                        *fresh313 = *fresh312;
+                                        let fresh314 = &mut (*parser).buffer.pointer;
+                                        let fresh315 = *fresh314;
+                                        *fresh314 = (*fresh314).c_offset(1);
+                                        let fresh316 = string.pointer;
+                                        string.pointer = (string.pointer).c_offset(1);
+                                        *fresh316 = *fresh315;
+                                        let fresh317 = &mut (*parser).buffer.pointer;
+                                        let fresh318 = *fresh317;
+                                        *fresh317 = (*fresh317).c_offset(1);
+                                        let fresh319 = string.pointer;
+                                        string.pointer = (string.pointer).c_offset(1);
+                                        *fresh319 = *fresh318;
+                                    } else if *(*parser).buffer.pointer as libc::c_int
+                                        & 0xf8 as libc::c_int
+                                        == 0xf0 as libc::c_int
+                                    {
+                                        let fresh320 = &mut (*parser).buffer.pointer;
+                                        let fresh321 = *fresh320;
+                                        *fresh320 = (*fresh320).c_offset(1);
+                                        let fresh322 = string.pointer;
+                                        string.pointer = (string.pointer).c_offset(1);
+                                        *fresh322 = *fresh321;
+                                        let fresh323 = &mut (*parser).buffer.pointer;
+                                        let fresh324 = *fresh323;
+                                        *fresh323 = (*fresh323).c_offset(1);
+                                        let fresh325 = string.pointer;
+                                        string.pointer = (string.pointer).c_offset(1);
+                                        *fresh325 = *fresh324;
+                                        let fresh326 = &mut (*parser).buffer.pointer;
+                                        let fresh327 = *fresh326;
+                                        *fresh326 = (*fresh326).c_offset(1);
+                                        let fresh328 = string.pointer;
+                                        string.pointer = (string.pointer).c_offset(1);
+                                        *fresh328 = *fresh327;
+                                        let fresh329 = &mut (*parser).buffer.pointer;
+                                        let fresh330 = *fresh329;
+                                        *fresh329 = (*fresh329).c_offset(1);
+                                        let fresh331 = string.pointer;
+                                        string.pointer = (string.pointer).c_offset(1);
+                                        *fresh331 = *fresh330;
                                     } else {
-                                        if *(*parser).buffer.pointer as libc::c_int
-                                            & 0xe0 as libc::c_int
-                                            == 0xc0 as libc::c_int
-                                        {
-                                            let fresh305 = &mut (*parser).buffer.pointer;
-                                            let fresh306 = *fresh305;
-                                            *fresh305 = (*fresh305).c_offset(1);
-                                            let fresh307 = string.pointer;
-                                            string.pointer = (string.pointer).c_offset(1);
-                                            *fresh307 = *fresh306;
-                                            let fresh308 = &mut (*parser).buffer.pointer;
-                                            let fresh309 = *fresh308;
-                                            *fresh308 = (*fresh308).c_offset(1);
-                                            let fresh310 = string.pointer;
-                                            string.pointer = (string.pointer).c_offset(1);
-                                            *fresh310 = *fresh309;
-                                        } else {
-                                            if *(*parser).buffer.pointer as libc::c_int
-                                                & 0xf0 as libc::c_int
-                                                == 0xe0 as libc::c_int
-                                            {
-                                                let fresh311 = &mut (*parser).buffer.pointer;
-                                                let fresh312 = *fresh311;
-                                                *fresh311 = (*fresh311).c_offset(1);
-                                                let fresh313 = string.pointer;
-                                                string.pointer = (string.pointer).c_offset(1);
-                                                *fresh313 = *fresh312;
-                                                let fresh314 = &mut (*parser).buffer.pointer;
-                                                let fresh315 = *fresh314;
-                                                *fresh314 = (*fresh314).c_offset(1);
-                                                let fresh316 = string.pointer;
-                                                string.pointer = (string.pointer).c_offset(1);
-                                                *fresh316 = *fresh315;
-                                                let fresh317 = &mut (*parser).buffer.pointer;
-                                                let fresh318 = *fresh317;
-                                                *fresh317 = (*fresh317).c_offset(1);
-                                                let fresh319 = string.pointer;
-                                                string.pointer = (string.pointer).c_offset(1);
-                                                *fresh319 = *fresh318;
-                                            } else {
-                                                if *(*parser).buffer.pointer as libc::c_int
-                                                    & 0xf8 as libc::c_int
-                                                    == 0xf0 as libc::c_int
-                                                {
-                                                    let fresh320 = &mut (*parser).buffer.pointer;
-                                                    let fresh321 = *fresh320;
-                                                    *fresh320 = (*fresh320).c_offset(1);
-                                                    let fresh322 = string.pointer;
-                                                    string.pointer = (string.pointer).c_offset(1);
-                                                    *fresh322 = *fresh321;
-                                                    let fresh323 = &mut (*parser).buffer.pointer;
-                                                    let fresh324 = *fresh323;
-                                                    *fresh323 = (*fresh323).c_offset(1);
-                                                    let fresh325 = string.pointer;
-                                                    string.pointer = (string.pointer).c_offset(1);
-                                                    *fresh325 = *fresh324;
-                                                    let fresh326 = &mut (*parser).buffer.pointer;
-                                                    let fresh327 = *fresh326;
-                                                    *fresh326 = (*fresh326).c_offset(1);
-                                                    let fresh328 = string.pointer;
-                                                    string.pointer = (string.pointer).c_offset(1);
-                                                    *fresh328 = *fresh327;
-                                                    let fresh329 = &mut (*parser).buffer.pointer;
-                                                    let fresh330 = *fresh329;
-                                                    *fresh329 = (*fresh329).c_offset(1);
-                                                    let fresh331 = string.pointer;
-                                                    string.pointer = (string.pointer).c_offset(1);
-                                                    *fresh331 = *fresh330;
-                                                } else {
-                                                };
-                                            };
-                                        };
                                     };
                                     let fresh332 = &mut (*parser).mark.index;
                                     *fresh332 = (*fresh332).wrapping_add(1);
@@ -5252,78 +5019,70 @@ unsafe extern "C" fn yaml_parser_scan_tag_uri(
                                 let fresh337 = string.pointer;
                                 string.pointer = (string.pointer).c_offset(1);
                                 *fresh337 = *fresh336;
+                            } else if *(*parser).buffer.pointer as libc::c_int & 0xe0 as libc::c_int
+                                == 0xc0 as libc::c_int
+                            {
+                                let fresh338 = &mut (*parser).buffer.pointer;
+                                let fresh339 = *fresh338;
+                                *fresh338 = (*fresh338).c_offset(1);
+                                let fresh340 = string.pointer;
+                                string.pointer = (string.pointer).c_offset(1);
+                                *fresh340 = *fresh339;
+                                let fresh341 = &mut (*parser).buffer.pointer;
+                                let fresh342 = *fresh341;
+                                *fresh341 = (*fresh341).c_offset(1);
+                                let fresh343 = string.pointer;
+                                string.pointer = (string.pointer).c_offset(1);
+                                *fresh343 = *fresh342;
+                            } else if *(*parser).buffer.pointer as libc::c_int & 0xf0 as libc::c_int
+                                == 0xe0 as libc::c_int
+                            {
+                                let fresh344 = &mut (*parser).buffer.pointer;
+                                let fresh345 = *fresh344;
+                                *fresh344 = (*fresh344).c_offset(1);
+                                let fresh346 = string.pointer;
+                                string.pointer = (string.pointer).c_offset(1);
+                                *fresh346 = *fresh345;
+                                let fresh347 = &mut (*parser).buffer.pointer;
+                                let fresh348 = *fresh347;
+                                *fresh347 = (*fresh347).c_offset(1);
+                                let fresh349 = string.pointer;
+                                string.pointer = (string.pointer).c_offset(1);
+                                *fresh349 = *fresh348;
+                                let fresh350 = &mut (*parser).buffer.pointer;
+                                let fresh351 = *fresh350;
+                                *fresh350 = (*fresh350).c_offset(1);
+                                let fresh352 = string.pointer;
+                                string.pointer = (string.pointer).c_offset(1);
+                                *fresh352 = *fresh351;
+                            } else if *(*parser).buffer.pointer as libc::c_int & 0xf8 as libc::c_int
+                                == 0xf0 as libc::c_int
+                            {
+                                let fresh353 = &mut (*parser).buffer.pointer;
+                                let fresh354 = *fresh353;
+                                *fresh353 = (*fresh353).c_offset(1);
+                                let fresh355 = string.pointer;
+                                string.pointer = (string.pointer).c_offset(1);
+                                *fresh355 = *fresh354;
+                                let fresh356 = &mut (*parser).buffer.pointer;
+                                let fresh357 = *fresh356;
+                                *fresh356 = (*fresh356).c_offset(1);
+                                let fresh358 = string.pointer;
+                                string.pointer = (string.pointer).c_offset(1);
+                                *fresh358 = *fresh357;
+                                let fresh359 = &mut (*parser).buffer.pointer;
+                                let fresh360 = *fresh359;
+                                *fresh359 = (*fresh359).c_offset(1);
+                                let fresh361 = string.pointer;
+                                string.pointer = (string.pointer).c_offset(1);
+                                *fresh361 = *fresh360;
+                                let fresh362 = &mut (*parser).buffer.pointer;
+                                let fresh363 = *fresh362;
+                                *fresh362 = (*fresh362).c_offset(1);
+                                let fresh364 = string.pointer;
+                                string.pointer = (string.pointer).c_offset(1);
+                                *fresh364 = *fresh363;
                             } else {
-                                if *(*parser).buffer.pointer as libc::c_int & 0xe0 as libc::c_int
-                                    == 0xc0 as libc::c_int
-                                {
-                                    let fresh338 = &mut (*parser).buffer.pointer;
-                                    let fresh339 = *fresh338;
-                                    *fresh338 = (*fresh338).c_offset(1);
-                                    let fresh340 = string.pointer;
-                                    string.pointer = (string.pointer).c_offset(1);
-                                    *fresh340 = *fresh339;
-                                    let fresh341 = &mut (*parser).buffer.pointer;
-                                    let fresh342 = *fresh341;
-                                    *fresh341 = (*fresh341).c_offset(1);
-                                    let fresh343 = string.pointer;
-                                    string.pointer = (string.pointer).c_offset(1);
-                                    *fresh343 = *fresh342;
-                                } else {
-                                    if *(*parser).buffer.pointer as libc::c_int
-                                        & 0xf0 as libc::c_int
-                                        == 0xe0 as libc::c_int
-                                    {
-                                        let fresh344 = &mut (*parser).buffer.pointer;
-                                        let fresh345 = *fresh344;
-                                        *fresh344 = (*fresh344).c_offset(1);
-                                        let fresh346 = string.pointer;
-                                        string.pointer = (string.pointer).c_offset(1);
-                                        *fresh346 = *fresh345;
-                                        let fresh347 = &mut (*parser).buffer.pointer;
-                                        let fresh348 = *fresh347;
-                                        *fresh347 = (*fresh347).c_offset(1);
-                                        let fresh349 = string.pointer;
-                                        string.pointer = (string.pointer).c_offset(1);
-                                        *fresh349 = *fresh348;
-                                        let fresh350 = &mut (*parser).buffer.pointer;
-                                        let fresh351 = *fresh350;
-                                        *fresh350 = (*fresh350).c_offset(1);
-                                        let fresh352 = string.pointer;
-                                        string.pointer = (string.pointer).c_offset(1);
-                                        *fresh352 = *fresh351;
-                                    } else {
-                                        if *(*parser).buffer.pointer as libc::c_int
-                                            & 0xf8 as libc::c_int
-                                            == 0xf0 as libc::c_int
-                                        {
-                                            let fresh353 = &mut (*parser).buffer.pointer;
-                                            let fresh354 = *fresh353;
-                                            *fresh353 = (*fresh353).c_offset(1);
-                                            let fresh355 = string.pointer;
-                                            string.pointer = (string.pointer).c_offset(1);
-                                            *fresh355 = *fresh354;
-                                            let fresh356 = &mut (*parser).buffer.pointer;
-                                            let fresh357 = *fresh356;
-                                            *fresh356 = (*fresh356).c_offset(1);
-                                            let fresh358 = string.pointer;
-                                            string.pointer = (string.pointer).c_offset(1);
-                                            *fresh358 = *fresh357;
-                                            let fresh359 = &mut (*parser).buffer.pointer;
-                                            let fresh360 = *fresh359;
-                                            *fresh359 = (*fresh359).c_offset(1);
-                                            let fresh361 = string.pointer;
-                                            string.pointer = (string.pointer).c_offset(1);
-                                            *fresh361 = *fresh360;
-                                            let fresh362 = &mut (*parser).buffer.pointer;
-                                            let fresh363 = *fresh362;
-                                            *fresh362 = (*fresh362).c_offset(1);
-                                            let fresh364 = string.pointer;
-                                            string.pointer = (string.pointer).c_offset(1);
-                                            *fresh364 = *fresh363;
-                                        } else {
-                                        };
-                                    };
-                                };
                             };
                             let fresh365 = &mut (*parser).mark.index;
                             *fresh365 = (*fresh365).wrapping_add(1);
@@ -5456,19 +5215,17 @@ unsafe extern "C" fn yaml_parser_scan_uri_escapes(
             *((*parser).buffer.pointer).c_offset(1 as libc::c_int as isize) as libc::c_int
                 - 'A' as i32 as yaml_char_t as libc::c_int
                 + 10 as libc::c_int
+        } else if *((*parser).buffer.pointer).c_offset(1 as libc::c_int as isize) as libc::c_int
+            >= 'a' as i32 as yaml_char_t as libc::c_int
+            && *((*parser).buffer.pointer).c_offset(1 as libc::c_int as isize) as libc::c_int
+                <= 'f' as i32 as yaml_char_t as libc::c_int
+        {
+            *((*parser).buffer.pointer).c_offset(1 as libc::c_int as isize) as libc::c_int
+                - 'a' as i32 as yaml_char_t as libc::c_int
+                + 10 as libc::c_int
         } else {
-            if *((*parser).buffer.pointer).c_offset(1 as libc::c_int as isize) as libc::c_int
-                >= 'a' as i32 as yaml_char_t as libc::c_int
-                && *((*parser).buffer.pointer).c_offset(1 as libc::c_int as isize) as libc::c_int
-                    <= 'f' as i32 as yaml_char_t as libc::c_int
-            {
-                *((*parser).buffer.pointer).c_offset(1 as libc::c_int as isize) as libc::c_int
-                    - 'a' as i32 as yaml_char_t as libc::c_int
-                    + 10 as libc::c_int
-            } else {
-                *((*parser).buffer.pointer).c_offset(1 as libc::c_int as isize) as libc::c_int
-                    - '0' as i32 as yaml_char_t as libc::c_int
-            }
+            *((*parser).buffer.pointer).c_offset(1 as libc::c_int as isize) as libc::c_int
+                - '0' as i32 as yaml_char_t as libc::c_int
         }) << 4 as libc::c_int)
             + (if *((*parser).buffer.pointer).c_offset(2 as libc::c_int as isize) as libc::c_int
                 >= 'A' as i32 as yaml_char_t as libc::c_int
@@ -5478,20 +5235,17 @@ unsafe extern "C" fn yaml_parser_scan_uri_escapes(
                 *((*parser).buffer.pointer).c_offset(2 as libc::c_int as isize) as libc::c_int
                     - 'A' as i32 as yaml_char_t as libc::c_int
                     + 10 as libc::c_int
+            } else if *((*parser).buffer.pointer).c_offset(2 as libc::c_int as isize) as libc::c_int
+                >= 'a' as i32 as yaml_char_t as libc::c_int
+                && *((*parser).buffer.pointer).c_offset(2 as libc::c_int as isize) as libc::c_int
+                    <= 'f' as i32 as yaml_char_t as libc::c_int
+            {
+                *((*parser).buffer.pointer).c_offset(2 as libc::c_int as isize) as libc::c_int
+                    - 'a' as i32 as yaml_char_t as libc::c_int
+                    + 10 as libc::c_int
             } else {
-                if *((*parser).buffer.pointer).c_offset(2 as libc::c_int as isize) as libc::c_int
-                    >= 'a' as i32 as yaml_char_t as libc::c_int
-                    && *((*parser).buffer.pointer).c_offset(2 as libc::c_int as isize)
-                        as libc::c_int
-                        <= 'f' as i32 as yaml_char_t as libc::c_int
-                {
-                    *((*parser).buffer.pointer).c_offset(2 as libc::c_int as isize) as libc::c_int
-                        - 'a' as i32 as yaml_char_t as libc::c_int
-                        + 10 as libc::c_int
-                } else {
-                    *((*parser).buffer.pointer).c_offset(2 as libc::c_int as isize) as libc::c_int
-                        - '0' as i32 as yaml_char_t as libc::c_int
-                }
+                *((*parser).buffer.pointer).c_offset(2 as libc::c_int as isize) as libc::c_int
+                    - '0' as i32 as yaml_char_t as libc::c_int
             })) as libc::c_uchar;
         if width == 0 {
             width = if octet as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int {
@@ -5546,31 +5300,23 @@ unsafe extern "C" fn yaml_parser_scan_uri_escapes(
                 == 0 as libc::c_int
             {
                 1 as libc::c_int
+            } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                & 0xe0 as libc::c_int
+                == 0xc0 as libc::c_int
+            {
+                2 as libc::c_int
+            } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                & 0xf0 as libc::c_int
+                == 0xe0 as libc::c_int
+            {
+                3 as libc::c_int
+            } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                & 0xf8 as libc::c_int
+                == 0xf0 as libc::c_int
+            {
+                4 as libc::c_int
             } else {
-                if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                    & 0xe0 as libc::c_int
-                    == 0xc0 as libc::c_int
-                {
-                    2 as libc::c_int
-                } else {
-                    if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                        as libc::c_int
-                        & 0xf0 as libc::c_int
-                        == 0xe0 as libc::c_int
-                    {
-                        3 as libc::c_int
-                    } else {
-                        if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                            as libc::c_int
-                            & 0xf8 as libc::c_int
-                            == 0xf0 as libc::c_int
-                        {
-                            4 as libc::c_int
-                        } else {
-                            0 as libc::c_int
-                        }
-                    }
-                }
+                0 as libc::c_int
             }) as isize,
         );
         let fresh374 = &mut (*parser).mark.index;
@@ -5586,31 +5332,23 @@ unsafe extern "C" fn yaml_parser_scan_uri_escapes(
                 == 0 as libc::c_int
             {
                 1 as libc::c_int
+            } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                & 0xe0 as libc::c_int
+                == 0xc0 as libc::c_int
+            {
+                2 as libc::c_int
+            } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                & 0xf0 as libc::c_int
+                == 0xe0 as libc::c_int
+            {
+                3 as libc::c_int
+            } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                & 0xf8 as libc::c_int
+                == 0xf0 as libc::c_int
+            {
+                4 as libc::c_int
             } else {
-                if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                    & 0xe0 as libc::c_int
-                    == 0xc0 as libc::c_int
-                {
-                    2 as libc::c_int
-                } else {
-                    if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                        as libc::c_int
-                        & 0xf0 as libc::c_int
-                        == 0xe0 as libc::c_int
-                    {
-                        3 as libc::c_int
-                    } else {
-                        if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                            as libc::c_int
-                            & 0xf8 as libc::c_int
-                            == 0xf0 as libc::c_int
-                        {
-                            4 as libc::c_int
-                        } else {
-                            0 as libc::c_int
-                        }
-                    }
-                }
+                0 as libc::c_int
             }) as isize,
         );
         let fresh378 = &mut (*parser).mark.index;
@@ -5626,31 +5364,23 @@ unsafe extern "C" fn yaml_parser_scan_uri_escapes(
                 == 0 as libc::c_int
             {
                 1 as libc::c_int
+            } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                & 0xe0 as libc::c_int
+                == 0xc0 as libc::c_int
+            {
+                2 as libc::c_int
+            } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                & 0xf0 as libc::c_int
+                == 0xe0 as libc::c_int
+            {
+                3 as libc::c_int
+            } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                & 0xf8 as libc::c_int
+                == 0xf0 as libc::c_int
+            {
+                4 as libc::c_int
             } else {
-                if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                    & 0xe0 as libc::c_int
-                    == 0xc0 as libc::c_int
-                {
-                    2 as libc::c_int
-                } else {
-                    if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                        as libc::c_int
-                        & 0xf0 as libc::c_int
-                        == 0xe0 as libc::c_int
-                    {
-                        3 as libc::c_int
-                    } else {
-                        if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                            as libc::c_int
-                            & 0xf8 as libc::c_int
-                            == 0xf0 as libc::c_int
-                        {
-                            4 as libc::c_int
-                        } else {
-                            0 as libc::c_int
-                        }
-                    }
-                }
+                0 as libc::c_int
             }) as isize,
         );
         width -= 1;
@@ -5754,32 +5484,26 @@ unsafe extern "C" fn yaml_parser_scan_block_scalar(
                         == 0 as libc::c_int
                     {
                         1 as libc::c_int
+                    } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                        as libc::c_int
+                        & 0xe0 as libc::c_int
+                        == 0xc0 as libc::c_int
+                    {
+                        2 as libc::c_int
+                    } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                        as libc::c_int
+                        & 0xf0 as libc::c_int
+                        == 0xe0 as libc::c_int
+                    {
+                        3 as libc::c_int
+                    } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                        as libc::c_int
+                        & 0xf8 as libc::c_int
+                        == 0xf0 as libc::c_int
+                    {
+                        4 as libc::c_int
                     } else {
-                        if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                            as libc::c_int
-                            & 0xe0 as libc::c_int
-                            == 0xc0 as libc::c_int
-                        {
-                            2 as libc::c_int
-                        } else {
-                            if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                                as libc::c_int
-                                & 0xf0 as libc::c_int
-                                == 0xe0 as libc::c_int
-                            {
-                                3 as libc::c_int
-                            } else {
-                                if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                                    as libc::c_int
-                                    & 0xf8 as libc::c_int
-                                    == 0xf0 as libc::c_int
-                                {
-                                    4 as libc::c_int
-                                } else {
-                                    0 as libc::c_int
-                                }
-                            }
-                        }
+                        0 as libc::c_int
                     }) as isize,
                 );
                 if !(if (*parser).unread >= 1 as libc::c_int as libc::c_ulong {
@@ -5818,34 +5542,29 @@ unsafe extern "C" fn yaml_parser_scan_block_scalar(
                                 == 0 as libc::c_int
                             {
                                 1 as libc::c_int
+                            } else if *((*parser).buffer.pointer)
+                                .c_offset(0 as libc::c_int as isize)
+                                as libc::c_int
+                                & 0xe0 as libc::c_int
+                                == 0xc0 as libc::c_int
+                            {
+                                2 as libc::c_int
+                            } else if *((*parser).buffer.pointer)
+                                .c_offset(0 as libc::c_int as isize)
+                                as libc::c_int
+                                & 0xf0 as libc::c_int
+                                == 0xe0 as libc::c_int
+                            {
+                                3 as libc::c_int
+                            } else if *((*parser).buffer.pointer)
+                                .c_offset(0 as libc::c_int as isize)
+                                as libc::c_int
+                                & 0xf8 as libc::c_int
+                                == 0xf0 as libc::c_int
+                            {
+                                4 as libc::c_int
                             } else {
-                                if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                                    as libc::c_int
-                                    & 0xe0 as libc::c_int
-                                    == 0xc0 as libc::c_int
-                                {
-                                    2 as libc::c_int
-                                } else {
-                                    if *((*parser).buffer.pointer)
-                                        .c_offset(0 as libc::c_int as isize)
-                                        as libc::c_int
-                                        & 0xf0 as libc::c_int
-                                        == 0xe0 as libc::c_int
-                                    {
-                                        3 as libc::c_int
-                                    } else {
-                                        if *((*parser).buffer.pointer)
-                                            .c_offset(0 as libc::c_int as isize)
-                                            as libc::c_int
-                                            & 0xf8 as libc::c_int
-                                            == 0xf0 as libc::c_int
-                                        {
-                                            4 as libc::c_int
-                                        } else {
-                                            0 as libc::c_int
-                                        }
-                                    }
-                                }
+                                0 as libc::c_int
                             }) as isize,
                         );
                         if if (*parser).unread >= 1 as libc::c_int as libc::c_ulong {
@@ -5895,35 +5614,29 @@ unsafe extern "C" fn yaml_parser_scan_block_scalar(
                                         == 0 as libc::c_int
                                     {
                                         1 as libc::c_int
+                                    } else if *((*parser).buffer.pointer)
+                                        .c_offset(0 as libc::c_int as isize)
+                                        as libc::c_int
+                                        & 0xe0 as libc::c_int
+                                        == 0xc0 as libc::c_int
+                                    {
+                                        2 as libc::c_int
+                                    } else if *((*parser).buffer.pointer)
+                                        .c_offset(0 as libc::c_int as isize)
+                                        as libc::c_int
+                                        & 0xf0 as libc::c_int
+                                        == 0xe0 as libc::c_int
+                                    {
+                                        3 as libc::c_int
+                                    } else if *((*parser).buffer.pointer)
+                                        .c_offset(0 as libc::c_int as isize)
+                                        as libc::c_int
+                                        & 0xf8 as libc::c_int
+                                        == 0xf0 as libc::c_int
+                                    {
+                                        4 as libc::c_int
                                     } else {
-                                        if *((*parser).buffer.pointer)
-                                            .c_offset(0 as libc::c_int as isize)
-                                            as libc::c_int
-                                            & 0xe0 as libc::c_int
-                                            == 0xc0 as libc::c_int
-                                        {
-                                            2 as libc::c_int
-                                        } else {
-                                            if *((*parser).buffer.pointer)
-                                                .c_offset(0 as libc::c_int as isize)
-                                                as libc::c_int
-                                                & 0xf0 as libc::c_int
-                                                == 0xe0 as libc::c_int
-                                            {
-                                                3 as libc::c_int
-                                            } else {
-                                                if *((*parser).buffer.pointer)
-                                                    .c_offset(0 as libc::c_int as isize)
-                                                    as libc::c_int
-                                                    & 0xf8 as libc::c_int
-                                                    == 0xf0 as libc::c_int
-                                                {
-                                                    4 as libc::c_int
-                                                } else {
-                                                    0 as libc::c_int
-                                                }
-                                            }
-                                        }
+                                        0 as libc::c_int
                                     }) as isize,
                                 );
                                 current_block = 11913429853522160501;
@@ -5970,35 +5683,29 @@ unsafe extern "C" fn yaml_parser_scan_block_scalar(
                                     == 0 as libc::c_int
                                 {
                                     1 as libc::c_int
+                                } else if *((*parser).buffer.pointer)
+                                    .c_offset(0 as libc::c_int as isize)
+                                    as libc::c_int
+                                    & 0xe0 as libc::c_int
+                                    == 0xc0 as libc::c_int
+                                {
+                                    2 as libc::c_int
+                                } else if *((*parser).buffer.pointer)
+                                    .c_offset(0 as libc::c_int as isize)
+                                    as libc::c_int
+                                    & 0xf0 as libc::c_int
+                                    == 0xe0 as libc::c_int
+                                {
+                                    3 as libc::c_int
+                                } else if *((*parser).buffer.pointer)
+                                    .c_offset(0 as libc::c_int as isize)
+                                    as libc::c_int
+                                    & 0xf8 as libc::c_int
+                                    == 0xf0 as libc::c_int
+                                {
+                                    4 as libc::c_int
                                 } else {
-                                    if *((*parser).buffer.pointer)
-                                        .c_offset(0 as libc::c_int as isize)
-                                        as libc::c_int
-                                        & 0xe0 as libc::c_int
-                                        == 0xc0 as libc::c_int
-                                    {
-                                        2 as libc::c_int
-                                    } else {
-                                        if *((*parser).buffer.pointer)
-                                            .c_offset(0 as libc::c_int as isize)
-                                            as libc::c_int
-                                            & 0xf0 as libc::c_int
-                                            == 0xe0 as libc::c_int
-                                        {
-                                            3 as libc::c_int
-                                        } else {
-                                            if *((*parser).buffer.pointer)
-                                                .c_offset(0 as libc::c_int as isize)
-                                                as libc::c_int
-                                                & 0xf8 as libc::c_int
-                                                == 0xf0 as libc::c_int
-                                            {
-                                                4 as libc::c_int
-                                            } else {
-                                                0 as libc::c_int
-                                            }
-                                        }
-                                    }
+                                    0 as libc::c_int
                                 }) as isize,
                             );
                             if if (*parser).unread >= 1 as libc::c_int as libc::c_ulong {
@@ -6041,35 +5748,29 @@ unsafe extern "C" fn yaml_parser_scan_block_scalar(
                                             == 0 as libc::c_int
                                         {
                                             1 as libc::c_int
+                                        } else if *((*parser).buffer.pointer)
+                                            .c_offset(0 as libc::c_int as isize)
+                                            as libc::c_int
+                                            & 0xe0 as libc::c_int
+                                            == 0xc0 as libc::c_int
+                                        {
+                                            2 as libc::c_int
+                                        } else if *((*parser).buffer.pointer)
+                                            .c_offset(0 as libc::c_int as isize)
+                                            as libc::c_int
+                                            & 0xf0 as libc::c_int
+                                            == 0xe0 as libc::c_int
+                                        {
+                                            3 as libc::c_int
+                                        } else if *((*parser).buffer.pointer)
+                                            .c_offset(0 as libc::c_int as isize)
+                                            as libc::c_int
+                                            & 0xf8 as libc::c_int
+                                            == 0xf0 as libc::c_int
+                                        {
+                                            4 as libc::c_int
                                         } else {
-                                            if *((*parser).buffer.pointer)
-                                                .c_offset(0 as libc::c_int as isize)
-                                                as libc::c_int
-                                                & 0xe0 as libc::c_int
-                                                == 0xc0 as libc::c_int
-                                            {
-                                                2 as libc::c_int
-                                            } else {
-                                                if *((*parser).buffer.pointer)
-                                                    .c_offset(0 as libc::c_int as isize)
-                                                    as libc::c_int
-                                                    & 0xf0 as libc::c_int
-                                                    == 0xe0 as libc::c_int
-                                                {
-                                                    3 as libc::c_int
-                                                } else {
-                                                    if *((*parser).buffer.pointer)
-                                                        .c_offset(0 as libc::c_int as isize)
-                                                        as libc::c_int
-                                                        & 0xf8 as libc::c_int
-                                                        == 0xf0 as libc::c_int
-                                                    {
-                                                        4 as libc::c_int
-                                                    } else {
-                                                        0 as libc::c_int
-                                                    }
-                                                }
-                                            }
+                                            0 as libc::c_int
                                         }) as isize,
                                     );
                                 }
@@ -6116,35 +5817,29 @@ unsafe extern "C" fn yaml_parser_scan_block_scalar(
                                             == 0 as libc::c_int
                                         {
                                             1 as libc::c_int
+                                        } else if *((*parser).buffer.pointer)
+                                            .c_offset(0 as libc::c_int as isize)
+                                            as libc::c_int
+                                            & 0xe0 as libc::c_int
+                                            == 0xc0 as libc::c_int
+                                        {
+                                            2 as libc::c_int
+                                        } else if *((*parser).buffer.pointer)
+                                            .c_offset(0 as libc::c_int as isize)
+                                            as libc::c_int
+                                            & 0xf0 as libc::c_int
+                                            == 0xe0 as libc::c_int
+                                        {
+                                            3 as libc::c_int
+                                        } else if *((*parser).buffer.pointer)
+                                            .c_offset(0 as libc::c_int as isize)
+                                            as libc::c_int
+                                            & 0xf8 as libc::c_int
+                                            == 0xf0 as libc::c_int
+                                        {
+                                            4 as libc::c_int
                                         } else {
-                                            if *((*parser).buffer.pointer)
-                                                .c_offset(0 as libc::c_int as isize)
-                                                as libc::c_int
-                                                & 0xe0 as libc::c_int
-                                                == 0xc0 as libc::c_int
-                                            {
-                                                2 as libc::c_int
-                                            } else {
-                                                if *((*parser).buffer.pointer)
-                                                    .c_offset(0 as libc::c_int as isize)
-                                                    as libc::c_int
-                                                    & 0xf0 as libc::c_int
-                                                    == 0xe0 as libc::c_int
-                                                {
-                                                    3 as libc::c_int
-                                                } else {
-                                                    if *((*parser).buffer.pointer)
-                                                        .c_offset(0 as libc::c_int as isize)
-                                                        as libc::c_int
-                                                        & 0xf8 as libc::c_int
-                                                        == 0xf0 as libc::c_int
-                                                    {
-                                                        4 as libc::c_int
-                                                    } else {
-                                                        0 as libc::c_int
-                                                    }
-                                                }
-                                            }
+                                            0 as libc::c_int
                                         }) as isize,
                                     );
                                     if if (*parser).unread >= 1 as libc::c_int as libc::c_ulong {
@@ -6242,37 +5937,29 @@ unsafe extern "C" fn yaml_parser_scan_block_scalar(
                                                         == 0 as libc::c_int
                                                     {
                                                         1 as libc::c_int
+                                                    } else if *((*parser).buffer.pointer)
+                                                        .c_offset(0 as libc::c_int as isize)
+                                                        as libc::c_int
+                                                        & 0xe0 as libc::c_int
+                                                        == 0xc0 as libc::c_int
+                                                    {
+                                                        2 as libc::c_int
+                                                    } else if *((*parser).buffer.pointer)
+                                                        .c_offset(0 as libc::c_int as isize)
+                                                        as libc::c_int
+                                                        & 0xf0 as libc::c_int
+                                                        == 0xe0 as libc::c_int
+                                                    {
+                                                        3 as libc::c_int
+                                                    } else if *((*parser).buffer.pointer)
+                                                        .c_offset(0 as libc::c_int as isize)
+                                                        as libc::c_int
+                                                        & 0xf8 as libc::c_int
+                                                        == 0xf0 as libc::c_int
+                                                    {
+                                                        4 as libc::c_int
                                                     } else {
-                                                        if *((*parser).buffer.pointer)
-                                                            .c_offset(0 as libc::c_int as isize)
-                                                            as libc::c_int
-                                                            & 0xe0 as libc::c_int
-                                                            == 0xc0 as libc::c_int
-                                                        {
-                                                            2 as libc::c_int
-                                                        } else {
-                                                            if *((*parser).buffer.pointer)
-                                                                .c_offset(0 as libc::c_int as isize)
-                                                                as libc::c_int
-                                                                & 0xf0 as libc::c_int
-                                                                == 0xe0 as libc::c_int
-                                                            {
-                                                                3 as libc::c_int
-                                                            } else {
-                                                                if *((*parser).buffer.pointer)
-                                                                    .c_offset(
-                                                                        0 as libc::c_int as isize,
-                                                                    )
-                                                                    as libc::c_int
-                                                                    & 0xf8 as libc::c_int
-                                                                    == 0xf0 as libc::c_int
-                                                                {
-                                                                    4 as libc::c_int
-                                                                } else {
-                                                                    0 as libc::c_int
-                                                                }
-                                                            }
-                                                        }
+                                                        0 as libc::c_int
                                                     })
                                                         as isize,
                                                 );
@@ -6487,79 +6174,154 @@ unsafe extern "C" fn yaml_parser_scan_block_scalar(
                                                                 *fresh413 = (*fresh413).c_offset(
                                                                     2 as libc::c_int as isize,
                                                                 );
-                                                            } else {
-                                                                if *((*parser).buffer.pointer)
-                                                                    .c_offset(0 as libc::c_int as isize) as libc::c_int
-                                                                    == '\r' as i32 as yaml_char_t as libc::c_int
-                                                                    || *((*parser).buffer.pointer)
-                                                                        .c_offset(0 as libc::c_int as isize) as libc::c_int
-                                                                        == '\n' as i32 as yaml_char_t as libc::c_int
-                                                                    || *((*parser).buffer.pointer)
-                                                                        .c_offset(0 as libc::c_int as isize) as libc::c_int
-                                                                        == -62i32 as yaml_char_t as libc::c_int
-                                                                        && *((*parser).buffer.pointer)
-                                                                            .c_offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                                                                            as libc::c_int == -123i32 as yaml_char_t as libc::c_int
-                                                                    || *((*parser).buffer.pointer)
-                                                                        .c_offset(0 as libc::c_int as isize) as libc::c_int
-                                                                        == -30i32 as yaml_char_t as libc::c_int
-                                                                        && *((*parser).buffer.pointer)
-                                                                            .c_offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                                                                            as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                                                                        && *((*parser).buffer.pointer)
-                                                                            .c_offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                                                                            as libc::c_int == -88i32 as yaml_char_t as libc::c_int
-                                                                    || *((*parser).buffer.pointer)
-                                                                        .c_offset(0 as libc::c_int as isize) as libc::c_int
-                                                                        == -30i32 as yaml_char_t as libc::c_int
-                                                                        && *((*parser).buffer.pointer)
-                                                                            .c_offset((0 as libc::c_int + 1 as libc::c_int) as isize)
-                                                                            as libc::c_int == -128i32 as yaml_char_t as libc::c_int
-                                                                        && *((*parser).buffer.pointer)
-                                                                            .c_offset((0 as libc::c_int + 2 as libc::c_int) as isize)
-                                                                            as libc::c_int == -87i32 as yaml_char_t as libc::c_int
-                                                                {
-                                                                    let fresh414 = &mut (*parser).mark.index;
-                                                                    *fresh414 = (*fresh414).wrapping_add(1);
-                                                                    (*parser).mark.column = 0 as libc::c_int as size_t;
-                                                                    let fresh415 = &mut (*parser).mark.line;
-                                                                    *fresh415 = (*fresh415).wrapping_add(1);
-                                                                    let fresh416 = &mut (*parser).unread;
-                                                                    *fresh416 = (*fresh416).wrapping_sub(1);
-                                                                    let fresh417 = &mut (*parser).buffer.pointer;
-                                                                    *fresh417 = (*fresh417)
+                                                            } else if *((*parser).buffer.pointer)
+                                                                .c_offset(0 as libc::c_int as isize)
+                                                                as libc::c_int
+                                                                == '\r' as i32 as yaml_char_t
+                                                                    as libc::c_int
+                                                                || *((*parser).buffer.pointer)
+                                                                    .c_offset(
+                                                                        0 as libc::c_int as isize,
+                                                                    )
+                                                                    as libc::c_int
+                                                                    == '\n' as i32 as yaml_char_t
+                                                                        as libc::c_int
+                                                                || *((*parser).buffer.pointer)
+                                                                    .c_offset(
+                                                                        0 as libc::c_int as isize,
+                                                                    )
+                                                                    as libc::c_int
+                                                                    == -62i32 as yaml_char_t
+                                                                        as libc::c_int
+                                                                    && *((*parser).buffer.pointer)
                                                                         .c_offset(
-                                                                            (if *((*parser).buffer.pointer)
-                                                                                .c_offset(0 as libc::c_int as isize) as libc::c_int
-                                                                                & 0x80 as libc::c_int == 0 as libc::c_int
-                                                                            {
-                                                                                1 as libc::c_int
-                                                                            } else {
-                                                                                if *((*parser).buffer.pointer)
-                                                                                    .c_offset(0 as libc::c_int as isize) as libc::c_int
-                                                                                    & 0xe0 as libc::c_int == 0xc0 as libc::c_int
-                                                                                {
-                                                                                    2 as libc::c_int
-                                                                                } else {
-                                                                                    if *((*parser).buffer.pointer)
-                                                                                        .c_offset(0 as libc::c_int as isize) as libc::c_int
-                                                                                        & 0xf0 as libc::c_int == 0xe0 as libc::c_int
-                                                                                    {
-                                                                                        3 as libc::c_int
-                                                                                    } else {
-                                                                                        if *((*parser).buffer.pointer)
-                                                                                            .c_offset(0 as libc::c_int as isize) as libc::c_int
-                                                                                            & 0xf8 as libc::c_int == 0xf0 as libc::c_int
-                                                                                        {
-                                                                                            4 as libc::c_int
-                                                                                        } else {
-                                                                                            0 as libc::c_int
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                            }) as isize,
-                                                                        );
-                                                                } else {};
+                                                                            (0 as libc::c_int
+                                                                                + 1 as libc::c_int)
+                                                                                as isize,
+                                                                        )
+                                                                        as libc::c_int
+                                                                        == -123i32 as yaml_char_t
+                                                                            as libc::c_int
+                                                                || *((*parser).buffer.pointer)
+                                                                    .c_offset(
+                                                                        0 as libc::c_int as isize,
+                                                                    )
+                                                                    as libc::c_int
+                                                                    == -30i32 as yaml_char_t
+                                                                        as libc::c_int
+                                                                    && *((*parser).buffer.pointer)
+                                                                        .c_offset(
+                                                                            (0 as libc::c_int
+                                                                                + 1 as libc::c_int)
+                                                                                as isize,
+                                                                        )
+                                                                        as libc::c_int
+                                                                        == -128i32 as yaml_char_t
+                                                                            as libc::c_int
+                                                                    && *((*parser).buffer.pointer)
+                                                                        .c_offset(
+                                                                            (0 as libc::c_int
+                                                                                + 2 as libc::c_int)
+                                                                                as isize,
+                                                                        )
+                                                                        as libc::c_int
+                                                                        == -88i32 as yaml_char_t
+                                                                            as libc::c_int
+                                                                || *((*parser).buffer.pointer)
+                                                                    .c_offset(
+                                                                        0 as libc::c_int as isize,
+                                                                    )
+                                                                    as libc::c_int
+                                                                    == -30i32 as yaml_char_t
+                                                                        as libc::c_int
+                                                                    && *((*parser).buffer.pointer)
+                                                                        .c_offset(
+                                                                            (0 as libc::c_int
+                                                                                + 1 as libc::c_int)
+                                                                                as isize,
+                                                                        )
+                                                                        as libc::c_int
+                                                                        == -128i32 as yaml_char_t
+                                                                            as libc::c_int
+                                                                    && *((*parser).buffer.pointer)
+                                                                        .c_offset(
+                                                                            (0 as libc::c_int
+                                                                                + 2 as libc::c_int)
+                                                                                as isize,
+                                                                        )
+                                                                        as libc::c_int
+                                                                        == -87i32 as yaml_char_t
+                                                                            as libc::c_int
+                                                            {
+                                                                let fresh414 =
+                                                                    &mut (*parser).mark.index;
+                                                                *fresh414 =
+                                                                    (*fresh414).wrapping_add(1);
+                                                                (*parser).mark.column =
+                                                                    0 as libc::c_int as size_t;
+                                                                let fresh415 =
+                                                                    &mut (*parser).mark.line;
+                                                                *fresh415 =
+                                                                    (*fresh415).wrapping_add(1);
+                                                                let fresh416 =
+                                                                    &mut (*parser).unread;
+                                                                *fresh416 =
+                                                                    (*fresh416).wrapping_sub(1);
+                                                                let fresh417 =
+                                                                    &mut (*parser).buffer.pointer;
+                                                                *fresh417 = (*fresh417).c_offset(
+                                                                    (if *((*parser).buffer.pointer)
+                                                                        .c_offset(
+                                                                            0 as libc::c_int
+                                                                                as isize,
+                                                                        )
+                                                                        as libc::c_int
+                                                                        & 0x80 as libc::c_int
+                                                                        == 0 as libc::c_int
+                                                                    {
+                                                                        1 as libc::c_int
+                                                                    } else if *((*parser)
+                                                                        .buffer
+                                                                        .pointer)
+                                                                        .c_offset(
+                                                                            0 as libc::c_int
+                                                                                as isize,
+                                                                        )
+                                                                        as libc::c_int
+                                                                        & 0xe0 as libc::c_int
+                                                                        == 0xc0 as libc::c_int
+                                                                    {
+                                                                        2 as libc::c_int
+                                                                    } else if *((*parser)
+                                                                        .buffer
+                                                                        .pointer)
+                                                                        .c_offset(
+                                                                            0 as libc::c_int
+                                                                                as isize,
+                                                                        )
+                                                                        as libc::c_int
+                                                                        & 0xf0 as libc::c_int
+                                                                        == 0xe0 as libc::c_int
+                                                                    {
+                                                                        3 as libc::c_int
+                                                                    } else if *((*parser)
+                                                                        .buffer
+                                                                        .pointer)
+                                                                        .c_offset(
+                                                                            0 as libc::c_int
+                                                                                as isize,
+                                                                        )
+                                                                        as libc::c_int
+                                                                        & 0xf8 as libc::c_int
+                                                                        == 0xf0 as libc::c_int
+                                                                    {
+                                                                        4 as libc::c_int
+                                                                    } else {
+                                                                        0 as libc::c_int
+                                                                    })
+                                                                        as isize,
+                                                                );
+                                                            } else {
                                                             };
                                                             current_block = 13619784596304402172;
                                                         }
@@ -6765,76 +6527,70 @@ unsafe extern "C" fn yaml_parser_scan_block_scalar(
                                                                                     let fresh421 = string.pointer;
                                                                                     string.pointer = (string.pointer).c_offset(1);
                                                                                     *fresh421 = *fresh420;
-                                                                                } else {
-                                                                                    if *(*parser).buffer.pointer as libc::c_int
-                                                                                        & 0xe0 as libc::c_int == 0xc0 as libc::c_int
-                                                                                    {
-                                                                                        let fresh422 = &mut (*parser).buffer.pointer;
-                                                                                        let fresh423 = *fresh422;
-                                                                                        *fresh422 = (*fresh422).c_offset(1);
-                                                                                        let fresh424 = string.pointer;
-                                                                                        string.pointer = (string.pointer).c_offset(1);
-                                                                                        *fresh424 = *fresh423;
-                                                                                        let fresh425 = &mut (*parser).buffer.pointer;
-                                                                                        let fresh426 = *fresh425;
-                                                                                        *fresh425 = (*fresh425).c_offset(1);
-                                                                                        let fresh427 = string.pointer;
-                                                                                        string.pointer = (string.pointer).c_offset(1);
-                                                                                        *fresh427 = *fresh426;
-                                                                                    } else {
-                                                                                        if *(*parser).buffer.pointer as libc::c_int
-                                                                                            & 0xf0 as libc::c_int == 0xe0 as libc::c_int
-                                                                                        {
-                                                                                            let fresh428 = &mut (*parser).buffer.pointer;
-                                                                                            let fresh429 = *fresh428;
-                                                                                            *fresh428 = (*fresh428).c_offset(1);
-                                                                                            let fresh430 = string.pointer;
-                                                                                            string.pointer = (string.pointer).c_offset(1);
-                                                                                            *fresh430 = *fresh429;
-                                                                                            let fresh431 = &mut (*parser).buffer.pointer;
-                                                                                            let fresh432 = *fresh431;
-                                                                                            *fresh431 = (*fresh431).c_offset(1);
-                                                                                            let fresh433 = string.pointer;
-                                                                                            string.pointer = (string.pointer).c_offset(1);
-                                                                                            *fresh433 = *fresh432;
-                                                                                            let fresh434 = &mut (*parser).buffer.pointer;
-                                                                                            let fresh435 = *fresh434;
-                                                                                            *fresh434 = (*fresh434).c_offset(1);
-                                                                                            let fresh436 = string.pointer;
-                                                                                            string.pointer = (string.pointer).c_offset(1);
-                                                                                            *fresh436 = *fresh435;
-                                                                                        } else {
-                                                                                            if *(*parser).buffer.pointer as libc::c_int
-                                                                                                & 0xf8 as libc::c_int == 0xf0 as libc::c_int
-                                                                                            {
-                                                                                                let fresh437 = &mut (*parser).buffer.pointer;
-                                                                                                let fresh438 = *fresh437;
-                                                                                                *fresh437 = (*fresh437).c_offset(1);
-                                                                                                let fresh439 = string.pointer;
-                                                                                                string.pointer = (string.pointer).c_offset(1);
-                                                                                                *fresh439 = *fresh438;
-                                                                                                let fresh440 = &mut (*parser).buffer.pointer;
-                                                                                                let fresh441 = *fresh440;
-                                                                                                *fresh440 = (*fresh440).c_offset(1);
-                                                                                                let fresh442 = string.pointer;
-                                                                                                string.pointer = (string.pointer).c_offset(1);
-                                                                                                *fresh442 = *fresh441;
-                                                                                                let fresh443 = &mut (*parser).buffer.pointer;
-                                                                                                let fresh444 = *fresh443;
-                                                                                                *fresh443 = (*fresh443).c_offset(1);
-                                                                                                let fresh445 = string.pointer;
-                                                                                                string.pointer = (string.pointer).c_offset(1);
-                                                                                                *fresh445 = *fresh444;
-                                                                                                let fresh446 = &mut (*parser).buffer.pointer;
-                                                                                                let fresh447 = *fresh446;
-                                                                                                *fresh446 = (*fresh446).c_offset(1);
-                                                                                                let fresh448 = string.pointer;
-                                                                                                string.pointer = (string.pointer).c_offset(1);
-                                                                                                *fresh448 = *fresh447;
-                                                                                            } else {};
-                                                                                        };
-                                                                                    };
-                                                                                };
+                                                                                } else if *(*parser).buffer.pointer as libc::c_int
+                                                                                    & 0xe0 as libc::c_int == 0xc0 as libc::c_int
+                                                                                {
+                                                                                    let fresh422 = &mut (*parser).buffer.pointer;
+                                                                                    let fresh423 = *fresh422;
+                                                                                    *fresh422 = (*fresh422).c_offset(1);
+                                                                                    let fresh424 = string.pointer;
+                                                                                    string.pointer = (string.pointer).c_offset(1);
+                                                                                    *fresh424 = *fresh423;
+                                                                                    let fresh425 = &mut (*parser).buffer.pointer;
+                                                                                    let fresh426 = *fresh425;
+                                                                                    *fresh425 = (*fresh425).c_offset(1);
+                                                                                    let fresh427 = string.pointer;
+                                                                                    string.pointer = (string.pointer).c_offset(1);
+                                                                                    *fresh427 = *fresh426;
+                                                                                } else if *(*parser).buffer.pointer as libc::c_int
+                                                                                    & 0xf0 as libc::c_int == 0xe0 as libc::c_int
+                                                                                {
+                                                                                    let fresh428 = &mut (*parser).buffer.pointer;
+                                                                                    let fresh429 = *fresh428;
+                                                                                    *fresh428 = (*fresh428).c_offset(1);
+                                                                                    let fresh430 = string.pointer;
+                                                                                    string.pointer = (string.pointer).c_offset(1);
+                                                                                    *fresh430 = *fresh429;
+                                                                                    let fresh431 = &mut (*parser).buffer.pointer;
+                                                                                    let fresh432 = *fresh431;
+                                                                                    *fresh431 = (*fresh431).c_offset(1);
+                                                                                    let fresh433 = string.pointer;
+                                                                                    string.pointer = (string.pointer).c_offset(1);
+                                                                                    *fresh433 = *fresh432;
+                                                                                    let fresh434 = &mut (*parser).buffer.pointer;
+                                                                                    let fresh435 = *fresh434;
+                                                                                    *fresh434 = (*fresh434).c_offset(1);
+                                                                                    let fresh436 = string.pointer;
+                                                                                    string.pointer = (string.pointer).c_offset(1);
+                                                                                    *fresh436 = *fresh435;
+                                                                                } else if *(*parser).buffer.pointer as libc::c_int
+                                                                                    & 0xf8 as libc::c_int == 0xf0 as libc::c_int
+                                                                                {
+                                                                                    let fresh437 = &mut (*parser).buffer.pointer;
+                                                                                    let fresh438 = *fresh437;
+                                                                                    *fresh437 = (*fresh437).c_offset(1);
+                                                                                    let fresh439 = string.pointer;
+                                                                                    string.pointer = (string.pointer).c_offset(1);
+                                                                                    *fresh439 = *fresh438;
+                                                                                    let fresh440 = &mut (*parser).buffer.pointer;
+                                                                                    let fresh441 = *fresh440;
+                                                                                    *fresh440 = (*fresh440).c_offset(1);
+                                                                                    let fresh442 = string.pointer;
+                                                                                    string.pointer = (string.pointer).c_offset(1);
+                                                                                    *fresh442 = *fresh441;
+                                                                                    let fresh443 = &mut (*parser).buffer.pointer;
+                                                                                    let fresh444 = *fresh443;
+                                                                                    *fresh443 = (*fresh443).c_offset(1);
+                                                                                    let fresh445 = string.pointer;
+                                                                                    string.pointer = (string.pointer).c_offset(1);
+                                                                                    *fresh445 = *fresh444;
+                                                                                    let fresh446 = &mut (*parser).buffer.pointer;
+                                                                                    let fresh447 = *fresh446;
+                                                                                    *fresh446 = (*fresh446).c_offset(1);
+                                                                                    let fresh448 = string.pointer;
+                                                                                    string.pointer = (string.pointer).c_offset(1);
+                                                                                    *fresh448 = *fresh447;
+                                                                                } else {};
                                                                                 let fresh449 = &mut (*parser).mark.index;
                                                                                 *fresh449 = (*fresh449).wrapping_add(1);
                                                                                 let fresh450 = &mut (*parser).mark.column;
@@ -6913,89 +6669,83 @@ unsafe extern "C" fn yaml_parser_scan_block_scalar(
                                                                                 *fresh456 = (*fresh456 as libc::c_ulong)
                                                                                     .wrapping_sub(2 as libc::c_int as libc::c_ulong) as size_t
                                                                                     as size_t;
-                                                                            } else {
-                                                                                if *((*parser).buffer.pointer)
+                                                                            } else if *((*parser).buffer.pointer)
+                                                                                .c_offset(0 as libc::c_int as isize) as libc::c_int
+                                                                                == '\r' as i32 as yaml_char_t as libc::c_int
+                                                                                || *((*parser).buffer.pointer)
                                                                                     .c_offset(0 as libc::c_int as isize) as libc::c_int
-                                                                                    == '\r' as i32 as yaml_char_t as libc::c_int
+                                                                                    == '\n' as i32 as yaml_char_t as libc::c_int
+                                                                            {
+                                                                                let fresh457 = leading_break.pointer;
+                                                                                leading_break.pointer = (leading_break.pointer).c_offset(1);
+                                                                                *fresh457 = '\n' as i32 as yaml_char_t;
+                                                                                let fresh458 = &mut (*parser).buffer.pointer;
+                                                                                *fresh458 = (*fresh458).c_offset(1);
+                                                                                let fresh459 = &mut (*parser).mark.index;
+                                                                                *fresh459 = (*fresh459).wrapping_add(1);
+                                                                                (*parser).mark.column = 0 as libc::c_int as size_t;
+                                                                                let fresh460 = &mut (*parser).mark.line;
+                                                                                *fresh460 = (*fresh460).wrapping_add(1);
+                                                                                let fresh461 = &mut (*parser).unread;
+                                                                                *fresh461 = (*fresh461).wrapping_sub(1);
+                                                                            } else if *((*parser).buffer.pointer)
+                                                                                .c_offset(0 as libc::c_int as isize) as libc::c_int
+                                                                                == -62i32 as yaml_char_t as libc::c_int
+                                                                                && *((*parser).buffer.pointer)
+                                                                                    .c_offset(1 as libc::c_int as isize) as libc::c_int
+                                                                                    == -123i32 as yaml_char_t as libc::c_int
+                                                                            {
+                                                                                let fresh462 = leading_break.pointer;
+                                                                                leading_break.pointer = (leading_break.pointer).c_offset(1);
+                                                                                *fresh462 = '\n' as i32 as yaml_char_t;
+                                                                                let fresh463 = &mut (*parser).buffer.pointer;
+                                                                                *fresh463 = (*fresh463).c_offset(2 as libc::c_int as isize);
+                                                                                let fresh464 = &mut (*parser).mark.index;
+                                                                                *fresh464 = (*fresh464).wrapping_add(1);
+                                                                                (*parser).mark.column = 0 as libc::c_int as size_t;
+                                                                                let fresh465 = &mut (*parser).mark.line;
+                                                                                *fresh465 = (*fresh465).wrapping_add(1);
+                                                                                let fresh466 = &mut (*parser).unread;
+                                                                                *fresh466 = (*fresh466).wrapping_sub(1);
+                                                                            } else if *((*parser).buffer.pointer)
+                                                                                .c_offset(0 as libc::c_int as isize) as libc::c_int
+                                                                                == -30i32 as yaml_char_t as libc::c_int
+                                                                                && *((*parser).buffer.pointer)
+                                                                                    .c_offset(1 as libc::c_int as isize) as libc::c_int
+                                                                                    == -128i32 as yaml_char_t as libc::c_int
+                                                                                && (*((*parser).buffer.pointer)
+                                                                                    .c_offset(2 as libc::c_int as isize) as libc::c_int
+                                                                                    == -88i32 as yaml_char_t as libc::c_int
                                                                                     || *((*parser).buffer.pointer)
-                                                                                        .c_offset(0 as libc::c_int as isize) as libc::c_int
-                                                                                        == '\n' as i32 as yaml_char_t as libc::c_int
-                                                                                {
-                                                                                    let fresh457 = leading_break.pointer;
-                                                                                    leading_break.pointer = (leading_break.pointer).c_offset(1);
-                                                                                    *fresh457 = '\n' as i32 as yaml_char_t;
-                                                                                    let fresh458 = &mut (*parser).buffer.pointer;
-                                                                                    *fresh458 = (*fresh458).c_offset(1);
-                                                                                    let fresh459 = &mut (*parser).mark.index;
-                                                                                    *fresh459 = (*fresh459).wrapping_add(1);
-                                                                                    (*parser).mark.column = 0 as libc::c_int as size_t;
-                                                                                    let fresh460 = &mut (*parser).mark.line;
-                                                                                    *fresh460 = (*fresh460).wrapping_add(1);
-                                                                                    let fresh461 = &mut (*parser).unread;
-                                                                                    *fresh461 = (*fresh461).wrapping_sub(1);
-                                                                                } else {
-                                                                                    if *((*parser).buffer.pointer)
-                                                                                        .c_offset(0 as libc::c_int as isize) as libc::c_int
-                                                                                        == -62i32 as yaml_char_t as libc::c_int
-                                                                                        && *((*parser).buffer.pointer)
-                                                                                            .c_offset(1 as libc::c_int as isize) as libc::c_int
-                                                                                            == -123i32 as yaml_char_t as libc::c_int
-                                                                                    {
-                                                                                        let fresh462 = leading_break.pointer;
-                                                                                        leading_break.pointer = (leading_break.pointer).c_offset(1);
-                                                                                        *fresh462 = '\n' as i32 as yaml_char_t;
-                                                                                        let fresh463 = &mut (*parser).buffer.pointer;
-                                                                                        *fresh463 = (*fresh463).c_offset(2 as libc::c_int as isize);
-                                                                                        let fresh464 = &mut (*parser).mark.index;
-                                                                                        *fresh464 = (*fresh464).wrapping_add(1);
-                                                                                        (*parser).mark.column = 0 as libc::c_int as size_t;
-                                                                                        let fresh465 = &mut (*parser).mark.line;
-                                                                                        *fresh465 = (*fresh465).wrapping_add(1);
-                                                                                        let fresh466 = &mut (*parser).unread;
-                                                                                        *fresh466 = (*fresh466).wrapping_sub(1);
-                                                                                    } else {
-                                                                                        if *((*parser).buffer.pointer)
-                                                                                            .c_offset(0 as libc::c_int as isize) as libc::c_int
-                                                                                            == -30i32 as yaml_char_t as libc::c_int
-                                                                                            && *((*parser).buffer.pointer)
-                                                                                                .c_offset(1 as libc::c_int as isize) as libc::c_int
-                                                                                                == -128i32 as yaml_char_t as libc::c_int
-                                                                                            && (*((*parser).buffer.pointer)
-                                                                                                .c_offset(2 as libc::c_int as isize) as libc::c_int
-                                                                                                == -88i32 as yaml_char_t as libc::c_int
-                                                                                                || *((*parser).buffer.pointer)
-                                                                                                    .c_offset(2 as libc::c_int as isize) as libc::c_int
-                                                                                                    == -87i32 as yaml_char_t as libc::c_int)
-                                                                                        {
-                                                                                            let fresh467 = &mut (*parser).buffer.pointer;
-                                                                                            let fresh468 = *fresh467;
-                                                                                            *fresh467 = (*fresh467).c_offset(1);
-                                                                                            let fresh469 = leading_break.pointer;
-                                                                                            leading_break.pointer = (leading_break.pointer).c_offset(1);
-                                                                                            *fresh469 = *fresh468;
-                                                                                            let fresh470 = &mut (*parser).buffer.pointer;
-                                                                                            let fresh471 = *fresh470;
-                                                                                            *fresh470 = (*fresh470).c_offset(1);
-                                                                                            let fresh472 = leading_break.pointer;
-                                                                                            leading_break.pointer = (leading_break.pointer).c_offset(1);
-                                                                                            *fresh472 = *fresh471;
-                                                                                            let fresh473 = &mut (*parser).buffer.pointer;
-                                                                                            let fresh474 = *fresh473;
-                                                                                            *fresh473 = (*fresh473).c_offset(1);
-                                                                                            let fresh475 = leading_break.pointer;
-                                                                                            leading_break.pointer = (leading_break.pointer).c_offset(1);
-                                                                                            *fresh475 = *fresh474;
-                                                                                            let fresh476 = &mut (*parser).mark.index;
-                                                                                            *fresh476 = (*fresh476).wrapping_add(1);
-                                                                                            (*parser).mark.column = 0 as libc::c_int as size_t;
-                                                                                            let fresh477 = &mut (*parser).mark.line;
-                                                                                            *fresh477 = (*fresh477).wrapping_add(1);
-                                                                                            let fresh478 = &mut (*parser).unread;
-                                                                                            *fresh478 = (*fresh478).wrapping_sub(1);
-                                                                                        } else {};
-                                                                                    };
-                                                                                };
-                                                                            };
+                                                                                        .c_offset(2 as libc::c_int as isize) as libc::c_int
+                                                                                        == -87i32 as yaml_char_t as libc::c_int)
+                                                                            {
+                                                                                let fresh467 = &mut (*parser).buffer.pointer;
+                                                                                let fresh468 = *fresh467;
+                                                                                *fresh467 = (*fresh467).c_offset(1);
+                                                                                let fresh469 = leading_break.pointer;
+                                                                                leading_break.pointer = (leading_break.pointer).c_offset(1);
+                                                                                *fresh469 = *fresh468;
+                                                                                let fresh470 = &mut (*parser).buffer.pointer;
+                                                                                let fresh471 = *fresh470;
+                                                                                *fresh470 = (*fresh470).c_offset(1);
+                                                                                let fresh472 = leading_break.pointer;
+                                                                                leading_break.pointer = (leading_break.pointer).c_offset(1);
+                                                                                *fresh472 = *fresh471;
+                                                                                let fresh473 = &mut (*parser).buffer.pointer;
+                                                                                let fresh474 = *fresh473;
+                                                                                *fresh473 = (*fresh473).c_offset(1);
+                                                                                let fresh475 = leading_break.pointer;
+                                                                                leading_break.pointer = (leading_break.pointer).c_offset(1);
+                                                                                *fresh475 = *fresh474;
+                                                                                let fresh476 = &mut (*parser).mark.index;
+                                                                                *fresh476 = (*fresh476).wrapping_add(1);
+                                                                                (*parser).mark.column = 0 as libc::c_int as size_t;
+                                                                                let fresh477 = &mut (*parser).mark.line;
+                                                                                *fresh477 = (*fresh477).wrapping_add(1);
+                                                                                let fresh478 = &mut (*parser).unread;
+                                                                                *fresh478 = (*fresh478).wrapping_sub(1);
+                                                                            } else {};
                                                                             1 as libc::c_int
                                                                         } else {
                                                                             0 as libc::c_int
@@ -7176,32 +6926,26 @@ unsafe extern "C" fn yaml_parser_scan_block_scalar_breaks(
                     == 0 as libc::c_int
                 {
                     1 as libc::c_int
+                } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                    as libc::c_int
+                    & 0xe0 as libc::c_int
+                    == 0xc0 as libc::c_int
+                {
+                    2 as libc::c_int
+                } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                    as libc::c_int
+                    & 0xf0 as libc::c_int
+                    == 0xe0 as libc::c_int
+                {
+                    3 as libc::c_int
+                } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                    as libc::c_int
+                    & 0xf8 as libc::c_int
+                    == 0xf0 as libc::c_int
+                {
+                    4 as libc::c_int
                 } else {
-                    if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                        as libc::c_int
-                        & 0xe0 as libc::c_int
-                        == 0xc0 as libc::c_int
-                    {
-                        2 as libc::c_int
-                    } else {
-                        if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                            as libc::c_int
-                            & 0xf0 as libc::c_int
-                            == 0xe0 as libc::c_int
-                        {
-                            3 as libc::c_int
-                        } else {
-                            if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                                as libc::c_int
-                                & 0xf8 as libc::c_int
-                                == 0xf0 as libc::c_int
-                            {
-                                4 as libc::c_int
-                            } else {
-                                0 as libc::c_int
-                            }
-                        }
-                    }
+                    0 as libc::c_int
                 }) as isize,
             );
             if if (*parser).unread >= 1 as libc::c_int as libc::c_ulong {
@@ -7304,93 +7048,81 @@ unsafe extern "C" fn yaml_parser_scan_block_scalar_breaks(
                 *fresh489 = (*fresh489 as libc::c_ulong)
                     .wrapping_sub(2 as libc::c_int as libc::c_ulong)
                     as size_t as size_t;
+            } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                == '\r' as i32 as yaml_char_t as libc::c_int
+                || *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                    == '\n' as i32 as yaml_char_t as libc::c_int
+            {
+                let fresh490 = &mut (*breaks).pointer;
+                let fresh491 = *fresh490;
+                *fresh490 = (*fresh490).c_offset(1);
+                *fresh491 = '\n' as i32 as yaml_char_t;
+                let fresh492 = &mut (*parser).buffer.pointer;
+                *fresh492 = (*fresh492).c_offset(1);
+                let fresh493 = &mut (*parser).mark.index;
+                *fresh493 = (*fresh493).wrapping_add(1);
+                (*parser).mark.column = 0 as libc::c_int as size_t;
+                let fresh494 = &mut (*parser).mark.line;
+                *fresh494 = (*fresh494).wrapping_add(1);
+                let fresh495 = &mut (*parser).unread;
+                *fresh495 = (*fresh495).wrapping_sub(1);
+            } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                == -62i32 as yaml_char_t as libc::c_int
+                && *((*parser).buffer.pointer).c_offset(1 as libc::c_int as isize) as libc::c_int
+                    == -123i32 as yaml_char_t as libc::c_int
+            {
+                let fresh496 = &mut (*breaks).pointer;
+                let fresh497 = *fresh496;
+                *fresh496 = (*fresh496).c_offset(1);
+                *fresh497 = '\n' as i32 as yaml_char_t;
+                let fresh498 = &mut (*parser).buffer.pointer;
+                *fresh498 = (*fresh498).c_offset(2 as libc::c_int as isize);
+                let fresh499 = &mut (*parser).mark.index;
+                *fresh499 = (*fresh499).wrapping_add(1);
+                (*parser).mark.column = 0 as libc::c_int as size_t;
+                let fresh500 = &mut (*parser).mark.line;
+                *fresh500 = (*fresh500).wrapping_add(1);
+                let fresh501 = &mut (*parser).unread;
+                *fresh501 = (*fresh501).wrapping_sub(1);
+            } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                == -30i32 as yaml_char_t as libc::c_int
+                && *((*parser).buffer.pointer).c_offset(1 as libc::c_int as isize) as libc::c_int
+                    == -128i32 as yaml_char_t as libc::c_int
+                && (*((*parser).buffer.pointer).c_offset(2 as libc::c_int as isize) as libc::c_int
+                    == -88i32 as yaml_char_t as libc::c_int
+                    || *((*parser).buffer.pointer).c_offset(2 as libc::c_int as isize)
+                        as libc::c_int
+                        == -87i32 as yaml_char_t as libc::c_int)
+            {
+                let fresh502 = &mut (*parser).buffer.pointer;
+                let fresh503 = *fresh502;
+                *fresh502 = (*fresh502).c_offset(1);
+                let fresh504 = &mut (*breaks).pointer;
+                let fresh505 = *fresh504;
+                *fresh504 = (*fresh504).c_offset(1);
+                *fresh505 = *fresh503;
+                let fresh506 = &mut (*parser).buffer.pointer;
+                let fresh507 = *fresh506;
+                *fresh506 = (*fresh506).c_offset(1);
+                let fresh508 = &mut (*breaks).pointer;
+                let fresh509 = *fresh508;
+                *fresh508 = (*fresh508).c_offset(1);
+                *fresh509 = *fresh507;
+                let fresh510 = &mut (*parser).buffer.pointer;
+                let fresh511 = *fresh510;
+                *fresh510 = (*fresh510).c_offset(1);
+                let fresh512 = &mut (*breaks).pointer;
+                let fresh513 = *fresh512;
+                *fresh512 = (*fresh512).c_offset(1);
+                *fresh513 = *fresh511;
+                let fresh514 = &mut (*parser).mark.index;
+                *fresh514 = (*fresh514).wrapping_add(1);
+                (*parser).mark.column = 0 as libc::c_int as size_t;
+                let fresh515 = &mut (*parser).mark.line;
+                *fresh515 = (*fresh515).wrapping_add(1);
+                let fresh516 = &mut (*parser).unread;
+                *fresh516 = (*fresh516).wrapping_sub(1);
             } else {
-                if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
-                    == '\r' as i32 as yaml_char_t as libc::c_int
-                    || *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                        as libc::c_int
-                        == '\n' as i32 as yaml_char_t as libc::c_int
-                {
-                    let fresh490 = &mut (*breaks).pointer;
-                    let fresh491 = *fresh490;
-                    *fresh490 = (*fresh490).c_offset(1);
-                    *fresh491 = '\n' as i32 as yaml_char_t;
-                    let fresh492 = &mut (*parser).buffer.pointer;
-                    *fresh492 = (*fresh492).c_offset(1);
-                    let fresh493 = &mut (*parser).mark.index;
-                    *fresh493 = (*fresh493).wrapping_add(1);
-                    (*parser).mark.column = 0 as libc::c_int as size_t;
-                    let fresh494 = &mut (*parser).mark.line;
-                    *fresh494 = (*fresh494).wrapping_add(1);
-                    let fresh495 = &mut (*parser).unread;
-                    *fresh495 = (*fresh495).wrapping_sub(1);
-                } else {
-                    if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                        as libc::c_int
-                        == -62i32 as yaml_char_t as libc::c_int
-                        && *((*parser).buffer.pointer).c_offset(1 as libc::c_int as isize)
-                            as libc::c_int
-                            == -123i32 as yaml_char_t as libc::c_int
-                    {
-                        let fresh496 = &mut (*breaks).pointer;
-                        let fresh497 = *fresh496;
-                        *fresh496 = (*fresh496).c_offset(1);
-                        *fresh497 = '\n' as i32 as yaml_char_t;
-                        let fresh498 = &mut (*parser).buffer.pointer;
-                        *fresh498 = (*fresh498).c_offset(2 as libc::c_int as isize);
-                        let fresh499 = &mut (*parser).mark.index;
-                        *fresh499 = (*fresh499).wrapping_add(1);
-                        (*parser).mark.column = 0 as libc::c_int as size_t;
-                        let fresh500 = &mut (*parser).mark.line;
-                        *fresh500 = (*fresh500).wrapping_add(1);
-                        let fresh501 = &mut (*parser).unread;
-                        *fresh501 = (*fresh501).wrapping_sub(1);
-                    } else {
-                        if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                            as libc::c_int
-                            == -30i32 as yaml_char_t as libc::c_int
-                            && *((*parser).buffer.pointer).c_offset(1 as libc::c_int as isize)
-                                as libc::c_int
-                                == -128i32 as yaml_char_t as libc::c_int
-                            && (*((*parser).buffer.pointer).c_offset(2 as libc::c_int as isize)
-                                as libc::c_int
-                                == -88i32 as yaml_char_t as libc::c_int
-                                || *((*parser).buffer.pointer).c_offset(2 as libc::c_int as isize)
-                                    as libc::c_int
-                                    == -87i32 as yaml_char_t as libc::c_int)
-                        {
-                            let fresh502 = &mut (*parser).buffer.pointer;
-                            let fresh503 = *fresh502;
-                            *fresh502 = (*fresh502).c_offset(1);
-                            let fresh504 = &mut (*breaks).pointer;
-                            let fresh505 = *fresh504;
-                            *fresh504 = (*fresh504).c_offset(1);
-                            *fresh505 = *fresh503;
-                            let fresh506 = &mut (*parser).buffer.pointer;
-                            let fresh507 = *fresh506;
-                            *fresh506 = (*fresh506).c_offset(1);
-                            let fresh508 = &mut (*breaks).pointer;
-                            let fresh509 = *fresh508;
-                            *fresh508 = (*fresh508).c_offset(1);
-                            *fresh509 = *fresh507;
-                            let fresh510 = &mut (*parser).buffer.pointer;
-                            let fresh511 = *fresh510;
-                            *fresh510 = (*fresh510).c_offset(1);
-                            let fresh512 = &mut (*breaks).pointer;
-                            let fresh513 = *fresh512;
-                            *fresh512 = (*fresh512).c_offset(1);
-                            *fresh513 = *fresh511;
-                            let fresh514 = &mut (*parser).mark.index;
-                            *fresh514 = (*fresh514).wrapping_add(1);
-                            (*parser).mark.column = 0 as libc::c_int as size_t;
-                            let fresh515 = &mut (*parser).mark.line;
-                            *fresh515 = (*fresh515).wrapping_add(1);
-                            let fresh516 = &mut (*parser).unread;
-                            *fresh516 = (*fresh516).wrapping_sub(1);
-                        } else {
-                        };
-                    };
-                };
             };
             1 as libc::c_int
         } else {
@@ -7524,33 +7256,26 @@ unsafe extern "C" fn yaml_parser_scan_flow_scalar(
                             == 0 as libc::c_int
                         {
                             1 as libc::c_int
+                        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                            as libc::c_int
+                            & 0xe0 as libc::c_int
+                            == 0xc0 as libc::c_int
+                        {
+                            2 as libc::c_int
+                        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                            as libc::c_int
+                            & 0xf0 as libc::c_int
+                            == 0xe0 as libc::c_int
+                        {
+                            3 as libc::c_int
+                        } else if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
+                            as libc::c_int
+                            & 0xf8 as libc::c_int
+                            == 0xf0 as libc::c_int
+                        {
+                            4 as libc::c_int
                         } else {
-                            if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                                as libc::c_int
-                                & 0xe0 as libc::c_int
-                                == 0xc0 as libc::c_int
-                            {
-                                2 as libc::c_int
-                            } else {
-                                if *((*parser).buffer.pointer).c_offset(0 as libc::c_int as isize)
-                                    as libc::c_int
-                                    & 0xf0 as libc::c_int
-                                    == 0xe0 as libc::c_int
-                                {
-                                    3 as libc::c_int
-                                } else {
-                                    if *((*parser).buffer.pointer)
-                                        .c_offset(0 as libc::c_int as isize)
-                                        as libc::c_int
-                                        & 0xf8 as libc::c_int
-                                        == 0xf0 as libc::c_int
-                                    {
-                                        4 as libc::c_int
-                                    } else {
-                                        0 as libc::c_int
-                                    }
-                                }
-                            }
+                            0 as libc::c_int
                         }) as isize,
                     );
                     's_58: loop {
@@ -7774,35 +7499,29 @@ unsafe extern "C" fn yaml_parser_scan_flow_scalar(
                                             == 0 as libc::c_int
                                         {
                                             1 as libc::c_int
+                                        } else if *((*parser).buffer.pointer)
+                                            .c_offset(0 as libc::c_int as isize)
+                                            as libc::c_int
+                                            & 0xe0 as libc::c_int
+                                            == 0xc0 as libc::c_int
+                                        {
+                                            2 as libc::c_int
+                                        } else if *((*parser).buffer.pointer)
+                                            .c_offset(0 as libc::c_int as isize)
+                                            as libc::c_int
+                                            & 0xf0 as libc::c_int
+                                            == 0xe0 as libc::c_int
+                                        {
+                                            3 as libc::c_int
+                                        } else if *((*parser).buffer.pointer)
+                                            .c_offset(0 as libc::c_int as isize)
+                                            as libc::c_int
+                                            & 0xf8 as libc::c_int
+                                            == 0xf0 as libc::c_int
+                                        {
+                                            4 as libc::c_int
                                         } else {
-                                            if *((*parser).buffer.pointer)
-                                                .c_offset(0 as libc::c_int as isize)
-                                                as libc::c_int
-                                                & 0xe0 as libc::c_int
-                                                == 0xc0 as libc::c_int
-                                            {
-                                                2 as libc::c_int
-                                            } else {
-                                                if *((*parser).buffer.pointer)
-                                                    .c_offset(0 as libc::c_int as isize)
-                                                    as libc::c_int
-                                                    & 0xf0 as libc::c_int
-                                                    == 0xe0 as libc::c_int
-                                                {
-                                                    3 as libc::c_int
-                                                } else {
-                                                    if *((*parser).buffer.pointer)
-                                                        .c_offset(0 as libc::c_int as isize)
-                                                        as libc::c_int
-                                                        & 0xf8 as libc::c_int
-                                                        == 0xf0 as libc::c_int
-                                                    {
-                                                        4 as libc::c_int
-                                                    } else {
-                                                        0 as libc::c_int
-                                                    }
-                                                }
-                                            }
+                                            0 as libc::c_int
                                         }) as isize,
                                     );
                                     let fresh526 = &mut (*parser).mark.index;
@@ -7820,35 +7539,29 @@ unsafe extern "C" fn yaml_parser_scan_flow_scalar(
                                             == 0 as libc::c_int
                                         {
                                             1 as libc::c_int
+                                        } else if *((*parser).buffer.pointer)
+                                            .c_offset(0 as libc::c_int as isize)
+                                            as libc::c_int
+                                            & 0xe0 as libc::c_int
+                                            == 0xc0 as libc::c_int
+                                        {
+                                            2 as libc::c_int
+                                        } else if *((*parser).buffer.pointer)
+                                            .c_offset(0 as libc::c_int as isize)
+                                            as libc::c_int
+                                            & 0xf0 as libc::c_int
+                                            == 0xe0 as libc::c_int
+                                        {
+                                            3 as libc::c_int
+                                        } else if *((*parser).buffer.pointer)
+                                            .c_offset(0 as libc::c_int as isize)
+                                            as libc::c_int
+                                            & 0xf8 as libc::c_int
+                                            == 0xf0 as libc::c_int
+                                        {
+                                            4 as libc::c_int
                                         } else {
-                                            if *((*parser).buffer.pointer)
-                                                .c_offset(0 as libc::c_int as isize)
-                                                as libc::c_int
-                                                & 0xe0 as libc::c_int
-                                                == 0xc0 as libc::c_int
-                                            {
-                                                2 as libc::c_int
-                                            } else {
-                                                if *((*parser).buffer.pointer)
-                                                    .c_offset(0 as libc::c_int as isize)
-                                                    as libc::c_int
-                                                    & 0xf0 as libc::c_int
-                                                    == 0xe0 as libc::c_int
-                                                {
-                                                    3 as libc::c_int
-                                                } else {
-                                                    if *((*parser).buffer.pointer)
-                                                        .c_offset(0 as libc::c_int as isize)
-                                                        as libc::c_int
-                                                        & 0xf8 as libc::c_int
-                                                        == 0xf0 as libc::c_int
-                                                    {
-                                                        4 as libc::c_int
-                                                    } else {
-                                                        0 as libc::c_int
-                                                    }
-                                                }
-                                            }
+                                            0 as libc::c_int
                                         }) as isize,
                                     );
                                 } else {
@@ -7940,35 +7653,29 @@ unsafe extern "C" fn yaml_parser_scan_flow_scalar(
                                                 == 0 as libc::c_int
                                             {
                                                 1 as libc::c_int
+                                            } else if *((*parser).buffer.pointer)
+                                                .c_offset(0 as libc::c_int as isize)
+                                                as libc::c_int
+                                                & 0xe0 as libc::c_int
+                                                == 0xc0 as libc::c_int
+                                            {
+                                                2 as libc::c_int
+                                            } else if *((*parser).buffer.pointer)
+                                                .c_offset(0 as libc::c_int as isize)
+                                                as libc::c_int
+                                                & 0xf0 as libc::c_int
+                                                == 0xe0 as libc::c_int
+                                            {
+                                                3 as libc::c_int
+                                            } else if *((*parser).buffer.pointer)
+                                                .c_offset(0 as libc::c_int as isize)
+                                                as libc::c_int
+                                                & 0xf8 as libc::c_int
+                                                == 0xf0 as libc::c_int
+                                            {
+                                                4 as libc::c_int
                                             } else {
-                                                if *((*parser).buffer.pointer)
-                                                    .c_offset(0 as libc::c_int as isize)
-                                                    as libc::c_int
-                                                    & 0xe0 as libc::c_int
-                                                    == 0xc0 as libc::c_int
-                                                {
-                                                    2 as libc::c_int
-                                                } else {
-                                                    if *((*parser).buffer.pointer)
-                                                        .c_offset(0 as libc::c_int as isize)
-                                                        as libc::c_int
-                                                        & 0xf0 as libc::c_int
-                                                        == 0xe0 as libc::c_int
-                                                    {
-                                                        3 as libc::c_int
-                                                    } else {
-                                                        if *((*parser).buffer.pointer)
-                                                            .c_offset(0 as libc::c_int as isize)
-                                                            as libc::c_int
-                                                            & 0xf8 as libc::c_int
-                                                            == 0xf0 as libc::c_int
-                                                        {
-                                                            4 as libc::c_int
-                                                        } else {
-                                                            0 as libc::c_int
-                                                        }
-                                                    }
-                                                }
+                                                0 as libc::c_int
                                             }) as isize,
                                         );
                                         if *((*parser).buffer.pointer)
@@ -7997,110 +7704,95 @@ unsafe extern "C" fn yaml_parser_scan_flow_scalar(
                                             let fresh537 = &mut (*parser).buffer.pointer;
                                             *fresh537 =
                                                 (*fresh537).c_offset(2 as libc::c_int as isize);
-                                        } else {
-                                            if *((*parser).buffer.pointer)
+                                        } else if *((*parser).buffer.pointer)
+                                            .c_offset(0 as libc::c_int as isize)
+                                            as libc::c_int
+                                            == '\r' as i32 as yaml_char_t as libc::c_int
+                                            || *((*parser).buffer.pointer)
                                                 .c_offset(0 as libc::c_int as isize)
                                                 as libc::c_int
-                                                == '\r' as i32 as yaml_char_t as libc::c_int
-                                                || *((*parser).buffer.pointer)
+                                                == '\n' as i32 as yaml_char_t as libc::c_int
+                                            || *((*parser).buffer.pointer)
+                                                .c_offset(0 as libc::c_int as isize)
+                                                as libc::c_int
+                                                == -62i32 as yaml_char_t as libc::c_int
+                                                && *((*parser).buffer.pointer).c_offset(
+                                                    (0 as libc::c_int + 1 as libc::c_int) as isize,
+                                                )
+                                                    as libc::c_int
+                                                    == -123i32 as yaml_char_t as libc::c_int
+                                            || *((*parser).buffer.pointer)
+                                                .c_offset(0 as libc::c_int as isize)
+                                                as libc::c_int
+                                                == -30i32 as yaml_char_t as libc::c_int
+                                                && *((*parser).buffer.pointer).c_offset(
+                                                    (0 as libc::c_int + 1 as libc::c_int) as isize,
+                                                )
+                                                    as libc::c_int
+                                                    == -128i32 as yaml_char_t as libc::c_int
+                                                && *((*parser).buffer.pointer).c_offset(
+                                                    (0 as libc::c_int + 2 as libc::c_int) as isize,
+                                                )
+                                                    as libc::c_int
+                                                    == -88i32 as yaml_char_t as libc::c_int
+                                            || *((*parser).buffer.pointer)
+                                                .c_offset(0 as libc::c_int as isize)
+                                                as libc::c_int
+                                                == -30i32 as yaml_char_t as libc::c_int
+                                                && *((*parser).buffer.pointer).c_offset(
+                                                    (0 as libc::c_int + 1 as libc::c_int) as isize,
+                                                )
+                                                    as libc::c_int
+                                                    == -128i32 as yaml_char_t as libc::c_int
+                                                && *((*parser).buffer.pointer).c_offset(
+                                                    (0 as libc::c_int + 2 as libc::c_int) as isize,
+                                                )
+                                                    as libc::c_int
+                                                    == -87i32 as yaml_char_t as libc::c_int
+                                        {
+                                            let fresh538 = &mut (*parser).mark.index;
+                                            *fresh538 = (*fresh538).wrapping_add(1);
+                                            (*parser).mark.column = 0 as libc::c_int as size_t;
+                                            let fresh539 = &mut (*parser).mark.line;
+                                            *fresh539 = (*fresh539).wrapping_add(1);
+                                            let fresh540 = &mut (*parser).unread;
+                                            *fresh540 = (*fresh540).wrapping_sub(1);
+                                            let fresh541 = &mut (*parser).buffer.pointer;
+                                            *fresh541 = (*fresh541).c_offset(
+                                                (if *((*parser).buffer.pointer)
                                                     .c_offset(0 as libc::c_int as isize)
                                                     as libc::c_int
-                                                    == '\n' as i32 as yaml_char_t as libc::c_int
-                                                || *((*parser).buffer.pointer)
+                                                    & 0x80 as libc::c_int
+                                                    == 0 as libc::c_int
+                                                {
+                                                    1 as libc::c_int
+                                                } else if *((*parser).buffer.pointer)
                                                     .c_offset(0 as libc::c_int as isize)
                                                     as libc::c_int
-                                                    == -62i32 as yaml_char_t as libc::c_int
-                                                    && *((*parser).buffer.pointer).c_offset(
-                                                        (0 as libc::c_int + 1 as libc::c_int)
-                                                            as isize,
-                                                    )
-                                                        as libc::c_int
-                                                        == -123i32 as yaml_char_t as libc::c_int
-                                                || *((*parser).buffer.pointer)
+                                                    & 0xe0 as libc::c_int
+                                                    == 0xc0 as libc::c_int
+                                                {
+                                                    2 as libc::c_int
+                                                } else if *((*parser).buffer.pointer)
                                                     .c_offset(0 as libc::c_int as isize)
                                                     as libc::c_int
-                                                    == -30i32 as yaml_char_t as libc::c_int
-                                                    && *((*parser).buffer.pointer).c_offset(
-                                                        (0 as libc::c_int + 1 as libc::c_int)
-                                                            as isize,
-                                                    )
-                                                        as libc::c_int
-                                                        == -128i32 as yaml_char_t as libc::c_int
-                                                    && *((*parser).buffer.pointer).c_offset(
-                                                        (0 as libc::c_int + 2 as libc::c_int)
-                                                            as isize,
-                                                    )
-                                                        as libc::c_int
-                                                        == -88i32 as yaml_char_t as libc::c_int
-                                                || *((*parser).buffer.pointer)
+                                                    & 0xf0 as libc::c_int
+                                                    == 0xe0 as libc::c_int
+                                                {
+                                                    3 as libc::c_int
+                                                } else if *((*parser).buffer.pointer)
                                                     .c_offset(0 as libc::c_int as isize)
                                                     as libc::c_int
-                                                    == -30i32 as yaml_char_t as libc::c_int
-                                                    && *((*parser).buffer.pointer).c_offset(
-                                                        (0 as libc::c_int + 1 as libc::c_int)
-                                                            as isize,
-                                                    )
-                                                        as libc::c_int
-                                                        == -128i32 as yaml_char_t as libc::c_int
-                                                    && *((*parser).buffer.pointer).c_offset(
-                                                        (0 as libc::c_int + 2 as libc::c_int)
-                                                            as isize,
-                                                    )
-                                                        as libc::c_int
-                                                        == -87i32 as yaml_char_t as libc::c_int
-                                            {
-                                                let fresh538 = &mut (*parser).mark.index;
-                                                *fresh538 = (*fresh538).wrapping_add(1);
-                                                (*parser).mark.column = 0 as libc::c_int as size_t;
-                                                let fresh539 = &mut (*parser).mark.line;
-                                                *fresh539 = (*fresh539).wrapping_add(1);
-                                                let fresh540 = &mut (*parser).unread;
-                                                *fresh540 = (*fresh540).wrapping_sub(1);
-                                                let fresh541 = &mut (*parser).buffer.pointer;
-                                                *fresh541 = (*fresh541).c_offset(
-                                                    (if *((*parser).buffer.pointer)
-                                                        .c_offset(0 as libc::c_int as isize)
-                                                        as libc::c_int
-                                                        & 0x80 as libc::c_int
-                                                        == 0 as libc::c_int
-                                                    {
-                                                        1 as libc::c_int
-                                                    } else {
-                                                        if *((*parser).buffer.pointer)
-                                                            .c_offset(0 as libc::c_int as isize)
-                                                            as libc::c_int
-                                                            & 0xe0 as libc::c_int
-                                                            == 0xc0 as libc::c_int
-                                                        {
-                                                            2 as libc::c_int
-                                                        } else {
-                                                            if *((*parser).buffer.pointer)
-                                                                .c_offset(0 as libc::c_int as isize)
-                                                                as libc::c_int
-                                                                & 0xf0 as libc::c_int
-                                                                == 0xe0 as libc::c_int
-                                                            {
-                                                                3 as libc::c_int
-                                                            } else {
-                                                                if *((*parser).buffer.pointer)
-                                                                    .c_offset(
-                                                                        0 as libc::c_int as isize,
-                                                                    )
-                                                                    as libc::c_int
-                                                                    & 0xf8 as libc::c_int
-                                                                    == 0xf0 as libc::c_int
-                                                                {
-                                                                    4 as libc::c_int
-                                                                } else {
-                                                                    0 as libc::c_int
-                                                                }
-                                                            }
-                                                        }
-                                                    })
-                                                        as isize,
-                                                );
-                                            } else {
-                                            };
+                                                    & 0xf8 as libc::c_int
+                                                    == 0xf0 as libc::c_int
+                                                {
+                                                    4 as libc::c_int
+                                                } else {
+                                                    0 as libc::c_int
+                                                })
+                                                    as isize,
+                                            );
+                                        } else {
                                         };
                                         leading_blanks = 1 as libc::c_int;
                                         break;
@@ -8272,35 +7964,29 @@ unsafe extern "C" fn yaml_parser_scan_flow_scalar(
                                                 == 0 as libc::c_int
                                             {
                                                 1 as libc::c_int
+                                            } else if *((*parser).buffer.pointer)
+                                                .c_offset(0 as libc::c_int as isize)
+                                                as libc::c_int
+                                                & 0xe0 as libc::c_int
+                                                == 0xc0 as libc::c_int
+                                            {
+                                                2 as libc::c_int
+                                            } else if *((*parser).buffer.pointer)
+                                                .c_offset(0 as libc::c_int as isize)
+                                                as libc::c_int
+                                                & 0xf0 as libc::c_int
+                                                == 0xe0 as libc::c_int
+                                            {
+                                                3 as libc::c_int
+                                            } else if *((*parser).buffer.pointer)
+                                                .c_offset(0 as libc::c_int as isize)
+                                                as libc::c_int
+                                                & 0xf8 as libc::c_int
+                                                == 0xf0 as libc::c_int
+                                            {
+                                                4 as libc::c_int
                                             } else {
-                                                if *((*parser).buffer.pointer)
-                                                    .c_offset(0 as libc::c_int as isize)
-                                                    as libc::c_int
-                                                    & 0xe0 as libc::c_int
-                                                    == 0xc0 as libc::c_int
-                                                {
-                                                    2 as libc::c_int
-                                                } else {
-                                                    if *((*parser).buffer.pointer)
-                                                        .c_offset(0 as libc::c_int as isize)
-                                                        as libc::c_int
-                                                        & 0xf0 as libc::c_int
-                                                        == 0xe0 as libc::c_int
-                                                    {
-                                                        3 as libc::c_int
-                                                    } else {
-                                                        if *((*parser).buffer.pointer)
-                                                            .c_offset(0 as libc::c_int as isize)
-                                                            as libc::c_int
-                                                            & 0xf8 as libc::c_int
-                                                            == 0xf0 as libc::c_int
-                                                        {
-                                                            4 as libc::c_int
-                                                        } else {
-                                                            0 as libc::c_int
-                                                        }
-                                                    }
-                                                }
+                                                0 as libc::c_int
                                             }) as isize,
                                         );
                                         let fresh569 = &mut (*parser).mark.index;
@@ -8318,35 +8004,29 @@ unsafe extern "C" fn yaml_parser_scan_flow_scalar(
                                                 == 0 as libc::c_int
                                             {
                                                 1 as libc::c_int
+                                            } else if *((*parser).buffer.pointer)
+                                                .c_offset(0 as libc::c_int as isize)
+                                                as libc::c_int
+                                                & 0xe0 as libc::c_int
+                                                == 0xc0 as libc::c_int
+                                            {
+                                                2 as libc::c_int
+                                            } else if *((*parser).buffer.pointer)
+                                                .c_offset(0 as libc::c_int as isize)
+                                                as libc::c_int
+                                                & 0xf0 as libc::c_int
+                                                == 0xe0 as libc::c_int
+                                            {
+                                                3 as libc::c_int
+                                            } else if *((*parser).buffer.pointer)
+                                                .c_offset(0 as libc::c_int as isize)
+                                                as libc::c_int
+                                                & 0xf8 as libc::c_int
+                                                == 0xf0 as libc::c_int
+                                            {
+                                                4 as libc::c_int
                                             } else {
-                                                if *((*parser).buffer.pointer)
-                                                    .c_offset(0 as libc::c_int as isize)
-                                                    as libc::c_int
-                                                    & 0xe0 as libc::c_int
-                                                    == 0xc0 as libc::c_int
-                                                {
-                                                    2 as libc::c_int
-                                                } else {
-                                                    if *((*parser).buffer.pointer)
-                                                        .c_offset(0 as libc::c_int as isize)
-                                                        as libc::c_int
-                                                        & 0xf0 as libc::c_int
-                                                        == 0xe0 as libc::c_int
-                                                    {
-                                                        3 as libc::c_int
-                                                    } else {
-                                                        if *((*parser).buffer.pointer)
-                                                            .c_offset(0 as libc::c_int as isize)
-                                                            as libc::c_int
-                                                            & 0xf8 as libc::c_int
-                                                            == 0xf0 as libc::c_int
-                                                        {
-                                                            4 as libc::c_int
-                                                        } else {
-                                                            0 as libc::c_int
-                                                        }
-                                                    }
-                                                }
+                                                0 as libc::c_int
                                             }) as isize,
                                         );
                                         if code_length != 0 {
@@ -8423,31 +8103,29 @@ unsafe extern "C" fn yaml_parser_scan_flow_scalar(
                                                                     - 'A' as i32 as yaml_char_t
                                                                         as libc::c_int
                                                                     + 10 as libc::c_int
-                                                            } else {
-                                                                if *((*parser).buffer.pointer)
+                                                            } else if *((*parser).buffer.pointer)
+                                                                .c_offset(k as isize)
+                                                                as libc::c_int
+                                                                >= 'a' as i32 as yaml_char_t
+                                                                    as libc::c_int
+                                                                && *((*parser).buffer.pointer)
                                                                     .c_offset(k as isize)
                                                                     as libc::c_int
-                                                                    >= 'a' as i32 as yaml_char_t
+                                                                    <= 'f' as i32 as yaml_char_t
                                                                         as libc::c_int
-                                                                    && *((*parser).buffer.pointer)
-                                                                        .c_offset(k as isize)
+                                                            {
+                                                                *((*parser).buffer.pointer)
+                                                                    .c_offset(k as isize)
+                                                                    as libc::c_int
+                                                                    - 'a' as i32 as yaml_char_t
                                                                         as libc::c_int
-                                                                        <= 'f' as i32 as yaml_char_t
-                                                                            as libc::c_int
-                                                                {
-                                                                    *((*parser).buffer.pointer)
-                                                                        .c_offset(k as isize)
+                                                                    + 10 as libc::c_int
+                                                            } else {
+                                                                *((*parser).buffer.pointer)
+                                                                    .c_offset(k as isize)
+                                                                    as libc::c_int
+                                                                    - '0' as i32 as yaml_char_t
                                                                         as libc::c_int
-                                                                        - 'a' as i32 as yaml_char_t
-                                                                            as libc::c_int
-                                                                        + 10 as libc::c_int
-                                                                } else {
-                                                                    *((*parser).buffer.pointer)
-                                                                        .c_offset(k as isize)
-                                                                        as libc::c_int
-                                                                        - '0' as i32 as yaml_char_t
-                                                                            as libc::c_int
-                                                                }
                                                             })
                                                                 as libc::c_uint,
                                                         );
@@ -8577,40 +8255,29 @@ unsafe extern "C" fn yaml_parser_scan_flow_scalar(
                                                             == 0 as libc::c_int
                                                         {
                                                             1 as libc::c_int
+                                                        } else if *((*parser).buffer.pointer)
+                                                            .c_offset(0 as libc::c_int as isize)
+                                                            as libc::c_int
+                                                            & 0xe0 as libc::c_int
+                                                            == 0xc0 as libc::c_int
+                                                        {
+                                                            2 as libc::c_int
+                                                        } else if *((*parser).buffer.pointer)
+                                                            .c_offset(0 as libc::c_int as isize)
+                                                            as libc::c_int
+                                                            & 0xf0 as libc::c_int
+                                                            == 0xe0 as libc::c_int
+                                                        {
+                                                            3 as libc::c_int
+                                                        } else if *((*parser).buffer.pointer)
+                                                            .c_offset(0 as libc::c_int as isize)
+                                                            as libc::c_int
+                                                            & 0xf8 as libc::c_int
+                                                            == 0xf0 as libc::c_int
+                                                        {
+                                                            4 as libc::c_int
                                                         } else {
-                                                            if *((*parser).buffer.pointer)
-                                                                .c_offset(0 as libc::c_int as isize)
-                                                                as libc::c_int
-                                                                & 0xe0 as libc::c_int
-                                                                == 0xc0 as libc::c_int
-                                                            {
-                                                                2 as libc::c_int
-                                                            } else {
-                                                                if *((*parser).buffer.pointer)
-                                                                    .c_offset(
-                                                                        0 as libc::c_int as isize,
-                                                                    )
-                                                                    as libc::c_int
-                                                                    & 0xf0 as libc::c_int
-                                                                    == 0xe0 as libc::c_int
-                                                                {
-                                                                    3 as libc::c_int
-                                                                } else {
-                                                                    if *((*parser).buffer.pointer)
-                                                                        .c_offset(
-                                                                            0 as libc::c_int
-                                                                                as isize,
-                                                                        )
-                                                                        as libc::c_int
-                                                                        & 0xf8 as libc::c_int
-                                                                        == 0xf0 as libc::c_int
-                                                                    {
-                                                                        4 as libc::c_int
-                                                                    } else {
-                                                                        0 as libc::c_int
-                                                                    }
-                                                                }
-                                                            }
+                                                            0 as libc::c_int
                                                         })
                                                             as isize,
                                                     );
@@ -8643,87 +8310,73 @@ unsafe extern "C" fn yaml_parser_scan_flow_scalar(
                                             let fresh589 = string.pointer;
                                             string.pointer = (string.pointer).c_offset(1);
                                             *fresh589 = *fresh588;
+                                        } else if *(*parser).buffer.pointer as libc::c_int
+                                            & 0xe0 as libc::c_int
+                                            == 0xc0 as libc::c_int
+                                        {
+                                            let fresh590 = &mut (*parser).buffer.pointer;
+                                            let fresh591 = *fresh590;
+                                            *fresh590 = (*fresh590).c_offset(1);
+                                            let fresh592 = string.pointer;
+                                            string.pointer = (string.pointer).c_offset(1);
+                                            *fresh592 = *fresh591;
+                                            let fresh593 = &mut (*parser).buffer.pointer;
+                                            let fresh594 = *fresh593;
+                                            *fresh593 = (*fresh593).c_offset(1);
+                                            let fresh595 = string.pointer;
+                                            string.pointer = (string.pointer).c_offset(1);
+                                            *fresh595 = *fresh594;
+                                        } else if *(*parser).buffer.pointer as libc::c_int
+                                            & 0xf0 as libc::c_int
+                                            == 0xe0 as libc::c_int
+                                        {
+                                            let fresh596 = &mut (*parser).buffer.pointer;
+                                            let fresh597 = *fresh596;
+                                            *fresh596 = (*fresh596).c_offset(1);
+                                            let fresh598 = string.pointer;
+                                            string.pointer = (string.pointer).c_offset(1);
+                                            *fresh598 = *fresh597;
+                                            let fresh599 = &mut (*parser).buffer.pointer;
+                                            let fresh600 = *fresh599;
+                                            *fresh599 = (*fresh599).c_offset(1);
+                                            let fresh601 = string.pointer;
+                                            string.pointer = (string.pointer).c_offset(1);
+                                            *fresh601 = *fresh600;
+                                            let fresh602 = &mut (*parser).buffer.pointer;
+                                            let fresh603 = *fresh602;
+                                            *fresh602 = (*fresh602).c_offset(1);
+                                            let fresh604 = string.pointer;
+                                            string.pointer = (string.pointer).c_offset(1);
+                                            *fresh604 = *fresh603;
+                                        } else if *(*parser).buffer.pointer as libc::c_int
+                                            & 0xf8 as libc::c_int
+                                            == 0xf0 as libc::c_int
+                                        {
+                                            let fresh605 = &mut (*parser).buffer.pointer;
+                                            let fresh606 = *fresh605;
+                                            *fresh605 = (*fresh605).c_offset(1);
+                                            let fresh607 = string.pointer;
+                                            string.pointer = (string.pointer).c_offset(1);
+                                            *fresh607 = *fresh606;
+                                            let fresh608 = &mut (*parser).buffer.pointer;
+                                            let fresh609 = *fresh608;
+                                            *fresh608 = (*fresh608).c_offset(1);
+                                            let fresh610 = string.pointer;
+                                            string.pointer = (string.pointer).c_offset(1);
+                                            *fresh610 = *fresh609;
+                                            let fresh611 = &mut (*parser).buffer.pointer;
+                                            let fresh612 = *fresh611;
+                                            *fresh611 = (*fresh611).c_offset(1);
+                                            let fresh613 = string.pointer;
+                                            string.pointer = (string.pointer).c_offset(1);
+                                            *fresh613 = *fresh612;
+                                            let fresh614 = &mut (*parser).buffer.pointer;
+                                            let fresh615 = *fresh614;
+                                            *fresh614 = (*fresh614).c_offset(1);
+                                            let fresh616 = string.pointer;
+                                            string.pointer = (string.pointer).c_offset(1);
+                                            *fresh616 = *fresh615;
                                         } else {
-                                            if *(*parser).buffer.pointer as libc::c_int
-                                                & 0xe0 as libc::c_int
-                                                == 0xc0 as libc::c_int
-                                            {
-                                                let fresh590 = &mut (*parser).buffer.pointer;
-                                                let fresh591 = *fresh590;
-                                                *fresh590 = (*fresh590).c_offset(1);
-                                                let fresh592 = string.pointer;
-                                                string.pointer = (string.pointer).c_offset(1);
-                                                *fresh592 = *fresh591;
-                                                let fresh593 = &mut (*parser).buffer.pointer;
-                                                let fresh594 = *fresh593;
-                                                *fresh593 = (*fresh593).c_offset(1);
-                                                let fresh595 = string.pointer;
-                                                string.pointer = (string.pointer).c_offset(1);
-                                                *fresh595 = *fresh594;
-                                            } else {
-                                                if *(*parser).buffer.pointer as libc::c_int
-                                                    & 0xf0 as libc::c_int
-                                                    == 0xe0 as libc::c_int
-                                                {
-                                                    let fresh596 = &mut (*parser).buffer.pointer;
-                                                    let fresh597 = *fresh596;
-                                                    *fresh596 = (*fresh596).c_offset(1);
-                                                    let fresh598 = string.pointer;
-                                                    string.pointer = (string.pointer).c_offset(1);
-                                                    *fresh598 = *fresh597;
-                                                    let fresh599 = &mut (*parser).buffer.pointer;
-                                                    let fresh600 = *fresh599;
-                                                    *fresh599 = (*fresh599).c_offset(1);
-                                                    let fresh601 = string.pointer;
-                                                    string.pointer = (string.pointer).c_offset(1);
-                                                    *fresh601 = *fresh600;
-                                                    let fresh602 = &mut (*parser).buffer.pointer;
-                                                    let fresh603 = *fresh602;
-                                                    *fresh602 = (*fresh602).c_offset(1);
-                                                    let fresh604 = string.pointer;
-                                                    string.pointer = (string.pointer).c_offset(1);
-                                                    *fresh604 = *fresh603;
-                                                } else {
-                                                    if *(*parser).buffer.pointer as libc::c_int
-                                                        & 0xf8 as libc::c_int
-                                                        == 0xf0 as libc::c_int
-                                                    {
-                                                        let fresh605 =
-                                                            &mut (*parser).buffer.pointer;
-                                                        let fresh606 = *fresh605;
-                                                        *fresh605 = (*fresh605).c_offset(1);
-                                                        let fresh607 = string.pointer;
-                                                        string.pointer =
-                                                            (string.pointer).c_offset(1);
-                                                        *fresh607 = *fresh606;
-                                                        let fresh608 =
-                                                            &mut (*parser).buffer.pointer;
-                                                        let fresh609 = *fresh608;
-                                                        *fresh608 = (*fresh608).c_offset(1);
-                                                        let fresh610 = string.pointer;
-                                                        string.pointer =
-                                                            (string.pointer).c_offset(1);
-                                                        *fresh610 = *fresh609;
-                                                        let fresh611 =
-                                                            &mut (*parser).buffer.pointer;
-                                                        let fresh612 = *fresh611;
-                                                        *fresh611 = (*fresh611).c_offset(1);
-                                                        let fresh613 = string.pointer;
-                                                        string.pointer =
-                                                            (string.pointer).c_offset(1);
-                                                        *fresh613 = *fresh612;
-                                                        let fresh614 =
-                                                            &mut (*parser).buffer.pointer;
-                                                        let fresh615 = *fresh614;
-                                                        *fresh614 = (*fresh614).c_offset(1);
-                                                        let fresh616 = string.pointer;
-                                                        string.pointer =
-                                                            (string.pointer).c_offset(1);
-                                                        *fresh616 = *fresh615;
-                                                    } else {
-                                                    };
-                                                };
-                                            };
                                         };
                                         let fresh617 = &mut (*parser).mark.index;
                                         *fresh617 = (*fresh617).wrapping_add(1);
@@ -8857,95 +8510,82 @@ unsafe extern "C" fn yaml_parser_scan_flow_scalar(
                                                 whitespaces.pointer =
                                                     (whitespaces.pointer).c_offset(1);
                                                 *fresh622 = *fresh621;
+                                            } else if *(*parser).buffer.pointer as libc::c_int
+                                                & 0xe0 as libc::c_int
+                                                == 0xc0 as libc::c_int
+                                            {
+                                                let fresh623 = &mut (*parser).buffer.pointer;
+                                                let fresh624 = *fresh623;
+                                                *fresh623 = (*fresh623).c_offset(1);
+                                                let fresh625 = whitespaces.pointer;
+                                                whitespaces.pointer =
+                                                    (whitespaces.pointer).c_offset(1);
+                                                *fresh625 = *fresh624;
+                                                let fresh626 = &mut (*parser).buffer.pointer;
+                                                let fresh627 = *fresh626;
+                                                *fresh626 = (*fresh626).c_offset(1);
+                                                let fresh628 = whitespaces.pointer;
+                                                whitespaces.pointer =
+                                                    (whitespaces.pointer).c_offset(1);
+                                                *fresh628 = *fresh627;
+                                            } else if *(*parser).buffer.pointer as libc::c_int
+                                                & 0xf0 as libc::c_int
+                                                == 0xe0 as libc::c_int
+                                            {
+                                                let fresh629 = &mut (*parser).buffer.pointer;
+                                                let fresh630 = *fresh629;
+                                                *fresh629 = (*fresh629).c_offset(1);
+                                                let fresh631 = whitespaces.pointer;
+                                                whitespaces.pointer =
+                                                    (whitespaces.pointer).c_offset(1);
+                                                *fresh631 = *fresh630;
+                                                let fresh632 = &mut (*parser).buffer.pointer;
+                                                let fresh633 = *fresh632;
+                                                *fresh632 = (*fresh632).c_offset(1);
+                                                let fresh634 = whitespaces.pointer;
+                                                whitespaces.pointer =
+                                                    (whitespaces.pointer).c_offset(1);
+                                                *fresh634 = *fresh633;
+                                                let fresh635 = &mut (*parser).buffer.pointer;
+                                                let fresh636 = *fresh635;
+                                                *fresh635 = (*fresh635).c_offset(1);
+                                                let fresh637 = whitespaces.pointer;
+                                                whitespaces.pointer =
+                                                    (whitespaces.pointer).c_offset(1);
+                                                *fresh637 = *fresh636;
+                                            } else if *(*parser).buffer.pointer as libc::c_int
+                                                & 0xf8 as libc::c_int
+                                                == 0xf0 as libc::c_int
+                                            {
+                                                let fresh638 = &mut (*parser).buffer.pointer;
+                                                let fresh639 = *fresh638;
+                                                *fresh638 = (*fresh638).c_offset(1);
+                                                let fresh640 = whitespaces.pointer;
+                                                whitespaces.pointer =
+                                                    (whitespaces.pointer).c_offset(1);
+                                                *fresh640 = *fresh639;
+                                                let fresh641 = &mut (*parser).buffer.pointer;
+                                                let fresh642 = *fresh641;
+                                                *fresh641 = (*fresh641).c_offset(1);
+                                                let fresh643 = whitespaces.pointer;
+                                                whitespaces.pointer =
+                                                    (whitespaces.pointer).c_offset(1);
+                                                *fresh643 = *fresh642;
+                                                let fresh644 = &mut (*parser).buffer.pointer;
+                                                let fresh645 = *fresh644;
+                                                *fresh644 = (*fresh644).c_offset(1);
+                                                let fresh646 = whitespaces.pointer;
+                                                whitespaces.pointer =
+                                                    (whitespaces.pointer).c_offset(1);
+                                                *fresh646 = *fresh645;
+                                                let fresh647 = &mut (*parser).buffer.pointer;
+                                                let fresh648 = *fresh647;
+                                                *fresh647 = (*fresh647).c_offset(1);
+                                                let fresh649 = whitespaces.pointer;
+                                                whitespaces.pointer =
+                                                    (whitespaces.pointer).c_offset(1);
+                                                *fresh649 = *fresh648;
                                             } else {
-                                                if *(*parser).buffer.pointer as libc::c_int
-                                                    & 0xe0 as libc::c_int
-                                                    == 0xc0 as libc::c_int
-                                                {
-                                                    let fresh623 = &mut (*parser).buffer.pointer;
-                                                    let fresh624 = *fresh623;
-                                                    *fresh623 = (*fresh623).c_offset(1);
-                                                    let fresh625 = whitespaces.pointer;
-                                                    whitespaces.pointer =
-                                                        (whitespaces.pointer).c_offset(1);
-                                                    *fresh625 = *fresh624;
-                                                    let fresh626 = &mut (*parser).buffer.pointer;
-                                                    let fresh627 = *fresh626;
-                                                    *fresh626 = (*fresh626).c_offset(1);
-                                                    let fresh628 = whitespaces.pointer;
-                                                    whitespaces.pointer =
-                                                        (whitespaces.pointer).c_offset(1);
-                                                    *fresh628 = *fresh627;
-                                                } else {
-                                                    if *(*parser).buffer.pointer as libc::c_int
-                                                        & 0xf0 as libc::c_int
-                                                        == 0xe0 as libc::c_int
-                                                    {
-                                                        let fresh629 =
-                                                            &mut (*parser).buffer.pointer;
-                                                        let fresh630 = *fresh629;
-                                                        *fresh629 = (*fresh629).c_offset(1);
-                                                        let fresh631 = whitespaces.pointer;
-                                                        whitespaces.pointer =
-                                                            (whitespaces.pointer).c_offset(1);
-                                                        *fresh631 = *fresh630;
-                                                        let fresh632 =
-                                                            &mut (*parser).buffer.pointer;
-                                                        let fresh633 = *fresh632;
-                                                        *fresh632 = (*fresh632).c_offset(1);
-                                                        let fresh634 = whitespaces.pointer;
-                                                        whitespaces.pointer =
-                                                            (whitespaces.pointer).c_offset(1);
-                                                        *fresh634 = *fresh633;
-                                                        let fresh635 =
-                                                            &mut (*parser).buffer.pointer;
-                                                        let fresh636 = *fresh635;
-                                                        *fresh635 = (*fresh635).c_offset(1);
-                                                        let fresh637 = whitespaces.pointer;
-                                                        whitespaces.pointer =
-                                                            (whitespaces.pointer).c_offset(1);
-                                                        *fresh637 = *fresh636;
-                                                    } else {
-                                                        if *(*parser).buffer.pointer as libc::c_int
-                                                            & 0xf8 as libc::c_int
-                                                            == 0xf0 as libc::c_int
-                                                        {
-                                                            let fresh638 =
-                                                                &mut (*parser).buffer.pointer;
-                                                            let fresh639 = *fresh638;
-                                                            *fresh638 = (*fresh638).c_offset(1);
-                                                            let fresh640 = whitespaces.pointer;
-                                                            whitespaces.pointer =
-                                                                (whitespaces.pointer).c_offset(1);
-                                                            *fresh640 = *fresh639;
-                                                            let fresh641 =
-                                                                &mut (*parser).buffer.pointer;
-                                                            let fresh642 = *fresh641;
-                                                            *fresh641 = (*fresh641).c_offset(1);
-                                                            let fresh643 = whitespaces.pointer;
-                                                            whitespaces.pointer =
-                                                                (whitespaces.pointer).c_offset(1);
-                                                            *fresh643 = *fresh642;
-                                                            let fresh644 =
-                                                                &mut (*parser).buffer.pointer;
-                                                            let fresh645 = *fresh644;
-                                                            *fresh644 = (*fresh644).c_offset(1);
-                                                            let fresh646 = whitespaces.pointer;
-                                                            whitespaces.pointer =
-                                                                (whitespaces.pointer).c_offset(1);
-                                                            *fresh646 = *fresh645;
-                                                            let fresh647 =
-                                                                &mut (*parser).buffer.pointer;
-                                                            let fresh648 = *fresh647;
-                                                            *fresh647 = (*fresh647).c_offset(1);
-                                                            let fresh649 = whitespaces.pointer;
-                                                            whitespaces.pointer =
-                                                                (whitespaces.pointer).c_offset(1);
-                                                            *fresh649 = *fresh648;
-                                                        } else {
-                                                        };
-                                                    };
-                                                };
                                             };
                                             let fresh650 = &mut (*parser).mark.index;
                                             *fresh650 = (*fresh650).wrapping_add(1);
@@ -8977,35 +8617,29 @@ unsafe extern "C" fn yaml_parser_scan_flow_scalar(
                                                 == 0 as libc::c_int
                                             {
                                                 1 as libc::c_int
+                                            } else if *((*parser).buffer.pointer)
+                                                .c_offset(0 as libc::c_int as isize)
+                                                as libc::c_int
+                                                & 0xe0 as libc::c_int
+                                                == 0xc0 as libc::c_int
+                                            {
+                                                2 as libc::c_int
+                                            } else if *((*parser).buffer.pointer)
+                                                .c_offset(0 as libc::c_int as isize)
+                                                as libc::c_int
+                                                & 0xf0 as libc::c_int
+                                                == 0xe0 as libc::c_int
+                                            {
+                                                3 as libc::c_int
+                                            } else if *((*parser).buffer.pointer)
+                                                .c_offset(0 as libc::c_int as isize)
+                                                as libc::c_int
+                                                & 0xf8 as libc::c_int
+                                                == 0xf0 as libc::c_int
+                                            {
+                                                4 as libc::c_int
                                             } else {
-                                                if *((*parser).buffer.pointer)
-                                                    .c_offset(0 as libc::c_int as isize)
-                                                    as libc::c_int
-                                                    & 0xe0 as libc::c_int
-                                                    == 0xc0 as libc::c_int
-                                                {
-                                                    2 as libc::c_int
-                                                } else {
-                                                    if *((*parser).buffer.pointer)
-                                                        .c_offset(0 as libc::c_int as isize)
-                                                        as libc::c_int
-                                                        & 0xf0 as libc::c_int
-                                                        == 0xe0 as libc::c_int
-                                                    {
-                                                        3 as libc::c_int
-                                                    } else {
-                                                        if *((*parser).buffer.pointer)
-                                                            .c_offset(0 as libc::c_int as isize)
-                                                            as libc::c_int
-                                                            & 0xf8 as libc::c_int
-                                                            == 0xf0 as libc::c_int
-                                                        {
-                                                            4 as libc::c_int
-                                                        } else {
-                                                            0 as libc::c_int
-                                                        }
-                                                    }
-                                                }
+                                                0 as libc::c_int
                                             }) as isize,
                                         );
                                     }
@@ -9075,116 +8709,97 @@ unsafe extern "C" fn yaml_parser_scan_flow_scalar(
                                                     .wrapping_sub(2 as libc::c_int as libc::c_ulong)
                                                     as size_t
                                                     as size_t;
-                                            } else {
-                                                if *((*parser).buffer.pointer)
+                                            } else if *((*parser).buffer.pointer)
+                                                .c_offset(0 as libc::c_int as isize)
+                                                as libc::c_int
+                                                == '\r' as i32 as yaml_char_t as libc::c_int
+                                                || *((*parser).buffer.pointer)
                                                     .c_offset(0 as libc::c_int as isize)
                                                     as libc::c_int
-                                                    == '\r' as i32 as yaml_char_t as libc::c_int
+                                                    == '\n' as i32 as yaml_char_t as libc::c_int
+                                            {
+                                                let fresh662 = leading_break.pointer;
+                                                leading_break.pointer =
+                                                    (leading_break.pointer).c_offset(1);
+                                                *fresh662 = '\n' as i32 as yaml_char_t;
+                                                let fresh663 = &mut (*parser).buffer.pointer;
+                                                *fresh663 = (*fresh663).c_offset(1);
+                                                let fresh664 = &mut (*parser).mark.index;
+                                                *fresh664 = (*fresh664).wrapping_add(1);
+                                                (*parser).mark.column = 0 as libc::c_int as size_t;
+                                                let fresh665 = &mut (*parser).mark.line;
+                                                *fresh665 = (*fresh665).wrapping_add(1);
+                                                let fresh666 = &mut (*parser).unread;
+                                                *fresh666 = (*fresh666).wrapping_sub(1);
+                                            } else if *((*parser).buffer.pointer)
+                                                .c_offset(0 as libc::c_int as isize)
+                                                as libc::c_int
+                                                == -62i32 as yaml_char_t as libc::c_int
+                                                && *((*parser).buffer.pointer)
+                                                    .c_offset(1 as libc::c_int as isize)
+                                                    as libc::c_int
+                                                    == -123i32 as yaml_char_t as libc::c_int
+                                            {
+                                                let fresh667 = leading_break.pointer;
+                                                leading_break.pointer =
+                                                    (leading_break.pointer).c_offset(1);
+                                                *fresh667 = '\n' as i32 as yaml_char_t;
+                                                let fresh668 = &mut (*parser).buffer.pointer;
+                                                *fresh668 =
+                                                    (*fresh668).c_offset(2 as libc::c_int as isize);
+                                                let fresh669 = &mut (*parser).mark.index;
+                                                *fresh669 = (*fresh669).wrapping_add(1);
+                                                (*parser).mark.column = 0 as libc::c_int as size_t;
+                                                let fresh670 = &mut (*parser).mark.line;
+                                                *fresh670 = (*fresh670).wrapping_add(1);
+                                                let fresh671 = &mut (*parser).unread;
+                                                *fresh671 = (*fresh671).wrapping_sub(1);
+                                            } else if *((*parser).buffer.pointer)
+                                                .c_offset(0 as libc::c_int as isize)
+                                                as libc::c_int
+                                                == -30i32 as yaml_char_t as libc::c_int
+                                                && *((*parser).buffer.pointer)
+                                                    .c_offset(1 as libc::c_int as isize)
+                                                    as libc::c_int
+                                                    == -128i32 as yaml_char_t as libc::c_int
+                                                && (*((*parser).buffer.pointer)
+                                                    .c_offset(2 as libc::c_int as isize)
+                                                    as libc::c_int
+                                                    == -88i32 as yaml_char_t as libc::c_int
                                                     || *((*parser).buffer.pointer)
-                                                        .c_offset(0 as libc::c_int as isize)
+                                                        .c_offset(2 as libc::c_int as isize)
                                                         as libc::c_int
-                                                        == '\n' as i32 as yaml_char_t as libc::c_int
-                                                {
-                                                    let fresh662 = leading_break.pointer;
-                                                    leading_break.pointer =
-                                                        (leading_break.pointer).c_offset(1);
-                                                    *fresh662 = '\n' as i32 as yaml_char_t;
-                                                    let fresh663 = &mut (*parser).buffer.pointer;
-                                                    *fresh663 = (*fresh663).c_offset(1);
-                                                    let fresh664 = &mut (*parser).mark.index;
-                                                    *fresh664 = (*fresh664).wrapping_add(1);
-                                                    (*parser).mark.column =
-                                                        0 as libc::c_int as size_t;
-                                                    let fresh665 = &mut (*parser).mark.line;
-                                                    *fresh665 = (*fresh665).wrapping_add(1);
-                                                    let fresh666 = &mut (*parser).unread;
-                                                    *fresh666 = (*fresh666).wrapping_sub(1);
-                                                } else {
-                                                    if *((*parser).buffer.pointer)
-                                                        .c_offset(0 as libc::c_int as isize)
-                                                        as libc::c_int
-                                                        == -62i32 as yaml_char_t as libc::c_int
-                                                        && *((*parser).buffer.pointer)
-                                                            .c_offset(1 as libc::c_int as isize)
-                                                            as libc::c_int
-                                                            == -123i32 as yaml_char_t as libc::c_int
-                                                    {
-                                                        let fresh667 = leading_break.pointer;
-                                                        leading_break.pointer =
-                                                            (leading_break.pointer).c_offset(1);
-                                                        *fresh667 = '\n' as i32 as yaml_char_t;
-                                                        let fresh668 =
-                                                            &mut (*parser).buffer.pointer;
-                                                        *fresh668 = (*fresh668)
-                                                            .c_offset(2 as libc::c_int as isize);
-                                                        let fresh669 = &mut (*parser).mark.index;
-                                                        *fresh669 = (*fresh669).wrapping_add(1);
-                                                        (*parser).mark.column =
-                                                            0 as libc::c_int as size_t;
-                                                        let fresh670 = &mut (*parser).mark.line;
-                                                        *fresh670 = (*fresh670).wrapping_add(1);
-                                                        let fresh671 = &mut (*parser).unread;
-                                                        *fresh671 = (*fresh671).wrapping_sub(1);
-                                                    } else {
-                                                        if *((*parser).buffer.pointer)
-                                                            .c_offset(0 as libc::c_int as isize)
-                                                            as libc::c_int
-                                                            == -30i32 as yaml_char_t as libc::c_int
-                                                            && *((*parser).buffer.pointer)
-                                                                .c_offset(1 as libc::c_int as isize)
-                                                                as libc::c_int
-                                                                == -128i32 as yaml_char_t
-                                                                    as libc::c_int
-                                                            && (*((*parser).buffer.pointer)
-                                                                .c_offset(2 as libc::c_int as isize)
-                                                                as libc::c_int
-                                                                == -88i32 as yaml_char_t
-                                                                    as libc::c_int
-                                                                || *((*parser).buffer.pointer)
-                                                                    .c_offset(
-                                                                        2 as libc::c_int as isize,
-                                                                    )
-                                                                    as libc::c_int
-                                                                    == -87i32 as yaml_char_t
-                                                                        as libc::c_int)
-                                                        {
-                                                            let fresh672 =
-                                                                &mut (*parser).buffer.pointer;
-                                                            let fresh673 = *fresh672;
-                                                            *fresh672 = (*fresh672).c_offset(1);
-                                                            let fresh674 = leading_break.pointer;
-                                                            leading_break.pointer =
-                                                                (leading_break.pointer).c_offset(1);
-                                                            *fresh674 = *fresh673;
-                                                            let fresh675 =
-                                                                &mut (*parser).buffer.pointer;
-                                                            let fresh676 = *fresh675;
-                                                            *fresh675 = (*fresh675).c_offset(1);
-                                                            let fresh677 = leading_break.pointer;
-                                                            leading_break.pointer =
-                                                                (leading_break.pointer).c_offset(1);
-                                                            *fresh677 = *fresh676;
-                                                            let fresh678 =
-                                                                &mut (*parser).buffer.pointer;
-                                                            let fresh679 = *fresh678;
-                                                            *fresh678 = (*fresh678).c_offset(1);
-                                                            let fresh680 = leading_break.pointer;
-                                                            leading_break.pointer =
-                                                                (leading_break.pointer).c_offset(1);
-                                                            *fresh680 = *fresh679;
-                                                            let fresh681 =
-                                                                &mut (*parser).mark.index;
-                                                            *fresh681 = (*fresh681).wrapping_add(1);
-                                                            (*parser).mark.column =
-                                                                0 as libc::c_int as size_t;
-                                                            let fresh682 = &mut (*parser).mark.line;
-                                                            *fresh682 = (*fresh682).wrapping_add(1);
-                                                            let fresh683 = &mut (*parser).unread;
-                                                            *fresh683 = (*fresh683).wrapping_sub(1);
-                                                        } else {
-                                                        };
-                                                    };
-                                                };
+                                                        == -87i32 as yaml_char_t as libc::c_int)
+                                            {
+                                                let fresh672 = &mut (*parser).buffer.pointer;
+                                                let fresh673 = *fresh672;
+                                                *fresh672 = (*fresh672).c_offset(1);
+                                                let fresh674 = leading_break.pointer;
+                                                leading_break.pointer =
+                                                    (leading_break.pointer).c_offset(1);
+                                                *fresh674 = *fresh673;
+                                                let fresh675 = &mut (*parser).buffer.pointer;
+                                                let fresh676 = *fresh675;
+                                                *fresh675 = (*fresh675).c_offset(1);
+                                                let fresh677 = leading_break.pointer;
+                                                leading_break.pointer =
+                                                    (leading_break.pointer).c_offset(1);
+                                                *fresh677 = *fresh676;
+                                                let fresh678 = &mut (*parser).buffer.pointer;
+                                                let fresh679 = *fresh678;
+                                                *fresh678 = (*fresh678).c_offset(1);
+                                                let fresh680 = leading_break.pointer;
+                                                leading_break.pointer =
+                                                    (leading_break.pointer).c_offset(1);
+                                                *fresh680 = *fresh679;
+                                                let fresh681 = &mut (*parser).mark.index;
+                                                *fresh681 = (*fresh681).wrapping_add(1);
+                                                (*parser).mark.column = 0 as libc::c_int as size_t;
+                                                let fresh682 = &mut (*parser).mark.line;
+                                                *fresh682 = (*fresh682).wrapping_add(1);
+                                                let fresh683 = &mut (*parser).unread;
+                                                *fresh683 = (*fresh683).wrapping_sub(1);
+                                            } else {
                                             };
                                             1 as libc::c_int
                                         } else {
@@ -9239,109 +8854,97 @@ unsafe extern "C" fn yaml_parser_scan_flow_scalar(
                                                 .wrapping_sub(2 as libc::c_int as libc::c_ulong)
                                                 as size_t
                                                 as size_t;
-                                        } else {
-                                            if *((*parser).buffer.pointer)
+                                        } else if *((*parser).buffer.pointer)
+                                            .c_offset(0 as libc::c_int as isize)
+                                            as libc::c_int
+                                            == '\r' as i32 as yaml_char_t as libc::c_int
+                                            || *((*parser).buffer.pointer)
                                                 .c_offset(0 as libc::c_int as isize)
                                                 as libc::c_int
-                                                == '\r' as i32 as yaml_char_t as libc::c_int
+                                                == '\n' as i32 as yaml_char_t as libc::c_int
+                                        {
+                                            let fresh689 = trailing_breaks.pointer;
+                                            trailing_breaks.pointer =
+                                                (trailing_breaks.pointer).c_offset(1);
+                                            *fresh689 = '\n' as i32 as yaml_char_t;
+                                            let fresh690 = &mut (*parser).buffer.pointer;
+                                            *fresh690 = (*fresh690).c_offset(1);
+                                            let fresh691 = &mut (*parser).mark.index;
+                                            *fresh691 = (*fresh691).wrapping_add(1);
+                                            (*parser).mark.column = 0 as libc::c_int as size_t;
+                                            let fresh692 = &mut (*parser).mark.line;
+                                            *fresh692 = (*fresh692).wrapping_add(1);
+                                            let fresh693 = &mut (*parser).unread;
+                                            *fresh693 = (*fresh693).wrapping_sub(1);
+                                        } else if *((*parser).buffer.pointer)
+                                            .c_offset(0 as libc::c_int as isize)
+                                            as libc::c_int
+                                            == -62i32 as yaml_char_t as libc::c_int
+                                            && *((*parser).buffer.pointer)
+                                                .c_offset(1 as libc::c_int as isize)
+                                                as libc::c_int
+                                                == -123i32 as yaml_char_t as libc::c_int
+                                        {
+                                            let fresh694 = trailing_breaks.pointer;
+                                            trailing_breaks.pointer =
+                                                (trailing_breaks.pointer).c_offset(1);
+                                            *fresh694 = '\n' as i32 as yaml_char_t;
+                                            let fresh695 = &mut (*parser).buffer.pointer;
+                                            *fresh695 =
+                                                (*fresh695).c_offset(2 as libc::c_int as isize);
+                                            let fresh696 = &mut (*parser).mark.index;
+                                            *fresh696 = (*fresh696).wrapping_add(1);
+                                            (*parser).mark.column = 0 as libc::c_int as size_t;
+                                            let fresh697 = &mut (*parser).mark.line;
+                                            *fresh697 = (*fresh697).wrapping_add(1);
+                                            let fresh698 = &mut (*parser).unread;
+                                            *fresh698 = (*fresh698).wrapping_sub(1);
+                                        } else if *((*parser).buffer.pointer)
+                                            .c_offset(0 as libc::c_int as isize)
+                                            as libc::c_int
+                                            == -30i32 as yaml_char_t as libc::c_int
+                                            && *((*parser).buffer.pointer)
+                                                .c_offset(1 as libc::c_int as isize)
+                                                as libc::c_int
+                                                == -128i32 as yaml_char_t as libc::c_int
+                                            && (*((*parser).buffer.pointer)
+                                                .c_offset(2 as libc::c_int as isize)
+                                                as libc::c_int
+                                                == -88i32 as yaml_char_t as libc::c_int
                                                 || *((*parser).buffer.pointer)
-                                                    .c_offset(0 as libc::c_int as isize)
+                                                    .c_offset(2 as libc::c_int as isize)
                                                     as libc::c_int
-                                                    == '\n' as i32 as yaml_char_t as libc::c_int
-                                            {
-                                                let fresh689 = trailing_breaks.pointer;
-                                                trailing_breaks.pointer =
-                                                    (trailing_breaks.pointer).c_offset(1);
-                                                *fresh689 = '\n' as i32 as yaml_char_t;
-                                                let fresh690 = &mut (*parser).buffer.pointer;
-                                                *fresh690 = (*fresh690).c_offset(1);
-                                                let fresh691 = &mut (*parser).mark.index;
-                                                *fresh691 = (*fresh691).wrapping_add(1);
-                                                (*parser).mark.column = 0 as libc::c_int as size_t;
-                                                let fresh692 = &mut (*parser).mark.line;
-                                                *fresh692 = (*fresh692).wrapping_add(1);
-                                                let fresh693 = &mut (*parser).unread;
-                                                *fresh693 = (*fresh693).wrapping_sub(1);
-                                            } else {
-                                                if *((*parser).buffer.pointer)
-                                                    .c_offset(0 as libc::c_int as isize)
-                                                    as libc::c_int
-                                                    == -62i32 as yaml_char_t as libc::c_int
-                                                    && *((*parser).buffer.pointer)
-                                                        .c_offset(1 as libc::c_int as isize)
-                                                        as libc::c_int
-                                                        == -123i32 as yaml_char_t as libc::c_int
-                                                {
-                                                    let fresh694 = trailing_breaks.pointer;
-                                                    trailing_breaks.pointer =
-                                                        (trailing_breaks.pointer).c_offset(1);
-                                                    *fresh694 = '\n' as i32 as yaml_char_t;
-                                                    let fresh695 = &mut (*parser).buffer.pointer;
-                                                    *fresh695 = (*fresh695)
-                                                        .c_offset(2 as libc::c_int as isize);
-                                                    let fresh696 = &mut (*parser).mark.index;
-                                                    *fresh696 = (*fresh696).wrapping_add(1);
-                                                    (*parser).mark.column =
-                                                        0 as libc::c_int as size_t;
-                                                    let fresh697 = &mut (*parser).mark.line;
-                                                    *fresh697 = (*fresh697).wrapping_add(1);
-                                                    let fresh698 = &mut (*parser).unread;
-                                                    *fresh698 = (*fresh698).wrapping_sub(1);
-                                                } else {
-                                                    if *((*parser).buffer.pointer)
-                                                        .c_offset(0 as libc::c_int as isize)
-                                                        as libc::c_int
-                                                        == -30i32 as yaml_char_t as libc::c_int
-                                                        && *((*parser).buffer.pointer)
-                                                            .c_offset(1 as libc::c_int as isize)
-                                                            as libc::c_int
-                                                            == -128i32 as yaml_char_t as libc::c_int
-                                                        && (*((*parser).buffer.pointer)
-                                                            .c_offset(2 as libc::c_int as isize)
-                                                            as libc::c_int
-                                                            == -88i32 as yaml_char_t as libc::c_int
-                                                            || *((*parser).buffer.pointer)
-                                                                .c_offset(2 as libc::c_int as isize)
-                                                                as libc::c_int
-                                                                == -87i32 as yaml_char_t
-                                                                    as libc::c_int)
-                                                    {
-                                                        let fresh699 =
-                                                            &mut (*parser).buffer.pointer;
-                                                        let fresh700 = *fresh699;
-                                                        *fresh699 = (*fresh699).c_offset(1);
-                                                        let fresh701 = trailing_breaks.pointer;
-                                                        trailing_breaks.pointer =
-                                                            (trailing_breaks.pointer).c_offset(1);
-                                                        *fresh701 = *fresh700;
-                                                        let fresh702 =
-                                                            &mut (*parser).buffer.pointer;
-                                                        let fresh703 = *fresh702;
-                                                        *fresh702 = (*fresh702).c_offset(1);
-                                                        let fresh704 = trailing_breaks.pointer;
-                                                        trailing_breaks.pointer =
-                                                            (trailing_breaks.pointer).c_offset(1);
-                                                        *fresh704 = *fresh703;
-                                                        let fresh705 =
-                                                            &mut (*parser).buffer.pointer;
-                                                        let fresh706 = *fresh705;
-                                                        *fresh705 = (*fresh705).c_offset(1);
-                                                        let fresh707 = trailing_breaks.pointer;
-                                                        trailing_breaks.pointer =
-                                                            (trailing_breaks.pointer).c_offset(1);
-                                                        *fresh707 = *fresh706;
-                                                        let fresh708 = &mut (*parser).mark.index;
-                                                        *fresh708 = (*fresh708).wrapping_add(1);
-                                                        (*parser).mark.column =
-                                                            0 as libc::c_int as size_t;
-                                                        let fresh709 = &mut (*parser).mark.line;
-                                                        *fresh709 = (*fresh709).wrapping_add(1);
-                                                        let fresh710 = &mut (*parser).unread;
-                                                        *fresh710 = (*fresh710).wrapping_sub(1);
-                                                    } else {
-                                                    };
-                                                };
-                                            };
+                                                    == -87i32 as yaml_char_t as libc::c_int)
+                                        {
+                                            let fresh699 = &mut (*parser).buffer.pointer;
+                                            let fresh700 = *fresh699;
+                                            *fresh699 = (*fresh699).c_offset(1);
+                                            let fresh701 = trailing_breaks.pointer;
+                                            trailing_breaks.pointer =
+                                                (trailing_breaks.pointer).c_offset(1);
+                                            *fresh701 = *fresh700;
+                                            let fresh702 = &mut (*parser).buffer.pointer;
+                                            let fresh703 = *fresh702;
+                                            *fresh702 = (*fresh702).c_offset(1);
+                                            let fresh704 = trailing_breaks.pointer;
+                                            trailing_breaks.pointer =
+                                                (trailing_breaks.pointer).c_offset(1);
+                                            *fresh704 = *fresh703;
+                                            let fresh705 = &mut (*parser).buffer.pointer;
+                                            let fresh706 = *fresh705;
+                                            *fresh705 = (*fresh705).c_offset(1);
+                                            let fresh707 = trailing_breaks.pointer;
+                                            trailing_breaks.pointer =
+                                                (trailing_breaks.pointer).c_offset(1);
+                                            *fresh707 = *fresh706;
+                                            let fresh708 = &mut (*parser).mark.index;
+                                            *fresh708 = (*fresh708).wrapping_add(1);
+                                            (*parser).mark.column = 0 as libc::c_int as size_t;
+                                            let fresh709 = &mut (*parser).mark.line;
+                                            *fresh709 = (*fresh709).wrapping_add(1);
+                                            let fresh710 = &mut (*parser).unread;
+                                            *fresh710 = (*fresh710).wrapping_sub(1);
+                                        } else {
                                         };
                                         1 as libc::c_int
                                     } else {
@@ -9533,35 +9136,29 @@ unsafe extern "C" fn yaml_parser_scan_flow_scalar(
                                     == 0 as libc::c_int
                                 {
                                     1 as libc::c_int
+                                } else if *((*parser).buffer.pointer)
+                                    .c_offset(0 as libc::c_int as isize)
+                                    as libc::c_int
+                                    & 0xe0 as libc::c_int
+                                    == 0xc0 as libc::c_int
+                                {
+                                    2 as libc::c_int
+                                } else if *((*parser).buffer.pointer)
+                                    .c_offset(0 as libc::c_int as isize)
+                                    as libc::c_int
+                                    & 0xf0 as libc::c_int
+                                    == 0xe0 as libc::c_int
+                                {
+                                    3 as libc::c_int
+                                } else if *((*parser).buffer.pointer)
+                                    .c_offset(0 as libc::c_int as isize)
+                                    as libc::c_int
+                                    & 0xf8 as libc::c_int
+                                    == 0xf0 as libc::c_int
+                                {
+                                    4 as libc::c_int
                                 } else {
-                                    if *((*parser).buffer.pointer)
-                                        .c_offset(0 as libc::c_int as isize)
-                                        as libc::c_int
-                                        & 0xe0 as libc::c_int
-                                        == 0xc0 as libc::c_int
-                                    {
-                                        2 as libc::c_int
-                                    } else {
-                                        if *((*parser).buffer.pointer)
-                                            .c_offset(0 as libc::c_int as isize)
-                                            as libc::c_int
-                                            & 0xf0 as libc::c_int
-                                            == 0xe0 as libc::c_int
-                                        {
-                                            3 as libc::c_int
-                                        } else {
-                                            if *((*parser).buffer.pointer)
-                                                .c_offset(0 as libc::c_int as isize)
-                                                as libc::c_int
-                                                & 0xf8 as libc::c_int
-                                                == 0xf0 as libc::c_int
-                                            {
-                                                4 as libc::c_int
-                                            } else {
-                                                0 as libc::c_int
-                                            }
-                                        }
-                                    }
+                                    0 as libc::c_int
                                 }) as isize,
                             );
                             end_mark = (*parser).mark;
@@ -10168,79 +9765,73 @@ unsafe extern "C" fn yaml_parser_scan_plain_scalar(
                                         let fresh720 = string.pointer;
                                         string.pointer = (string.pointer).c_offset(1);
                                         *fresh720 = *fresh719;
+                                    } else if *(*parser).buffer.pointer as libc::c_int
+                                        & 0xe0 as libc::c_int
+                                        == 0xc0 as libc::c_int
+                                    {
+                                        let fresh721 = &mut (*parser).buffer.pointer;
+                                        let fresh722 = *fresh721;
+                                        *fresh721 = (*fresh721).c_offset(1);
+                                        let fresh723 = string.pointer;
+                                        string.pointer = (string.pointer).c_offset(1);
+                                        *fresh723 = *fresh722;
+                                        let fresh724 = &mut (*parser).buffer.pointer;
+                                        let fresh725 = *fresh724;
+                                        *fresh724 = (*fresh724).c_offset(1);
+                                        let fresh726 = string.pointer;
+                                        string.pointer = (string.pointer).c_offset(1);
+                                        *fresh726 = *fresh725;
+                                    } else if *(*parser).buffer.pointer as libc::c_int
+                                        & 0xf0 as libc::c_int
+                                        == 0xe0 as libc::c_int
+                                    {
+                                        let fresh727 = &mut (*parser).buffer.pointer;
+                                        let fresh728 = *fresh727;
+                                        *fresh727 = (*fresh727).c_offset(1);
+                                        let fresh729 = string.pointer;
+                                        string.pointer = (string.pointer).c_offset(1);
+                                        *fresh729 = *fresh728;
+                                        let fresh730 = &mut (*parser).buffer.pointer;
+                                        let fresh731 = *fresh730;
+                                        *fresh730 = (*fresh730).c_offset(1);
+                                        let fresh732 = string.pointer;
+                                        string.pointer = (string.pointer).c_offset(1);
+                                        *fresh732 = *fresh731;
+                                        let fresh733 = &mut (*parser).buffer.pointer;
+                                        let fresh734 = *fresh733;
+                                        *fresh733 = (*fresh733).c_offset(1);
+                                        let fresh735 = string.pointer;
+                                        string.pointer = (string.pointer).c_offset(1);
+                                        *fresh735 = *fresh734;
+                                    } else if *(*parser).buffer.pointer as libc::c_int
+                                        & 0xf8 as libc::c_int
+                                        == 0xf0 as libc::c_int
+                                    {
+                                        let fresh736 = &mut (*parser).buffer.pointer;
+                                        let fresh737 = *fresh736;
+                                        *fresh736 = (*fresh736).c_offset(1);
+                                        let fresh738 = string.pointer;
+                                        string.pointer = (string.pointer).c_offset(1);
+                                        *fresh738 = *fresh737;
+                                        let fresh739 = &mut (*parser).buffer.pointer;
+                                        let fresh740 = *fresh739;
+                                        *fresh739 = (*fresh739).c_offset(1);
+                                        let fresh741 = string.pointer;
+                                        string.pointer = (string.pointer).c_offset(1);
+                                        *fresh741 = *fresh740;
+                                        let fresh742 = &mut (*parser).buffer.pointer;
+                                        let fresh743 = *fresh742;
+                                        *fresh742 = (*fresh742).c_offset(1);
+                                        let fresh744 = string.pointer;
+                                        string.pointer = (string.pointer).c_offset(1);
+                                        *fresh744 = *fresh743;
+                                        let fresh745 = &mut (*parser).buffer.pointer;
+                                        let fresh746 = *fresh745;
+                                        *fresh745 = (*fresh745).c_offset(1);
+                                        let fresh747 = string.pointer;
+                                        string.pointer = (string.pointer).c_offset(1);
+                                        *fresh747 = *fresh746;
                                     } else {
-                                        if *(*parser).buffer.pointer as libc::c_int
-                                            & 0xe0 as libc::c_int
-                                            == 0xc0 as libc::c_int
-                                        {
-                                            let fresh721 = &mut (*parser).buffer.pointer;
-                                            let fresh722 = *fresh721;
-                                            *fresh721 = (*fresh721).c_offset(1);
-                                            let fresh723 = string.pointer;
-                                            string.pointer = (string.pointer).c_offset(1);
-                                            *fresh723 = *fresh722;
-                                            let fresh724 = &mut (*parser).buffer.pointer;
-                                            let fresh725 = *fresh724;
-                                            *fresh724 = (*fresh724).c_offset(1);
-                                            let fresh726 = string.pointer;
-                                            string.pointer = (string.pointer).c_offset(1);
-                                            *fresh726 = *fresh725;
-                                        } else {
-                                            if *(*parser).buffer.pointer as libc::c_int
-                                                & 0xf0 as libc::c_int
-                                                == 0xe0 as libc::c_int
-                                            {
-                                                let fresh727 = &mut (*parser).buffer.pointer;
-                                                let fresh728 = *fresh727;
-                                                *fresh727 = (*fresh727).c_offset(1);
-                                                let fresh729 = string.pointer;
-                                                string.pointer = (string.pointer).c_offset(1);
-                                                *fresh729 = *fresh728;
-                                                let fresh730 = &mut (*parser).buffer.pointer;
-                                                let fresh731 = *fresh730;
-                                                *fresh730 = (*fresh730).c_offset(1);
-                                                let fresh732 = string.pointer;
-                                                string.pointer = (string.pointer).c_offset(1);
-                                                *fresh732 = *fresh731;
-                                                let fresh733 = &mut (*parser).buffer.pointer;
-                                                let fresh734 = *fresh733;
-                                                *fresh733 = (*fresh733).c_offset(1);
-                                                let fresh735 = string.pointer;
-                                                string.pointer = (string.pointer).c_offset(1);
-                                                *fresh735 = *fresh734;
-                                            } else {
-                                                if *(*parser).buffer.pointer as libc::c_int
-                                                    & 0xf8 as libc::c_int
-                                                    == 0xf0 as libc::c_int
-                                                {
-                                                    let fresh736 = &mut (*parser).buffer.pointer;
-                                                    let fresh737 = *fresh736;
-                                                    *fresh736 = (*fresh736).c_offset(1);
-                                                    let fresh738 = string.pointer;
-                                                    string.pointer = (string.pointer).c_offset(1);
-                                                    *fresh738 = *fresh737;
-                                                    let fresh739 = &mut (*parser).buffer.pointer;
-                                                    let fresh740 = *fresh739;
-                                                    *fresh739 = (*fresh739).c_offset(1);
-                                                    let fresh741 = string.pointer;
-                                                    string.pointer = (string.pointer).c_offset(1);
-                                                    *fresh741 = *fresh740;
-                                                    let fresh742 = &mut (*parser).buffer.pointer;
-                                                    let fresh743 = *fresh742;
-                                                    *fresh742 = (*fresh742).c_offset(1);
-                                                    let fresh744 = string.pointer;
-                                                    string.pointer = (string.pointer).c_offset(1);
-                                                    *fresh744 = *fresh743;
-                                                    let fresh745 = &mut (*parser).buffer.pointer;
-                                                    let fresh746 = *fresh745;
-                                                    *fresh745 = (*fresh745).c_offset(1);
-                                                    let fresh747 = string.pointer;
-                                                    string.pointer = (string.pointer).c_offset(1);
-                                                    *fresh747 = *fresh746;
-                                                } else {
-                                                };
-                                            };
-                                        };
                                     };
                                     let fresh748 = &mut (*parser).mark.index;
                                     *fresh748 = (*fresh748).wrapping_add(1);
@@ -10415,92 +10006,73 @@ unsafe extern "C" fn yaml_parser_scan_plain_scalar(
                                             let fresh753 = whitespaces.pointer;
                                             whitespaces.pointer = (whitespaces.pointer).c_offset(1);
                                             *fresh753 = *fresh752;
+                                        } else if *(*parser).buffer.pointer as libc::c_int
+                                            & 0xe0 as libc::c_int
+                                            == 0xc0 as libc::c_int
+                                        {
+                                            let fresh754 = &mut (*parser).buffer.pointer;
+                                            let fresh755 = *fresh754;
+                                            *fresh754 = (*fresh754).c_offset(1);
+                                            let fresh756 = whitespaces.pointer;
+                                            whitespaces.pointer = (whitespaces.pointer).c_offset(1);
+                                            *fresh756 = *fresh755;
+                                            let fresh757 = &mut (*parser).buffer.pointer;
+                                            let fresh758 = *fresh757;
+                                            *fresh757 = (*fresh757).c_offset(1);
+                                            let fresh759 = whitespaces.pointer;
+                                            whitespaces.pointer = (whitespaces.pointer).c_offset(1);
+                                            *fresh759 = *fresh758;
+                                        } else if *(*parser).buffer.pointer as libc::c_int
+                                            & 0xf0 as libc::c_int
+                                            == 0xe0 as libc::c_int
+                                        {
+                                            let fresh760 = &mut (*parser).buffer.pointer;
+                                            let fresh761 = *fresh760;
+                                            *fresh760 = (*fresh760).c_offset(1);
+                                            let fresh762 = whitespaces.pointer;
+                                            whitespaces.pointer = (whitespaces.pointer).c_offset(1);
+                                            *fresh762 = *fresh761;
+                                            let fresh763 = &mut (*parser).buffer.pointer;
+                                            let fresh764 = *fresh763;
+                                            *fresh763 = (*fresh763).c_offset(1);
+                                            let fresh765 = whitespaces.pointer;
+                                            whitespaces.pointer = (whitespaces.pointer).c_offset(1);
+                                            *fresh765 = *fresh764;
+                                            let fresh766 = &mut (*parser).buffer.pointer;
+                                            let fresh767 = *fresh766;
+                                            *fresh766 = (*fresh766).c_offset(1);
+                                            let fresh768 = whitespaces.pointer;
+                                            whitespaces.pointer = (whitespaces.pointer).c_offset(1);
+                                            *fresh768 = *fresh767;
+                                        } else if *(*parser).buffer.pointer as libc::c_int
+                                            & 0xf8 as libc::c_int
+                                            == 0xf0 as libc::c_int
+                                        {
+                                            let fresh769 = &mut (*parser).buffer.pointer;
+                                            let fresh770 = *fresh769;
+                                            *fresh769 = (*fresh769).c_offset(1);
+                                            let fresh771 = whitespaces.pointer;
+                                            whitespaces.pointer = (whitespaces.pointer).c_offset(1);
+                                            *fresh771 = *fresh770;
+                                            let fresh772 = &mut (*parser).buffer.pointer;
+                                            let fresh773 = *fresh772;
+                                            *fresh772 = (*fresh772).c_offset(1);
+                                            let fresh774 = whitespaces.pointer;
+                                            whitespaces.pointer = (whitespaces.pointer).c_offset(1);
+                                            *fresh774 = *fresh773;
+                                            let fresh775 = &mut (*parser).buffer.pointer;
+                                            let fresh776 = *fresh775;
+                                            *fresh775 = (*fresh775).c_offset(1);
+                                            let fresh777 = whitespaces.pointer;
+                                            whitespaces.pointer = (whitespaces.pointer).c_offset(1);
+                                            *fresh777 = *fresh776;
+                                            let fresh778 = &mut (*parser).buffer.pointer;
+                                            let fresh779 = *fresh778;
+                                            *fresh778 = (*fresh778).c_offset(1);
+                                            let fresh780 = whitespaces.pointer;
+                                            whitespaces.pointer = (whitespaces.pointer).c_offset(1);
+                                            *fresh780 = *fresh779;
                                         } else {
-                                            if *(*parser).buffer.pointer as libc::c_int
-                                                & 0xe0 as libc::c_int
-                                                == 0xc0 as libc::c_int
-                                            {
-                                                let fresh754 = &mut (*parser).buffer.pointer;
-                                                let fresh755 = *fresh754;
-                                                *fresh754 = (*fresh754).c_offset(1);
-                                                let fresh756 = whitespaces.pointer;
-                                                whitespaces.pointer =
-                                                    (whitespaces.pointer).c_offset(1);
-                                                *fresh756 = *fresh755;
-                                                let fresh757 = &mut (*parser).buffer.pointer;
-                                                let fresh758 = *fresh757;
-                                                *fresh757 = (*fresh757).c_offset(1);
-                                                let fresh759 = whitespaces.pointer;
-                                                whitespaces.pointer =
-                                                    (whitespaces.pointer).c_offset(1);
-                                                *fresh759 = *fresh758;
-                                            } else {
-                                                if *(*parser).buffer.pointer as libc::c_int
-                                                    & 0xf0 as libc::c_int
-                                                    == 0xe0 as libc::c_int
-                                                {
-                                                    let fresh760 = &mut (*parser).buffer.pointer;
-                                                    let fresh761 = *fresh760;
-                                                    *fresh760 = (*fresh760).c_offset(1);
-                                                    let fresh762 = whitespaces.pointer;
-                                                    whitespaces.pointer =
-                                                        (whitespaces.pointer).c_offset(1);
-                                                    *fresh762 = *fresh761;
-                                                    let fresh763 = &mut (*parser).buffer.pointer;
-                                                    let fresh764 = *fresh763;
-                                                    *fresh763 = (*fresh763).c_offset(1);
-                                                    let fresh765 = whitespaces.pointer;
-                                                    whitespaces.pointer =
-                                                        (whitespaces.pointer).c_offset(1);
-                                                    *fresh765 = *fresh764;
-                                                    let fresh766 = &mut (*parser).buffer.pointer;
-                                                    let fresh767 = *fresh766;
-                                                    *fresh766 = (*fresh766).c_offset(1);
-                                                    let fresh768 = whitespaces.pointer;
-                                                    whitespaces.pointer =
-                                                        (whitespaces.pointer).c_offset(1);
-                                                    *fresh768 = *fresh767;
-                                                } else {
-                                                    if *(*parser).buffer.pointer as libc::c_int
-                                                        & 0xf8 as libc::c_int
-                                                        == 0xf0 as libc::c_int
-                                                    {
-                                                        let fresh769 =
-                                                            &mut (*parser).buffer.pointer;
-                                                        let fresh770 = *fresh769;
-                                                        *fresh769 = (*fresh769).c_offset(1);
-                                                        let fresh771 = whitespaces.pointer;
-                                                        whitespaces.pointer =
-                                                            (whitespaces.pointer).c_offset(1);
-                                                        *fresh771 = *fresh770;
-                                                        let fresh772 =
-                                                            &mut (*parser).buffer.pointer;
-                                                        let fresh773 = *fresh772;
-                                                        *fresh772 = (*fresh772).c_offset(1);
-                                                        let fresh774 = whitespaces.pointer;
-                                                        whitespaces.pointer =
-                                                            (whitespaces.pointer).c_offset(1);
-                                                        *fresh774 = *fresh773;
-                                                        let fresh775 =
-                                                            &mut (*parser).buffer.pointer;
-                                                        let fresh776 = *fresh775;
-                                                        *fresh775 = (*fresh775).c_offset(1);
-                                                        let fresh777 = whitespaces.pointer;
-                                                        whitespaces.pointer =
-                                                            (whitespaces.pointer).c_offset(1);
-                                                        *fresh777 = *fresh776;
-                                                        let fresh778 =
-                                                            &mut (*parser).buffer.pointer;
-                                                        let fresh779 = *fresh778;
-                                                        *fresh778 = (*fresh778).c_offset(1);
-                                                        let fresh780 = whitespaces.pointer;
-                                                        whitespaces.pointer =
-                                                            (whitespaces.pointer).c_offset(1);
-                                                        *fresh780 = *fresh779;
-                                                    } else {
-                                                    };
-                                                };
-                                            };
                                         };
                                         let fresh781 = &mut (*parser).mark.index;
                                         *fresh781 = (*fresh781).wrapping_add(1);
@@ -10532,35 +10104,29 @@ unsafe extern "C" fn yaml_parser_scan_plain_scalar(
                                             == 0 as libc::c_int
                                         {
                                             1 as libc::c_int
+                                        } else if *((*parser).buffer.pointer)
+                                            .c_offset(0 as libc::c_int as isize)
+                                            as libc::c_int
+                                            & 0xe0 as libc::c_int
+                                            == 0xc0 as libc::c_int
+                                        {
+                                            2 as libc::c_int
+                                        } else if *((*parser).buffer.pointer)
+                                            .c_offset(0 as libc::c_int as isize)
+                                            as libc::c_int
+                                            & 0xf0 as libc::c_int
+                                            == 0xe0 as libc::c_int
+                                        {
+                                            3 as libc::c_int
+                                        } else if *((*parser).buffer.pointer)
+                                            .c_offset(0 as libc::c_int as isize)
+                                            as libc::c_int
+                                            & 0xf8 as libc::c_int
+                                            == 0xf0 as libc::c_int
+                                        {
+                                            4 as libc::c_int
                                         } else {
-                                            if *((*parser).buffer.pointer)
-                                                .c_offset(0 as libc::c_int as isize)
-                                                as libc::c_int
-                                                & 0xe0 as libc::c_int
-                                                == 0xc0 as libc::c_int
-                                            {
-                                                2 as libc::c_int
-                                            } else {
-                                                if *((*parser).buffer.pointer)
-                                                    .c_offset(0 as libc::c_int as isize)
-                                                    as libc::c_int
-                                                    & 0xf0 as libc::c_int
-                                                    == 0xe0 as libc::c_int
-                                                {
-                                                    3 as libc::c_int
-                                                } else {
-                                                    if *((*parser).buffer.pointer)
-                                                        .c_offset(0 as libc::c_int as isize)
-                                                        as libc::c_int
-                                                        & 0xf8 as libc::c_int
-                                                        == 0xf0 as libc::c_int
-                                                    {
-                                                        4 as libc::c_int
-                                                    } else {
-                                                        0 as libc::c_int
-                                                    }
-                                                }
-                                            }
+                                            0 as libc::c_int
                                         }) as isize,
                                     );
                                 }
@@ -10627,109 +10193,97 @@ unsafe extern "C" fn yaml_parser_scan_plain_scalar(
                                                 .wrapping_sub(2 as libc::c_int as libc::c_ulong)
                                                 as size_t
                                                 as size_t;
-                                        } else {
-                                            if *((*parser).buffer.pointer)
+                                        } else if *((*parser).buffer.pointer)
+                                            .c_offset(0 as libc::c_int as isize)
+                                            as libc::c_int
+                                            == '\r' as i32 as yaml_char_t as libc::c_int
+                                            || *((*parser).buffer.pointer)
                                                 .c_offset(0 as libc::c_int as isize)
                                                 as libc::c_int
-                                                == '\r' as i32 as yaml_char_t as libc::c_int
+                                                == '\n' as i32 as yaml_char_t as libc::c_int
+                                        {
+                                            let fresh793 = leading_break.pointer;
+                                            leading_break.pointer =
+                                                (leading_break.pointer).c_offset(1);
+                                            *fresh793 = '\n' as i32 as yaml_char_t;
+                                            let fresh794 = &mut (*parser).buffer.pointer;
+                                            *fresh794 = (*fresh794).c_offset(1);
+                                            let fresh795 = &mut (*parser).mark.index;
+                                            *fresh795 = (*fresh795).wrapping_add(1);
+                                            (*parser).mark.column = 0 as libc::c_int as size_t;
+                                            let fresh796 = &mut (*parser).mark.line;
+                                            *fresh796 = (*fresh796).wrapping_add(1);
+                                            let fresh797 = &mut (*parser).unread;
+                                            *fresh797 = (*fresh797).wrapping_sub(1);
+                                        } else if *((*parser).buffer.pointer)
+                                            .c_offset(0 as libc::c_int as isize)
+                                            as libc::c_int
+                                            == -62i32 as yaml_char_t as libc::c_int
+                                            && *((*parser).buffer.pointer)
+                                                .c_offset(1 as libc::c_int as isize)
+                                                as libc::c_int
+                                                == -123i32 as yaml_char_t as libc::c_int
+                                        {
+                                            let fresh798 = leading_break.pointer;
+                                            leading_break.pointer =
+                                                (leading_break.pointer).c_offset(1);
+                                            *fresh798 = '\n' as i32 as yaml_char_t;
+                                            let fresh799 = &mut (*parser).buffer.pointer;
+                                            *fresh799 =
+                                                (*fresh799).c_offset(2 as libc::c_int as isize);
+                                            let fresh800 = &mut (*parser).mark.index;
+                                            *fresh800 = (*fresh800).wrapping_add(1);
+                                            (*parser).mark.column = 0 as libc::c_int as size_t;
+                                            let fresh801 = &mut (*parser).mark.line;
+                                            *fresh801 = (*fresh801).wrapping_add(1);
+                                            let fresh802 = &mut (*parser).unread;
+                                            *fresh802 = (*fresh802).wrapping_sub(1);
+                                        } else if *((*parser).buffer.pointer)
+                                            .c_offset(0 as libc::c_int as isize)
+                                            as libc::c_int
+                                            == -30i32 as yaml_char_t as libc::c_int
+                                            && *((*parser).buffer.pointer)
+                                                .c_offset(1 as libc::c_int as isize)
+                                                as libc::c_int
+                                                == -128i32 as yaml_char_t as libc::c_int
+                                            && (*((*parser).buffer.pointer)
+                                                .c_offset(2 as libc::c_int as isize)
+                                                as libc::c_int
+                                                == -88i32 as yaml_char_t as libc::c_int
                                                 || *((*parser).buffer.pointer)
-                                                    .c_offset(0 as libc::c_int as isize)
+                                                    .c_offset(2 as libc::c_int as isize)
                                                     as libc::c_int
-                                                    == '\n' as i32 as yaml_char_t as libc::c_int
-                                            {
-                                                let fresh793 = leading_break.pointer;
-                                                leading_break.pointer =
-                                                    (leading_break.pointer).c_offset(1);
-                                                *fresh793 = '\n' as i32 as yaml_char_t;
-                                                let fresh794 = &mut (*parser).buffer.pointer;
-                                                *fresh794 = (*fresh794).c_offset(1);
-                                                let fresh795 = &mut (*parser).mark.index;
-                                                *fresh795 = (*fresh795).wrapping_add(1);
-                                                (*parser).mark.column = 0 as libc::c_int as size_t;
-                                                let fresh796 = &mut (*parser).mark.line;
-                                                *fresh796 = (*fresh796).wrapping_add(1);
-                                                let fresh797 = &mut (*parser).unread;
-                                                *fresh797 = (*fresh797).wrapping_sub(1);
-                                            } else {
-                                                if *((*parser).buffer.pointer)
-                                                    .c_offset(0 as libc::c_int as isize)
-                                                    as libc::c_int
-                                                    == -62i32 as yaml_char_t as libc::c_int
-                                                    && *((*parser).buffer.pointer)
-                                                        .c_offset(1 as libc::c_int as isize)
-                                                        as libc::c_int
-                                                        == -123i32 as yaml_char_t as libc::c_int
-                                                {
-                                                    let fresh798 = leading_break.pointer;
-                                                    leading_break.pointer =
-                                                        (leading_break.pointer).c_offset(1);
-                                                    *fresh798 = '\n' as i32 as yaml_char_t;
-                                                    let fresh799 = &mut (*parser).buffer.pointer;
-                                                    *fresh799 = (*fresh799)
-                                                        .c_offset(2 as libc::c_int as isize);
-                                                    let fresh800 = &mut (*parser).mark.index;
-                                                    *fresh800 = (*fresh800).wrapping_add(1);
-                                                    (*parser).mark.column =
-                                                        0 as libc::c_int as size_t;
-                                                    let fresh801 = &mut (*parser).mark.line;
-                                                    *fresh801 = (*fresh801).wrapping_add(1);
-                                                    let fresh802 = &mut (*parser).unread;
-                                                    *fresh802 = (*fresh802).wrapping_sub(1);
-                                                } else {
-                                                    if *((*parser).buffer.pointer)
-                                                        .c_offset(0 as libc::c_int as isize)
-                                                        as libc::c_int
-                                                        == -30i32 as yaml_char_t as libc::c_int
-                                                        && *((*parser).buffer.pointer)
-                                                            .c_offset(1 as libc::c_int as isize)
-                                                            as libc::c_int
-                                                            == -128i32 as yaml_char_t as libc::c_int
-                                                        && (*((*parser).buffer.pointer)
-                                                            .c_offset(2 as libc::c_int as isize)
-                                                            as libc::c_int
-                                                            == -88i32 as yaml_char_t as libc::c_int
-                                                            || *((*parser).buffer.pointer)
-                                                                .c_offset(2 as libc::c_int as isize)
-                                                                as libc::c_int
-                                                                == -87i32 as yaml_char_t
-                                                                    as libc::c_int)
-                                                    {
-                                                        let fresh803 =
-                                                            &mut (*parser).buffer.pointer;
-                                                        let fresh804 = *fresh803;
-                                                        *fresh803 = (*fresh803).c_offset(1);
-                                                        let fresh805 = leading_break.pointer;
-                                                        leading_break.pointer =
-                                                            (leading_break.pointer).c_offset(1);
-                                                        *fresh805 = *fresh804;
-                                                        let fresh806 =
-                                                            &mut (*parser).buffer.pointer;
-                                                        let fresh807 = *fresh806;
-                                                        *fresh806 = (*fresh806).c_offset(1);
-                                                        let fresh808 = leading_break.pointer;
-                                                        leading_break.pointer =
-                                                            (leading_break.pointer).c_offset(1);
-                                                        *fresh808 = *fresh807;
-                                                        let fresh809 =
-                                                            &mut (*parser).buffer.pointer;
-                                                        let fresh810 = *fresh809;
-                                                        *fresh809 = (*fresh809).c_offset(1);
-                                                        let fresh811 = leading_break.pointer;
-                                                        leading_break.pointer =
-                                                            (leading_break.pointer).c_offset(1);
-                                                        *fresh811 = *fresh810;
-                                                        let fresh812 = &mut (*parser).mark.index;
-                                                        *fresh812 = (*fresh812).wrapping_add(1);
-                                                        (*parser).mark.column =
-                                                            0 as libc::c_int as size_t;
-                                                        let fresh813 = &mut (*parser).mark.line;
-                                                        *fresh813 = (*fresh813).wrapping_add(1);
-                                                        let fresh814 = &mut (*parser).unread;
-                                                        *fresh814 = (*fresh814).wrapping_sub(1);
-                                                    } else {
-                                                    };
-                                                };
-                                            };
+                                                    == -87i32 as yaml_char_t as libc::c_int)
+                                        {
+                                            let fresh803 = &mut (*parser).buffer.pointer;
+                                            let fresh804 = *fresh803;
+                                            *fresh803 = (*fresh803).c_offset(1);
+                                            let fresh805 = leading_break.pointer;
+                                            leading_break.pointer =
+                                                (leading_break.pointer).c_offset(1);
+                                            *fresh805 = *fresh804;
+                                            let fresh806 = &mut (*parser).buffer.pointer;
+                                            let fresh807 = *fresh806;
+                                            *fresh806 = (*fresh806).c_offset(1);
+                                            let fresh808 = leading_break.pointer;
+                                            leading_break.pointer =
+                                                (leading_break.pointer).c_offset(1);
+                                            *fresh808 = *fresh807;
+                                            let fresh809 = &mut (*parser).buffer.pointer;
+                                            let fresh810 = *fresh809;
+                                            *fresh809 = (*fresh809).c_offset(1);
+                                            let fresh811 = leading_break.pointer;
+                                            leading_break.pointer =
+                                                (leading_break.pointer).c_offset(1);
+                                            *fresh811 = *fresh810;
+                                            let fresh812 = &mut (*parser).mark.index;
+                                            *fresh812 = (*fresh812).wrapping_add(1);
+                                            (*parser).mark.column = 0 as libc::c_int as size_t;
+                                            let fresh813 = &mut (*parser).mark.line;
+                                            *fresh813 = (*fresh813).wrapping_add(1);
+                                            let fresh814 = &mut (*parser).unread;
+                                            *fresh814 = (*fresh814).wrapping_sub(1);
+                                        } else {
                                         };
                                         1 as libc::c_int
                                     } else {
@@ -10783,104 +10337,96 @@ unsafe extern "C" fn yaml_parser_scan_plain_scalar(
                                             .wrapping_sub(2 as libc::c_int as libc::c_ulong)
                                             as size_t
                                             as size_t;
-                                    } else {
-                                        if *((*parser).buffer.pointer)
+                                    } else if *((*parser).buffer.pointer)
+                                        .c_offset(0 as libc::c_int as isize)
+                                        as libc::c_int
+                                        == '\r' as i32 as yaml_char_t as libc::c_int
+                                        || *((*parser).buffer.pointer)
                                             .c_offset(0 as libc::c_int as isize)
                                             as libc::c_int
-                                            == '\r' as i32 as yaml_char_t as libc::c_int
+                                            == '\n' as i32 as yaml_char_t as libc::c_int
+                                    {
+                                        let fresh820 = trailing_breaks.pointer;
+                                        trailing_breaks.pointer =
+                                            (trailing_breaks.pointer).c_offset(1);
+                                        *fresh820 = '\n' as i32 as yaml_char_t;
+                                        let fresh821 = &mut (*parser).buffer.pointer;
+                                        *fresh821 = (*fresh821).c_offset(1);
+                                        let fresh822 = &mut (*parser).mark.index;
+                                        *fresh822 = (*fresh822).wrapping_add(1);
+                                        (*parser).mark.column = 0 as libc::c_int as size_t;
+                                        let fresh823 = &mut (*parser).mark.line;
+                                        *fresh823 = (*fresh823).wrapping_add(1);
+                                        let fresh824 = &mut (*parser).unread;
+                                        *fresh824 = (*fresh824).wrapping_sub(1);
+                                    } else if *((*parser).buffer.pointer)
+                                        .c_offset(0 as libc::c_int as isize)
+                                        as libc::c_int
+                                        == -62i32 as yaml_char_t as libc::c_int
+                                        && *((*parser).buffer.pointer)
+                                            .c_offset(1 as libc::c_int as isize)
+                                            as libc::c_int
+                                            == -123i32 as yaml_char_t as libc::c_int
+                                    {
+                                        let fresh825 = trailing_breaks.pointer;
+                                        trailing_breaks.pointer =
+                                            (trailing_breaks.pointer).c_offset(1);
+                                        *fresh825 = '\n' as i32 as yaml_char_t;
+                                        let fresh826 = &mut (*parser).buffer.pointer;
+                                        *fresh826 = (*fresh826).c_offset(2 as libc::c_int as isize);
+                                        let fresh827 = &mut (*parser).mark.index;
+                                        *fresh827 = (*fresh827).wrapping_add(1);
+                                        (*parser).mark.column = 0 as libc::c_int as size_t;
+                                        let fresh828 = &mut (*parser).mark.line;
+                                        *fresh828 = (*fresh828).wrapping_add(1);
+                                        let fresh829 = &mut (*parser).unread;
+                                        *fresh829 = (*fresh829).wrapping_sub(1);
+                                    } else if *((*parser).buffer.pointer)
+                                        .c_offset(0 as libc::c_int as isize)
+                                        as libc::c_int
+                                        == -30i32 as yaml_char_t as libc::c_int
+                                        && *((*parser).buffer.pointer)
+                                            .c_offset(1 as libc::c_int as isize)
+                                            as libc::c_int
+                                            == -128i32 as yaml_char_t as libc::c_int
+                                        && (*((*parser).buffer.pointer)
+                                            .c_offset(2 as libc::c_int as isize)
+                                            as libc::c_int
+                                            == -88i32 as yaml_char_t as libc::c_int
                                             || *((*parser).buffer.pointer)
-                                                .c_offset(0 as libc::c_int as isize)
+                                                .c_offset(2 as libc::c_int as isize)
                                                 as libc::c_int
-                                                == '\n' as i32 as yaml_char_t as libc::c_int
-                                        {
-                                            let fresh820 = trailing_breaks.pointer;
-                                            trailing_breaks.pointer =
-                                                (trailing_breaks.pointer).c_offset(1);
-                                            *fresh820 = '\n' as i32 as yaml_char_t;
-                                            let fresh821 = &mut (*parser).buffer.pointer;
-                                            *fresh821 = (*fresh821).c_offset(1);
-                                            let fresh822 = &mut (*parser).mark.index;
-                                            *fresh822 = (*fresh822).wrapping_add(1);
-                                            (*parser).mark.column = 0 as libc::c_int as size_t;
-                                            let fresh823 = &mut (*parser).mark.line;
-                                            *fresh823 = (*fresh823).wrapping_add(1);
-                                            let fresh824 = &mut (*parser).unread;
-                                            *fresh824 = (*fresh824).wrapping_sub(1);
-                                        } else {
-                                            if *((*parser).buffer.pointer)
-                                                .c_offset(0 as libc::c_int as isize)
-                                                as libc::c_int
-                                                == -62i32 as yaml_char_t as libc::c_int
-                                                && *((*parser).buffer.pointer)
-                                                    .c_offset(1 as libc::c_int as isize)
-                                                    as libc::c_int
-                                                    == -123i32 as yaml_char_t as libc::c_int
-                                            {
-                                                let fresh825 = trailing_breaks.pointer;
-                                                trailing_breaks.pointer =
-                                                    (trailing_breaks.pointer).c_offset(1);
-                                                *fresh825 = '\n' as i32 as yaml_char_t;
-                                                let fresh826 = &mut (*parser).buffer.pointer;
-                                                *fresh826 =
-                                                    (*fresh826).c_offset(2 as libc::c_int as isize);
-                                                let fresh827 = &mut (*parser).mark.index;
-                                                *fresh827 = (*fresh827).wrapping_add(1);
-                                                (*parser).mark.column = 0 as libc::c_int as size_t;
-                                                let fresh828 = &mut (*parser).mark.line;
-                                                *fresh828 = (*fresh828).wrapping_add(1);
-                                                let fresh829 = &mut (*parser).unread;
-                                                *fresh829 = (*fresh829).wrapping_sub(1);
-                                            } else {
-                                                if *((*parser).buffer.pointer)
-                                                    .c_offset(0 as libc::c_int as isize)
-                                                    as libc::c_int
-                                                    == -30i32 as yaml_char_t as libc::c_int
-                                                    && *((*parser).buffer.pointer)
-                                                        .c_offset(1 as libc::c_int as isize)
-                                                        as libc::c_int
-                                                        == -128i32 as yaml_char_t as libc::c_int
-                                                    && (*((*parser).buffer.pointer)
-                                                        .c_offset(2 as libc::c_int as isize)
-                                                        as libc::c_int
-                                                        == -88i32 as yaml_char_t as libc::c_int
-                                                        || *((*parser).buffer.pointer)
-                                                            .c_offset(2 as libc::c_int as isize)
-                                                            as libc::c_int
-                                                            == -87i32 as yaml_char_t as libc::c_int)
-                                                {
-                                                    let fresh830 = &mut (*parser).buffer.pointer;
-                                                    let fresh831 = *fresh830;
-                                                    *fresh830 = (*fresh830).c_offset(1);
-                                                    let fresh832 = trailing_breaks.pointer;
-                                                    trailing_breaks.pointer =
-                                                        (trailing_breaks.pointer).c_offset(1);
-                                                    *fresh832 = *fresh831;
-                                                    let fresh833 = &mut (*parser).buffer.pointer;
-                                                    let fresh834 = *fresh833;
-                                                    *fresh833 = (*fresh833).c_offset(1);
-                                                    let fresh835 = trailing_breaks.pointer;
-                                                    trailing_breaks.pointer =
-                                                        (trailing_breaks.pointer).c_offset(1);
-                                                    *fresh835 = *fresh834;
-                                                    let fresh836 = &mut (*parser).buffer.pointer;
-                                                    let fresh837 = *fresh836;
-                                                    *fresh836 = (*fresh836).c_offset(1);
-                                                    let fresh838 = trailing_breaks.pointer;
-                                                    trailing_breaks.pointer =
-                                                        (trailing_breaks.pointer).c_offset(1);
-                                                    *fresh838 = *fresh837;
-                                                    let fresh839 = &mut (*parser).mark.index;
-                                                    *fresh839 = (*fresh839).wrapping_add(1);
-                                                    (*parser).mark.column =
-                                                        0 as libc::c_int as size_t;
-                                                    let fresh840 = &mut (*parser).mark.line;
-                                                    *fresh840 = (*fresh840).wrapping_add(1);
-                                                    let fresh841 = &mut (*parser).unread;
-                                                    *fresh841 = (*fresh841).wrapping_sub(1);
-                                                } else {
-                                                };
-                                            };
-                                        };
+                                                == -87i32 as yaml_char_t as libc::c_int)
+                                    {
+                                        let fresh830 = &mut (*parser).buffer.pointer;
+                                        let fresh831 = *fresh830;
+                                        *fresh830 = (*fresh830).c_offset(1);
+                                        let fresh832 = trailing_breaks.pointer;
+                                        trailing_breaks.pointer =
+                                            (trailing_breaks.pointer).c_offset(1);
+                                        *fresh832 = *fresh831;
+                                        let fresh833 = &mut (*parser).buffer.pointer;
+                                        let fresh834 = *fresh833;
+                                        *fresh833 = (*fresh833).c_offset(1);
+                                        let fresh835 = trailing_breaks.pointer;
+                                        trailing_breaks.pointer =
+                                            (trailing_breaks.pointer).c_offset(1);
+                                        *fresh835 = *fresh834;
+                                        let fresh836 = &mut (*parser).buffer.pointer;
+                                        let fresh837 = *fresh836;
+                                        *fresh836 = (*fresh836).c_offset(1);
+                                        let fresh838 = trailing_breaks.pointer;
+                                        trailing_breaks.pointer =
+                                            (trailing_breaks.pointer).c_offset(1);
+                                        *fresh838 = *fresh837;
+                                        let fresh839 = &mut (*parser).mark.index;
+                                        *fresh839 = (*fresh839).wrapping_add(1);
+                                        (*parser).mark.column = 0 as libc::c_int as size_t;
+                                        let fresh840 = &mut (*parser).mark.line;
+                                        *fresh840 = (*fresh840).wrapping_add(1);
+                                        let fresh841 = &mut (*parser).unread;
+                                        *fresh841 = (*fresh841).wrapping_sub(1);
+                                    } else {
                                     };
                                     1 as libc::c_int
                                 } else {

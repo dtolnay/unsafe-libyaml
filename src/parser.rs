@@ -1408,31 +1408,29 @@ unsafe extern "C" fn yaml_parser_parse_flow_sequence_entry(
             let fresh102 = &mut (*parser).tokens.head;
             *fresh102 = (*fresh102).c_offset(1);
             return 1 as libc::c_int;
-        } else {
-            if (*token).type_0 as libc::c_uint
-                != YAML_FLOW_SEQUENCE_END_TOKEN as libc::c_int as libc::c_uint
+        } else if (*token).type_0 as libc::c_uint
+            != YAML_FLOW_SEQUENCE_END_TOKEN as libc::c_int as libc::c_uint
+        {
+            if if (*parser).states.top != (*parser).states.end
+                || yaml_stack_extend(
+                    ptr::addr_of_mut!((*parser).states.start) as *mut *mut libc::c_void,
+                    ptr::addr_of_mut!((*parser).states.top) as *mut *mut libc::c_void,
+                    ptr::addr_of_mut!((*parser).states.end) as *mut *mut libc::c_void,
+                ) != 0
             {
-                if if (*parser).states.top != (*parser).states.end
-                    || yaml_stack_extend(
-                        ptr::addr_of_mut!((*parser).states.start) as *mut *mut libc::c_void,
-                        ptr::addr_of_mut!((*parser).states.top) as *mut *mut libc::c_void,
-                        ptr::addr_of_mut!((*parser).states.end) as *mut *mut libc::c_void,
-                    ) != 0
-                {
-                    let fresh103 = &mut (*parser).states.top;
-                    let fresh104 = *fresh103;
-                    *fresh103 = (*fresh103).c_offset(1);
-                    *fresh104 = YAML_PARSE_FLOW_SEQUENCE_ENTRY_STATE;
-                    1 as libc::c_int
-                } else {
-                    (*parser).error = YAML_MEMORY_ERROR;
-                    0 as libc::c_int
-                } == 0
-                {
-                    return 0 as libc::c_int;
-                }
-                return yaml_parser_parse_node(parser, event, 0 as libc::c_int, 0 as libc::c_int);
+                let fresh103 = &mut (*parser).states.top;
+                let fresh104 = *fresh103;
+                *fresh103 = (*fresh103).c_offset(1);
+                *fresh104 = YAML_PARSE_FLOW_SEQUENCE_ENTRY_STATE;
+                1 as libc::c_int
+            } else {
+                (*parser).error = YAML_MEMORY_ERROR;
+                0 as libc::c_int
+            } == 0
+            {
+                return 0 as libc::c_int;
             }
+            return yaml_parser_parse_node(parser, event, 0 as libc::c_int, 0 as libc::c_int);
         }
     }
     let fresh105 = &mut (*parser).states.top;
@@ -1725,31 +1723,29 @@ unsafe extern "C" fn yaml_parser_parse_flow_mapping_key(
                 (*parser).state = YAML_PARSE_FLOW_MAPPING_VALUE_STATE;
                 return yaml_parser_process_empty_scalar(parser, event, (*token).start_mark);
             }
-        } else {
-            if (*token).type_0 as libc::c_uint
-                != YAML_FLOW_MAPPING_END_TOKEN as libc::c_int as libc::c_uint
+        } else if (*token).type_0 as libc::c_uint
+            != YAML_FLOW_MAPPING_END_TOKEN as libc::c_int as libc::c_uint
+        {
+            if if (*parser).states.top != (*parser).states.end
+                || yaml_stack_extend(
+                    ptr::addr_of_mut!((*parser).states.start) as *mut *mut libc::c_void,
+                    ptr::addr_of_mut!((*parser).states.top) as *mut *mut libc::c_void,
+                    ptr::addr_of_mut!((*parser).states.end) as *mut *mut libc::c_void,
+                ) != 0
             {
-                if if (*parser).states.top != (*parser).states.end
-                    || yaml_stack_extend(
-                        ptr::addr_of_mut!((*parser).states.start) as *mut *mut libc::c_void,
-                        ptr::addr_of_mut!((*parser).states.top) as *mut *mut libc::c_void,
-                        ptr::addr_of_mut!((*parser).states.end) as *mut *mut libc::c_void,
-                    ) != 0
-                {
-                    let fresh128 = &mut (*parser).states.top;
-                    let fresh129 = *fresh128;
-                    *fresh128 = (*fresh128).c_offset(1);
-                    *fresh129 = YAML_PARSE_FLOW_MAPPING_EMPTY_VALUE_STATE;
-                    1 as libc::c_int
-                } else {
-                    (*parser).error = YAML_MEMORY_ERROR;
-                    0 as libc::c_int
-                } == 0
-                {
-                    return 0 as libc::c_int;
-                }
-                return yaml_parser_parse_node(parser, event, 0 as libc::c_int, 0 as libc::c_int);
+                let fresh128 = &mut (*parser).states.top;
+                let fresh129 = *fresh128;
+                *fresh128 = (*fresh128).c_offset(1);
+                *fresh129 = YAML_PARSE_FLOW_MAPPING_EMPTY_VALUE_STATE;
+                1 as libc::c_int
+            } else {
+                (*parser).error = YAML_MEMORY_ERROR;
+                0 as libc::c_int
+            } == 0
+            {
+                return 0 as libc::c_int;
             }
+            return yaml_parser_parse_node(parser, event, 0 as libc::c_int, 0 as libc::c_int);
         }
     }
     let fresh130 = &mut (*parser).states.top;

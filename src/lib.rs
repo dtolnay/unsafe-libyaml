@@ -6,7 +6,6 @@
     clippy::cast_possible_wrap,
     clippy::cast_ptr_alignment,
     clippy::cast_sign_loss,
-    clippy::collapsible_else_if,
     clippy::collapsible_if,
     clippy::if_not_else,
     clippy::let_underscore_drop,
