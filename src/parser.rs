@@ -21,7 +21,6 @@ pub struct Unnamed_36 {
     pub end: *mut yaml_tag_directive_t,
     pub top: *mut yaml_tag_directive_t,
 }
-#[no_mangle]
 pub unsafe extern "C" fn yaml_parser_parse(
     parser: *mut yaml_parser_t,
     event: *mut yaml_event_t,

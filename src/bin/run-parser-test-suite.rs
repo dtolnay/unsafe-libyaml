@@ -200,7 +200,6 @@ unsafe fn unsafe_main() -> ExitCode {
     yaml_parser_delete(parser);
     ExitCode::SUCCESS
 }
-#[no_mangle]
 pub unsafe extern "C" fn print_escaped(str: *mut yaml_char_t, length: size_t) {
     let mut i: libc::c_int;
     let mut c: libc::c_char;

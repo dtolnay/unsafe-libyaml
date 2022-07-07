@@ -8,7 +8,6 @@ use std::io::Write;
 use std::mem;
 use std::ptr;
 use std::slice;
-#[no_mangle]
 pub unsafe extern "C" fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> libc::c_int {
     let mut event: yaml_event_t = yaml_event_t {
         type_0: YAML_NO_EVENT,
@@ -52,7 +51,6 @@ pub unsafe extern "C" fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> 
     (*emitter).opened = 1 as libc::c_int;
     1 as libc::c_int
 }
-#[no_mangle]
 pub unsafe extern "C" fn yaml_emitter_close(mut emitter: *mut yaml_emitter_t) -> libc::c_int {
     let mut event: yaml_event_t = yaml_event_t {
         type_0: YAML_NO_EVENT,
@@ -98,7 +96,6 @@ pub unsafe extern "C" fn yaml_emitter_close(mut emitter: *mut yaml_emitter_t) ->
     (*emitter).closed = 1 as libc::c_int;
     1 as libc::c_int
 }
-#[no_mangle]
 pub unsafe extern "C" fn yaml_emitter_dump(
     emitter: *mut yaml_emitter_t,
     document: *mut yaml_document_t,

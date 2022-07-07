@@ -14,7 +14,6 @@ unsafe extern "C" fn yaml_emitter_set_emitter_error(
     *fresh0 = problem;
     0 as libc::c_int
 }
-#[no_mangle]
 pub unsafe extern "C" fn yaml_emitter_emit(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,

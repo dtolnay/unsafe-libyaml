@@ -30,7 +30,6 @@ pub struct Unnamed_36 {
     pub end: *mut yaml_node_item_t,
     pub top: *mut yaml_node_item_t,
 }
-#[no_mangle]
 pub unsafe extern "C" fn yaml_parser_load(
     mut parser: *mut yaml_parser_t,
     document: *mut yaml_document_t,

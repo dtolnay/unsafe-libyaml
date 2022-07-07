@@ -9,7 +9,6 @@ use crate::yaml::*;
 use crate::PointerExt;
 use std::mem;
 use std::ptr;
-#[no_mangle]
 pub unsafe extern "C" fn yaml_parser_scan(
     mut parser: *mut yaml_parser_t,
     token: *mut yaml_token_t,
@@ -56,7 +55,6 @@ unsafe extern "C" fn yaml_parser_set_scanner_error(
     (*parser).problem_mark = (*parser).mark;
     0 as libc::c_int
 }
-#[no_mangle]
 pub unsafe extern "C" fn yaml_parser_fetch_more_tokens(
     mut parser: *mut yaml_parser_t,
 ) -> libc::c_int {

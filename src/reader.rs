@@ -122,7 +122,6 @@ unsafe extern "C" fn yaml_parser_update_raw_buffer(mut parser: *mut yaml_parser_
     }
     1 as libc::c_int
 }
-#[no_mangle]
 pub unsafe extern "C" fn yaml_parser_update_buffer(
     parser: *mut yaml_parser_t,
     length: size_t,

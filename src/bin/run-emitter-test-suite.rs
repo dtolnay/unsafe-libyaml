@@ -313,7 +313,6 @@ impl ReadBuf {
         }
     }
 }
-#[no_mangle]
 pub unsafe extern "C" fn get_anchor(
     sigil: libc::c_char,
     line: *mut libc::c_char,
@@ -338,7 +337,6 @@ pub unsafe extern "C" fn get_anchor(
     *anchor.offset(end.offset_from(start) as libc::c_long as isize) = '\0' as i32 as libc::c_char;
     anchor
 }
-#[no_mangle]
 pub unsafe extern "C" fn get_tag(
     line: *mut libc::c_char,
     tag: *mut libc::c_char,
@@ -362,7 +360,6 @@ pub unsafe extern "C" fn get_tag(
     ) = '\0' as i32 as libc::c_char;
     tag
 }
-#[no_mangle]
 pub unsafe extern "C" fn get_value(
     line: *mut libc::c_char,
     value: *mut libc::c_char,
