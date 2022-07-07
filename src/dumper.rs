@@ -8,7 +8,7 @@ use std::io::Write;
 use std::mem;
 use std::ptr;
 use std::slice;
-pub unsafe extern "C" fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> libc::c_int {
+pub unsafe fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> libc::c_int {
     let mut event: yaml_event_t = yaml_event_t {
         type_0: YAML_NO_EVENT,
         data: unnamed_yaml_event_s_data {
@@ -51,7 +51,7 @@ pub unsafe extern "C" fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> 
     (*emitter).opened = 1 as libc::c_int;
     1 as libc::c_int
 }
-pub unsafe extern "C" fn yaml_emitter_close(mut emitter: *mut yaml_emitter_t) -> libc::c_int {
+pub unsafe fn yaml_emitter_close(mut emitter: *mut yaml_emitter_t) -> libc::c_int {
     let mut event: yaml_event_t = yaml_event_t {
         type_0: YAML_NO_EVENT,
         data: unnamed_yaml_event_s_data {
@@ -96,7 +96,7 @@ pub unsafe extern "C" fn yaml_emitter_close(mut emitter: *mut yaml_emitter_t) ->
     (*emitter).closed = 1 as libc::c_int;
     1 as libc::c_int
 }
-pub unsafe extern "C" fn yaml_emitter_dump(
+pub unsafe fn yaml_emitter_dump(
     emitter: *mut yaml_emitter_t,
     document: *mut yaml_document_t,
 ) -> libc::c_int {
@@ -203,7 +203,7 @@ pub unsafe extern "C" fn yaml_emitter_dump(
     yaml_emitter_delete_document_and_anchors(emitter);
     0 as libc::c_int
 }
-unsafe extern "C" fn yaml_emitter_delete_document_and_anchors(mut emitter: *mut yaml_emitter_t) {
+unsafe fn yaml_emitter_delete_document_and_anchors(mut emitter: *mut yaml_emitter_t) {
     let mut index: libc::c_int;
     if ((*emitter).anchors).is_null() {
         yaml_document_delete((*emitter).document);
@@ -250,7 +250,7 @@ unsafe extern "C" fn yaml_emitter_delete_document_and_anchors(mut emitter: *mut 
     let fresh7 = &mut (*emitter).document;
     *fresh7 = ptr::null_mut::<yaml_document_t>();
 }
-unsafe extern "C" fn yaml_emitter_anchor_node(emitter: *mut yaml_emitter_t, index: libc::c_int) {
+unsafe fn yaml_emitter_anchor_node(emitter: *mut yaml_emitter_t, index: libc::c_int) {
     let node: *mut yaml_node_t = ((*(*emitter).document).nodes.start)
         .c_offset(index as isize)
         .c_offset(-(1 as libc::c_int as isize));
@@ -288,7 +288,7 @@ unsafe extern "C" fn yaml_emitter_anchor_node(emitter: *mut yaml_emitter_t, inde
         (*((*emitter).anchors).c_offset((index - 1 as libc::c_int) as isize)).anchor = *fresh9;
     }
 }
-unsafe extern "C" fn yaml_emitter_generate_anchor(
+unsafe fn yaml_emitter_generate_anchor(
     _emitter: *mut yaml_emitter_t,
     anchor_id: libc::c_int,
 ) -> *mut yaml_char_t {
@@ -300,10 +300,7 @@ unsafe extern "C" fn yaml_emitter_generate_anchor(
     let _ = write!(buffer, "id{:03}\0", anchor_id);
     anchor
 }
-unsafe extern "C" fn yaml_emitter_dump_node(
-    emitter: *mut yaml_emitter_t,
-    index: libc::c_int,
-) -> libc::c_int {
+unsafe fn yaml_emitter_dump_node(emitter: *mut yaml_emitter_t, index: libc::c_int) -> libc::c_int {
     let node: *mut yaml_node_t = ((*(*emitter).document).nodes.start)
         .c_offset(index as isize)
         .c_offset(-(1 as libc::c_int as isize));
@@ -328,7 +325,7 @@ unsafe extern "C" fn yaml_emitter_dump_node(
         _ => __assert!(false),
     }
 }
-unsafe extern "C" fn yaml_emitter_dump_alias(
+unsafe fn yaml_emitter_dump_alias(
     emitter: *mut yaml_emitter_t,
     anchor: *mut yaml_char_t,
 ) -> libc::c_int {
@@ -368,7 +365,7 @@ unsafe extern "C" fn yaml_emitter_dump_alias(
     event.data.alias.anchor = anchor;
     yaml_emitter_emit(emitter, &mut event)
 }
-unsafe extern "C" fn yaml_emitter_dump_scalar(
+unsafe fn yaml_emitter_dump_scalar(
     emitter: *mut yaml_emitter_t,
     node: *mut yaml_node_t,
     anchor: *mut yaml_char_t,
@@ -423,7 +420,7 @@ unsafe extern "C" fn yaml_emitter_dump_scalar(
     event.data.scalar.style = (*node).data.scalar.style;
     yaml_emitter_emit(emitter, &mut event)
 }
-unsafe extern "C" fn yaml_emitter_dump_sequence(
+unsafe fn yaml_emitter_dump_sequence(
     emitter: *mut yaml_emitter_t,
     node: *mut yaml_node_t,
     anchor: *mut yaml_char_t,
@@ -493,7 +490,7 @@ unsafe extern "C" fn yaml_emitter_dump_sequence(
     }
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_emitter_dump_mapping(
+unsafe fn yaml_emitter_dump_mapping(
     emitter: *mut yaml_emitter_t,
     node: *mut yaml_node_t,
     anchor: *mut yaml_char_t,

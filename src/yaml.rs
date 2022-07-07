@@ -439,7 +439,7 @@ pub struct Unnamed_35 {
     pub error: yaml_error_type_t,
 }
 pub type yaml_read_handler_t =
-    unsafe extern "C" fn(*mut libc::c_void, *mut libc::c_uchar, size_t, *mut size_t) -> libc::c_int;
+    unsafe fn(*mut libc::c_void, *mut libc::c_uchar, size_t, *mut size_t) -> libc::c_int;
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -613,7 +613,7 @@ pub struct unnamed_yaml_parser_s_input_string {
 }
 pub type yaml_parser_t = yaml_parser_s;
 pub type yaml_write_handler_t =
-    unsafe extern "C" fn(*mut libc::c_void, *mut libc::c_uchar, size_t) -> libc::c_int;
+    unsafe fn(*mut libc::c_void, *mut libc::c_uchar, size_t) -> libc::c_int;
 pub type yaml_emitter_state_e = libc::c_uint;
 pub const YAML_EMIT_END_STATE: yaml_emitter_state_e = 17;
 pub const YAML_EMIT_BLOCK_MAPPING_VALUE_STATE: yaml_emitter_state_e = 16;

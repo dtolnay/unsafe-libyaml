@@ -9,7 +9,7 @@ use crate::yaml::*;
 use crate::PointerExt;
 use std::mem;
 use std::ptr;
-pub unsafe extern "C" fn yaml_parser_scan(
+pub unsafe fn yaml_parser_scan(
     mut parser: *mut yaml_parser_t,
     token: *mut yaml_token_t,
 ) -> libc::c_int {
@@ -40,7 +40,7 @@ pub unsafe extern "C" fn yaml_parser_scan(
     }
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_set_scanner_error(
+unsafe fn yaml_parser_set_scanner_error(
     mut parser: *mut yaml_parser_t,
     context: *const libc::c_char,
     context_mark: yaml_mark_t,
@@ -55,9 +55,7 @@ unsafe extern "C" fn yaml_parser_set_scanner_error(
     (*parser).problem_mark = (*parser).mark;
     0 as libc::c_int
 }
-pub unsafe extern "C" fn yaml_parser_fetch_more_tokens(
-    mut parser: *mut yaml_parser_t,
-) -> libc::c_int {
+pub unsafe fn yaml_parser_fetch_more_tokens(mut parser: *mut yaml_parser_t) -> libc::c_int {
     let mut need_more_tokens: libc::c_int;
     loop {
         need_more_tokens = 0 as libc::c_int;
@@ -90,7 +88,7 @@ pub unsafe extern "C" fn yaml_parser_fetch_more_tokens(
     (*parser).token_available = 1 as libc::c_int;
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_fetch_next_token(parser: *mut yaml_parser_t) -> libc::c_int {
+unsafe fn yaml_parser_fetch_next_token(parser: *mut yaml_parser_t) -> libc::c_int {
     if if (*parser).unread >= 1 as libc::c_int as libc::c_ulong {
         1 as libc::c_int
     } else {
@@ -557,7 +555,7 @@ unsafe extern "C" fn yaml_parser_fetch_next_token(parser: *mut yaml_parser_t) ->
         b"found character that cannot start any token\0" as *const u8 as *const libc::c_char,
     )
 }
-unsafe extern "C" fn yaml_parser_stale_simple_keys(parser: *mut yaml_parser_t) -> libc::c_int {
+unsafe fn yaml_parser_stale_simple_keys(parser: *mut yaml_parser_t) -> libc::c_int {
     let mut simple_key: *mut yaml_simple_key_t;
     simple_key = (*parser).simple_keys.start;
     while simple_key != (*parser).simple_keys.top {
@@ -580,7 +578,7 @@ unsafe extern "C" fn yaml_parser_stale_simple_keys(parser: *mut yaml_parser_t) -
     }
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_save_simple_key(parser: *mut yaml_parser_t) -> libc::c_int {
+unsafe fn yaml_parser_save_simple_key(parser: *mut yaml_parser_t) -> libc::c_int {
     let required: libc::c_int = ((*parser).flow_level == 0
         && (*parser).indent as libc::c_long == (*parser).mark.column as ptrdiff_t)
         as libc::c_int;
@@ -608,7 +606,7 @@ unsafe extern "C" fn yaml_parser_save_simple_key(parser: *mut yaml_parser_t) -> 
     }
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_remove_simple_key(parser: *mut yaml_parser_t) -> libc::c_int {
+unsafe fn yaml_parser_remove_simple_key(parser: *mut yaml_parser_t) -> libc::c_int {
     let mut simple_key: *mut yaml_simple_key_t =
         ((*parser).simple_keys.top).c_offset(-(1 as libc::c_int as isize));
     if (*simple_key).possible != 0 {
@@ -624,9 +622,7 @@ unsafe extern "C" fn yaml_parser_remove_simple_key(parser: *mut yaml_parser_t) -
     (*simple_key).possible = 0 as libc::c_int;
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_increase_flow_level(
-    mut parser: *mut yaml_parser_t,
-) -> libc::c_int {
+unsafe fn yaml_parser_increase_flow_level(mut parser: *mut yaml_parser_t) -> libc::c_int {
     let empty_simple_key: yaml_simple_key_t = {
         yaml_simple_key_s {
             possible: 0 as libc::c_int,
@@ -668,7 +664,7 @@ unsafe extern "C" fn yaml_parser_increase_flow_level(
     *fresh7 += 1;
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_decrease_flow_level(parser: *mut yaml_parser_t) -> libc::c_int {
+unsafe fn yaml_parser_decrease_flow_level(parser: *mut yaml_parser_t) -> libc::c_int {
     if (*parser).flow_level != 0 {
         let fresh8 = &mut (*parser).flow_level;
         *fresh8 -= 1;
@@ -677,7 +673,7 @@ unsafe extern "C" fn yaml_parser_decrease_flow_level(parser: *mut yaml_parser_t)
     }
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_roll_indent(
+unsafe fn yaml_parser_roll_indent(
     mut parser: *mut yaml_parser_t,
     column: ptrdiff_t,
     number: ptrdiff_t,
@@ -797,7 +793,7 @@ unsafe extern "C" fn yaml_parser_roll_indent(
     }
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_unroll_indent(
+unsafe fn yaml_parser_unroll_indent(
     mut parser: *mut yaml_parser_t,
     column: ptrdiff_t,
 ) -> libc::c_int {
@@ -857,7 +853,7 @@ unsafe extern "C" fn yaml_parser_unroll_indent(
     }
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_fetch_stream_start(mut parser: *mut yaml_parser_t) -> libc::c_int {
+unsafe fn yaml_parser_fetch_stream_start(mut parser: *mut yaml_parser_t) -> libc::c_int {
     let simple_key: yaml_simple_key_t = {
         yaml_simple_key_s {
             possible: 0 as libc::c_int,
@@ -943,7 +939,7 @@ unsafe extern "C" fn yaml_parser_fetch_stream_start(mut parser: *mut yaml_parser
     }
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_fetch_stream_end(mut parser: *mut yaml_parser_t) -> libc::c_int {
+unsafe fn yaml_parser_fetch_stream_end(mut parser: *mut yaml_parser_t) -> libc::c_int {
     let mut token: yaml_token_t = yaml_token_t {
         type_0: YAML_NO_TOKEN,
         data: unnamed_yaml_token_s_data {
@@ -1004,7 +1000,7 @@ unsafe extern "C" fn yaml_parser_fetch_stream_end(mut parser: *mut yaml_parser_t
     }
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_fetch_directive(mut parser: *mut yaml_parser_t) -> libc::c_int {
+unsafe fn yaml_parser_fetch_directive(mut parser: *mut yaml_parser_t) -> libc::c_int {
     let mut token: yaml_token_t = yaml_token_t {
         type_0: YAML_NO_TOKEN,
         data: unnamed_yaml_token_s_data {
@@ -1056,7 +1052,7 @@ unsafe extern "C" fn yaml_parser_fetch_directive(mut parser: *mut yaml_parser_t)
     }
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_fetch_document_indicator(
+unsafe fn yaml_parser_fetch_document_indicator(
     mut parser: *mut yaml_parser_t,
     type_0: yaml_token_type_t,
 ) -> libc::c_int {
@@ -1213,7 +1209,7 @@ unsafe extern "C" fn yaml_parser_fetch_document_indicator(
     }
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_fetch_flow_collection_start(
+unsafe fn yaml_parser_fetch_flow_collection_start(
     mut parser: *mut yaml_parser_t,
     type_0: yaml_token_type_t,
 ) -> libc::c_int {
@@ -1306,7 +1302,7 @@ unsafe extern "C" fn yaml_parser_fetch_flow_collection_start(
     }
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_fetch_flow_collection_end(
+unsafe fn yaml_parser_fetch_flow_collection_end(
     mut parser: *mut yaml_parser_t,
     type_0: yaml_token_type_t,
 ) -> libc::c_int {
@@ -1399,7 +1395,7 @@ unsafe extern "C" fn yaml_parser_fetch_flow_collection_end(
     }
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_fetch_flow_entry(mut parser: *mut yaml_parser_t) -> libc::c_int {
+unsafe fn yaml_parser_fetch_flow_entry(mut parser: *mut yaml_parser_t) -> libc::c_int {
     let mut token: yaml_token_t = yaml_token_t {
         type_0: YAML_NO_TOKEN,
         data: unnamed_yaml_token_s_data {
@@ -1486,7 +1482,7 @@ unsafe extern "C" fn yaml_parser_fetch_flow_entry(mut parser: *mut yaml_parser_t
     }
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_fetch_block_entry(mut parser: *mut yaml_parser_t) -> libc::c_int {
+unsafe fn yaml_parser_fetch_block_entry(mut parser: *mut yaml_parser_t) -> libc::c_int {
     let mut token: yaml_token_t = yaml_token_t {
         type_0: YAML_NO_TOKEN,
         data: unnamed_yaml_token_s_data {
@@ -1594,7 +1590,7 @@ unsafe extern "C" fn yaml_parser_fetch_block_entry(mut parser: *mut yaml_parser_
     }
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_fetch_key(mut parser: *mut yaml_parser_t) -> libc::c_int {
+unsafe fn yaml_parser_fetch_key(mut parser: *mut yaml_parser_t) -> libc::c_int {
     let mut token: yaml_token_t = yaml_token_t {
         type_0: YAML_NO_TOKEN,
         data: unnamed_yaml_token_s_data {
@@ -1702,7 +1698,7 @@ unsafe extern "C" fn yaml_parser_fetch_key(mut parser: *mut yaml_parser_t) -> li
     }
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_fetch_value(mut parser: *mut yaml_parser_t) -> libc::c_int {
+unsafe fn yaml_parser_fetch_value(mut parser: *mut yaml_parser_t) -> libc::c_int {
     let mut token: yaml_token_t = yaml_token_t {
         type_0: YAML_NO_TOKEN,
         data: unnamed_yaml_token_s_data {
@@ -1869,7 +1865,7 @@ unsafe extern "C" fn yaml_parser_fetch_value(mut parser: *mut yaml_parser_t) -> 
     }
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_fetch_anchor(
+unsafe fn yaml_parser_fetch_anchor(
     mut parser: *mut yaml_parser_t,
     type_0: yaml_token_type_t,
 ) -> libc::c_int {
@@ -1921,7 +1917,7 @@ unsafe extern "C" fn yaml_parser_fetch_anchor(
     }
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_fetch_tag(mut parser: *mut yaml_parser_t) -> libc::c_int {
+unsafe fn yaml_parser_fetch_tag(mut parser: *mut yaml_parser_t) -> libc::c_int {
     let mut token: yaml_token_t = yaml_token_t {
         type_0: YAML_NO_TOKEN,
         data: unnamed_yaml_token_s_data {
@@ -1970,7 +1966,7 @@ unsafe extern "C" fn yaml_parser_fetch_tag(mut parser: *mut yaml_parser_t) -> li
     }
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_fetch_block_scalar(
+unsafe fn yaml_parser_fetch_block_scalar(
     mut parser: *mut yaml_parser_t,
     literal: libc::c_int,
 ) -> libc::c_int {
@@ -2022,7 +2018,7 @@ unsafe extern "C" fn yaml_parser_fetch_block_scalar(
     }
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_fetch_flow_scalar(
+unsafe fn yaml_parser_fetch_flow_scalar(
     mut parser: *mut yaml_parser_t,
     single: libc::c_int,
 ) -> libc::c_int {
@@ -2074,7 +2070,7 @@ unsafe extern "C" fn yaml_parser_fetch_flow_scalar(
     }
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_fetch_plain_scalar(mut parser: *mut yaml_parser_t) -> libc::c_int {
+unsafe fn yaml_parser_fetch_plain_scalar(mut parser: *mut yaml_parser_t) -> libc::c_int {
     let mut token: yaml_token_t = yaml_token_t {
         type_0: YAML_NO_TOKEN,
         data: unnamed_yaml_token_s_data {
@@ -2123,7 +2119,7 @@ unsafe extern "C" fn yaml_parser_fetch_plain_scalar(mut parser: *mut yaml_parser
     }
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_scan_to_next_token(mut parser: *mut yaml_parser_t) -> libc::c_int {
+unsafe fn yaml_parser_scan_to_next_token(mut parser: *mut yaml_parser_t) -> libc::c_int {
     loop {
         if if (*parser).unread >= 1 as libc::c_int as libc::c_ulong {
             1 as libc::c_int
@@ -2453,7 +2449,7 @@ unsafe extern "C" fn yaml_parser_scan_to_next_token(mut parser: *mut yaml_parser
     }
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_scan_directive(
+unsafe fn yaml_parser_scan_directive(
     mut parser: *mut yaml_parser_t,
     mut token: *mut yaml_token_t,
 ) -> libc::c_int {
@@ -3016,7 +3012,7 @@ unsafe extern "C" fn yaml_parser_scan_directive(
     yaml_free(name as *mut libc::c_void);
     0 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_scan_directive_name(
+unsafe fn yaml_parser_scan_directive_name(
     mut parser: *mut yaml_parser_t,
     start_mark: yaml_mark_t,
     name: *mut *mut yaml_char_t,
@@ -3262,7 +3258,7 @@ unsafe extern "C" fn yaml_parser_scan_directive_name(
     string.start = string.pointer;
     0 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_scan_version_directive_value(
+unsafe fn yaml_parser_scan_version_directive_value(
     parser: *mut yaml_parser_t,
     start_mark: yaml_mark_t,
     major: *mut libc::c_int,
@@ -3372,7 +3368,7 @@ unsafe extern "C" fn yaml_parser_scan_version_directive_value(
     }
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_scan_version_directive_number(
+unsafe fn yaml_parser_scan_version_directive_number(
     parser: *mut yaml_parser_t,
     start_mark: yaml_mark_t,
     number: *mut libc::c_int,
@@ -3456,7 +3452,7 @@ unsafe extern "C" fn yaml_parser_scan_version_directive_number(
     *number = value;
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_scan_tag_directive_value(
+unsafe fn yaml_parser_scan_tag_directive_value(
     parser: *mut yaml_parser_t,
     start_mark: yaml_mark_t,
     handle: *mut *mut yaml_char_t,
@@ -3714,7 +3710,7 @@ unsafe extern "C" fn yaml_parser_scan_tag_directive_value(
         }
     }
 }
-unsafe extern "C" fn yaml_parser_scan_anchor(
+unsafe fn yaml_parser_scan_anchor(
     mut parser: *mut yaml_parser_t,
     mut token: *mut yaml_token_t,
     type_0: yaml_token_type_t,
@@ -4045,7 +4041,7 @@ unsafe extern "C" fn yaml_parser_scan_anchor(
     string.start = string.pointer;
     0 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_scan_tag(
+unsafe fn yaml_parser_scan_tag(
     parser: *mut yaml_parser_t,
     mut token: *mut yaml_token_t,
 ) -> libc::c_int {
@@ -4352,7 +4348,7 @@ unsafe extern "C" fn yaml_parser_scan_tag(
     yaml_free(suffix as *mut libc::c_void);
     0 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_scan_tag_handle(
+unsafe fn yaml_parser_scan_tag_handle(
     mut parser: *mut yaml_parser_t,
     directive: libc::c_int,
     start_mark: yaml_mark_t,
@@ -4790,7 +4786,7 @@ unsafe extern "C" fn yaml_parser_scan_tag_handle(
     string.start = string.pointer;
     0 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_scan_tag_uri(
+unsafe fn yaml_parser_scan_tag_uri(
     mut parser: *mut yaml_parser_t,
     uri_char: libc::c_int,
     directive: libc::c_int,
@@ -5138,7 +5134,7 @@ unsafe extern "C" fn yaml_parser_scan_tag_uri(
         }
     }
 }
-unsafe extern "C" fn yaml_parser_scan_uri_escapes(
+unsafe fn yaml_parser_scan_uri_escapes(
     parser: *mut yaml_parser_t,
     directive: libc::c_int,
     start_mark: yaml_mark_t,
@@ -5381,7 +5377,7 @@ unsafe extern "C" fn yaml_parser_scan_uri_escapes(
     }
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_scan_block_scalar(
+unsafe fn yaml_parser_scan_block_scalar(
     mut parser: *mut yaml_parser_t,
     mut token: *mut yaml_token_t,
     literal: libc::c_int,
@@ -6881,7 +6877,7 @@ unsafe extern "C" fn yaml_parser_scan_block_scalar(
     trailing_breaks.start = trailing_breaks.pointer;
     0 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_scan_block_scalar_breaks(
+unsafe fn yaml_parser_scan_block_scalar_breaks(
     mut parser: *mut yaml_parser_t,
     indent: *mut libc::c_int,
     breaks: *mut yaml_string_t,
@@ -7133,7 +7129,7 @@ unsafe extern "C" fn yaml_parser_scan_block_scalar_breaks(
     }
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_scan_flow_scalar(
+unsafe fn yaml_parser_scan_flow_scalar(
     mut parser: *mut yaml_parser_t,
     mut token: *mut yaml_token_t,
     single: libc::c_int,
@@ -9202,7 +9198,7 @@ unsafe extern "C" fn yaml_parser_scan_flow_scalar(
     whitespaces.start = whitespaces.pointer;
     0 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_scan_plain_scalar(
+unsafe fn yaml_parser_scan_plain_scalar(
     mut parser: *mut yaml_parser_t,
     mut token: *mut yaml_token_t,
 ) -> libc::c_int {

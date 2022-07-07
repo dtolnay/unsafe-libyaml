@@ -42,7 +42,7 @@ unsafe fn unsafe_main() -> ExitCode {
         let _ = writeln!(io::stderr(), "Could not initialize the parser object");
         return ExitCode::FAILURE;
     }
-    unsafe extern "C" fn read_from_file(
+    unsafe fn read_from_file(
         data: *mut libc::c_void,
         buffer: *mut libc::c_uchar,
         size: size_t,
@@ -200,7 +200,7 @@ unsafe fn unsafe_main() -> ExitCode {
     yaml_parser_delete(parser);
     ExitCode::SUCCESS
 }
-pub unsafe extern "C" fn print_escaped(str: *mut yaml_char_t, length: size_t) {
+pub unsafe fn print_escaped(str: *mut yaml_char_t, length: size_t) {
     let mut i: libc::c_int;
     let mut c: libc::c_char;
     i = 0 as libc::c_int;

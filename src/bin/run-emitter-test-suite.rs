@@ -57,7 +57,7 @@ unsafe fn unsafe_main() -> ExitCode {
         let _ = writeln!(io::stderr(), "Could not initalize the emitter object");
         return ExitCode::FAILURE;
     }
-    unsafe extern "C" fn write_to_stdout(
+    unsafe fn write_to_stdout(
         _data: *mut libc::c_void,
         buffer: *mut libc::c_uchar,
         size: size_t,
@@ -313,7 +313,7 @@ impl ReadBuf {
         }
     }
 }
-pub unsafe extern "C" fn get_anchor(
+pub unsafe fn get_anchor(
     sigil: libc::c_char,
     line: *mut libc::c_char,
     anchor: *mut libc::c_char,
@@ -337,10 +337,7 @@ pub unsafe extern "C" fn get_anchor(
     *anchor.offset(end.offset_from(start) as libc::c_long as isize) = '\0' as i32 as libc::c_char;
     anchor
 }
-pub unsafe extern "C" fn get_tag(
-    line: *mut libc::c_char,
-    tag: *mut libc::c_char,
-) -> *mut libc::c_char {
+pub unsafe fn get_tag(line: *mut libc::c_char, tag: *mut libc::c_char) -> *mut libc::c_char {
     let start: *mut libc::c_char = strchr(line, '<' as i32);
     if start.is_null() {
         return ptr::null_mut::<libc::c_char>();
@@ -360,7 +357,7 @@ pub unsafe extern "C" fn get_tag(
     ) = '\0' as i32 as libc::c_char;
     tag
 }
-pub unsafe extern "C" fn get_value(
+pub unsafe fn get_value(
     line: *mut libc::c_char,
     value: *mut libc::c_char,
     style: *mut libc::c_int,

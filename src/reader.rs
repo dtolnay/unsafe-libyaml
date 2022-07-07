@@ -2,7 +2,7 @@ use crate::externs::*;
 use crate::libc;
 use crate::yaml::*;
 use crate::PointerExt;
-unsafe extern "C" fn yaml_parser_set_reader_error(
+unsafe fn yaml_parser_set_reader_error(
     mut parser: *mut yaml_parser_t,
     problem: *const libc::c_char,
     offset: size_t,
@@ -15,7 +15,7 @@ unsafe extern "C" fn yaml_parser_set_reader_error(
     (*parser).problem_value = value;
     0 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_determine_encoding(mut parser: *mut yaml_parser_t) -> libc::c_int {
+unsafe fn yaml_parser_determine_encoding(mut parser: *mut yaml_parser_t) -> libc::c_int {
     while (*parser).eof == 0
         && (((*parser).raw_buffer.last).c_offset_from((*parser).raw_buffer.pointer) as libc::c_long)
             < 3 as libc::c_int as libc::c_long
@@ -73,7 +73,7 @@ unsafe extern "C" fn yaml_parser_determine_encoding(mut parser: *mut yaml_parser
     }
     1 as libc::c_int
 }
-unsafe extern "C" fn yaml_parser_update_raw_buffer(mut parser: *mut yaml_parser_t) -> libc::c_int {
+unsafe fn yaml_parser_update_raw_buffer(mut parser: *mut yaml_parser_t) -> libc::c_int {
     let mut size_read: size_t = 0 as libc::c_int as size_t;
     if (*parser).raw_buffer.start == (*parser).raw_buffer.pointer
         && (*parser).raw_buffer.last == (*parser).raw_buffer.end
@@ -122,10 +122,7 @@ unsafe extern "C" fn yaml_parser_update_raw_buffer(mut parser: *mut yaml_parser_
     }
     1 as libc::c_int
 }
-pub unsafe extern "C" fn yaml_parser_update_buffer(
-    parser: *mut yaml_parser_t,
-    length: size_t,
-) -> libc::c_int {
+pub unsafe fn yaml_parser_update_buffer(parser: *mut yaml_parser_t, length: size_t) -> libc::c_int {
     let mut first: libc::c_int = 1 as libc::c_int;
     __assert!(((*parser).read_handler).is_some());
     if (*parser).eof != 0 && (*parser).raw_buffer.pointer == (*parser).raw_buffer.last {

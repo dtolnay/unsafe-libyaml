@@ -4,10 +4,10 @@ use crate::yaml::*;
 use crate::PointerExt;
 use std::mem;
 use std::ptr;
-pub unsafe extern "C" fn yaml_get_version_string() -> *const libc::c_char {
+pub unsafe fn yaml_get_version_string() -> *const libc::c_char {
     b"0.2.5\0" as *const u8 as *const libc::c_char
 }
-pub unsafe extern "C" fn yaml_get_version(
+pub unsafe fn yaml_get_version(
     major: *mut libc::c_int,
     minor: *mut libc::c_int,
     patch: *mut libc::c_int,
@@ -16,14 +16,14 @@ pub unsafe extern "C" fn yaml_get_version(
     *minor = 2 as libc::c_int;
     *patch = 5 as libc::c_int;
 }
-pub unsafe extern "C" fn yaml_malloc(size: size_t) -> *mut libc::c_void {
+pub unsafe fn yaml_malloc(size: size_t) -> *mut libc::c_void {
     malloc(if size != 0 {
         size
     } else {
         1 as libc::c_int as libc::c_ulong
     })
 }
-pub unsafe extern "C" fn yaml_realloc(ptr: *mut libc::c_void, size: size_t) -> *mut libc::c_void {
+pub unsafe fn yaml_realloc(ptr: *mut libc::c_void, size: size_t) -> *mut libc::c_void {
     if !ptr.is_null() {
         realloc(
             ptr,
@@ -41,18 +41,18 @@ pub unsafe extern "C" fn yaml_realloc(ptr: *mut libc::c_void, size: size_t) -> *
         })
     }
 }
-pub unsafe extern "C" fn yaml_free(ptr: *mut libc::c_void) {
+pub unsafe fn yaml_free(ptr: *mut libc::c_void) {
     if !ptr.is_null() {
         free(ptr);
     }
 }
-pub unsafe extern "C" fn yaml_strdup(str: *const yaml_char_t) -> *mut yaml_char_t {
+pub unsafe fn yaml_strdup(str: *const yaml_char_t) -> *mut yaml_char_t {
     if str.is_null() {
         return ptr::null_mut::<yaml_char_t>();
     }
     strdup(str as *mut libc::c_char) as *mut yaml_char_t
 }
-pub unsafe extern "C" fn yaml_string_extend(
+pub unsafe fn yaml_string_extend(
     start: *mut *mut yaml_char_t,
     pointer: *mut *mut yaml_char_t,
     end: *mut *mut yaml_char_t,
@@ -77,7 +77,7 @@ pub unsafe extern "C" fn yaml_string_extend(
     *start = new_start;
     1 as libc::c_int
 }
-pub unsafe extern "C" fn yaml_string_join(
+pub unsafe fn yaml_string_join(
     a_start: *mut *mut yaml_char_t,
     a_pointer: *mut *mut yaml_char_t,
     a_end: *mut *mut yaml_char_t,
@@ -104,7 +104,7 @@ pub unsafe extern "C" fn yaml_string_join(
         (*a_pointer).c_offset((*b_pointer).c_offset_from(*b_start) as libc::c_long as isize);
     1 as libc::c_int
 }
-pub unsafe extern "C" fn yaml_stack_extend(
+pub unsafe fn yaml_stack_extend(
     start: *mut *mut libc::c_void,
     top: *mut *mut libc::c_void,
     end: *mut *mut libc::c_void,
@@ -133,7 +133,7 @@ pub unsafe extern "C" fn yaml_stack_extend(
     *start = new_start;
     1 as libc::c_int
 }
-pub unsafe extern "C" fn yaml_queue_extend(
+pub unsafe fn yaml_queue_extend(
     start: *mut *mut libc::c_void,
     head: *mut *mut libc::c_void,
     tail: *mut *mut libc::c_void,
@@ -179,7 +179,7 @@ pub unsafe extern "C" fn yaml_queue_extend(
     }
     1 as libc::c_int
 }
-pub unsafe extern "C" fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) -> libc::c_int {
+pub unsafe fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) -> libc::c_int {
     __assert!(!parser.is_null());
     memset(
         parser as *mut libc::c_void,
@@ -395,7 +395,7 @@ pub unsafe extern "C" fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) 
     *fresh51 = *fresh50;
     0 as libc::c_int
 }
-pub unsafe extern "C" fn yaml_parser_delete(parser: *mut yaml_parser_t) {
+pub unsafe fn yaml_parser_delete(parser: *mut yaml_parser_t) {
     __assert!(!parser.is_null());
     yaml_free((*parser).raw_buffer.start as *mut libc::c_void);
     let fresh52 = &mut (*parser).raw_buffer.end;
@@ -474,7 +474,7 @@ pub unsafe extern "C" fn yaml_parser_delete(parser: *mut yaml_parser_t) {
         mem::size_of::<yaml_parser_t>() as libc::c_ulong,
     );
 }
-unsafe extern "C" fn yaml_string_read_handler(
+unsafe fn yaml_string_read_handler(
     data: *mut libc::c_void,
     buffer: *mut libc::c_uchar,
     mut size: size_t,
@@ -502,7 +502,7 @@ unsafe extern "C" fn yaml_string_read_handler(
     *size_read = size;
     1 as libc::c_int
 }
-pub unsafe extern "C" fn yaml_parser_set_input_string(
+pub unsafe fn yaml_parser_set_input_string(
     parser: *mut yaml_parser_t,
     input: *const libc::c_uchar,
     size: size_t,
@@ -513,12 +513,7 @@ pub unsafe extern "C" fn yaml_parser_set_input_string(
     let fresh81 = &mut (*parser).read_handler;
     *fresh81 = Some(
         yaml_string_read_handler
-            as unsafe extern "C" fn(
-                *mut libc::c_void,
-                *mut libc::c_uchar,
-                size_t,
-                *mut size_t,
-            ) -> libc::c_int,
+            as unsafe fn(*mut libc::c_void, *mut libc::c_uchar, size_t, *mut size_t) -> libc::c_int,
     );
     let fresh82 = &mut (*parser).read_handler_data;
     *fresh82 = parser as *mut libc::c_void;
@@ -529,7 +524,7 @@ pub unsafe extern "C" fn yaml_parser_set_input_string(
     let fresh85 = &mut (*parser).input.string.end;
     *fresh85 = input.c_offset(size as isize);
 }
-pub unsafe extern "C" fn yaml_parser_set_input(
+pub unsafe fn yaml_parser_set_input(
     parser: *mut yaml_parser_t,
     handler: Option<yaml_read_handler_t>,
     data: *mut libc::c_void,
@@ -542,15 +537,12 @@ pub unsafe extern "C" fn yaml_parser_set_input(
     let fresh90 = &mut (*parser).read_handler_data;
     *fresh90 = data;
 }
-pub unsafe extern "C" fn yaml_parser_set_encoding(
-    mut parser: *mut yaml_parser_t,
-    encoding: yaml_encoding_t,
-) {
+pub unsafe fn yaml_parser_set_encoding(mut parser: *mut yaml_parser_t, encoding: yaml_encoding_t) {
     __assert!(!parser.is_null());
     __assert!((*parser).encoding as u64 == 0);
     (*parser).encoding = encoding;
 }
-pub unsafe extern "C" fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> libc::c_int {
+pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> libc::c_int {
     __assert!(!emitter.is_null());
     memset(
         emitter as *mut libc::c_void,
@@ -710,7 +702,7 @@ pub unsafe extern "C" fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_
     *fresh130 = *fresh129;
     0 as libc::c_int
 }
-pub unsafe extern "C" fn yaml_emitter_delete(emitter: *mut yaml_emitter_t) {
+pub unsafe fn yaml_emitter_delete(emitter: *mut yaml_emitter_t) {
     __assert!(!emitter.is_null());
     yaml_free((*emitter).buffer.start as *mut libc::c_void);
     let fresh131 = &mut (*emitter).buffer.end;
@@ -776,7 +768,7 @@ pub unsafe extern "C" fn yaml_emitter_delete(emitter: *mut yaml_emitter_t) {
         mem::size_of::<yaml_emitter_t>() as libc::c_ulong,
     );
 }
-unsafe extern "C" fn yaml_string_write_handler(
+unsafe fn yaml_string_write_handler(
     data: *mut libc::c_void,
     buffer: *mut libc::c_uchar,
     size: size_t,
@@ -803,7 +795,7 @@ unsafe extern "C" fn yaml_string_write_handler(
     *fresh153 = (*fresh153 as libc::c_ulong).wrapping_add(size) as size_t as size_t;
     1 as libc::c_int
 }
-pub unsafe extern "C" fn yaml_emitter_set_output_string(
+pub unsafe fn yaml_emitter_set_output_string(
     mut emitter: *mut yaml_emitter_t,
     output: *mut libc::c_uchar,
     size: size_t,
@@ -815,7 +807,7 @@ pub unsafe extern "C" fn yaml_emitter_set_output_string(
     let fresh154 = &mut (*emitter).write_handler;
     *fresh154 = Some(
         yaml_string_write_handler
-            as unsafe extern "C" fn(*mut libc::c_void, *mut libc::c_uchar, size_t) -> libc::c_int,
+            as unsafe fn(*mut libc::c_void, *mut libc::c_uchar, size_t) -> libc::c_int,
     );
     let fresh155 = &mut (*emitter).write_handler_data;
     *fresh155 = emitter as *mut libc::c_void;
@@ -826,7 +818,7 @@ pub unsafe extern "C" fn yaml_emitter_set_output_string(
     *fresh157 = size_written;
     *size_written = 0 as libc::c_int as size_t;
 }
-pub unsafe extern "C" fn yaml_emitter_set_output(
+pub unsafe fn yaml_emitter_set_output(
     emitter: *mut yaml_emitter_t,
     handler: Option<yaml_write_handler_t>,
     data: *mut libc::c_void,
@@ -839,7 +831,7 @@ pub unsafe extern "C" fn yaml_emitter_set_output(
     let fresh162 = &mut (*emitter).write_handler_data;
     *fresh162 = data;
 }
-pub unsafe extern "C" fn yaml_emitter_set_encoding(
+pub unsafe fn yaml_emitter_set_encoding(
     mut emitter: *mut yaml_emitter_t,
     encoding: yaml_encoding_t,
 ) {
@@ -847,17 +839,11 @@ pub unsafe extern "C" fn yaml_emitter_set_encoding(
     __assert!((*emitter).encoding as u64 == 0);
     (*emitter).encoding = encoding;
 }
-pub unsafe extern "C" fn yaml_emitter_set_canonical(
-    mut emitter: *mut yaml_emitter_t,
-    canonical: libc::c_int,
-) {
+pub unsafe fn yaml_emitter_set_canonical(mut emitter: *mut yaml_emitter_t, canonical: libc::c_int) {
     __assert!(!emitter.is_null());
     (*emitter).canonical = (canonical != 0 as libc::c_int) as libc::c_int;
 }
-pub unsafe extern "C" fn yaml_emitter_set_indent(
-    mut emitter: *mut yaml_emitter_t,
-    indent: libc::c_int,
-) {
+pub unsafe fn yaml_emitter_set_indent(mut emitter: *mut yaml_emitter_t, indent: libc::c_int) {
     __assert!(!emitter.is_null());
     (*emitter).best_indent = if (1 as libc::c_int) < indent && indent < 10 as libc::c_int {
         indent
@@ -865,10 +851,7 @@ pub unsafe extern "C" fn yaml_emitter_set_indent(
         2 as libc::c_int
     };
 }
-pub unsafe extern "C" fn yaml_emitter_set_width(
-    mut emitter: *mut yaml_emitter_t,
-    width: libc::c_int,
-) {
+pub unsafe fn yaml_emitter_set_width(mut emitter: *mut yaml_emitter_t, width: libc::c_int) {
     __assert!(!emitter.is_null());
     (*emitter).best_width = if width >= 0 as libc::c_int {
         width
@@ -876,21 +859,15 @@ pub unsafe extern "C" fn yaml_emitter_set_width(
         -(1 as libc::c_int)
     };
 }
-pub unsafe extern "C" fn yaml_emitter_set_unicode(
-    mut emitter: *mut yaml_emitter_t,
-    unicode: libc::c_int,
-) {
+pub unsafe fn yaml_emitter_set_unicode(mut emitter: *mut yaml_emitter_t, unicode: libc::c_int) {
     __assert!(!emitter.is_null());
     (*emitter).unicode = (unicode != 0 as libc::c_int) as libc::c_int;
 }
-pub unsafe extern "C" fn yaml_emitter_set_break(
-    mut emitter: *mut yaml_emitter_t,
-    line_break: yaml_break_t,
-) {
+pub unsafe fn yaml_emitter_set_break(mut emitter: *mut yaml_emitter_t, line_break: yaml_break_t) {
     __assert!(!emitter.is_null());
     (*emitter).line_break = line_break;
 }
-pub unsafe extern "C" fn yaml_token_delete(token: *mut yaml_token_t) {
+pub unsafe fn yaml_token_delete(token: *mut yaml_token_t) {
     __assert!(!token.is_null());
     match (*token).type_0 as libc::c_uint {
         4 => {
@@ -918,7 +895,7 @@ pub unsafe extern "C" fn yaml_token_delete(token: *mut yaml_token_t) {
         mem::size_of::<yaml_token_t>() as libc::c_ulong,
     );
 }
-unsafe extern "C" fn yaml_check_utf8(start: *const yaml_char_t, length: size_t) -> libc::c_int {
+unsafe fn yaml_check_utf8(start: *const yaml_char_t, length: size_t) -> libc::c_int {
     let end: *const yaml_char_t = start.c_offset(length as isize);
     let mut pointer: *const yaml_char_t = start;
     while pointer < end {
@@ -979,7 +956,7 @@ unsafe extern "C" fn yaml_check_utf8(start: *const yaml_char_t, length: size_t) 
     }
     1 as libc::c_int
 }
-pub unsafe extern "C" fn yaml_stream_start_event_initialize(
+pub unsafe fn yaml_stream_start_event_initialize(
     mut event: *mut yaml_event_t,
     encoding: yaml_encoding_t,
 ) -> libc::c_int {
@@ -1002,9 +979,7 @@ pub unsafe extern "C" fn yaml_stream_start_event_initialize(
     (*event).data.stream_start.encoding = encoding;
     1 as libc::c_int
 }
-pub unsafe extern "C" fn yaml_stream_end_event_initialize(
-    mut event: *mut yaml_event_t,
-) -> libc::c_int {
+pub unsafe fn yaml_stream_end_event_initialize(mut event: *mut yaml_event_t) -> libc::c_int {
     let mark: yaml_mark_t = {
         yaml_mark_s {
             index: 0 as libc::c_int as size_t,
@@ -1023,7 +998,7 @@ pub unsafe extern "C" fn yaml_stream_end_event_initialize(
     (*event).end_mark = mark;
     1 as libc::c_int
 }
-pub unsafe extern "C" fn yaml_document_start_event_initialize(
+pub unsafe fn yaml_document_start_event_initialize(
     mut event: *mut yaml_event_t,
     version_directive: *mut yaml_version_directive_t,
     tag_directives_start: *mut yaml_tag_directive_t,
@@ -1194,7 +1169,7 @@ pub unsafe extern "C" fn yaml_document_start_event_initialize(
     yaml_free(value.prefix as *mut libc::c_void);
     0 as libc::c_int
 }
-pub unsafe extern "C" fn yaml_document_end_event_initialize(
+pub unsafe fn yaml_document_end_event_initialize(
     mut event: *mut yaml_event_t,
     implicit: libc::c_int,
 ) -> libc::c_int {
@@ -1217,7 +1192,7 @@ pub unsafe extern "C" fn yaml_document_end_event_initialize(
     (*event).data.document_end.implicit = implicit;
     1 as libc::c_int
 }
-pub unsafe extern "C" fn yaml_alias_event_initialize(
+pub unsafe fn yaml_alias_event_initialize(
     mut event: *mut yaml_event_t,
     anchor: *const yaml_char_t,
 ) -> libc::c_int {
@@ -1249,7 +1224,7 @@ pub unsafe extern "C" fn yaml_alias_event_initialize(
     *fresh167 = anchor_copy;
     1 as libc::c_int
 }
-pub unsafe extern "C" fn yaml_scalar_event_initialize(
+pub unsafe fn yaml_scalar_event_initialize(
     mut event: *mut yaml_event_t,
     anchor: *const yaml_char_t,
     tag: *const yaml_char_t,
@@ -1349,7 +1324,7 @@ pub unsafe extern "C" fn yaml_scalar_event_initialize(
     yaml_free(value_copy as *mut libc::c_void);
     0 as libc::c_int
 }
-pub unsafe extern "C" fn yaml_sequence_start_event_initialize(
+pub unsafe fn yaml_sequence_start_event_initialize(
     mut event: *mut yaml_event_t,
     anchor: *const yaml_char_t,
     tag: *const yaml_char_t,
@@ -1424,9 +1399,7 @@ pub unsafe extern "C" fn yaml_sequence_start_event_initialize(
     yaml_free(tag_copy as *mut libc::c_void);
     0 as libc::c_int
 }
-pub unsafe extern "C" fn yaml_sequence_end_event_initialize(
-    mut event: *mut yaml_event_t,
-) -> libc::c_int {
+pub unsafe fn yaml_sequence_end_event_initialize(mut event: *mut yaml_event_t) -> libc::c_int {
     let mark: yaml_mark_t = {
         yaml_mark_s {
             index: 0 as libc::c_int as size_t,
@@ -1445,7 +1418,7 @@ pub unsafe extern "C" fn yaml_sequence_end_event_initialize(
     (*event).end_mark = mark;
     1 as libc::c_int
 }
-pub unsafe extern "C" fn yaml_mapping_start_event_initialize(
+pub unsafe fn yaml_mapping_start_event_initialize(
     mut event: *mut yaml_event_t,
     anchor: *const yaml_char_t,
     tag: *const yaml_char_t,
@@ -1520,9 +1493,7 @@ pub unsafe extern "C" fn yaml_mapping_start_event_initialize(
     yaml_free(tag_copy as *mut libc::c_void);
     0 as libc::c_int
 }
-pub unsafe extern "C" fn yaml_mapping_end_event_initialize(
-    mut event: *mut yaml_event_t,
-) -> libc::c_int {
+pub unsafe fn yaml_mapping_end_event_initialize(mut event: *mut yaml_event_t) -> libc::c_int {
     let mark: yaml_mark_t = {
         yaml_mark_s {
             index: 0 as libc::c_int as size_t,
@@ -1541,7 +1512,7 @@ pub unsafe extern "C" fn yaml_mapping_end_event_initialize(
     (*event).end_mark = mark;
     1 as libc::c_int
 }
-pub unsafe extern "C" fn yaml_event_delete(event: *mut yaml_event_t) {
+pub unsafe fn yaml_event_delete(event: *mut yaml_event_t) {
     let mut tag_directive: *mut yaml_tag_directive_t;
     __assert!(!event.is_null());
     match (*event).type_0 as libc::c_uint {
@@ -1579,7 +1550,7 @@ pub unsafe extern "C" fn yaml_event_delete(event: *mut yaml_event_t) {
         mem::size_of::<yaml_event_t>() as libc::c_ulong,
     );
 }
-pub unsafe extern "C" fn yaml_document_initialize(
+pub unsafe fn yaml_document_initialize(
     mut document: *mut yaml_document_t,
     version_directive: *mut yaml_version_directive_t,
     tag_directives_start: *mut yaml_tag_directive_t,
@@ -1785,7 +1756,7 @@ pub unsafe extern "C" fn yaml_document_initialize(
     yaml_free(value.prefix as *mut libc::c_void);
     0 as libc::c_int
 }
-pub unsafe extern "C" fn yaml_document_delete(document: *mut yaml_document_t) {
+pub unsafe fn yaml_document_delete(document: *mut yaml_document_t) {
     let mut tag_directive: *mut yaml_tag_directive_t;
     __assert!(!document.is_null());
     while !((*document).nodes.start == (*document).nodes.top) {
@@ -1835,7 +1806,7 @@ pub unsafe extern "C" fn yaml_document_delete(document: *mut yaml_document_t) {
         mem::size_of::<yaml_document_t>() as libc::c_ulong,
     );
 }
-pub unsafe extern "C" fn yaml_document_get_node(
+pub unsafe fn yaml_document_get_node(
     document: *mut yaml_document_t,
     index: libc::c_int,
 ) -> *mut yaml_node_t {
@@ -1849,16 +1820,14 @@ pub unsafe extern "C" fn yaml_document_get_node(
     }
     ptr::null_mut::<yaml_node_t>()
 }
-pub unsafe extern "C" fn yaml_document_get_root_node(
-    document: *mut yaml_document_t,
-) -> *mut yaml_node_t {
+pub unsafe fn yaml_document_get_root_node(document: *mut yaml_document_t) -> *mut yaml_node_t {
     __assert!(!document.is_null());
     if (*document).nodes.top != (*document).nodes.start {
         return (*document).nodes.start;
     }
     ptr::null_mut::<yaml_node_t>()
 }
-pub unsafe extern "C" fn yaml_document_add_scalar(
+pub unsafe fn yaml_document_add_scalar(
     document: *mut yaml_document_t,
     mut tag: *const yaml_char_t,
     value: *const yaml_char_t,
@@ -1958,7 +1927,7 @@ pub unsafe extern "C" fn yaml_document_add_scalar(
     yaml_free(value_copy as *mut libc::c_void);
     0 as libc::c_int
 }
-pub unsafe extern "C" fn yaml_document_add_sequence(
+pub unsafe fn yaml_document_add_sequence(
     document: *mut yaml_document_t,
     mut tag: *const yaml_char_t,
     style: yaml_sequence_style_t,
@@ -2065,7 +2034,7 @@ pub unsafe extern "C" fn yaml_document_add_sequence(
     yaml_free(tag_copy as *mut libc::c_void);
     0 as libc::c_int
 }
-pub unsafe extern "C" fn yaml_document_add_mapping(
+pub unsafe fn yaml_document_add_mapping(
     document: *mut yaml_document_t,
     mut tag: *const yaml_char_t,
     style: yaml_mapping_style_t,
@@ -2172,7 +2141,7 @@ pub unsafe extern "C" fn yaml_document_add_mapping(
     yaml_free(tag_copy as *mut libc::c_void);
     0 as libc::c_int
 }
-pub unsafe extern "C" fn yaml_document_append_sequence_item(
+pub unsafe fn yaml_document_append_sequence_item(
     document: *mut yaml_document_t,
     sequence: libc::c_int,
     item: libc::c_int,
@@ -2247,7 +2216,7 @@ pub unsafe extern "C" fn yaml_document_append_sequence_item(
     }
     1 as libc::c_int
 }
-pub unsafe extern "C" fn yaml_document_append_mapping_pair(
+pub unsafe fn yaml_document_append_mapping_pair(
     document: *mut yaml_document_t,
     mapping: libc::c_int,
     key: libc::c_int,
