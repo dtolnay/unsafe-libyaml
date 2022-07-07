@@ -239,7 +239,7 @@ pub use crate::api::{
 };
 pub use crate::dumper::{yaml_emitter_close, yaml_emitter_dump, yaml_emitter_open};
 pub use crate::emitter::yaml_emitter_emit;
-pub use crate::loader::{loader_ctx, yaml_parser_load};
+pub use crate::loader::yaml_parser_load;
 pub use crate::parser::yaml_parser_parse;
 pub use crate::reader::yaml_parser_update_buffer;
 pub use crate::scanner::{yaml_parser_fetch_more_tokens, yaml_parser_scan};
