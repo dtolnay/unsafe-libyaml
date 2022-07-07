@@ -1152,11 +1152,11 @@ pub unsafe extern "C" fn yaml_document_start_event_initialize(
                         }
                         if if tag_directives_copy.top != tag_directives_copy.end
                             || yaml_stack_extend(
-                                &mut tag_directives_copy.start as *mut *mut yaml_tag_directive_t
+                                ptr::addr_of_mut!(tag_directives_copy.start)
                                     as *mut *mut libc::c_void,
-                                &mut tag_directives_copy.top as *mut *mut yaml_tag_directive_t
+                                ptr::addr_of_mut!(tag_directives_copy.top)
                                     as *mut *mut libc::c_void,
-                                &mut tag_directives_copy.end as *mut *mut yaml_tag_directive_t
+                                ptr::addr_of_mut!(tag_directives_copy.end)
                                     as *mut *mut libc::c_void,
                             ) != 0
                         {
@@ -1739,11 +1739,11 @@ pub unsafe extern "C" fn yaml_document_initialize(
                             }
                             if if tag_directives_copy.top != tag_directives_copy.end
                                 || yaml_stack_extend(
-                                    &mut tag_directives_copy.start as *mut *mut yaml_tag_directive_t
+                                    ptr::addr_of_mut!(tag_directives_copy.start)
                                         as *mut *mut libc::c_void,
-                                    &mut tag_directives_copy.top as *mut *mut yaml_tag_directive_t
+                                    ptr::addr_of_mut!(tag_directives_copy.top)
                                         as *mut *mut libc::c_void,
-                                    &mut tag_directives_copy.end as *mut *mut yaml_tag_directive_t
+                                    ptr::addr_of_mut!(tag_directives_copy.end)
                                         as *mut *mut libc::c_void,
                                 ) != 0
                             {
@@ -1954,7 +1954,7 @@ pub unsafe extern "C" fn yaml_document_add_scalar(
                     );
                     *value_copy.c_offset(length as isize) = '\0' as i32 as yaml_char_t;
                     memset(
-                        &mut node as *mut yaml_node_t as *mut libc::c_void,
+                        ptr::addr_of_mut!(node) as *mut libc::c_void,
                         0 as libc::c_int,
                         ::std::mem::size_of::<yaml_node_t>() as libc::c_ulong,
                     );
@@ -1967,12 +1967,9 @@ pub unsafe extern "C" fn yaml_document_add_scalar(
                     node.data.scalar.style = style;
                     if !(if (*document).nodes.top != (*document).nodes.end
                         || yaml_stack_extend(
-                            &mut (*document).nodes.start as *mut *mut yaml_node_t
-                                as *mut *mut libc::c_void,
-                            &mut (*document).nodes.top as *mut *mut yaml_node_t
-                                as *mut *mut libc::c_void,
-                            &mut (*document).nodes.end as *mut *mut yaml_node_t
-                                as *mut *mut libc::c_void,
+                            ptr::addr_of_mut!((*document).nodes.start) as *mut *mut libc::c_void,
+                            ptr::addr_of_mut!((*document).nodes.top) as *mut *mut libc::c_void,
+                            ptr::addr_of_mut!((*document).nodes.end) as *mut *mut libc::c_void,
                         ) != 0
                     {
                         let fresh186 = &mut (*document).nodes.top;
@@ -2062,7 +2059,7 @@ pub unsafe extern "C" fn yaml_document_add_sequence(
             } == 0)
             {
                 memset(
-                    &mut node as *mut yaml_node_t as *mut libc::c_void,
+                    ptr::addr_of_mut!(node) as *mut libc::c_void,
                     0 as libc::c_int,
                     ::std::mem::size_of::<yaml_node_t>() as libc::c_ulong,
                 );
@@ -2076,12 +2073,9 @@ pub unsafe extern "C" fn yaml_document_add_sequence(
                 node.data.sequence.style = style;
                 if !(if (*document).nodes.top != (*document).nodes.end
                     || yaml_stack_extend(
-                        &mut (*document).nodes.start as *mut *mut yaml_node_t
-                            as *mut *mut libc::c_void,
-                        &mut (*document).nodes.top as *mut *mut yaml_node_t
-                            as *mut *mut libc::c_void,
-                        &mut (*document).nodes.end as *mut *mut yaml_node_t
-                            as *mut *mut libc::c_void,
+                        ptr::addr_of_mut!((*document).nodes.start) as *mut *mut libc::c_void,
+                        ptr::addr_of_mut!((*document).nodes.top) as *mut *mut libc::c_void,
+                        ptr::addr_of_mut!((*document).nodes.end) as *mut *mut libc::c_void,
                     ) != 0
                 {
                     let fresh188 = &mut (*document).nodes.top;
@@ -2173,7 +2167,7 @@ pub unsafe extern "C" fn yaml_document_add_mapping(
             } == 0)
             {
                 memset(
-                    &mut node as *mut yaml_node_t as *mut libc::c_void,
+                    ptr::addr_of_mut!(node) as *mut libc::c_void,
                     0 as libc::c_int,
                     ::std::mem::size_of::<yaml_node_t>() as libc::c_ulong,
                 );
@@ -2187,12 +2181,9 @@ pub unsafe extern "C" fn yaml_document_add_mapping(
                 node.data.mapping.style = style;
                 if !(if (*document).nodes.top != (*document).nodes.end
                     || yaml_stack_extend(
-                        &mut (*document).nodes.start as *mut *mut yaml_node_t
-                            as *mut *mut libc::c_void,
-                        &mut (*document).nodes.top as *mut *mut yaml_node_t
-                            as *mut *mut libc::c_void,
-                        &mut (*document).nodes.end as *mut *mut yaml_node_t
-                            as *mut *mut libc::c_void,
+                        ptr::addr_of_mut!((*document).nodes.start) as *mut *mut libc::c_void,
+                        ptr::addr_of_mut!((*document).nodes.top) as *mut *mut libc::c_void,
+                        ptr::addr_of_mut!((*document).nodes.end) as *mut *mut libc::c_void,
                     ) != 0
                 {
                     let fresh190 = &mut (*document).nodes.top;
@@ -2252,21 +2243,27 @@ pub unsafe extern "C" fn yaml_document_append_sequence_item(
             .items
             .end
         || yaml_stack_extend(
-            &mut (*((*document).nodes.start).c_offset((sequence - 1 as libc::c_int) as isize))
-                .data
-                .sequence
-                .items
-                .start as *mut *mut yaml_node_item_t as *mut *mut libc::c_void,
-            &mut (*((*document).nodes.start).c_offset((sequence - 1 as libc::c_int) as isize))
-                .data
-                .sequence
-                .items
-                .top as *mut *mut yaml_node_item_t as *mut *mut libc::c_void,
-            &mut (*((*document).nodes.start).c_offset((sequence - 1 as libc::c_int) as isize))
-                .data
-                .sequence
-                .items
-                .end as *mut *mut yaml_node_item_t as *mut *mut libc::c_void,
+            ptr::addr_of_mut!(
+                (*((*document).nodes.start).c_offset((sequence - 1 as libc::c_int) as isize))
+                    .data
+                    .sequence
+                    .items
+                    .start
+            ) as *mut *mut libc::c_void,
+            ptr::addr_of_mut!(
+                (*((*document).nodes.start).c_offset((sequence - 1 as libc::c_int) as isize))
+                    .data
+                    .sequence
+                    .items
+                    .top
+            ) as *mut *mut libc::c_void,
+            ptr::addr_of_mut!(
+                (*((*document).nodes.start).c_offset((sequence - 1 as libc::c_int) as isize))
+                    .data
+                    .sequence
+                    .items
+                    .end
+            ) as *mut *mut libc::c_void,
         ) != 0
     {
         let fresh192 = &mut (*((*document).nodes.start)
@@ -2330,21 +2327,27 @@ pub unsafe extern "C" fn yaml_document_append_mapping_pair(
             .pairs
             .end
         || yaml_stack_extend(
-            &mut (*((*document).nodes.start).c_offset((mapping - 1 as libc::c_int) as isize))
-                .data
-                .mapping
-                .pairs
-                .start as *mut *mut yaml_node_pair_t as *mut *mut libc::c_void,
-            &mut (*((*document).nodes.start).c_offset((mapping - 1 as libc::c_int) as isize))
-                .data
-                .mapping
-                .pairs
-                .top as *mut *mut yaml_node_pair_t as *mut *mut libc::c_void,
-            &mut (*((*document).nodes.start).c_offset((mapping - 1 as libc::c_int) as isize))
-                .data
-                .mapping
-                .pairs
-                .end as *mut *mut yaml_node_pair_t as *mut *mut libc::c_void,
+            ptr::addr_of_mut!(
+                (*((*document).nodes.start).c_offset((mapping - 1 as libc::c_int) as isize))
+                    .data
+                    .mapping
+                    .pairs
+                    .start
+            ) as *mut *mut libc::c_void,
+            ptr::addr_of_mut!(
+                (*((*document).nodes.start).c_offset((mapping - 1 as libc::c_int) as isize))
+                    .data
+                    .mapping
+                    .pairs
+                    .top
+            ) as *mut *mut libc::c_void,
+            ptr::addr_of_mut!(
+                (*((*document).nodes.start).c_offset((mapping - 1 as libc::c_int) as isize))
+                    .data
+                    .mapping
+                    .pairs
+                    .end
+            ) as *mut *mut libc::c_void,
         ) != 0
     {
         let fresh194 = &mut (*((*document).nodes.start)

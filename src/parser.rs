@@ -220,12 +220,9 @@ unsafe extern "C" fn yaml_parser_parse_document_start(
         }
         if if (*parser).states.top != (*parser).states.end
             || yaml_stack_extend(
-                &mut (*parser).states.start as *mut *mut yaml_parser_state_t
-                    as *mut *mut libc::c_void,
-                &mut (*parser).states.top as *mut *mut yaml_parser_state_t
-                    as *mut *mut libc::c_void,
-                &mut (*parser).states.end as *mut *mut yaml_parser_state_t
-                    as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*parser).states.start) as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*parser).states.top) as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*parser).states.end) as *mut *mut libc::c_void,
             ) != 0
         {
             let fresh7 = &mut (*parser).states.top;
@@ -287,12 +284,9 @@ unsafe extern "C" fn yaml_parser_parse_document_start(
                 );
             } else if !(if (*parser).states.top != (*parser).states.end
                 || yaml_stack_extend(
-                    &mut (*parser).states.start as *mut *mut yaml_parser_state_t
-                        as *mut *mut libc::c_void,
-                    &mut (*parser).states.top as *mut *mut yaml_parser_state_t
-                        as *mut *mut libc::c_void,
-                    &mut (*parser).states.end as *mut *mut yaml_parser_state_t
-                        as *mut *mut libc::c_void,
+                    ptr::addr_of_mut!((*parser).states.start) as *mut *mut libc::c_void,
+                    ptr::addr_of_mut!((*parser).states.top) as *mut *mut libc::c_void,
+                    ptr::addr_of_mut!((*parser).states.end) as *mut *mut libc::c_void,
                 ) != 0
             {
                 let fresh12 = &mut (*parser).states.top;
@@ -916,9 +910,9 @@ unsafe extern "C" fn yaml_parser_parse_block_sequence_entry(
         };
         if if (*parser).marks.top != (*parser).marks.end
             || yaml_stack_extend(
-                &mut (*parser).marks.start as *mut *mut yaml_mark_t as *mut *mut libc::c_void,
-                &mut (*parser).marks.top as *mut *mut yaml_mark_t as *mut *mut libc::c_void,
-                &mut (*parser).marks.end as *mut *mut yaml_mark_t as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*parser).marks.start) as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*parser).marks.top) as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*parser).marks.end) as *mut *mut libc::c_void,
             ) != 0
         {
             let fresh57 = &mut (*parser).marks.top;
@@ -974,12 +968,9 @@ unsafe extern "C" fn yaml_parser_parse_block_sequence_entry(
         {
             if if (*parser).states.top != (*parser).states.end
                 || yaml_stack_extend(
-                    &mut (*parser).states.start as *mut *mut yaml_parser_state_t
-                        as *mut *mut libc::c_void,
-                    &mut (*parser).states.top as *mut *mut yaml_parser_state_t
-                        as *mut *mut libc::c_void,
-                    &mut (*parser).states.end as *mut *mut yaml_parser_state_t
-                        as *mut *mut libc::c_void,
+                    ptr::addr_of_mut!((*parser).states.start) as *mut *mut libc::c_void,
+                    ptr::addr_of_mut!((*parser).states.top) as *mut *mut libc::c_void,
+                    ptr::addr_of_mut!((*parser).states.end) as *mut *mut libc::c_void,
                 ) != 0
             {
                 let fresh63 = &mut (*parser).states.top;
@@ -1074,12 +1065,9 @@ unsafe extern "C" fn yaml_parser_parse_indentless_sequence_entry(
         {
             if if (*parser).states.top != (*parser).states.end
                 || yaml_stack_extend(
-                    &mut (*parser).states.start as *mut *mut yaml_parser_state_t
-                        as *mut *mut libc::c_void,
-                    &mut (*parser).states.top as *mut *mut yaml_parser_state_t
-                        as *mut *mut libc::c_void,
-                    &mut (*parser).states.end as *mut *mut yaml_parser_state_t
-                        as *mut *mut libc::c_void,
+                    ptr::addr_of_mut!((*parser).states.start) as *mut *mut libc::c_void,
+                    ptr::addr_of_mut!((*parser).states.top) as *mut *mut libc::c_void,
+                    ptr::addr_of_mut!((*parser).states.end) as *mut *mut libc::c_void,
                 ) != 0
             {
                 let fresh72 = &mut (*parser).states.top;
@@ -1128,9 +1116,9 @@ unsafe extern "C" fn yaml_parser_parse_block_mapping_key(
         };
         if if (*parser).marks.top != (*parser).marks.end
             || yaml_stack_extend(
-                &mut (*parser).marks.start as *mut *mut yaml_mark_t as *mut *mut libc::c_void,
-                &mut (*parser).marks.top as *mut *mut yaml_mark_t as *mut *mut libc::c_void,
-                &mut (*parser).marks.end as *mut *mut yaml_mark_t as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*parser).marks.start) as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*parser).marks.top) as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*parser).marks.end) as *mut *mut libc::c_void,
             ) != 0
         {
             let fresh75 = &mut (*parser).marks.top;
@@ -1187,12 +1175,9 @@ unsafe extern "C" fn yaml_parser_parse_block_mapping_key(
         {
             if if (*parser).states.top != (*parser).states.end
                 || yaml_stack_extend(
-                    &mut (*parser).states.start as *mut *mut yaml_parser_state_t
-                        as *mut *mut libc::c_void,
-                    &mut (*parser).states.top as *mut *mut yaml_parser_state_t
-                        as *mut *mut libc::c_void,
-                    &mut (*parser).states.end as *mut *mut yaml_parser_state_t
-                        as *mut *mut libc::c_void,
+                    ptr::addr_of_mut!((*parser).states.start) as *mut *mut libc::c_void,
+                    ptr::addr_of_mut!((*parser).states.top) as *mut *mut libc::c_void,
+                    ptr::addr_of_mut!((*parser).states.end) as *mut *mut libc::c_void,
                 ) != 0
             {
                 let fresh81 = &mut (*parser).states.top;
@@ -1286,12 +1271,9 @@ unsafe extern "C" fn yaml_parser_parse_block_mapping_value(
         {
             if if (*parser).states.top != (*parser).states.end
                 || yaml_stack_extend(
-                    &mut (*parser).states.start as *mut *mut yaml_parser_state_t
-                        as *mut *mut libc::c_void,
-                    &mut (*parser).states.top as *mut *mut yaml_parser_state_t
-                        as *mut *mut libc::c_void,
-                    &mut (*parser).states.end as *mut *mut yaml_parser_state_t
-                        as *mut *mut libc::c_void,
+                    ptr::addr_of_mut!((*parser).states.start) as *mut *mut libc::c_void,
+                    ptr::addr_of_mut!((*parser).states.top) as *mut *mut libc::c_void,
+                    ptr::addr_of_mut!((*parser).states.end) as *mut *mut libc::c_void,
                 ) != 0
             {
                 let fresh90 = &mut (*parser).states.top;
@@ -1330,9 +1312,9 @@ unsafe extern "C" fn yaml_parser_parse_flow_sequence_entry(
         };
         if if (*parser).marks.top != (*parser).marks.end
             || yaml_stack_extend(
-                &mut (*parser).marks.start as *mut *mut yaml_mark_t as *mut *mut libc::c_void,
-                &mut (*parser).marks.top as *mut *mut yaml_mark_t as *mut *mut libc::c_void,
-                &mut (*parser).marks.end as *mut *mut yaml_mark_t as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*parser).marks.start) as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*parser).marks.top) as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*parser).marks.end) as *mut *mut libc::c_void,
             ) != 0
         {
             let fresh92 = &mut (*parser).marks.top;
@@ -1432,12 +1414,9 @@ unsafe extern "C" fn yaml_parser_parse_flow_sequence_entry(
             {
                 if if (*parser).states.top != (*parser).states.end
                     || yaml_stack_extend(
-                        &mut (*parser).states.start as *mut *mut yaml_parser_state_t
-                            as *mut *mut libc::c_void,
-                        &mut (*parser).states.top as *mut *mut yaml_parser_state_t
-                            as *mut *mut libc::c_void,
-                        &mut (*parser).states.end as *mut *mut yaml_parser_state_t
-                            as *mut *mut libc::c_void,
+                        ptr::addr_of_mut!((*parser).states.start) as *mut *mut libc::c_void,
+                        ptr::addr_of_mut!((*parser).states.top) as *mut *mut libc::c_void,
+                        ptr::addr_of_mut!((*parser).states.end) as *mut *mut libc::c_void,
                     ) != 0
                 {
                     let fresh103 = &mut (*parser).states.top;
@@ -1499,12 +1478,9 @@ unsafe extern "C" fn yaml_parser_parse_flow_sequence_entry_mapping_key(
     {
         if if (*parser).states.top != (*parser).states.end
             || yaml_stack_extend(
-                &mut (*parser).states.start as *mut *mut yaml_parser_state_t
-                    as *mut *mut libc::c_void,
-                &mut (*parser).states.top as *mut *mut yaml_parser_state_t
-                    as *mut *mut libc::c_void,
-                &mut (*parser).states.end as *mut *mut yaml_parser_state_t
-                    as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*parser).states.start) as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*parser).states.top) as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*parser).states.end) as *mut *mut libc::c_void,
             ) != 0
         {
             let fresh109 = &mut (*parser).states.top;
@@ -1570,12 +1546,9 @@ unsafe extern "C" fn yaml_parser_parse_flow_sequence_entry_mapping_value(
         {
             if if (*parser).states.top != (*parser).states.end
                 || yaml_stack_extend(
-                    &mut (*parser).states.start as *mut *mut yaml_parser_state_t
-                        as *mut *mut libc::c_void,
-                    &mut (*parser).states.top as *mut *mut yaml_parser_state_t
-                        as *mut *mut libc::c_void,
-                    &mut (*parser).states.end as *mut *mut yaml_parser_state_t
-                        as *mut *mut libc::c_void,
+                    ptr::addr_of_mut!((*parser).states.start) as *mut *mut libc::c_void,
+                    ptr::addr_of_mut!((*parser).states.top) as *mut *mut libc::c_void,
+                    ptr::addr_of_mut!((*parser).states.end) as *mut *mut libc::c_void,
                 ) != 0
             {
                 let fresh115 = &mut (*parser).states.top;
@@ -1634,9 +1607,9 @@ unsafe extern "C" fn yaml_parser_parse_flow_mapping_key(
         };
         if if (*parser).marks.top != (*parser).marks.end
             || yaml_stack_extend(
-                &mut (*parser).marks.start as *mut *mut yaml_mark_t as *mut *mut libc::c_void,
-                &mut (*parser).marks.top as *mut *mut yaml_mark_t as *mut *mut libc::c_void,
-                &mut (*parser).marks.end as *mut *mut yaml_mark_t as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*parser).marks.start) as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*parser).marks.top) as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*parser).marks.end) as *mut *mut libc::c_void,
             ) != 0
         {
             let fresh117 = &mut (*parser).marks.top;
@@ -1730,12 +1703,9 @@ unsafe extern "C" fn yaml_parser_parse_flow_mapping_key(
             {
                 if if (*parser).states.top != (*parser).states.end
                     || yaml_stack_extend(
-                        &mut (*parser).states.start as *mut *mut yaml_parser_state_t
-                            as *mut *mut libc::c_void,
-                        &mut (*parser).states.top as *mut *mut yaml_parser_state_t
-                            as *mut *mut libc::c_void,
-                        &mut (*parser).states.end as *mut *mut yaml_parser_state_t
-                            as *mut *mut libc::c_void,
+                        ptr::addr_of_mut!((*parser).states.start) as *mut *mut libc::c_void,
+                        ptr::addr_of_mut!((*parser).states.top) as *mut *mut libc::c_void,
+                        ptr::addr_of_mut!((*parser).states.end) as *mut *mut libc::c_void,
                     ) != 0
                 {
                     let fresh126 = &mut (*parser).states.top;
@@ -1761,12 +1731,9 @@ unsafe extern "C" fn yaml_parser_parse_flow_mapping_key(
             {
                 if if (*parser).states.top != (*parser).states.end
                     || yaml_stack_extend(
-                        &mut (*parser).states.start as *mut *mut yaml_parser_state_t
-                            as *mut *mut libc::c_void,
-                        &mut (*parser).states.top as *mut *mut yaml_parser_state_t
-                            as *mut *mut libc::c_void,
-                        &mut (*parser).states.end as *mut *mut yaml_parser_state_t
-                            as *mut *mut libc::c_void,
+                        ptr::addr_of_mut!((*parser).states.start) as *mut *mut libc::c_void,
+                        ptr::addr_of_mut!((*parser).states.top) as *mut *mut libc::c_void,
+                        ptr::addr_of_mut!((*parser).states.end) as *mut *mut libc::c_void,
                     ) != 0
                 {
                     let fresh128 = &mut (*parser).states.top;
@@ -1849,12 +1816,9 @@ unsafe extern "C" fn yaml_parser_parse_flow_mapping_value(
         {
             if if (*parser).states.top != (*parser).states.end
                 || yaml_stack_extend(
-                    &mut (*parser).states.start as *mut *mut yaml_parser_state_t
-                        as *mut *mut libc::c_void,
-                    &mut (*parser).states.top as *mut *mut yaml_parser_state_t
-                        as *mut *mut libc::c_void,
-                    &mut (*parser).states.end as *mut *mut yaml_parser_state_t
-                        as *mut *mut libc::c_void,
+                    ptr::addr_of_mut!((*parser).states.start) as *mut *mut libc::c_void,
+                    ptr::addr_of_mut!((*parser).states.top) as *mut *mut libc::c_void,
+                    ptr::addr_of_mut!((*parser).states.end) as *mut *mut libc::c_void,
                 ) != 0
             {
                 let fresh136 = &mut (*parser).states.top;
@@ -2032,12 +1996,9 @@ unsafe extern "C" fn yaml_parser_process_directives(
                     }
                     if if tag_directives.top != tag_directives.end
                         || yaml_stack_extend(
-                            &mut tag_directives.start as *mut *mut yaml_tag_directive_t
-                                as *mut *mut libc::c_void,
-                            &mut tag_directives.top as *mut *mut yaml_tag_directive_t
-                                as *mut *mut libc::c_void,
-                            &mut tag_directives.end as *mut *mut yaml_tag_directive_t
-                                as *mut *mut libc::c_void,
+                            ptr::addr_of_mut!(tag_directives.start) as *mut *mut libc::c_void,
+                            ptr::addr_of_mut!(tag_directives.top) as *mut *mut libc::c_void,
+                            ptr::addr_of_mut!(tag_directives.end) as *mut *mut libc::c_void,
                         ) != 0
                     {
                         let fresh141 = tag_directives.top;
@@ -2179,12 +2140,9 @@ unsafe extern "C" fn yaml_parser_append_tag_directive(
         (*parser).error = YAML_MEMORY_ERROR;
     } else if !(if (*parser).tag_directives.top != (*parser).tag_directives.end
         || yaml_stack_extend(
-            &mut (*parser).tag_directives.start as *mut *mut yaml_tag_directive_t
-                as *mut *mut libc::c_void,
-            &mut (*parser).tag_directives.top as *mut *mut yaml_tag_directive_t
-                as *mut *mut libc::c_void,
-            &mut (*parser).tag_directives.end as *mut *mut yaml_tag_directive_t
-                as *mut *mut libc::c_void,
+            ptr::addr_of_mut!((*parser).tag_directives.start) as *mut *mut libc::c_void,
+            ptr::addr_of_mut!((*parser).tag_directives.top) as *mut *mut libc::c_void,
+            ptr::addr_of_mut!((*parser).tag_directives.end) as *mut *mut libc::c_void,
         ) != 0
     {
         let fresh144 = &mut (*parser).tag_directives.top;

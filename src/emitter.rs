@@ -21,10 +21,10 @@ pub unsafe extern "C" fn yaml_emitter_emit(
 ) -> libc::c_int {
     if if (*emitter).events.tail != (*emitter).events.end
         || yaml_queue_extend(
-            &mut (*emitter).events.start as *mut *mut yaml_event_t as *mut *mut libc::c_void,
-            &mut (*emitter).events.head as *mut *mut yaml_event_t as *mut *mut libc::c_void,
-            &mut (*emitter).events.tail as *mut *mut yaml_event_t as *mut *mut libc::c_void,
-            &mut (*emitter).events.end as *mut *mut yaml_event_t as *mut *mut libc::c_void,
+            ptr::addr_of_mut!((*emitter).events.start) as *mut *mut libc::c_void,
+            ptr::addr_of_mut!((*emitter).events.head) as *mut *mut libc::c_void,
+            ptr::addr_of_mut!((*emitter).events.tail) as *mut *mut libc::c_void,
+            ptr::addr_of_mut!((*emitter).events.end) as *mut *mut libc::c_void,
         ) != 0
     {
         let fresh1 = &mut (*emitter).events.tail;
@@ -124,12 +124,9 @@ unsafe extern "C" fn yaml_emitter_append_tag_directive(
         (*emitter).error = YAML_MEMORY_ERROR;
     } else if !(if (*emitter).tag_directives.top != (*emitter).tag_directives.end
         || yaml_stack_extend(
-            &mut (*emitter).tag_directives.start as *mut *mut yaml_tag_directive_t
-                as *mut *mut libc::c_void,
-            &mut (*emitter).tag_directives.top as *mut *mut yaml_tag_directive_t
-                as *mut *mut libc::c_void,
-            &mut (*emitter).tag_directives.end as *mut *mut yaml_tag_directive_t
-                as *mut *mut libc::c_void,
+            ptr::addr_of_mut!((*emitter).tag_directives.start) as *mut *mut libc::c_void,
+            ptr::addr_of_mut!((*emitter).tag_directives.top) as *mut *mut libc::c_void,
+            ptr::addr_of_mut!((*emitter).tag_directives.end) as *mut *mut libc::c_void,
         ) != 0
     {
         let fresh5 = &mut (*emitter).tag_directives.top;
@@ -155,9 +152,9 @@ unsafe extern "C" fn yaml_emitter_increase_indent(
 ) -> libc::c_int {
     if if (*emitter).indents.top != (*emitter).indents.end
         || yaml_stack_extend(
-            &mut (*emitter).indents.start as *mut *mut libc::c_int as *mut *mut libc::c_void,
-            &mut (*emitter).indents.top as *mut *mut libc::c_int as *mut *mut libc::c_void,
-            &mut (*emitter).indents.end as *mut *mut libc::c_int as *mut *mut libc::c_void,
+            ptr::addr_of_mut!((*emitter).indents.start) as *mut *mut libc::c_void,
+            ptr::addr_of_mut!((*emitter).indents.top) as *mut *mut libc::c_void,
+            ptr::addr_of_mut!((*emitter).indents.end) as *mut *mut libc::c_void,
         ) != 0
     {
         let fresh7 = &mut (*emitter).indents.top;
@@ -497,10 +494,9 @@ unsafe extern "C" fn yaml_emitter_emit_document_content(
 ) -> libc::c_int {
     if if (*emitter).states.top != (*emitter).states.end
         || yaml_stack_extend(
-            &mut (*emitter).states.start as *mut *mut yaml_emitter_state_t
-                as *mut *mut libc::c_void,
-            &mut (*emitter).states.top as *mut *mut yaml_emitter_state_t as *mut *mut libc::c_void,
-            &mut (*emitter).states.end as *mut *mut yaml_emitter_state_t as *mut *mut libc::c_void,
+            ptr::addr_of_mut!((*emitter).states.start) as *mut *mut libc::c_void,
+            ptr::addr_of_mut!((*emitter).states.top) as *mut *mut libc::c_void,
+            ptr::addr_of_mut!((*emitter).states.end) as *mut *mut libc::c_void,
         ) != 0
     {
         let fresh9 = &mut (*emitter).states.top;
@@ -645,10 +641,9 @@ unsafe extern "C" fn yaml_emitter_emit_flow_sequence_item(
     }
     if if (*emitter).states.top != (*emitter).states.end
         || yaml_stack_extend(
-            &mut (*emitter).states.start as *mut *mut yaml_emitter_state_t
-                as *mut *mut libc::c_void,
-            &mut (*emitter).states.top as *mut *mut yaml_emitter_state_t as *mut *mut libc::c_void,
-            &mut (*emitter).states.end as *mut *mut yaml_emitter_state_t as *mut *mut libc::c_void,
+            ptr::addr_of_mut!((*emitter).states.start) as *mut *mut libc::c_void,
+            ptr::addr_of_mut!((*emitter).states.top) as *mut *mut libc::c_void,
+            ptr::addr_of_mut!((*emitter).states.end) as *mut *mut libc::c_void,
         ) != 0
     {
         let fresh16 = &mut (*emitter).states.top;
@@ -750,12 +745,9 @@ unsafe extern "C" fn yaml_emitter_emit_flow_mapping_key(
     if (*emitter).canonical == 0 && yaml_emitter_check_simple_key(emitter) != 0 {
         if if (*emitter).states.top != (*emitter).states.end
             || yaml_stack_extend(
-                &mut (*emitter).states.start as *mut *mut yaml_emitter_state_t
-                    as *mut *mut libc::c_void,
-                &mut (*emitter).states.top as *mut *mut yaml_emitter_state_t
-                    as *mut *mut libc::c_void,
-                &mut (*emitter).states.end as *mut *mut yaml_emitter_state_t
-                    as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*emitter).states.start) as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*emitter).states.top) as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*emitter).states.end) as *mut *mut libc::c_void,
             ) != 0
         {
             let fresh22 = &mut (*emitter).states.top;
@@ -791,12 +783,9 @@ unsafe extern "C" fn yaml_emitter_emit_flow_mapping_key(
         }
         if if (*emitter).states.top != (*emitter).states.end
             || yaml_stack_extend(
-                &mut (*emitter).states.start as *mut *mut yaml_emitter_state_t
-                    as *mut *mut libc::c_void,
-                &mut (*emitter).states.top as *mut *mut yaml_emitter_state_t
-                    as *mut *mut libc::c_void,
-                &mut (*emitter).states.end as *mut *mut yaml_emitter_state_t
-                    as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*emitter).states.start) as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*emitter).states.top) as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*emitter).states.end) as *mut *mut libc::c_void,
             ) != 0
         {
             let fresh24 = &mut (*emitter).states.top;
@@ -856,10 +845,9 @@ unsafe extern "C" fn yaml_emitter_emit_flow_mapping_value(
     }
     if if (*emitter).states.top != (*emitter).states.end
         || yaml_stack_extend(
-            &mut (*emitter).states.start as *mut *mut yaml_emitter_state_t
-                as *mut *mut libc::c_void,
-            &mut (*emitter).states.top as *mut *mut yaml_emitter_state_t as *mut *mut libc::c_void,
-            &mut (*emitter).states.end as *mut *mut yaml_emitter_state_t as *mut *mut libc::c_void,
+            ptr::addr_of_mut!((*emitter).states.start) as *mut *mut libc::c_void,
+            ptr::addr_of_mut!((*emitter).states.top) as *mut *mut libc::c_void,
+            ptr::addr_of_mut!((*emitter).states.end) as *mut *mut libc::c_void,
         ) != 0
     {
         let fresh26 = &mut (*emitter).states.top;
@@ -922,10 +910,9 @@ unsafe extern "C" fn yaml_emitter_emit_block_sequence_item(
     }
     if if (*emitter).states.top != (*emitter).states.end
         || yaml_stack_extend(
-            &mut (*emitter).states.start as *mut *mut yaml_emitter_state_t
-                as *mut *mut libc::c_void,
-            &mut (*emitter).states.top as *mut *mut yaml_emitter_state_t as *mut *mut libc::c_void,
-            &mut (*emitter).states.end as *mut *mut yaml_emitter_state_t as *mut *mut libc::c_void,
+            ptr::addr_of_mut!((*emitter).states.start) as *mut *mut libc::c_void,
+            ptr::addr_of_mut!((*emitter).states.top) as *mut *mut libc::c_void,
+            ptr::addr_of_mut!((*emitter).states.end) as *mut *mut libc::c_void,
         ) != 0
     {
         let fresh30 = &mut (*emitter).states.top;
@@ -974,12 +961,9 @@ unsafe extern "C" fn yaml_emitter_emit_block_mapping_key(
     if yaml_emitter_check_simple_key(emitter) != 0 {
         if if (*emitter).states.top != (*emitter).states.end
             || yaml_stack_extend(
-                &mut (*emitter).states.start as *mut *mut yaml_emitter_state_t
-                    as *mut *mut libc::c_void,
-                &mut (*emitter).states.top as *mut *mut yaml_emitter_state_t
-                    as *mut *mut libc::c_void,
-                &mut (*emitter).states.end as *mut *mut yaml_emitter_state_t
-                    as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*emitter).states.start) as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*emitter).states.top) as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*emitter).states.end) as *mut *mut libc::c_void,
             ) != 0
         {
             let fresh34 = &mut (*emitter).states.top;
@@ -1015,12 +999,9 @@ unsafe extern "C" fn yaml_emitter_emit_block_mapping_key(
         }
         if if (*emitter).states.top != (*emitter).states.end
             || yaml_stack_extend(
-                &mut (*emitter).states.start as *mut *mut yaml_emitter_state_t
-                    as *mut *mut libc::c_void,
-                &mut (*emitter).states.top as *mut *mut yaml_emitter_state_t
-                    as *mut *mut libc::c_void,
-                &mut (*emitter).states.end as *mut *mut yaml_emitter_state_t
-                    as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*emitter).states.start) as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*emitter).states.top) as *mut *mut libc::c_void,
+                ptr::addr_of_mut!((*emitter).states.end) as *mut *mut libc::c_void,
             ) != 0
         {
             let fresh36 = &mut (*emitter).states.top;
@@ -1078,10 +1059,9 @@ unsafe extern "C" fn yaml_emitter_emit_block_mapping_value(
     }
     if if (*emitter).states.top != (*emitter).states.end
         || yaml_stack_extend(
-            &mut (*emitter).states.start as *mut *mut yaml_emitter_state_t
-                as *mut *mut libc::c_void,
-            &mut (*emitter).states.top as *mut *mut yaml_emitter_state_t as *mut *mut libc::c_void,
-            &mut (*emitter).states.end as *mut *mut yaml_emitter_state_t as *mut *mut libc::c_void,
+            ptr::addr_of_mut!((*emitter).states.start) as *mut *mut libc::c_void,
+            ptr::addr_of_mut!((*emitter).states.top) as *mut *mut libc::c_void,
+            ptr::addr_of_mut!((*emitter).states.end) as *mut *mut libc::c_void,
         ) != 0
     {
         let fresh38 = &mut (*emitter).states.top;

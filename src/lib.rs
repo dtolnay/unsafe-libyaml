@@ -1,7 +1,6 @@
 #![allow(non_camel_case_types)]
 #![warn(clippy::pedantic)]
 #![allow(
-    clippy::borrow_as_ptr,
     clippy::cast_lossless,
     clippy::cast_possible_truncation,
     clippy::cast_possible_wrap,
