@@ -28,9 +28,15 @@
 use std::mem;
 
 pub mod libc {
-    pub use std::os::raw::{
-        c_char, c_int, c_long, c_schar, c_uchar, c_uint, c_ulong, c_ushort, c_void,
-    };
+    pub use std::os::raw::c_void;
+    pub type c_char = i8;
+    pub type c_int = i32;
+    pub type c_long = i64;
+    pub type c_schar = i8;
+    pub type c_uchar = u8;
+    pub type c_uint = u32;
+    pub type c_ulong = u64;
+    pub type c_ushort = u16;
 }
 
 #[macro_use]

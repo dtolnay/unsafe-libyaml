@@ -1,6 +1,8 @@
 #![warn(clippy::pedantic)]
 #![allow(
+    clippy::cast_lossless,
     clippy::cast_possible_truncation,
+    clippy::cast_possible_wrap,
     clippy::cast_sign_loss,
     clippy::items_after_statements,
     clippy::let_underscore_drop,

@@ -1,7 +1,5 @@
 use crate::libc;
 pub type size_t = libc::c_ulong;
-pub type __off_t = libc::c_long;
-pub type __off64_t = libc::c_long;
 pub type yaml_char_t = libc::c_uchar;
 #[derive(Copy, Clone)]
 #[repr(C)]
