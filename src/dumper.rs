@@ -26,8 +26,8 @@ pub unsafe extern "C" fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> 
             column: 0,
         },
     };
-    let mut mark: yaml_mark_t = {
-        let mut init = yaml_mark_s {
+    let mark: yaml_mark_t = {
+        let init = yaml_mark_s {
             index: 0 as libc::c_int as size_t,
             line: 0 as libc::c_int as size_t,
             column: 0 as libc::c_int as size_t,
@@ -71,8 +71,8 @@ pub unsafe extern "C" fn yaml_emitter_close(mut emitter: *mut yaml_emitter_t) ->
             column: 0,
         },
     };
-    let mut mark: yaml_mark_t = {
-        let mut init = yaml_mark_s {
+    let mark: yaml_mark_t = {
+        let init = yaml_mark_s {
             index: 0 as libc::c_int as size_t,
             line: 0 as libc::c_int as size_t,
             column: 0 as libc::c_int as size_t,
@@ -100,10 +100,10 @@ pub unsafe extern "C" fn yaml_emitter_close(mut emitter: *mut yaml_emitter_t) ->
 }
 #[no_mangle]
 pub unsafe extern "C" fn yaml_emitter_dump(
-    mut emitter: *mut yaml_emitter_t,
-    mut document: *mut yaml_document_t,
+    emitter: *mut yaml_emitter_t,
+    document: *mut yaml_document_t,
 ) -> libc::c_int {
-    let mut current_block: u64;
+    let current_block: u64;
     let mut event: yaml_event_t = yaml_event_t {
         type_0: YAML_NO_EVENT,
         data: unnamed_yaml_event_s_data {
@@ -122,8 +122,8 @@ pub unsafe extern "C" fn yaml_emitter_dump(
             column: 0,
         },
     };
-    let mut mark: yaml_mark_t = {
-        let mut init = yaml_mark_s {
+    let mark: yaml_mark_t = {
+        let init = yaml_mark_s {
             index: 0 as libc::c_int as size_t,
             line: 0 as libc::c_int as size_t,
             column: 0 as libc::c_int as size_t,
@@ -254,11 +254,8 @@ unsafe extern "C" fn yaml_emitter_delete_document_and_anchors(mut emitter: *mut 
     let ref mut fresh7 = (*emitter).document;
     *fresh7 = 0 as *mut yaml_document_t;
 }
-unsafe extern "C" fn yaml_emitter_anchor_node(
-    mut emitter: *mut yaml_emitter_t,
-    mut index: libc::c_int,
-) {
-    let mut node: *mut yaml_node_t = ((*(*emitter).document).nodes.start)
+unsafe extern "C" fn yaml_emitter_anchor_node(emitter: *mut yaml_emitter_t, index: libc::c_int) {
+    let node: *mut yaml_node_t = ((*(*emitter).document).nodes.start)
         .c_offset(index as isize)
         .c_offset(-(1 as libc::c_int as isize));
     let mut item: *mut yaml_node_item_t = 0 as *mut yaml_node_item_t;
@@ -296,10 +293,10 @@ unsafe extern "C" fn yaml_emitter_anchor_node(
     }
 }
 unsafe extern "C" fn yaml_emitter_generate_anchor(
-    mut emitter: *mut yaml_emitter_t,
-    mut anchor_id: libc::c_int,
+    emitter: *mut yaml_emitter_t,
+    anchor_id: libc::c_int,
 ) -> *mut yaml_char_t {
-    let mut anchor: *mut yaml_char_t = yaml_malloc(16 as libc::c_int as size_t) as *mut yaml_char_t;
+    let anchor: *mut yaml_char_t = yaml_malloc(16 as libc::c_int as size_t) as *mut yaml_char_t;
     if anchor.is_null() {
         return 0 as *mut yaml_char_t;
     }
@@ -308,13 +305,13 @@ unsafe extern "C" fn yaml_emitter_generate_anchor(
     return anchor;
 }
 unsafe extern "C" fn yaml_emitter_dump_node(
-    mut emitter: *mut yaml_emitter_t,
-    mut index: libc::c_int,
+    emitter: *mut yaml_emitter_t,
+    index: libc::c_int,
 ) -> libc::c_int {
-    let mut node: *mut yaml_node_t = ((*(*emitter).document).nodes.start)
+    let node: *mut yaml_node_t = ((*(*emitter).document).nodes.start)
         .c_offset(index as isize)
         .c_offset(-(1 as libc::c_int as isize));
-    let mut anchor_id: libc::c_int =
+    let anchor_id: libc::c_int =
         (*((*emitter).anchors).c_offset((index - 1 as libc::c_int) as isize)).anchor;
     let mut anchor: *mut yaml_char_t = 0 as *mut yaml_char_t;
     if anchor_id != 0 {
@@ -336,8 +333,8 @@ unsafe extern "C" fn yaml_emitter_dump_node(
     }
 }
 unsafe extern "C" fn yaml_emitter_dump_alias(
-    mut emitter: *mut yaml_emitter_t,
-    mut anchor: *mut yaml_char_t,
+    emitter: *mut yaml_emitter_t,
+    anchor: *mut yaml_char_t,
 ) -> libc::c_int {
     let mut event: yaml_event_t = yaml_event_t {
         type_0: YAML_NO_EVENT,
@@ -357,8 +354,8 @@ unsafe extern "C" fn yaml_emitter_dump_alias(
             column: 0,
         },
     };
-    let mut mark: yaml_mark_t = {
-        let mut init = yaml_mark_s {
+    let mark: yaml_mark_t = {
+        let init = yaml_mark_s {
             index: 0 as libc::c_int as size_t,
             line: 0 as libc::c_int as size_t,
             column: 0 as libc::c_int as size_t,
@@ -377,9 +374,9 @@ unsafe extern "C" fn yaml_emitter_dump_alias(
     return yaml_emitter_emit(emitter, &mut event);
 }
 unsafe extern "C" fn yaml_emitter_dump_scalar(
-    mut emitter: *mut yaml_emitter_t,
-    mut node: *mut yaml_node_t,
-    mut anchor: *mut yaml_char_t,
+    emitter: *mut yaml_emitter_t,
+    node: *mut yaml_node_t,
+    anchor: *mut yaml_char_t,
 ) -> libc::c_int {
     let mut event: yaml_event_t = yaml_event_t {
         type_0: YAML_NO_EVENT,
@@ -399,19 +396,19 @@ unsafe extern "C" fn yaml_emitter_dump_scalar(
             column: 0,
         },
     };
-    let mut mark: yaml_mark_t = {
-        let mut init = yaml_mark_s {
+    let mark: yaml_mark_t = {
+        let init = yaml_mark_s {
             index: 0 as libc::c_int as size_t,
             line: 0 as libc::c_int as size_t,
             column: 0 as libc::c_int as size_t,
         };
         init
     };
-    let mut plain_implicit: libc::c_int = (strcmp(
+    let plain_implicit: libc::c_int = (strcmp(
         (*node).tag as *mut libc::c_char,
         b"tag:yaml.org,2002:str\0" as *const u8 as *const libc::c_char,
     ) == 0 as libc::c_int) as libc::c_int;
-    let mut quoted_implicit: libc::c_int = (strcmp(
+    let quoted_implicit: libc::c_int = (strcmp(
         (*node).tag as *mut libc::c_char,
         b"tag:yaml.org,2002:str\0" as *const u8 as *const libc::c_char,
     ) == 0 as libc::c_int) as libc::c_int;
@@ -433,9 +430,9 @@ unsafe extern "C" fn yaml_emitter_dump_scalar(
     return yaml_emitter_emit(emitter, &mut event);
 }
 unsafe extern "C" fn yaml_emitter_dump_sequence(
-    mut emitter: *mut yaml_emitter_t,
-    mut node: *mut yaml_node_t,
-    mut anchor: *mut yaml_char_t,
+    emitter: *mut yaml_emitter_t,
+    node: *mut yaml_node_t,
+    anchor: *mut yaml_char_t,
 ) -> libc::c_int {
     let mut event: yaml_event_t = yaml_event_t {
         type_0: YAML_NO_EVENT,
@@ -455,15 +452,15 @@ unsafe extern "C" fn yaml_emitter_dump_sequence(
             column: 0,
         },
     };
-    let mut mark: yaml_mark_t = {
-        let mut init = yaml_mark_s {
+    let mark: yaml_mark_t = {
+        let init = yaml_mark_s {
             index: 0 as libc::c_int as size_t,
             line: 0 as libc::c_int as size_t,
             column: 0 as libc::c_int as size_t,
         };
         init
     };
-    let mut implicit: libc::c_int = (strcmp(
+    let implicit: libc::c_int = (strcmp(
         (*node).tag as *mut libc::c_char,
         b"tag:yaml.org,2002:seq\0" as *const u8 as *const libc::c_char,
     ) == 0 as libc::c_int) as libc::c_int;
@@ -504,9 +501,9 @@ unsafe extern "C" fn yaml_emitter_dump_sequence(
     return 1 as libc::c_int;
 }
 unsafe extern "C" fn yaml_emitter_dump_mapping(
-    mut emitter: *mut yaml_emitter_t,
-    mut node: *mut yaml_node_t,
-    mut anchor: *mut yaml_char_t,
+    emitter: *mut yaml_emitter_t,
+    node: *mut yaml_node_t,
+    anchor: *mut yaml_char_t,
 ) -> libc::c_int {
     let mut event: yaml_event_t = yaml_event_t {
         type_0: YAML_NO_EVENT,
@@ -526,15 +523,15 @@ unsafe extern "C" fn yaml_emitter_dump_mapping(
             column: 0,
         },
     };
-    let mut mark: yaml_mark_t = {
-        let mut init = yaml_mark_s {
+    let mark: yaml_mark_t = {
+        let init = yaml_mark_s {
             index: 0 as libc::c_int as size_t,
             line: 0 as libc::c_int as size_t,
             column: 0 as libc::c_int as size_t,
         };
         init
     };
-    let mut implicit: libc::c_int = (strcmp(
+    let implicit: libc::c_int = (strcmp(
         (*node).tag as *mut libc::c_char,
         b"tag:yaml.org,2002:map\0" as *const u8 as *const libc::c_char,
     ) == 0 as libc::c_int) as libc::c_int;

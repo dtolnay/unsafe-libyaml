@@ -19,8 +19,8 @@ pub struct Unnamed_36 {
 }
 #[no_mangle]
 pub unsafe extern "C" fn yaml_parser_parse(
-    mut parser: *mut yaml_parser_t,
-    mut event: *mut yaml_event_t,
+    parser: *mut yaml_parser_t,
+    event: *mut yaml_event_t,
 ) -> libc::c_int {
     __assert!(!parser.is_null());
     __assert!(!event.is_null());
@@ -39,8 +39,8 @@ pub unsafe extern "C" fn yaml_parser_parse(
 }
 unsafe extern "C" fn yaml_parser_set_parser_error(
     mut parser: *mut yaml_parser_t,
-    mut problem: *const libc::c_char,
-    mut problem_mark: yaml_mark_t,
+    problem: *const libc::c_char,
+    problem_mark: yaml_mark_t,
 ) -> libc::c_int {
     (*parser).error = YAML_PARSER_ERROR;
     let ref mut fresh0 = (*parser).problem;
@@ -50,10 +50,10 @@ unsafe extern "C" fn yaml_parser_set_parser_error(
 }
 unsafe extern "C" fn yaml_parser_set_parser_error_context(
     mut parser: *mut yaml_parser_t,
-    mut context: *const libc::c_char,
-    mut context_mark: yaml_mark_t,
-    mut problem: *const libc::c_char,
-    mut problem_mark: yaml_mark_t,
+    context: *const libc::c_char,
+    context_mark: yaml_mark_t,
+    problem: *const libc::c_char,
+    problem_mark: yaml_mark_t,
 ) -> libc::c_int {
     (*parser).error = YAML_PARSER_ERROR;
     let ref mut fresh1 = (*parser).context;
@@ -65,8 +65,8 @@ unsafe extern "C" fn yaml_parser_set_parser_error_context(
     return 0 as libc::c_int;
 }
 unsafe extern "C" fn yaml_parser_state_machine(
-    mut parser: *mut yaml_parser_t,
-    mut event: *mut yaml_event_t,
+    parser: *mut yaml_parser_t,
+    event: *mut yaml_event_t,
 ) -> libc::c_int {
     match (*parser).state as libc::c_uint {
         0 => return yaml_parser_parse_stream_start(parser, event),
@@ -157,12 +157,12 @@ unsafe extern "C" fn yaml_parser_parse_stream_start(
 unsafe extern "C" fn yaml_parser_parse_document_start(
     mut parser: *mut yaml_parser_t,
     mut event: *mut yaml_event_t,
-    mut implicit: libc::c_int,
+    implicit: libc::c_int,
 ) -> libc::c_int {
     let mut token: *mut yaml_token_t = 0 as *mut yaml_token_t;
     let mut version_directive: *mut yaml_version_directive_t = 0 as *mut yaml_version_directive_t;
     let mut tag_directives: Unnamed_35 = {
-        let mut init = Unnamed_35 {
+        let init = Unnamed_35 {
             start: 0 as *mut yaml_tag_directive_t,
             end: 0 as *mut yaml_tag_directive_t,
         };
@@ -381,7 +381,7 @@ unsafe extern "C" fn yaml_parser_parse_document_start(
 }
 unsafe extern "C" fn yaml_parser_parse_document_content(
     mut parser: *mut yaml_parser_t,
-    mut event: *mut yaml_event_t,
+    event: *mut yaml_event_t,
 ) -> libc::c_int {
     let mut token: *mut yaml_token_t = 0 as *mut yaml_token_t;
     token = if (*parser).token_available != 0 || yaml_parser_fetch_more_tokens(parser) != 0 {
@@ -450,7 +450,7 @@ unsafe extern "C" fn yaml_parser_parse_document_end(
     while !((*parser).tag_directives.start == (*parser).tag_directives.top) {
         let ref mut fresh24 = (*parser).tag_directives.top;
         *fresh24 = (*fresh24).c_offset(-1);
-        let mut tag_directive: yaml_tag_directive_t = **fresh24;
+        let tag_directive: yaml_tag_directive_t = **fresh24;
         yaml_free(tag_directive.handle as *mut libc::c_void);
         yaml_free(tag_directive.prefix as *mut libc::c_void);
     }
@@ -469,8 +469,8 @@ unsafe extern "C" fn yaml_parser_parse_document_end(
 unsafe extern "C" fn yaml_parser_parse_node(
     mut parser: *mut yaml_parser_t,
     mut event: *mut yaml_event_t,
-    mut block: libc::c_int,
-    mut indentless_sequence: libc::c_int,
+    block: libc::c_int,
+    indentless_sequence: libc::c_int,
 ) -> libc::c_int {
     let mut current_block: u64;
     let mut token: *mut yaml_token_t = 0 as *mut yaml_token_t;
@@ -654,10 +654,9 @@ unsafe extern "C" fn yaml_parser_parse_node(
                                 tag_handle as *mut libc::c_char,
                             ) == 0 as libc::c_int
                             {
-                                let mut prefix_len: size_t =
+                                let prefix_len: size_t =
                                     strlen((*tag_directive).prefix as *mut libc::c_char);
-                                let mut suffix_len: size_t =
-                                    strlen(tag_suffix as *mut libc::c_char);
+                                let suffix_len: size_t = strlen(tag_suffix as *mut libc::c_char);
                                 tag = yaml_malloc(
                                     prefix_len
                                         .wrapping_add(suffix_len)
@@ -872,7 +871,7 @@ unsafe extern "C" fn yaml_parser_parse_node(
                             (*event).data.mapping_start.style = YAML_BLOCK_MAPPING_STYLE;
                             return 1 as libc::c_int;
                         } else if !anchor.is_null() || !tag.is_null() {
-                            let mut value: *mut yaml_char_t =
+                            let value: *mut yaml_char_t =
                                 yaml_malloc(1 as libc::c_int as size_t) as *mut yaml_char_t;
                             if value.is_null() {
                                 (*parser).error = YAML_MEMORY_ERROR;
@@ -933,7 +932,7 @@ unsafe extern "C" fn yaml_parser_parse_node(
 unsafe extern "C" fn yaml_parser_parse_block_sequence_entry(
     mut parser: *mut yaml_parser_t,
     mut event: *mut yaml_event_t,
-    mut first: libc::c_int,
+    first: libc::c_int,
 ) -> libc::c_int {
     let mut token: *mut yaml_token_t = 0 as *mut yaml_token_t;
     if first != 0 {
@@ -979,7 +978,7 @@ unsafe extern "C" fn yaml_parser_parse_block_sequence_entry(
         return 0 as libc::c_int;
     }
     if (*token).type_0 as libc::c_uint == YAML_BLOCK_ENTRY_TOKEN as libc::c_int as libc::c_uint {
-        let mut mark: yaml_mark_t = (*token).end_mark;
+        let mark: yaml_mark_t = (*token).end_mark;
         (*parser).token_available = 0 as libc::c_int;
         let ref mut fresh61 = (*parser).tokens_parsed;
         *fresh61 = (*fresh61).wrapping_add(1);
@@ -1077,7 +1076,7 @@ unsafe extern "C" fn yaml_parser_parse_indentless_sequence_entry(
         return 0 as libc::c_int;
     }
     if (*token).type_0 as libc::c_uint == YAML_BLOCK_ENTRY_TOKEN as libc::c_int as libc::c_uint {
-        let mut mark: yaml_mark_t = (*token).end_mark;
+        let mark: yaml_mark_t = (*token).end_mark;
         (*parser).token_available = 0 as libc::c_int;
         let ref mut fresh70 = (*parser).tokens_parsed;
         *fresh70 = (*fresh70).wrapping_add(1);
@@ -1145,7 +1144,7 @@ unsafe extern "C" fn yaml_parser_parse_indentless_sequence_entry(
 unsafe extern "C" fn yaml_parser_parse_block_mapping_key(
     mut parser: *mut yaml_parser_t,
     mut event: *mut yaml_event_t,
-    mut first: libc::c_int,
+    first: libc::c_int,
 ) -> libc::c_int {
     let mut token: *mut yaml_token_t = 0 as *mut yaml_token_t;
     if first != 0 {
@@ -1191,7 +1190,7 @@ unsafe extern "C" fn yaml_parser_parse_block_mapping_key(
         return 0 as libc::c_int;
     }
     if (*token).type_0 as libc::c_uint == YAML_KEY_TOKEN as libc::c_int as libc::c_uint {
-        let mut mark: yaml_mark_t = (*token).end_mark;
+        let mark: yaml_mark_t = (*token).end_mark;
         (*parser).token_available = 0 as libc::c_int;
         let ref mut fresh79 = (*parser).tokens_parsed;
         *fresh79 = (*fresh79).wrapping_add(1);
@@ -1278,7 +1277,7 @@ unsafe extern "C" fn yaml_parser_parse_block_mapping_key(
 }
 unsafe extern "C" fn yaml_parser_parse_block_mapping_value(
     mut parser: *mut yaml_parser_t,
-    mut event: *mut yaml_event_t,
+    event: *mut yaml_event_t,
 ) -> libc::c_int {
     let mut token: *mut yaml_token_t = 0 as *mut yaml_token_t;
     token = if (*parser).token_available != 0 || yaml_parser_fetch_more_tokens(parser) != 0 {
@@ -1290,7 +1289,7 @@ unsafe extern "C" fn yaml_parser_parse_block_mapping_value(
         return 0 as libc::c_int;
     }
     if (*token).type_0 as libc::c_uint == YAML_VALUE_TOKEN as libc::c_int as libc::c_uint {
-        let mut mark: yaml_mark_t = (*token).end_mark;
+        let mark: yaml_mark_t = (*token).end_mark;
         (*parser).token_available = 0 as libc::c_int;
         let ref mut fresh88 = (*parser).tokens_parsed;
         *fresh88 = (*fresh88).wrapping_add(1);
@@ -1347,7 +1346,7 @@ unsafe extern "C" fn yaml_parser_parse_block_mapping_value(
 unsafe extern "C" fn yaml_parser_parse_flow_sequence_entry(
     mut parser: *mut yaml_parser_t,
     mut event: *mut yaml_event_t,
-    mut first: libc::c_int,
+    first: libc::c_int,
 ) -> libc::c_int {
     let mut token: *mut yaml_token_t = 0 as *mut yaml_token_t;
     if first != 0 {
@@ -1509,7 +1508,7 @@ unsafe extern "C" fn yaml_parser_parse_flow_sequence_entry(
 }
 unsafe extern "C" fn yaml_parser_parse_flow_sequence_entry_mapping_key(
     mut parser: *mut yaml_parser_t,
-    mut event: *mut yaml_event_t,
+    event: *mut yaml_event_t,
 ) -> libc::c_int {
     let mut token: *mut yaml_token_t = 0 as *mut yaml_token_t;
     token = if (*parser).token_available != 0 || yaml_parser_fetch_more_tokens(parser) != 0 {
@@ -1549,7 +1548,7 @@ unsafe extern "C" fn yaml_parser_parse_flow_sequence_entry_mapping_key(
         }
         return yaml_parser_parse_node(parser, event, 0 as libc::c_int, 0 as libc::c_int);
     } else {
-        let mut mark: yaml_mark_t = (*token).end_mark;
+        let mark: yaml_mark_t = (*token).end_mark;
         (*parser).token_available = 0 as libc::c_int;
         let ref mut fresh111 = (*parser).tokens_parsed;
         *fresh111 = (*fresh111).wrapping_add(1);
@@ -1564,7 +1563,7 @@ unsafe extern "C" fn yaml_parser_parse_flow_sequence_entry_mapping_key(
 }
 unsafe extern "C" fn yaml_parser_parse_flow_sequence_entry_mapping_value(
     mut parser: *mut yaml_parser_t,
-    mut event: *mut yaml_event_t,
+    event: *mut yaml_event_t,
 ) -> libc::c_int {
     let mut token: *mut yaml_token_t = 0 as *mut yaml_token_t;
     token = if (*parser).token_available != 0 || yaml_parser_fetch_more_tokens(parser) != 0 {
@@ -1651,7 +1650,7 @@ unsafe extern "C" fn yaml_parser_parse_flow_sequence_entry_mapping_end(
 unsafe extern "C" fn yaml_parser_parse_flow_mapping_key(
     mut parser: *mut yaml_parser_t,
     mut event: *mut yaml_event_t,
-    mut first: libc::c_int,
+    first: libc::c_int,
 ) -> libc::c_int {
     let mut token: *mut yaml_token_t = 0 as *mut yaml_token_t;
     if first != 0 {
@@ -1838,8 +1837,8 @@ unsafe extern "C" fn yaml_parser_parse_flow_mapping_key(
 }
 unsafe extern "C" fn yaml_parser_parse_flow_mapping_value(
     mut parser: *mut yaml_parser_t,
-    mut event: *mut yaml_event_t,
-    mut empty: libc::c_int,
+    event: *mut yaml_event_t,
+    empty: libc::c_int,
 ) -> libc::c_int {
     let mut token: *mut yaml_token_t = 0 as *mut yaml_token_t;
     token = if (*parser).token_available != 0 || yaml_parser_fetch_more_tokens(parser) != 0 {
@@ -1906,7 +1905,7 @@ unsafe extern "C" fn yaml_parser_parse_flow_mapping_value(
 unsafe extern "C" fn yaml_parser_process_empty_scalar(
     mut parser: *mut yaml_parser_t,
     mut event: *mut yaml_event_t,
-    mut mark: yaml_mark_t,
+    mark: yaml_mark_t,
 ) -> libc::c_int {
     let mut value: *mut yaml_char_t = 0 as *mut yaml_char_t;
     value = yaml_malloc(1 as libc::c_int as size_t) as *mut yaml_char_t;
@@ -1937,21 +1936,21 @@ unsafe extern "C" fn yaml_parser_process_empty_scalar(
 }
 unsafe extern "C" fn yaml_parser_process_directives(
     mut parser: *mut yaml_parser_t,
-    mut version_directive_ref: *mut *mut yaml_version_directive_t,
-    mut tag_directives_start_ref: *mut *mut yaml_tag_directive_t,
-    mut tag_directives_end_ref: *mut *mut yaml_tag_directive_t,
+    version_directive_ref: *mut *mut yaml_version_directive_t,
+    tag_directives_start_ref: *mut *mut yaml_tag_directive_t,
+    tag_directives_end_ref: *mut *mut yaml_tag_directive_t,
 ) -> libc::c_int {
     let mut current_block: u64;
     let mut default_tag_directives: [yaml_tag_directive_t; 3] = [
         {
-            let mut init = yaml_tag_directive_s {
+            let init = yaml_tag_directive_s {
                 handle: b"!\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
                 prefix: b"!\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
             };
             init
         },
         {
-            let mut init = yaml_tag_directive_s {
+            let init = yaml_tag_directive_s {
                 handle: b"!!\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
                 prefix: b"tag:yaml.org,2002:\0" as *const u8 as *const libc::c_char
                     as *mut yaml_char_t,
@@ -1959,7 +1958,7 @@ unsafe extern "C" fn yaml_parser_process_directives(
             init
         },
         {
-            let mut init = yaml_tag_directive_s {
+            let init = yaml_tag_directive_s {
                 handle: 0 as *mut yaml_char_t,
                 prefix: 0 as *mut yaml_char_t,
             };
@@ -1969,7 +1968,7 @@ unsafe extern "C" fn yaml_parser_process_directives(
     let mut default_tag_directive: *mut yaml_tag_directive_t = 0 as *mut yaml_tag_directive_t;
     let mut version_directive: *mut yaml_version_directive_t = 0 as *mut yaml_version_directive_t;
     let mut tag_directives: Unnamed_36 = {
-        let mut init = Unnamed_36 {
+        let init = Unnamed_36 {
             start: 0 as *mut yaml_tag_directive_t,
             end: 0 as *mut yaml_tag_directive_t,
             top: 0 as *mut yaml_tag_directive_t,
@@ -2163,7 +2162,7 @@ unsafe extern "C" fn yaml_parser_process_directives(
     yaml_free(version_directive as *mut libc::c_void);
     while !(tag_directives.start == tag_directives.top) {
         tag_directives.top = (tag_directives.top).c_offset(-1);
-        let mut tag_directive: yaml_tag_directive_t = *tag_directives.top;
+        let tag_directive: yaml_tag_directive_t = *tag_directives.top;
         yaml_free(tag_directive.handle as *mut libc::c_void);
         yaml_free(tag_directive.prefix as *mut libc::c_void);
     }
@@ -2175,13 +2174,13 @@ unsafe extern "C" fn yaml_parser_process_directives(
 }
 unsafe extern "C" fn yaml_parser_append_tag_directive(
     mut parser: *mut yaml_parser_t,
-    mut value: yaml_tag_directive_t,
-    mut allow_duplicates: libc::c_int,
-    mut mark: yaml_mark_t,
+    value: yaml_tag_directive_t,
+    allow_duplicates: libc::c_int,
+    mark: yaml_mark_t,
 ) -> libc::c_int {
     let mut tag_directive: *mut yaml_tag_directive_t = 0 as *mut yaml_tag_directive_t;
     let mut copy: yaml_tag_directive_t = {
-        let mut init = yaml_tag_directive_s {
+        let init = yaml_tag_directive_s {
             handle: 0 as *mut yaml_char_t,
             prefix: 0 as *mut yaml_char_t,
         };

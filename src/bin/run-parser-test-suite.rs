@@ -1,4 +1,4 @@
-#![allow(unused_assignments, unused_mut)]
+#![allow(unused_assignments)]
 
 use std::cmp;
 use std::env;
@@ -193,7 +193,7 @@ unsafe fn unsafe_main() -> ExitCode {
     return ExitCode::SUCCESS;
 }
 #[no_mangle]
-pub unsafe extern "C" fn print_escaped(mut str: *mut yaml_char_t, mut length: size_t) {
+pub unsafe extern "C" fn print_escaped(str: *mut yaml_char_t, length: size_t) {
     let mut i: libc::c_int = 0;
     let mut c: libc::c_char = 0;
     i = 0 as libc::c_int;

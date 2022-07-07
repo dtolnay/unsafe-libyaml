@@ -1,4 +1,4 @@
-#![allow(unused_assignments, unused_mut)]
+#![allow(unused_assignments)]
 
 use std::env;
 use std::ffi::CStr;
@@ -21,16 +21,16 @@ use unsafe_libyaml::emitter::yaml_emitter_emit;
 use unsafe_libyaml::externs::{memcpy, strlen, strncmp};
 use unsafe_libyaml::*;
 unsafe fn unsafe_main() -> ExitCode {
-    let mut current_block: u64;
+    let current_block: u64;
     let mut input = None;
     let mut emitter = MaybeUninit::<yaml_emitter_t>::uninit();
     let emitter = emitter.as_mut_ptr();
     let mut event = MaybeUninit::<yaml_event_t>::uninit();
     let event = event.as_mut_ptr();
-    let mut version_directive: *mut yaml_version_directive_t =
+    let version_directive: *mut yaml_version_directive_t =
         ptr::null_mut::<yaml_version_directive_t>();
-    let mut canonical: libc::c_int = 0 as libc::c_int;
-    let mut unicode: libc::c_int = 0 as libc::c_int;
+    let canonical: libc::c_int = 0 as libc::c_int;
+    let unicode: libc::c_int = 0 as libc::c_int;
     let mut buf = ReadBuf::new();
     let mut foundfile: libc::c_int = 0 as libc::c_int;
     for arg in env::args().skip(1) {
@@ -302,9 +302,9 @@ impl ReadBuf {
 }
 #[no_mangle]
 pub unsafe extern "C" fn get_anchor(
-    mut sigil: libc::c_char,
-    mut line: *mut libc::c_char,
-    mut anchor: *mut libc::c_char,
+    sigil: libc::c_char,
+    line: *mut libc::c_char,
+    anchor: *mut libc::c_char,
 ) -> *mut libc::c_char {
     let mut start: *mut libc::c_char = ptr::null_mut::<libc::c_char>();
     let mut end: *mut libc::c_char = ptr::null_mut::<libc::c_char>();
@@ -327,8 +327,8 @@ pub unsafe extern "C" fn get_anchor(
 }
 #[no_mangle]
 pub unsafe extern "C" fn get_tag(
-    mut line: *mut libc::c_char,
-    mut tag: *mut libc::c_char,
+    line: *mut libc::c_char,
+    tag: *mut libc::c_char,
 ) -> *mut libc::c_char {
     let mut start: *mut libc::c_char = ptr::null_mut::<libc::c_char>();
     let mut end: *mut libc::c_char = ptr::null_mut::<libc::c_char>();
@@ -353,14 +353,14 @@ pub unsafe extern "C" fn get_tag(
 }
 #[no_mangle]
 pub unsafe extern "C" fn get_value(
-    mut line: *mut libc::c_char,
-    mut value: *mut libc::c_char,
-    mut style: *mut libc::c_int,
+    line: *mut libc::c_char,
+    value: *mut libc::c_char,
+    style: *mut libc::c_int,
 ) {
     let mut i: libc::c_int = 0 as libc::c_int;
     let mut c: *mut libc::c_char = ptr::null_mut::<libc::c_char>();
     let mut start: *mut libc::c_char = ptr::null_mut::<libc::c_char>();
-    let mut end: *mut libc::c_char = line.offset(strlen(line) as isize);
+    let end: *mut libc::c_char = line.offset(strlen(line) as isize);
     let mut current_block_8: u64;
     c = line.offset(4 as libc::c_int as isize);
     while c < end {

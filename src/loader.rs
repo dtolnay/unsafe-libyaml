@@ -28,9 +28,9 @@ pub struct Unnamed_36 {
 #[no_mangle]
 pub unsafe extern "C" fn yaml_parser_load(
     mut parser: *mut yaml_parser_t,
-    mut document: *mut yaml_document_t,
+    document: *mut yaml_document_t,
 ) -> libc::c_int {
-    let mut current_block: u64;
+    let current_block: u64;
     let mut event: yaml_event_t = yaml_event_t {
         type_0: YAML_NO_EVENT,
         data: unnamed_yaml_event_s_data {
@@ -134,8 +134,8 @@ pub unsafe extern "C" fn yaml_parser_load(
 }
 unsafe extern "C" fn yaml_parser_set_composer_error(
     mut parser: *mut yaml_parser_t,
-    mut problem: *const libc::c_char,
-    mut problem_mark: yaml_mark_t,
+    problem: *const libc::c_char,
+    problem_mark: yaml_mark_t,
 ) -> libc::c_int {
     (*parser).error = YAML_COMPOSER_ERROR;
     let ref mut fresh9 = (*parser).problem;
@@ -145,10 +145,10 @@ unsafe extern "C" fn yaml_parser_set_composer_error(
 }
 unsafe extern "C" fn yaml_parser_set_composer_error_context(
     mut parser: *mut yaml_parser_t,
-    mut context: *const libc::c_char,
-    mut context_mark: yaml_mark_t,
-    mut problem: *const libc::c_char,
-    mut problem_mark: yaml_mark_t,
+    context: *const libc::c_char,
+    context_mark: yaml_mark_t,
+    problem: *const libc::c_char,
+    problem_mark: yaml_mark_t,
 ) -> libc::c_int {
     (*parser).error = YAML_COMPOSER_ERROR;
     let ref mut fresh10 = (*parser).context;
@@ -159,7 +159,7 @@ unsafe extern "C" fn yaml_parser_set_composer_error_context(
     (*parser).problem_mark = problem_mark;
     return 0 as libc::c_int;
 }
-unsafe extern "C" fn yaml_parser_delete_aliases(mut parser: *mut yaml_parser_t) {
+unsafe extern "C" fn yaml_parser_delete_aliases(parser: *mut yaml_parser_t) {
     while !((*parser).aliases.start == (*parser).aliases.top) {
         let ref mut fresh12 = (*parser).aliases.top;
         *fresh12 = (*fresh12).c_offset(-1);
@@ -175,10 +175,10 @@ unsafe extern "C" fn yaml_parser_delete_aliases(mut parser: *mut yaml_parser_t) 
 }
 unsafe extern "C" fn yaml_parser_load_document(
     mut parser: *mut yaml_parser_t,
-    mut event: *mut yaml_event_t,
+    event: *mut yaml_event_t,
 ) -> libc::c_int {
     let mut ctx: loader_ctx = {
-        let mut init = loader_ctx {
+        let init = loader_ctx {
             start: 0 as *mut libc::c_int,
             end: 0 as *mut libc::c_int,
             top: 0 as *mut libc::c_int,
@@ -226,7 +226,7 @@ unsafe extern "C" fn yaml_parser_load_document(
 }
 unsafe extern "C" fn yaml_parser_load_nodes(
     mut parser: *mut yaml_parser_t,
-    mut ctx: *mut loader_ctx,
+    ctx: *mut loader_ctx,
 ) -> libc::c_int {
     let mut event: yaml_event_t = yaml_event_t {
         type_0: YAML_NO_EVENT,
@@ -297,8 +297,8 @@ unsafe extern "C" fn yaml_parser_load_nodes(
 }
 unsafe extern "C" fn yaml_parser_register_anchor(
     mut parser: *mut yaml_parser_t,
-    mut index: libc::c_int,
-    mut anchor: *mut yaml_char_t,
+    index: libc::c_int,
+    anchor: *mut yaml_char_t,
 ) -> libc::c_int {
     let mut data: yaml_alias_data_t = yaml_alias_data_t {
         anchor: 0 as *mut yaml_char_t,
@@ -360,8 +360,8 @@ unsafe extern "C" fn yaml_parser_register_anchor(
 }
 unsafe extern "C" fn yaml_parser_load_node_add(
     mut parser: *mut yaml_parser_t,
-    mut ctx: *mut loader_ctx,
-    mut index: libc::c_int,
+    ctx: *mut loader_ctx,
+    index: libc::c_int,
 ) -> libc::c_int {
     let mut parent: *mut yaml_node_s = 0 as *mut yaml_node_s;
     let mut parent_index: libc::c_int = 0;
@@ -371,7 +371,7 @@ unsafe extern "C" fn yaml_parser_load_node_add(
     parent_index = *((*ctx).top).c_offset(-(1 as libc::c_int as isize));
     parent = &mut *((*(*parser).document).nodes.start)
         .c_offset((parent_index - 1 as libc::c_int) as isize) as *mut yaml_node_t;
-    let mut current_block_17: u64;
+    let current_block_17: u64;
     match (*parent).type_0 as libc::c_uint {
         2 => {
             if if (((*parent).data.sequence.items.top)
@@ -474,11 +474,11 @@ unsafe extern "C" fn yaml_parser_load_node_add(
     return 1 as libc::c_int;
 }
 unsafe extern "C" fn yaml_parser_load_alias(
-    mut parser: *mut yaml_parser_t,
-    mut event: *mut yaml_event_t,
-    mut ctx: *mut loader_ctx,
+    parser: *mut yaml_parser_t,
+    event: *mut yaml_event_t,
+    ctx: *mut loader_ctx,
 ) -> libc::c_int {
-    let mut anchor: *mut yaml_char_t = (*event).data.alias.anchor;
+    let anchor: *mut yaml_char_t = (*event).data.alias.anchor;
     let mut alias_data: *mut yaml_alias_data_t = 0 as *mut yaml_alias_data_t;
     alias_data = (*parser).aliases.start;
     while alias_data != (*parser).aliases.top {
@@ -501,10 +501,10 @@ unsafe extern "C" fn yaml_parser_load_alias(
 }
 unsafe extern "C" fn yaml_parser_load_scalar(
     mut parser: *mut yaml_parser_t,
-    mut event: *mut yaml_event_t,
-    mut ctx: *mut loader_ctx,
+    event: *mut yaml_event_t,
+    ctx: *mut loader_ctx,
 ) -> libc::c_int {
-    let mut current_block: u64;
+    let current_block: u64;
     let mut node: yaml_node_t = yaml_node_t {
         type_0: YAML_NO_NODE,
         tag: 0 as *mut yaml_char_t,
@@ -610,10 +610,10 @@ unsafe extern "C" fn yaml_parser_load_scalar(
 }
 unsafe extern "C" fn yaml_parser_load_sequence(
     mut parser: *mut yaml_parser_t,
-    mut event: *mut yaml_event_t,
-    mut ctx: *mut loader_ctx,
+    event: *mut yaml_event_t,
+    ctx: *mut loader_ctx,
 ) -> libc::c_int {
-    let mut current_block: u64;
+    let current_block: u64;
     let mut node: yaml_node_t = yaml_node_t {
         type_0: YAML_NO_NODE,
         tag: 0 as *mut yaml_char_t,
@@ -636,7 +636,7 @@ unsafe extern "C" fn yaml_parser_load_sequence(
         },
     };
     let mut items: Unnamed_36 = {
-        let mut init = Unnamed_36 {
+        let init = Unnamed_36 {
             start: 0 as *mut yaml_node_item_t,
             end: 0 as *mut yaml_node_item_t,
             top: 0 as *mut yaml_node_item_t,
@@ -778,9 +778,9 @@ unsafe extern "C" fn yaml_parser_load_sequence(
     return 0 as libc::c_int;
 }
 unsafe extern "C" fn yaml_parser_load_sequence_end(
-    mut parser: *mut yaml_parser_t,
-    mut event: *mut yaml_event_t,
-    mut ctx: *mut loader_ctx,
+    parser: *mut yaml_parser_t,
+    event: *mut yaml_event_t,
+    ctx: *mut loader_ctx,
 ) -> libc::c_int {
     let mut index: libc::c_int = 0;
     __assert!(
@@ -800,10 +800,10 @@ unsafe extern "C" fn yaml_parser_load_sequence_end(
 }
 unsafe extern "C" fn yaml_parser_load_mapping(
     mut parser: *mut yaml_parser_t,
-    mut event: *mut yaml_event_t,
-    mut ctx: *mut loader_ctx,
+    event: *mut yaml_event_t,
+    ctx: *mut loader_ctx,
 ) -> libc::c_int {
-    let mut current_block: u64;
+    let current_block: u64;
     let mut node: yaml_node_t = yaml_node_t {
         type_0: YAML_NO_NODE,
         tag: 0 as *mut yaml_char_t,
@@ -826,7 +826,7 @@ unsafe extern "C" fn yaml_parser_load_mapping(
         },
     };
     let mut pairs: Unnamed_35 = {
-        let mut init = Unnamed_35 {
+        let init = Unnamed_35 {
             start: 0 as *mut yaml_node_pair_t,
             end: 0 as *mut yaml_node_pair_t,
             top: 0 as *mut yaml_node_pair_t,
@@ -968,9 +968,9 @@ unsafe extern "C" fn yaml_parser_load_mapping(
     return 0 as libc::c_int;
 }
 unsafe extern "C" fn yaml_parser_load_mapping_end(
-    mut parser: *mut yaml_parser_t,
-    mut event: *mut yaml_event_t,
-    mut ctx: *mut loader_ctx,
+    parser: *mut yaml_parser_t,
+    event: *mut yaml_event_t,
+    ctx: *mut loader_ctx,
 ) -> libc::c_int {
     let mut index: libc::c_int = 0;
     __assert!(

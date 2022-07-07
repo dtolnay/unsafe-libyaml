@@ -4,9 +4,9 @@ use crate::yaml::*;
 use crate::PointerExt;
 unsafe extern "C" fn yaml_parser_set_reader_error(
     mut parser: *mut yaml_parser_t,
-    mut problem: *const libc::c_char,
-    mut offset: size_t,
-    mut value: libc::c_int,
+    problem: *const libc::c_char,
+    offset: size_t,
+    value: libc::c_int,
 ) -> libc::c_int {
     (*parser).error = YAML_READER_ERROR;
     let ref mut fresh0 = (*parser).problem;
@@ -124,8 +124,8 @@ unsafe extern "C" fn yaml_parser_update_raw_buffer(mut parser: *mut yaml_parser_
 }
 #[no_mangle]
 pub unsafe extern "C" fn yaml_parser_update_buffer(
-    mut parser: *mut yaml_parser_t,
-    mut length: size_t,
+    parser: *mut yaml_parser_t,
+    length: size_t,
 ) -> libc::c_int {
     let mut first: libc::c_int = 1 as libc::c_int;
     __assert!(((*parser).read_handler).is_some());
@@ -143,7 +143,7 @@ pub unsafe extern "C" fn yaml_parser_update_buffer(
     if (*parser).buffer.start < (*parser).buffer.pointer
         && (*parser).buffer.pointer < (*parser).buffer.last
     {
-        let mut size: size_t = ((*parser).buffer.last).c_offset_from((*parser).buffer.pointer)
+        let size: size_t = ((*parser).buffer.last).c_offset_from((*parser).buffer.pointer)
             as libc::c_long as size_t;
         memmove(
             (*parser).buffer.start as *mut libc::c_void,
@@ -176,7 +176,7 @@ pub unsafe extern "C" fn yaml_parser_update_buffer(
             let mut low: libc::c_int = 0;
             let mut high: libc::c_int = 0;
             let mut k: size_t = 0;
-            let mut raw_unread: size_t = ((*parser).raw_buffer.last)
+            let raw_unread: size_t = ((*parser).raw_buffer.last)
                 .c_offset_from((*parser).raw_buffer.pointer)
                 as libc::c_long as size_t;
             match (*parser).encoding as libc::c_uint {

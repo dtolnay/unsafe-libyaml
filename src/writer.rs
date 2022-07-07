@@ -3,7 +3,7 @@ use crate::yaml::*;
 use crate::PointerExt;
 unsafe extern "C" fn yaml_emitter_set_writer_error(
     mut emitter: *mut yaml_emitter_t,
-    mut problem: *const libc::c_char,
+    problem: *const libc::c_char,
 ) -> libc::c_int {
     (*emitter).error = YAML_WRITER_ERROR;
     let ref mut fresh0 = (*emitter).problem;
@@ -11,7 +11,7 @@ unsafe extern "C" fn yaml_emitter_set_writer_error(
     return 0 as libc::c_int;
 }
 #[no_mangle]
-pub unsafe extern "C" fn yaml_emitter_flush(mut emitter: *mut yaml_emitter_t) -> libc::c_int {
+pub unsafe extern "C" fn yaml_emitter_flush(emitter: *mut yaml_emitter_t) -> libc::c_int {
     let mut low: libc::c_int = 0;
     let mut high: libc::c_int = 0;
     __assert!(!emitter.is_null());
