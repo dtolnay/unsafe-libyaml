@@ -1818,28 +1818,28 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
         {
             1 as libc::c_int
         } else {
-            (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+            if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                 & 0xe0 as libc::c_int
                 == 0xc0 as libc::c_int
             {
                 2 as libc::c_int
             } else {
-                (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                     & 0xf0 as libc::c_int
                     == 0xe0 as libc::c_int
                 {
                     3 as libc::c_int
                 } else {
-                    (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                    if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                         & 0xf8 as libc::c_int
                         == 0xf0 as libc::c_int
                     {
                         4 as libc::c_int
                     } else {
                         0 as libc::c_int
-                    })
-                })
-            })
+                    }
+                }
+            }
         }) as isize,
     ) as libc::c_int
         == ' ' as i32 as yaml_char_t as libc::c_int
@@ -1850,28 +1850,28 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
             {
                 1 as libc::c_int
             } else {
-                (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                     & 0xe0 as libc::c_int
                     == 0xc0 as libc::c_int
                 {
                     2 as libc::c_int
                 } else {
-                    (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                    if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                         & 0xf0 as libc::c_int
                         == 0xe0 as libc::c_int
                     {
                         3 as libc::c_int
                     } else {
-                        (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                        if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                             & 0xf8 as libc::c_int
                             == 0xf0 as libc::c_int
                         {
                             4 as libc::c_int
                         } else {
                             0 as libc::c_int
-                        })
-                    })
-                })
+                        }
+                    }
+                }
             }) as isize,
         ) as libc::c_int
             == '\t' as i32 as yaml_char_t as libc::c_int
@@ -1882,28 +1882,28 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
             {
                 1 as libc::c_int
             } else {
-                (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                     & 0xe0 as libc::c_int
                     == 0xc0 as libc::c_int
                 {
                     2 as libc::c_int
                 } else {
-                    (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                    if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                         & 0xf0 as libc::c_int
                         == 0xe0 as libc::c_int
                     {
                         3 as libc::c_int
                     } else {
-                        (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                        if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                             & 0xf8 as libc::c_int
                             == 0xf0 as libc::c_int
                         {
                             4 as libc::c_int
                         } else {
                             0 as libc::c_int
-                        })
-                    })
-                })
+                        }
+                    }
+                }
             }) as isize,
         ) as libc::c_int
             == '\r' as i32 as yaml_char_t as libc::c_int
@@ -1914,28 +1914,28 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                 {
                     1 as libc::c_int
                 } else {
-                    (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                    if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                         & 0xe0 as libc::c_int
                         == 0xc0 as libc::c_int
                     {
                         2 as libc::c_int
                     } else {
-                        (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                        if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                             & 0xf0 as libc::c_int
                             == 0xe0 as libc::c_int
                         {
                             3 as libc::c_int
                         } else {
-                            (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                            if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                                 & 0xf8 as libc::c_int
                                 == 0xf0 as libc::c_int
                             {
                                 4 as libc::c_int
                             } else {
                                 0 as libc::c_int
-                            })
-                        })
-                    })
+                            }
+                        }
+                    }
                 }) as isize,
             ) as libc::c_int
                 == '\n' as i32 as yaml_char_t as libc::c_int
@@ -1946,28 +1946,28 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                 {
                     1 as libc::c_int
                 } else {
-                    (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                    if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                         & 0xe0 as libc::c_int
                         == 0xc0 as libc::c_int
                     {
                         2 as libc::c_int
                     } else {
-                        (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                        if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                             & 0xf0 as libc::c_int
                             == 0xe0 as libc::c_int
                         {
                             3 as libc::c_int
                         } else {
-                            (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                            if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                                 & 0xf8 as libc::c_int
                                 == 0xf0 as libc::c_int
                             {
                                 4 as libc::c_int
                             } else {
                                 0 as libc::c_int
-                            })
-                        })
-                    })
+                            }
+                        }
+                    }
                 }) as isize,
             ) as libc::c_int
                 == -62i32 as yaml_char_t as libc::c_int
@@ -1978,19 +1978,19 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                     {
                         1 as libc::c_int
                     } else {
-                        (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                        if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                             & 0xe0 as libc::c_int
                             == 0xc0 as libc::c_int
                         {
                             2 as libc::c_int
                         } else {
-                            (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                            if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                                 & 0xf0 as libc::c_int
                                 == 0xe0 as libc::c_int
                             {
                                 3 as libc::c_int
                             } else {
-                                (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                     as libc::c_int
                                     & 0xf8 as libc::c_int
                                     == 0xf0 as libc::c_int
@@ -1998,9 +1998,9 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                                     4 as libc::c_int
                                 } else {
                                     0 as libc::c_int
-                                })
-                            })
-                        })
+                                }
+                            }
+                        }
                     }) + 1 as libc::c_int) as isize,
                 ) as libc::c_int
                     == -123i32 as yaml_char_t as libc::c_int
@@ -2011,28 +2011,28 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                 {
                     1 as libc::c_int
                 } else {
-                    (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                    if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                         & 0xe0 as libc::c_int
                         == 0xc0 as libc::c_int
                     {
                         2 as libc::c_int
                     } else {
-                        (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                        if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                             & 0xf0 as libc::c_int
                             == 0xe0 as libc::c_int
                         {
                             3 as libc::c_int
                         } else {
-                            (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                            if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                                 & 0xf8 as libc::c_int
                                 == 0xf0 as libc::c_int
                             {
                                 4 as libc::c_int
                             } else {
                                 0 as libc::c_int
-                            })
-                        })
-                    })
+                            }
+                        }
+                    }
                 }) as isize,
             ) as libc::c_int
                 == -30i32 as yaml_char_t as libc::c_int
@@ -2043,19 +2043,19 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                     {
                         1 as libc::c_int
                     } else {
-                        (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                        if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                             & 0xe0 as libc::c_int
                             == 0xc0 as libc::c_int
                         {
                             2 as libc::c_int
                         } else {
-                            (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                            if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                                 & 0xf0 as libc::c_int
                                 == 0xe0 as libc::c_int
                             {
                                 3 as libc::c_int
                             } else {
-                                (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                     as libc::c_int
                                     & 0xf8 as libc::c_int
                                     == 0xf0 as libc::c_int
@@ -2063,9 +2063,9 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                                     4 as libc::c_int
                                 } else {
                                     0 as libc::c_int
-                                })
-                            })
-                        })
+                                }
+                            }
+                        }
                     }) + 1 as libc::c_int) as isize,
                 ) as libc::c_int
                     == -128i32 as yaml_char_t as libc::c_int
@@ -2076,19 +2076,19 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                     {
                         1 as libc::c_int
                     } else {
-                        (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                        if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                             & 0xe0 as libc::c_int
                             == 0xc0 as libc::c_int
                         {
                             2 as libc::c_int
                         } else {
-                            (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                            if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                                 & 0xf0 as libc::c_int
                                 == 0xe0 as libc::c_int
                             {
                                 3 as libc::c_int
                             } else {
-                                (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                     as libc::c_int
                                     & 0xf8 as libc::c_int
                                     == 0xf0 as libc::c_int
@@ -2096,9 +2096,9 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                                     4 as libc::c_int
                                 } else {
                                     0 as libc::c_int
-                                })
-                            })
-                        })
+                                }
+                            }
+                        }
                     }) + 2 as libc::c_int) as isize,
                 ) as libc::c_int
                     == -88i32 as yaml_char_t as libc::c_int
@@ -2109,28 +2109,28 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                 {
                     1 as libc::c_int
                 } else {
-                    (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                    if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                         & 0xe0 as libc::c_int
                         == 0xc0 as libc::c_int
                     {
                         2 as libc::c_int
                     } else {
-                        (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                        if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                             & 0xf0 as libc::c_int
                             == 0xe0 as libc::c_int
                         {
                             3 as libc::c_int
                         } else {
-                            (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                            if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                                 & 0xf8 as libc::c_int
                                 == 0xf0 as libc::c_int
                             {
                                 4 as libc::c_int
                             } else {
                                 0 as libc::c_int
-                            })
-                        })
-                    })
+                            }
+                        }
+                    }
                 }) as isize,
             ) as libc::c_int
                 == -30i32 as yaml_char_t as libc::c_int
@@ -2141,19 +2141,19 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                     {
                         1 as libc::c_int
                     } else {
-                        (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                        if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                             & 0xe0 as libc::c_int
                             == 0xc0 as libc::c_int
                         {
                             2 as libc::c_int
                         } else {
-                            (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                            if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                                 & 0xf0 as libc::c_int
                                 == 0xe0 as libc::c_int
                             {
                                 3 as libc::c_int
                             } else {
-                                (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                     as libc::c_int
                                     & 0xf8 as libc::c_int
                                     == 0xf0 as libc::c_int
@@ -2161,9 +2161,9 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                                     4 as libc::c_int
                                 } else {
                                     0 as libc::c_int
-                                })
-                            })
-                        })
+                                }
+                            }
+                        }
                     }) + 1 as libc::c_int) as isize,
                 ) as libc::c_int
                     == -128i32 as yaml_char_t as libc::c_int
@@ -2174,19 +2174,19 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                     {
                         1 as libc::c_int
                     } else {
-                        (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                        if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                             & 0xe0 as libc::c_int
                             == 0xc0 as libc::c_int
                         {
                             2 as libc::c_int
                         } else {
-                            (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                            if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                                 & 0xf0 as libc::c_int
                                 == 0xe0 as libc::c_int
                             {
                                 3 as libc::c_int
                             } else {
-                                (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                     as libc::c_int
                                     & 0xf8 as libc::c_int
                                     == 0xf0 as libc::c_int
@@ -2194,9 +2194,9 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                                     4 as libc::c_int
                                 } else {
                                     0 as libc::c_int
-                                })
-                            })
-                        })
+                                }
+                            }
+                        }
                     }) + 2 as libc::c_int) as isize,
                 ) as libc::c_int
                     == -87i32 as yaml_char_t as libc::c_int
@@ -2207,28 +2207,28 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                 {
                     1 as libc::c_int
                 } else {
-                    (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                    if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                         & 0xe0 as libc::c_int
                         == 0xc0 as libc::c_int
                     {
                         2 as libc::c_int
                     } else {
-                        (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                        if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                             & 0xf0 as libc::c_int
                             == 0xe0 as libc::c_int
                         {
                             3 as libc::c_int
                         } else {
-                            (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                            if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                                 & 0xf8 as libc::c_int
                                 == 0xf0 as libc::c_int
                             {
                                 4 as libc::c_int
                             } else {
                                 0 as libc::c_int
-                            })
-                        })
-                    })
+                            }
+                        }
+                    }
                 }) as isize,
             ) as libc::c_int
                 == '\0' as i32 as yaml_char_t as libc::c_int))
@@ -2407,28 +2407,28 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                 {
                     1 as libc::c_int
                 } else {
-                    (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                    if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                         & 0xe0 as libc::c_int
                         == 0xc0 as libc::c_int
                     {
                         2 as libc::c_int
                     } else {
-                        (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                        if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                             & 0xf0 as libc::c_int
                             == 0xe0 as libc::c_int
                         {
                             3 as libc::c_int
                         } else {
-                            (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                            if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                                 & 0xf8 as libc::c_int
                                 == 0xf0 as libc::c_int
                             {
                                 4 as libc::c_int
                             } else {
                                 0 as libc::c_int
-                            })
-                        })
-                    })
+                            }
+                        }
+                    }
                 }) as isize,
             ) == string.end
             {
@@ -2475,28 +2475,28 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                 {
                     1 as libc::c_int
                 } else {
-                    (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                    if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                         & 0xe0 as libc::c_int
                         == 0xc0 as libc::c_int
                     {
                         2 as libc::c_int
                     } else {
-                        (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                        if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                             & 0xf0 as libc::c_int
                             == 0xe0 as libc::c_int
                         {
                             3 as libc::c_int
                         } else {
-                            (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                            if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                                 & 0xf8 as libc::c_int
                                 == 0xf0 as libc::c_int
                             {
                                 4 as libc::c_int
                             } else {
                                 0 as libc::c_int
-                            })
-                        })
-                    })
+                            }
+                        }
+                    }
                 }) as isize,
             ) == string.end
             {
@@ -2577,28 +2577,28 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                 {
                     1 as libc::c_int
                 } else {
-                    (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                    if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                         & 0xe0 as libc::c_int
                         == 0xc0 as libc::c_int
                     {
                         2 as libc::c_int
                     } else {
-                        (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                        if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                             & 0xf0 as libc::c_int
                             == 0xe0 as libc::c_int
                         {
                             3 as libc::c_int
                         } else {
-                            (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                            if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                                 & 0xf8 as libc::c_int
                                 == 0xf0 as libc::c_int
                             {
                                 4 as libc::c_int
                             } else {
                                 0 as libc::c_int
-                            })
-                        })
-                    })
+                            }
+                        }
+                    }
                 }) as isize,
             ) as libc::c_int
                 == ' ' as i32 as yaml_char_t as libc::c_int
@@ -2609,19 +2609,19 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                     {
                         1 as libc::c_int
                     } else {
-                        (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                        if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                             & 0xe0 as libc::c_int
                             == 0xc0 as libc::c_int
                         {
                             2 as libc::c_int
                         } else {
-                            (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                            if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                                 & 0xf0 as libc::c_int
                                 == 0xe0 as libc::c_int
                             {
                                 3 as libc::c_int
                             } else {
-                                (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                     as libc::c_int
                                     & 0xf8 as libc::c_int
                                     == 0xf0 as libc::c_int
@@ -2629,9 +2629,9 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                                     4 as libc::c_int
                                 } else {
                                     0 as libc::c_int
-                                })
-                            })
-                        })
+                                }
+                            }
+                        }
                     }) as isize,
                 ) as libc::c_int
                     == '\t' as i32 as yaml_char_t as libc::c_int
@@ -2642,19 +2642,19 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                     {
                         1 as libc::c_int
                     } else {
-                        (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                        if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                             & 0xe0 as libc::c_int
                             == 0xc0 as libc::c_int
                         {
                             2 as libc::c_int
                         } else {
-                            (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                            if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                                 & 0xf0 as libc::c_int
                                 == 0xe0 as libc::c_int
                             {
                                 3 as libc::c_int
                             } else {
-                                (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                     as libc::c_int
                                     & 0xf8 as libc::c_int
                                     == 0xf0 as libc::c_int
@@ -2662,9 +2662,9 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                                     4 as libc::c_int
                                 } else {
                                     0 as libc::c_int
-                                })
-                            })
-                        })
+                                }
+                            }
+                        }
                     }) as isize,
                 ) as libc::c_int
                     == '\r' as i32 as yaml_char_t as libc::c_int
@@ -2675,20 +2675,20 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                         {
                             1 as libc::c_int
                         } else {
-                            (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                            if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                                 & 0xe0 as libc::c_int
                                 == 0xc0 as libc::c_int
                             {
                                 2 as libc::c_int
                             } else {
-                                (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                     as libc::c_int
                                     & 0xf0 as libc::c_int
                                     == 0xe0 as libc::c_int
                                 {
                                     3 as libc::c_int
                                 } else {
-                                    (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                    if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                         as libc::c_int
                                         & 0xf8 as libc::c_int
                                         == 0xf0 as libc::c_int
@@ -2696,9 +2696,9 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                                         4 as libc::c_int
                                     } else {
                                         0 as libc::c_int
-                                    })
-                                })
-                            })
+                                    }
+                                }
+                            }
                         }) as isize,
                     ) as libc::c_int
                         == '\n' as i32 as yaml_char_t as libc::c_int
@@ -2709,20 +2709,20 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                         {
                             1 as libc::c_int
                         } else {
-                            (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                            if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                                 & 0xe0 as libc::c_int
                                 == 0xc0 as libc::c_int
                             {
                                 2 as libc::c_int
                             } else {
-                                (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                     as libc::c_int
                                     & 0xf0 as libc::c_int
                                     == 0xe0 as libc::c_int
                                 {
                                     3 as libc::c_int
                                 } else {
-                                    (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                    if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                         as libc::c_int
                                         & 0xf8 as libc::c_int
                                         == 0xf0 as libc::c_int
@@ -2730,9 +2730,9 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                                         4 as libc::c_int
                                     } else {
                                         0 as libc::c_int
-                                    })
-                                })
-                            })
+                                    }
+                                }
+                            }
                         }) as isize,
                     ) as libc::c_int
                         == -62i32 as yaml_char_t as libc::c_int
@@ -2744,21 +2744,21 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                             {
                                 1 as libc::c_int
                             } else {
-                                (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                     as libc::c_int
                                     & 0xe0 as libc::c_int
                                     == 0xc0 as libc::c_int
                                 {
                                     2 as libc::c_int
                                 } else {
-                                    (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                    if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                         as libc::c_int
                                         & 0xf0 as libc::c_int
                                         == 0xe0 as libc::c_int
                                     {
                                         3 as libc::c_int
                                     } else {
-                                        (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                        if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                             as libc::c_int
                                             & 0xf8 as libc::c_int
                                             == 0xf0 as libc::c_int
@@ -2766,9 +2766,9 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                                             4 as libc::c_int
                                         } else {
                                             0 as libc::c_int
-                                        })
-                                    })
-                                })
+                                        }
+                                    }
+                                }
                             }) + 1 as libc::c_int) as isize,
                         ) as libc::c_int
                             == -123i32 as yaml_char_t as libc::c_int
@@ -2779,20 +2779,20 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                         {
                             1 as libc::c_int
                         } else {
-                            (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                            if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                                 & 0xe0 as libc::c_int
                                 == 0xc0 as libc::c_int
                             {
                                 2 as libc::c_int
                             } else {
-                                (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                     as libc::c_int
                                     & 0xf0 as libc::c_int
                                     == 0xe0 as libc::c_int
                                 {
                                     3 as libc::c_int
                                 } else {
-                                    (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                    if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                         as libc::c_int
                                         & 0xf8 as libc::c_int
                                         == 0xf0 as libc::c_int
@@ -2800,9 +2800,9 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                                         4 as libc::c_int
                                     } else {
                                         0 as libc::c_int
-                                    })
-                                })
-                            })
+                                    }
+                                }
+                            }
                         }) as isize,
                     ) as libc::c_int
                         == -30i32 as yaml_char_t as libc::c_int
@@ -2814,21 +2814,21 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                             {
                                 1 as libc::c_int
                             } else {
-                                (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                     as libc::c_int
                                     & 0xe0 as libc::c_int
                                     == 0xc0 as libc::c_int
                                 {
                                     2 as libc::c_int
                                 } else {
-                                    (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                    if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                         as libc::c_int
                                         & 0xf0 as libc::c_int
                                         == 0xe0 as libc::c_int
                                     {
                                         3 as libc::c_int
                                     } else {
-                                        (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                        if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                             as libc::c_int
                                             & 0xf8 as libc::c_int
                                             == 0xf0 as libc::c_int
@@ -2836,9 +2836,9 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                                             4 as libc::c_int
                                         } else {
                                             0 as libc::c_int
-                                        })
-                                    })
-                                })
+                                        }
+                                    }
+                                }
                             }) + 1 as libc::c_int) as isize,
                         ) as libc::c_int
                             == -128i32 as yaml_char_t as libc::c_int
@@ -2850,21 +2850,21 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                             {
                                 1 as libc::c_int
                             } else {
-                                (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                     as libc::c_int
                                     & 0xe0 as libc::c_int
                                     == 0xc0 as libc::c_int
                                 {
                                     2 as libc::c_int
                                 } else {
-                                    (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                    if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                         as libc::c_int
                                         & 0xf0 as libc::c_int
                                         == 0xe0 as libc::c_int
                                     {
                                         3 as libc::c_int
                                     } else {
-                                        (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                        if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                             as libc::c_int
                                             & 0xf8 as libc::c_int
                                             == 0xf0 as libc::c_int
@@ -2872,9 +2872,9 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                                             4 as libc::c_int
                                         } else {
                                             0 as libc::c_int
-                                        })
-                                    })
-                                })
+                                        }
+                                    }
+                                }
                             }) + 2 as libc::c_int) as isize,
                         ) as libc::c_int
                             == -88i32 as yaml_char_t as libc::c_int
@@ -2885,20 +2885,20 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                         {
                             1 as libc::c_int
                         } else {
-                            (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                            if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                                 & 0xe0 as libc::c_int
                                 == 0xc0 as libc::c_int
                             {
                                 2 as libc::c_int
                             } else {
-                                (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                     as libc::c_int
                                     & 0xf0 as libc::c_int
                                     == 0xe0 as libc::c_int
                                 {
                                     3 as libc::c_int
                                 } else {
-                                    (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                    if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                         as libc::c_int
                                         & 0xf8 as libc::c_int
                                         == 0xf0 as libc::c_int
@@ -2906,9 +2906,9 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                                         4 as libc::c_int
                                     } else {
                                         0 as libc::c_int
-                                    })
-                                })
-                            })
+                                    }
+                                }
+                            }
                         }) as isize,
                     ) as libc::c_int
                         == -30i32 as yaml_char_t as libc::c_int
@@ -2920,21 +2920,21 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                             {
                                 1 as libc::c_int
                             } else {
-                                (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                     as libc::c_int
                                     & 0xe0 as libc::c_int
                                     == 0xc0 as libc::c_int
                                 {
                                     2 as libc::c_int
                                 } else {
-                                    (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                    if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                         as libc::c_int
                                         & 0xf0 as libc::c_int
                                         == 0xe0 as libc::c_int
                                     {
                                         3 as libc::c_int
                                     } else {
-                                        (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                        if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                             as libc::c_int
                                             & 0xf8 as libc::c_int
                                             == 0xf0 as libc::c_int
@@ -2942,9 +2942,9 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                                             4 as libc::c_int
                                         } else {
                                             0 as libc::c_int
-                                        })
-                                    })
-                                })
+                                        }
+                                    }
+                                }
                             }) + 1 as libc::c_int) as isize,
                         ) as libc::c_int
                             == -128i32 as yaml_char_t as libc::c_int
@@ -2956,21 +2956,21 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                             {
                                 1 as libc::c_int
                             } else {
-                                (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                     as libc::c_int
                                     & 0xe0 as libc::c_int
                                     == 0xc0 as libc::c_int
                                 {
                                     2 as libc::c_int
                                 } else {
-                                    (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                    if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                         as libc::c_int
                                         & 0xf0 as libc::c_int
                                         == 0xe0 as libc::c_int
                                     {
                                         3 as libc::c_int
                                     } else {
-                                        (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                        if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                             as libc::c_int
                                             & 0xf8 as libc::c_int
                                             == 0xf0 as libc::c_int
@@ -2978,9 +2978,9 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                                             4 as libc::c_int
                                         } else {
                                             0 as libc::c_int
-                                        })
-                                    })
-                                })
+                                        }
+                                    }
+                                }
                             }) + 2 as libc::c_int) as isize,
                         ) as libc::c_int
                             == -87i32 as yaml_char_t as libc::c_int
@@ -2991,20 +2991,20 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                         {
                             1 as libc::c_int
                         } else {
-                            (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
+                            if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                                 & 0xe0 as libc::c_int
                                 == 0xc0 as libc::c_int
                             {
                                 2 as libc::c_int
                             } else {
-                                (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                     as libc::c_int
                                     & 0xf0 as libc::c_int
                                     == 0xe0 as libc::c_int
                                 {
                                     3 as libc::c_int
                                 } else {
-                                    (if *(string.pointer).c_offset(0 as libc::c_int as isize)
+                                    if *(string.pointer).c_offset(0 as libc::c_int as isize)
                                         as libc::c_int
                                         & 0xf8 as libc::c_int
                                         == 0xf0 as libc::c_int
@@ -3012,9 +3012,9 @@ unsafe extern "C" fn yaml_emitter_analyze_scalar(
                                         4 as libc::c_int
                                     } else {
                                         0 as libc::c_int
-                                    })
-                                })
-                            })
+                                    }
+                                }
+                            }
                         }) as isize,
                     ) as libc::c_int
                         == '\0' as i32 as yaml_char_t as libc::c_int))
