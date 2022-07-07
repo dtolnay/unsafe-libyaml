@@ -56,15 +56,15 @@ pub unsafe extern "C" fn yaml_parser_load(
         0 as libc::c_int,
         ::std::mem::size_of::<yaml_document_t>() as libc::c_ulong,
     );
-    let ref mut fresh0 = (*document).nodes.start;
+    let fresh0 = &mut (*document).nodes.start;
     *fresh0 = yaml_malloc(
         (16 as libc::c_int as libc::c_ulong)
             .wrapping_mul(::std::mem::size_of::<yaml_node_t>() as libc::c_ulong),
     ) as *mut yaml_node_t;
     if !(if !(*fresh0).is_null() {
-        let ref mut fresh1 = (*document).nodes.top;
+        let fresh1 = &mut (*document).nodes.top;
         *fresh1 = (*document).nodes.start;
-        let ref mut fresh2 = (*document).nodes.end;
+        let fresh2 = &mut (*document).nodes.end;
         *fresh2 = ((*document).nodes.start).c_offset(16 as libc::c_int as isize);
         1 as libc::c_int
     } else {
@@ -97,15 +97,15 @@ pub unsafe extern "C" fn yaml_parser_load(
                     {
                         return 1 as libc::c_int;
                     }
-                    let ref mut fresh3 = (*parser).aliases.start;
+                    let fresh3 = &mut (*parser).aliases.start;
                     *fresh3 =
                         yaml_malloc((16 as libc::c_int as libc::c_ulong).wrapping_mul(
                             ::std::mem::size_of::<yaml_alias_data_t>() as libc::c_ulong,
                         )) as *mut yaml_alias_data_t;
                     if !(if !(*fresh3).is_null() {
-                        let ref mut fresh4 = (*parser).aliases.top;
+                        let fresh4 = &mut (*parser).aliases.top;
                         *fresh4 = (*parser).aliases.start;
-                        let ref mut fresh5 = (*parser).aliases.end;
+                        let fresh5 = &mut (*parser).aliases.end;
                         *fresh5 = ((*parser).aliases.start).c_offset(16 as libc::c_int as isize);
                         1 as libc::c_int
                     } else {
@@ -113,11 +113,11 @@ pub unsafe extern "C" fn yaml_parser_load(
                         0 as libc::c_int
                     } == 0)
                     {
-                        let ref mut fresh6 = (*parser).document;
+                        let fresh6 = &mut (*parser).document;
                         *fresh6 = document;
                         if !(yaml_parser_load_document(parser, &mut event) == 0) {
                             yaml_parser_delete_aliases(parser);
-                            let ref mut fresh7 = (*parser).document;
+                            let fresh7 = &mut (*parser).document;
                             *fresh7 = 0 as *mut yaml_document_t;
                             return 1 as libc::c_int;
                         }
@@ -128,7 +128,7 @@ pub unsafe extern "C" fn yaml_parser_load(
     }
     yaml_parser_delete_aliases(parser);
     yaml_document_delete(document);
-    let ref mut fresh8 = (*parser).document;
+    let fresh8 = &mut (*parser).document;
     *fresh8 = 0 as *mut yaml_document_t;
     0 as libc::c_int
 }
@@ -138,7 +138,7 @@ unsafe extern "C" fn yaml_parser_set_composer_error(
     problem_mark: yaml_mark_t,
 ) -> libc::c_int {
     (*parser).error = YAML_COMPOSER_ERROR;
-    let ref mut fresh9 = (*parser).problem;
+    let fresh9 = &mut (*parser).problem;
     *fresh9 = problem;
     (*parser).problem_mark = problem_mark;
     0 as libc::c_int
@@ -151,26 +151,26 @@ unsafe extern "C" fn yaml_parser_set_composer_error_context(
     problem_mark: yaml_mark_t,
 ) -> libc::c_int {
     (*parser).error = YAML_COMPOSER_ERROR;
-    let ref mut fresh10 = (*parser).context;
+    let fresh10 = &mut (*parser).context;
     *fresh10 = context;
     (*parser).context_mark = context_mark;
-    let ref mut fresh11 = (*parser).problem;
+    let fresh11 = &mut (*parser).problem;
     *fresh11 = problem;
     (*parser).problem_mark = problem_mark;
     0 as libc::c_int
 }
 unsafe extern "C" fn yaml_parser_delete_aliases(parser: *mut yaml_parser_t) {
     while !((*parser).aliases.start == (*parser).aliases.top) {
-        let ref mut fresh12 = (*parser).aliases.top;
+        let fresh12 = &mut (*parser).aliases.top;
         *fresh12 = (*fresh12).c_offset(-1);
         yaml_free((**fresh12).anchor as *mut libc::c_void);
     }
     yaml_free((*parser).aliases.start as *mut libc::c_void);
-    let ref mut fresh13 = (*parser).aliases.end;
+    let fresh13 = &mut (*parser).aliases.end;
     *fresh13 = 0 as *mut yaml_alias_data_t;
-    let ref mut fresh14 = (*parser).aliases.top;
+    let fresh14 = &mut (*parser).aliases.top;
     *fresh14 = *fresh13;
-    let ref mut fresh15 = (*parser).aliases.start;
+    let fresh15 = &mut (*parser).aliases.start;
     *fresh15 = *fresh14;
 }
 unsafe extern "C" fn yaml_parser_load_document(
@@ -188,11 +188,11 @@ unsafe extern "C" fn yaml_parser_load_document(
     __assert!(
         (*event).type_0 as libc::c_uint == YAML_DOCUMENT_START_EVENT as libc::c_int as libc::c_uint
     );
-    let ref mut fresh16 = (*(*parser).document).version_directive;
+    let fresh16 = &mut (*(*parser).document).version_directive;
     *fresh16 = (*event).data.document_start.version_directive;
-    let ref mut fresh17 = (*(*parser).document).tag_directives.start;
+    let fresh17 = &mut (*(*parser).document).tag_directives.start;
     *fresh17 = (*event).data.document_start.tag_directives.start;
-    let ref mut fresh18 = (*(*parser).document).tag_directives.end;
+    let fresh18 = &mut (*(*parser).document).tag_directives.end;
     *fresh18 = (*event).data.document_start.tag_directives.end;
     (*(*parser).document).start_implicit = (*event).data.document_start.implicit;
     (*(*parser).document).start_mark = (*event).start_mark;
@@ -343,7 +343,7 @@ unsafe extern "C" fn yaml_parser_register_anchor(
             &mut (*parser).aliases.end as *mut *mut yaml_alias_data_t as *mut *mut libc::c_void,
         ) != 0
     {
-        let ref mut fresh19 = (*parser).aliases.top;
+        let fresh19 = &mut (*parser).aliases.top;
         let fresh20 = *fresh19;
         *fresh19 = (*fresh19).c_offset(1);
         *fresh20 = data;
@@ -396,7 +396,7 @@ unsafe extern "C" fn yaml_parser_load_node_add(
                         as *mut *mut libc::c_void,
                 ) != 0
             {
-                let ref mut fresh21 = (*parent).data.sequence.items.top;
+                let fresh21 = &mut (*parent).data.sequence.items.top;
                 let fresh22 = *fresh21;
                 *fresh21 = (*fresh21).c_offset(1);
                 *fresh22 = index;
@@ -451,7 +451,7 @@ unsafe extern "C" fn yaml_parser_load_node_add(
                                 as *mut *mut libc::c_void,
                         ) != 0
                     {
-                        let ref mut fresh23 = (*parent).data.mapping.pairs.top;
+                        let fresh23 = &mut (*parent).data.mapping.pairs.top;
                         let fresh24 = *fresh23;
                         *fresh23 = (*fresh23).c_offset(1);
                         *fresh24 = pair;
@@ -580,7 +580,7 @@ unsafe extern "C" fn yaml_parser_load_scalar(
                             as *mut *mut libc::c_void,
                     ) != 0
                 {
-                    let ref mut fresh25 = (*(*parser).document).nodes.top;
+                    let fresh25 = &mut (*(*parser).document).nodes.top;
                     let fresh26 = *fresh25;
                     *fresh25 = (*fresh25).c_offset(1);
                     *fresh26 = node;
@@ -711,7 +711,7 @@ unsafe extern "C" fn yaml_parser_load_sequence(
                                 as *mut *mut libc::c_void,
                         ) != 0
                     {
-                        let ref mut fresh27 = (*(*parser).document).nodes.top;
+                        let fresh27 = &mut (*(*parser).document).nodes.top;
                         let fresh28 = *fresh27;
                         *fresh27 = (*fresh27).c_offset(1);
                         *fresh28 = node;
@@ -754,7 +754,7 @@ unsafe extern "C" fn yaml_parser_load_sequence(
                                 &mut (*ctx).end as *mut *mut libc::c_int as *mut *mut libc::c_void,
                             ) != 0
                         {
-                            let ref mut fresh29 = (*ctx).top;
+                            let fresh29 = &mut (*ctx).top;
                             let fresh30 = *fresh29;
                             *fresh29 = (*fresh29).c_offset(1);
                             *fresh30 = index;
@@ -792,7 +792,7 @@ unsafe extern "C" fn yaml_parser_load_sequence_end(
     );
     (*((*(*parser).document).nodes.start).c_offset((index - 1 as libc::c_int) as isize)).end_mark =
         (*event).end_mark;
-    let ref mut fresh31 = (*ctx).top;
+    let fresh31 = &mut (*ctx).top;
     *fresh31 = (*fresh31).c_offset(-1);
     1 as libc::c_int
 }
@@ -900,7 +900,7 @@ unsafe extern "C" fn yaml_parser_load_mapping(
                                 as *mut *mut libc::c_void,
                         ) != 0
                     {
-                        let ref mut fresh32 = (*(*parser).document).nodes.top;
+                        let fresh32 = &mut (*(*parser).document).nodes.top;
                         let fresh33 = *fresh32;
                         *fresh32 = (*fresh32).c_offset(1);
                         *fresh33 = node;
@@ -943,7 +943,7 @@ unsafe extern "C" fn yaml_parser_load_mapping(
                                 &mut (*ctx).end as *mut *mut libc::c_int as *mut *mut libc::c_void,
                             ) != 0
                         {
-                            let ref mut fresh34 = (*ctx).top;
+                            let fresh34 = &mut (*ctx).top;
                             let fresh35 = *fresh34;
                             *fresh34 = (*fresh34).c_offset(1);
                             *fresh35 = index;
@@ -981,7 +981,7 @@ unsafe extern "C" fn yaml_parser_load_mapping_end(
     );
     (*((*(*parser).document).nodes.start).c_offset((index - 1 as libc::c_int) as isize)).end_mark =
         (*event).end_mark;
-    let ref mut fresh36 = (*ctx).top;
+    let fresh36 = &mut (*ctx).top;
     *fresh36 = (*fresh36).c_offset(-1);
     1 as libc::c_int
 }
