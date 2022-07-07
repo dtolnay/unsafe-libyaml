@@ -1,6 +1,5 @@
 #![allow(
     non_camel_case_types,
-    unreachable_code,
     unused_assignments,
     unused_mut,
     unused_parens,

@@ -332,11 +332,8 @@ unsafe extern "C" fn yaml_emitter_dump_node(
         1 => return yaml_emitter_dump_scalar(emitter, node, anchor),
         2 => return yaml_emitter_dump_sequence(emitter, node, anchor),
         3 => return yaml_emitter_dump_mapping(emitter, node, anchor),
-        _ => {
-            __assert!(false);
-        }
+        _ => __assert!(false),
     }
-    return 0 as libc::c_int;
 }
 unsafe extern "C" fn yaml_emitter_dump_alias(
     mut emitter: *mut yaml_emitter_t,
