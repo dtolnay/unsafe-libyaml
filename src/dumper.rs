@@ -36,27 +36,11 @@ pub unsafe extern "C" fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> 
     };
     if !emitter.is_null() {
     } else {
-        __assert_fail!(
-            b"emitter\0" as *const u8 as *const libc::c_char,
-            b"dumper.c\0" as *const u8 as *const libc::c_char,
-            67 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<&[u8; 40], &[libc::c_char; 40]>(
-                b"int yaml_emitter_open(yaml_emitter_t *)\0",
-            ))
-            .as_ptr(),
-        );
+        __assert_fail!(b"emitter\0" as *const u8 as *const libc::c_char);
     }
     if (*emitter).opened == 0 {
     } else {
-        __assert_fail!(
-            b"!emitter->opened\0" as *const u8 as *const libc::c_char,
-            b"dumper.c\0" as *const u8 as *const libc::c_char,
-            68 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<&[u8; 40], &[libc::c_char; 40]>(
-                b"int yaml_emitter_open(yaml_emitter_t *)\0",
-            ))
-            .as_ptr(),
-        );
+        __assert_fail!(b"!emitter->opened\0" as *const u8 as *const libc::c_char);
     }
     memset(
         &mut event as *mut yaml_event_t as *mut libc::c_void,
@@ -103,27 +87,11 @@ pub unsafe extern "C" fn yaml_emitter_close(mut emitter: *mut yaml_emitter_t) ->
     };
     if !emitter.is_null() {
     } else {
-        __assert_fail!(
-            b"emitter\0" as *const u8 as *const libc::c_char,
-            b"dumper.c\0" as *const u8 as *const libc::c_char,
-            91 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<&[u8; 41], &[libc::c_char; 41]>(
-                b"int yaml_emitter_close(yaml_emitter_t *)\0",
-            ))
-            .as_ptr(),
-        );
+        __assert_fail!(b"emitter\0" as *const u8 as *const libc::c_char);
     }
     if (*emitter).opened != 0 {
     } else {
-        __assert_fail!(
-            b"emitter->opened\0" as *const u8 as *const libc::c_char,
-            b"dumper.c\0" as *const u8 as *const libc::c_char,
-            92 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<&[u8; 41], &[libc::c_char; 41]>(
-                b"int yaml_emitter_close(yaml_emitter_t *)\0",
-            ))
-            .as_ptr(),
-        );
+        __assert_fail!(b"emitter->opened\0" as *const u8 as *const libc::c_char);
     }
     if (*emitter).closed != 0 {
         return 1 as libc::c_int;
@@ -176,27 +144,11 @@ pub unsafe extern "C" fn yaml_emitter_dump(
     };
     if !emitter.is_null() {
     } else {
-        __assert_fail!(
-            b"emitter\0" as *const u8 as *const libc::c_char,
-            b"dumper.c\0" as *const u8 as *const libc::c_char,
-            117 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<&[u8; 59], &[libc::c_char; 59]>(
-                b"int yaml_emitter_dump(yaml_emitter_t *, yaml_document_t *)\0",
-            ))
-            .as_ptr(),
-        );
+        __assert_fail!(b"emitter\0" as *const u8 as *const libc::c_char);
     }
     if !document.is_null() {
     } else {
-        __assert_fail!(
-            b"document\0" as *const u8 as *const libc::c_char,
-            b"dumper.c\0" as *const u8 as *const libc::c_char,
-            118 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<&[u8; 59], &[libc::c_char; 59]>(
-                b"int yaml_emitter_dump(yaml_emitter_t *, yaml_document_t *)\0",
-            ))
-            .as_ptr(),
-        );
+        __assert_fail!(b"document\0" as *const u8 as *const libc::c_char);
     }
     let ref mut fresh0 = (*emitter).document;
     *fresh0 = document;
@@ -219,15 +171,7 @@ pub unsafe extern "C" fn yaml_emitter_dump(
             } else {
                 if (*emitter).opened != 0 {
                 } else {
-                    __assert_fail!(
-                        b"emitter->opened\0" as *const u8 as *const libc::c_char,
-                        b"dumper.c\0" as *const u8 as *const libc::c_char,
-                        132 as libc::c_int as libc::c_uint,
-                        (*::std::mem::transmute::<&[u8; 59], &[libc::c_char; 59]>(
-                            b"int yaml_emitter_dump(yaml_emitter_t *, yaml_document_t *)\0",
-                        ))
-                        .as_ptr(),
-                    );
+                    __assert_fail!(b"emitter->opened\0" as *const u8 as *const libc::c_char);
                 }
                 let ref mut fresh1 = (*emitter).anchors;
                 *fresh1 = yaml_malloc(
@@ -410,15 +354,7 @@ unsafe extern "C" fn yaml_emitter_dump_node(
         2 => return yaml_emitter_dump_sequence(emitter, node, anchor),
         3 => return yaml_emitter_dump_mapping(emitter, node, anchor),
         _ => {
-            __assert_fail!(
-                b"0\0" as *const u8 as *const libc::c_char,
-                b"dumper.c\0" as *const u8 as *const libc::c_char,
-                289 as libc::c_int as libc::c_uint,
-                (*::std::mem::transmute::<&[u8; 50], &[libc::c_char; 50]>(
-                    b"int yaml_emitter_dump_node(yaml_emitter_t *, int)\0",
-                ))
-                .as_ptr(),
-            );
+            __assert_fail!(b"0\0" as *const u8 as *const libc::c_char);
         }
     }
     return 0 as libc::c_int;

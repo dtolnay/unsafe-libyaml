@@ -40,13 +40,7 @@ unsafe fn unsafe_main() -> ExitCode {
         }
     }
     let input = input.unwrap_or_else(|| {
-        __assert_fail!(
-            b"input\0" as *const u8 as *const libc::c_char,
-            b"run-emitter-test-suite.c\0" as *const u8 as *const libc::c_char,
-            72 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<&[u8; 23], &[libc::c_char; 23]>(b"int main(int, char **)\0"))
-                .as_ptr(),
-        );
+        __assert_fail!(b"input\0" as *const u8 as *const libc::c_char);
     });
     if yaml_emitter_initialize(emitter) == 0 {
         let _ = writeln!(io::stderr(), "Could not initalize the emitter object");

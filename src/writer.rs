@@ -16,39 +16,15 @@ pub unsafe extern "C" fn yaml_emitter_flush(mut emitter: *mut yaml_emitter_t) ->
     let mut high: libc::c_int = 0;
     if !emitter.is_null() {
     } else {
-        __assert_fail!(
-            b"emitter\0" as *const u8 as *const libc::c_char,
-            b"writer.c\0" as *const u8 as *const libc::c_char,
-            36 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<&[u8; 41], &[libc::c_char; 41]>(
-                b"int yaml_emitter_flush(yaml_emitter_t *)\0",
-            ))
-            .as_ptr(),
-        );
+        __assert_fail!(b"emitter\0" as *const u8 as *const libc::c_char);
     }
     if ((*emitter).write_handler).is_some() {
     } else {
-        __assert_fail!(
-            b"emitter->write_handler\0" as *const u8 as *const libc::c_char,
-            b"writer.c\0" as *const u8 as *const libc::c_char,
-            37 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<&[u8; 41], &[libc::c_char; 41]>(
-                b"int yaml_emitter_flush(yaml_emitter_t *)\0",
-            ))
-            .as_ptr(),
-        );
+        __assert_fail!(b"emitter->write_handler\0" as *const u8 as *const libc::c_char);
     }
     if (*emitter).encoding as u64 != 0 {
     } else {
-        __assert_fail!(
-            b"emitter->encoding\0" as *const u8 as *const libc::c_char,
-            b"writer.c\0" as *const u8 as *const libc::c_char,
-            38 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<&[u8; 41], &[libc::c_char; 41]>(
-                b"int yaml_emitter_flush(yaml_emitter_t *)\0",
-            ))
-            .as_ptr(),
-        );
+        __assert_fail!(b"emitter->encoding\0" as *const u8 as *const libc::c_char);
     }
     let ref mut fresh1 = (*emitter).buffer.last;
     *fresh1 = (*emitter).buffer.pointer;

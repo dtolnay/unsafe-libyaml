@@ -24,27 +24,11 @@ pub unsafe extern "C" fn yaml_parser_parse(
 ) -> libc::c_int {
     if !parser.is_null() {
     } else {
-        __assert_fail!(
-            b"parser\0" as *const u8 as *const libc::c_char,
-            b"parser.c\0" as *const u8 as *const libc::c_char,
-            172 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<&[u8; 55], &[libc::c_char; 55]>(
-                b"int yaml_parser_parse(yaml_parser_t *, yaml_event_t *)\0",
-            ))
-            .as_ptr(),
-        );
+        __assert_fail!(b"parser\0" as *const u8 as *const libc::c_char);
     }
     if !event.is_null() {
     } else {
-        __assert_fail!(
-            b"event\0" as *const u8 as *const libc::c_char,
-            b"parser.c\0" as *const u8 as *const libc::c_char,
-            173 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<&[u8; 55], &[libc::c_char; 55]>(
-                b"int yaml_parser_parse(yaml_parser_t *, yaml_event_t *)\0",
-            ))
-            .as_ptr(),
-        );
+        __assert_fail!(b"event\0" as *const u8 as *const libc::c_char);
     }
     memset(
         event as *mut libc::c_void,

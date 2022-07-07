@@ -28,15 +28,8 @@ unsafe fn unsafe_main() -> ExitCode {
             return usage(ExitCode::FAILURE);
         }
     }
-    let input = input.unwrap_or_else(|| {
-        __assert_fail!(
-            b"input\0" as *const u8 as *const libc::c_char,
-            b"run-parser-test-suite.c\0" as *const u8 as *const libc::c_char,
-            46 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<&[u8; 23], &[libc::c_char; 23]>(b"int main(int, char **)\0"))
-                .as_ptr(),
-        )
-    });
+    let input =
+        input.unwrap_or_else(|| __assert_fail!(b"input\0" as *const u8 as *const libc::c_char));
     if yaml_parser_initialize(parser) == 0 {
         let _ = writeln!(io::stderr(), "Could not initialize the parser object");
         return ExitCode::FAILURE;

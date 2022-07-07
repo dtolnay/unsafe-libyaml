@@ -51,27 +51,11 @@ pub unsafe extern "C" fn yaml_parser_load(
     };
     if !parser.is_null() {
     } else {
-        __assert_fail!(
-            b"parser\0" as *const u8 as *const libc::c_char,
-            b"loader.c\0" as *const u8 as *const libc::c_char,
-            91 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<&[u8; 57], &[libc::c_char; 57]>(
-                b"int yaml_parser_load(yaml_parser_t *, yaml_document_t *)\0",
-            ))
-            .as_ptr(),
-        );
+        __assert_fail!(b"parser\0" as *const u8 as *const libc::c_char);
     }
     if !document.is_null() {
     } else {
-        __assert_fail!(
-            b"document\0" as *const u8 as *const libc::c_char,
-            b"loader.c\0" as *const u8 as *const libc::c_char,
-            92 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<&[u8; 57], &[libc::c_char; 57]>(
-                b"int yaml_parser_load(yaml_parser_t *, yaml_document_t *)\0",
-            ))
-            .as_ptr(),
-        );
+        __assert_fail!(b"document\0" as *const u8 as *const libc::c_char);
     }
     memset(
         document as *mut libc::c_void,
@@ -105,12 +89,6 @@ pub unsafe extern "C" fn yaml_parser_load(
                     __assert_fail!(
                         b"event.type == YAML_STREAM_START_EVENT\0" as *const u8
                             as *const libc::c_char,
-                        b"loader.c\0" as *const u8 as *const libc::c_char,
-                        100 as libc::c_int as libc::c_uint,
-                        (*::std::mem::transmute::<&[u8; 57], &[libc::c_char; 57]>(
-                            b"int yaml_parser_load(yaml_parser_t *, yaml_document_t *)\0",
-                        ))
-                        .as_ptr(),
                     );
                 }
                 current_block = 7815301370352969686;
@@ -222,12 +200,6 @@ unsafe extern "C" fn yaml_parser_load_document(
     } else {
         __assert_fail!(
             b"event->type == YAML_DOCUMENT_START_EVENT\0" as *const u8 as *const libc::c_char,
-            b"loader.c\0" as *const u8 as *const libc::c_char,
-            189 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<&[u8; 63], &[libc::c_char; 63]>(
-                b"int yaml_parser_load_document(yaml_parser_t *, yaml_event_t *)\0",
-            ))
-            .as_ptr(),
         );
     }
     let ref mut fresh16 = (*(*parser).document).version_directive;
@@ -325,15 +297,7 @@ unsafe extern "C" fn yaml_parser_load_nodes(
             }
             4 => {}
             _ => {
-                __assert_fail!(
-                    b"0\0" as *const u8 as *const libc::c_char,
-                    b"loader.c\0" as *const u8 as *const libc::c_char,
-                    246 as libc::c_int as libc::c_uint,
-                    (*::std::mem::transmute::<&[u8; 65], &[libc::c_char; 65]>(
-                        b"int yaml_parser_load_nodes(yaml_parser_t *, struct loader_ctx *)\0",
-                    ))
-                    .as_ptr(),
-                );
+                __assert_fail!(b"0\0" as *const u8 as *const libc::c_char);
                 return 0 as libc::c_int;
             }
         }
@@ -519,15 +483,7 @@ unsafe extern "C" fn yaml_parser_load_node_add(
             }
         }
         _ => {
-            __assert_fail!(
-                b"0\0" as *const u8 as *const libc::c_char,
-                b"loader.c\0" as *const u8 as *const libc::c_char,
-                340 as libc::c_int as libc::c_uint,
-                (*::std::mem::transmute::<&[u8; 73], &[libc::c_char; 73]>(
-                    b"int yaml_parser_load_node_add(yaml_parser_t *, struct loader_ctx *, int)\0",
-                ))
-                .as_ptr(),
-            );
+            __assert_fail!(b"0\0" as *const u8 as *const libc::c_char);
             return 0 as libc::c_int;
         }
     }
@@ -845,18 +801,7 @@ unsafe extern "C" fn yaml_parser_load_sequence_end(
     let mut index: libc::c_int = 0;
     if ((*ctx).top).c_offset_from((*ctx).start) as libc::c_long > 0 as libc::c_int as libc::c_long {
     } else {
-        __assert_fail!(
-            b"((*ctx).top - (*ctx).start) > 0\0" as *const u8 as *const libc::c_char,
-            b"loader.c\0" as *const u8 as *const libc::c_char,
-            467 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<
-                &[u8; 88],
-                &[libc::c_char; 88],
-            >(
-                b"int yaml_parser_load_sequence_end(yaml_parser_t *, yaml_event_t *, struct loader_ctx *)\0",
-            ))
-                .as_ptr(),
-        );
+        __assert_fail!(b"((*ctx).top - (*ctx).start) > 0\0" as *const u8 as *const libc::c_char);
     }
     index = *((*ctx).top).c_offset(-(1 as libc::c_int as isize));
     if (*((*(*parser).document).nodes.start).c_offset((index - 1 as libc::c_int) as isize)).type_0
@@ -865,17 +810,8 @@ unsafe extern "C" fn yaml_parser_load_sequence_end(
     {
     } else {
         __assert_fail!(
-            b"parser->document->nodes.start[index-1].type == YAML_SEQUENCE_NODE\0"
-                as *const u8 as *const libc::c_char,
-            b"loader.c\0" as *const u8 as *const libc::c_char,
-            470 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<
-                &[u8; 88],
-                &[libc::c_char; 88],
-            >(
-                b"int yaml_parser_load_sequence_end(yaml_parser_t *, yaml_event_t *, struct loader_ctx *)\0",
-            ))
-                .as_ptr(),
+            b"parser->document->nodes.start[index-1].type == YAML_SEQUENCE_NODE\0" as *const u8
+                as *const libc::c_char,
         );
     }
     (*((*(*parser).document).nodes.start).c_offset((index - 1 as libc::c_int) as isize)).end_mark =
@@ -1061,18 +997,7 @@ unsafe extern "C" fn yaml_parser_load_mapping_end(
     let mut index: libc::c_int = 0;
     if ((*ctx).top).c_offset_from((*ctx).start) as libc::c_long > 0 as libc::c_int as libc::c_long {
     } else {
-        __assert_fail!(
-            b"((*ctx).top - (*ctx).start) > 0\0" as *const u8 as *const libc::c_char,
-            b"loader.c\0" as *const u8 as *const libc::c_char,
-            535 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<
-                &[u8; 87],
-                &[libc::c_char; 87],
-            >(
-                b"int yaml_parser_load_mapping_end(yaml_parser_t *, yaml_event_t *, struct loader_ctx *)\0",
-            ))
-                .as_ptr(),
-        );
+        __assert_fail!(b"((*ctx).top - (*ctx).start) > 0\0" as *const u8 as *const libc::c_char);
     }
     index = *((*ctx).top).c_offset(-(1 as libc::c_int as isize));
     if (*((*(*parser).document).nodes.start).c_offset((index - 1 as libc::c_int) as isize)).type_0
@@ -1081,17 +1006,8 @@ unsafe extern "C" fn yaml_parser_load_mapping_end(
     {
     } else {
         __assert_fail!(
-            b"parser->document->nodes.start[index-1].type == YAML_MAPPING_NODE\0"
-                as *const u8 as *const libc::c_char,
-            b"loader.c\0" as *const u8 as *const libc::c_char,
-            538 as libc::c_int as libc::c_uint,
-            (*::std::mem::transmute::<
-                &[u8; 87],
-                &[libc::c_char; 87],
-            >(
-                b"int yaml_parser_load_mapping_end(yaml_parser_t *, yaml_event_t *, struct loader_ctx *)\0",
-            ))
-                .as_ptr(),
+            b"parser->document->nodes.start[index-1].type == YAML_MAPPING_NODE\0" as *const u8
+                as *const libc::c_char,
         );
     }
     (*((*(*parser).document).nodes.start).c_offset((index - 1 as libc::c_int) as isize)).end_mark =

@@ -141,28 +141,21 @@ pub mod externs {
 
     #[macro_export]
     macro_rules! __assert_fail {
-        (
-            $assertion:expr,
-            $file:expr,
-            $line:expr,
-            $function:expr,
-        ) => {
-            $crate::externs::__assert_fail($assertion, $file, $line, $function)
+        ($assertion:expr $(,)?) => {
+            $crate::externs::__assert_fail($assertion, file!(), line!())
         };
     }
 
     pub unsafe fn __assert_fail(
         __assertion: *const libc::c_char,
-        __file: *const libc::c_char,
-        __line: libc::c_uint,
-        __function: *const libc::c_char,
+        __file: &'static str,
+        __line: u32,
     ) -> ! {
         let _ = writeln!(
             io::stderr(),
-            "{}:{}: {}: Assertion `{}` failed.",
-            CStr::from_ptr(__file).to_string_lossy(),
+            "{}:{}: Assertion `{}` failed.",
+            __file,
             __line,
-            CStr::from_ptr(__function).to_string_lossy(),
             CStr::from_ptr(__assertion).to_string_lossy(),
         );
         process::abort();
