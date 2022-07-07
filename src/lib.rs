@@ -1,4 +1,4 @@
-#![allow(non_camel_case_types, unused_must_use)]
+#![allow(non_camel_case_types)]
 #![warn(clippy::pedantic)]
 #![allow(
     clippy::cast_lossless,
@@ -16,7 +16,6 @@
     clippy::nonminimal_bool,
     clippy::ptr_as_ptr,
     clippy::redundant_else,
-    clippy::short_circuit_statement,
     clippy::similar_names,
     clippy::single_match,
     clippy::single_match_else,

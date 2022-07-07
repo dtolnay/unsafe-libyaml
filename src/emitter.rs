@@ -3882,10 +3882,11 @@ unsafe extern "C" fn yaml_emitter_write_plain_scalar(
                 && (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                     == '\n' as i32 as yaml_char_t as libc::c_int
                 {
-                    ((((*emitter).buffer.pointer).c_offset(5 as libc::c_int as isize)
+                    if ((*emitter).buffer.pointer).c_offset(5 as libc::c_int as isize)
                         < (*emitter).buffer.end
-                        || yaml_emitter_flush(emitter) != 0)
-                        && {
+                        || yaml_emitter_flush(emitter) != 0
+                    {
+                        {
                             if (*emitter).line_break as libc::c_uint
                                 == YAML_CR_BREAK as libc::c_int as libc::c_uint
                             {
@@ -3917,7 +3918,8 @@ unsafe extern "C" fn yaml_emitter_write_plain_scalar(
                             let fresh269 = &mut (*emitter).line;
                             *fresh269 += 1;
                             1 as libc::c_int != 0
-                        });
+                        };
+                    }
                     string.pointer = (string.pointer).c_offset(1);
                     1 as libc::c_int
                 } else {
@@ -4327,10 +4329,11 @@ unsafe extern "C" fn yaml_emitter_write_single_quoted_scalar(
                 && (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                     == '\n' as i32 as yaml_char_t as libc::c_int
                 {
-                    ((((*emitter).buffer.pointer).c_offset(5 as libc::c_int as isize)
+                    if ((*emitter).buffer.pointer).c_offset(5 as libc::c_int as isize)
                         < (*emitter).buffer.end
-                        || yaml_emitter_flush(emitter) != 0)
-                        && {
+                        || yaml_emitter_flush(emitter) != 0
+                    {
+                        {
                             if (*emitter).line_break as libc::c_uint
                                 == YAML_CR_BREAK as libc::c_int as libc::c_uint
                             {
@@ -4362,7 +4365,8 @@ unsafe extern "C" fn yaml_emitter_write_single_quoted_scalar(
                             let fresh380 = &mut (*emitter).line;
                             *fresh380 += 1;
                             1 as libc::c_int != 0
-                        });
+                        };
+                    }
                     string.pointer = (string.pointer).c_offset(1);
                     1 as libc::c_int
                 } else {
@@ -5559,10 +5563,11 @@ unsafe extern "C" fn yaml_emitter_write_literal_scalar(
                 && (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                     == '\n' as i32 as yaml_char_t as libc::c_int
                 {
-                    ((((*emitter).buffer.pointer).c_offset(5 as libc::c_int as isize)
+                    if ((*emitter).buffer.pointer).c_offset(5 as libc::c_int as isize)
                         < (*emitter).buffer.end
-                        || yaml_emitter_flush(emitter) != 0)
-                        && {
+                        || yaml_emitter_flush(emitter) != 0
+                    {
+                        {
                             if (*emitter).line_break as libc::c_uint
                                 == YAML_CR_BREAK as libc::c_int as libc::c_uint
                             {
@@ -5594,7 +5599,8 @@ unsafe extern "C" fn yaml_emitter_write_literal_scalar(
                             let fresh588 = &mut (*emitter).line;
                             *fresh588 += 1;
                             1 as libc::c_int != 0
-                        });
+                        };
+                    }
                     string.pointer = (string.pointer).c_offset(1);
                     1 as libc::c_int
                 } else {
@@ -6004,10 +6010,11 @@ unsafe extern "C" fn yaml_emitter_write_folded_scalar(
                 && (if *(string.pointer).c_offset(0 as libc::c_int as isize) as libc::c_int
                     == '\n' as i32 as yaml_char_t as libc::c_int
                 {
-                    ((((*emitter).buffer.pointer).c_offset(5 as libc::c_int as isize)
+                    if ((*emitter).buffer.pointer).c_offset(5 as libc::c_int as isize)
                         < (*emitter).buffer.end
-                        || yaml_emitter_flush(emitter) != 0)
-                        && {
+                        || yaml_emitter_flush(emitter) != 0
+                    {
+                        {
                             if (*emitter).line_break as libc::c_uint
                                 == YAML_CR_BREAK as libc::c_int as libc::c_uint
                             {
@@ -6039,7 +6046,8 @@ unsafe extern "C" fn yaml_emitter_write_folded_scalar(
                             let fresh677 = &mut (*emitter).line;
                             *fresh677 += 1;
                             1 as libc::c_int != 0
-                        });
+                        };
+                    }
                     string.pointer = (string.pointer).c_offset(1);
                     1 as libc::c_int
                 } else {
