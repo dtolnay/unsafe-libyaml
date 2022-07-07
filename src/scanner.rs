@@ -12,14 +12,8 @@ pub unsafe extern "C" fn yaml_parser_scan(
     mut parser: *mut yaml_parser_t,
     mut token: *mut yaml_token_t,
 ) -> libc::c_int {
-    if !parser.is_null() {
-    } else {
-        __assert_fail!(b"parser\0" as *const u8 as *const libc::c_char);
-    }
-    if !token.is_null() {
-    } else {
-        __assert_fail!(b"token\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!parser.is_null());
+    __assert!(!token.is_null());
     memset(
         token as *mut libc::c_void,
         0 as libc::c_int,

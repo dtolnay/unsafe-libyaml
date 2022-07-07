@@ -193,10 +193,7 @@ pub unsafe extern "C" fn yaml_queue_extend(
 }
 #[no_mangle]
 pub unsafe extern "C" fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) -> libc::c_int {
-    if !parser.is_null() {
-    } else {
-        __assert_fail!(b"parser\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!parser.is_null());
     memset(
         parser as *mut libc::c_void,
         0 as libc::c_int,
@@ -408,10 +405,7 @@ pub unsafe extern "C" fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) 
 }
 #[no_mangle]
 pub unsafe extern "C" fn yaml_parser_delete(mut parser: *mut yaml_parser_t) {
-    if !parser.is_null() {
-    } else {
-        __assert_fail!(b"parser\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!parser.is_null());
     yaml_free((*parser).raw_buffer.start as *mut libc::c_void);
     let ref mut fresh52 = (*parser).raw_buffer.end;
     *fresh52 = 0 as *mut libc::c_uchar;
@@ -523,18 +517,9 @@ pub unsafe extern "C" fn yaml_parser_set_input_string(
     mut input: *const libc::c_uchar,
     mut size: size_t,
 ) {
-    if !parser.is_null() {
-    } else {
-        __assert_fail!(b"parser\0" as *const u8 as *const libc::c_char);
-    }
-    if ((*parser).read_handler).is_none() {
-    } else {
-        __assert_fail!(b"!parser->read_handler\0" as *const u8 as *const libc::c_char);
-    }
-    if !input.is_null() {
-    } else {
-        __assert_fail!(b"input\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!parser.is_null());
+    __assert!(((*parser).read_handler).is_none());
+    __assert!(!input.is_null());
     let ref mut fresh81 = (*parser).read_handler;
     *fresh81 = Some(
         yaml_string_read_handler
@@ -560,18 +545,9 @@ pub unsafe extern "C" fn yaml_parser_set_input(
     mut handler: Option<yaml_read_handler_t>,
     mut data: *mut libc::c_void,
 ) {
-    if !parser.is_null() {
-    } else {
-        __assert_fail!(b"parser\0" as *const u8 as *const libc::c_char);
-    }
-    if ((*parser).read_handler).is_none() {
-    } else {
-        __assert_fail!(b"!parser->read_handler\0" as *const u8 as *const libc::c_char);
-    }
-    if handler.is_some() {
-    } else {
-        __assert_fail!(b"handler\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!parser.is_null());
+    __assert!(((*parser).read_handler).is_none());
+    __assert!(handler.is_some());
     let ref mut fresh89 = (*parser).read_handler;
     *fresh89 = handler;
     let ref mut fresh90 = (*parser).read_handler_data;
@@ -582,22 +558,13 @@ pub unsafe extern "C" fn yaml_parser_set_encoding(
     mut parser: *mut yaml_parser_t,
     mut encoding: yaml_encoding_t,
 ) {
-    if !parser.is_null() {
-    } else {
-        __assert_fail!(b"parser\0" as *const u8 as *const libc::c_char);
-    }
-    if (*parser).encoding as u64 == 0 {
-    } else {
-        __assert_fail!(b"!parser->encoding\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!parser.is_null());
+    __assert!((*parser).encoding as u64 == 0);
     (*parser).encoding = encoding;
 }
 #[no_mangle]
 pub unsafe extern "C" fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> libc::c_int {
-    if !emitter.is_null() {
-    } else {
-        __assert_fail!(b"emitter\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!emitter.is_null());
     memset(
         emitter as *mut libc::c_void,
         0 as libc::c_int,
@@ -760,10 +727,7 @@ pub unsafe extern "C" fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_
 }
 #[no_mangle]
 pub unsafe extern "C" fn yaml_emitter_delete(mut emitter: *mut yaml_emitter_t) {
-    if !emitter.is_null() {
-    } else {
-        __assert_fail!(b"emitter\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!emitter.is_null());
     yaml_free((*emitter).buffer.start as *mut libc::c_void);
     let ref mut fresh131 = (*emitter).buffer.end;
     *fresh131 = 0 as *mut yaml_char_t;
@@ -862,18 +826,9 @@ pub unsafe extern "C" fn yaml_emitter_set_output_string(
     mut size: size_t,
     mut size_written: *mut size_t,
 ) {
-    if !emitter.is_null() {
-    } else {
-        __assert_fail!(b"emitter\0" as *const u8 as *const libc::c_char);
-    }
-    if ((*emitter).write_handler).is_none() {
-    } else {
-        __assert_fail!(b"!emitter->write_handler\0" as *const u8 as *const libc::c_char);
-    }
-    if !output.is_null() {
-    } else {
-        __assert_fail!(b"output\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!emitter.is_null());
+    __assert!(((*emitter).write_handler).is_none());
+    __assert!(!output.is_null());
     let ref mut fresh154 = (*emitter).write_handler;
     *fresh154 = Some(
         yaml_string_write_handler
@@ -894,18 +849,9 @@ pub unsafe extern "C" fn yaml_emitter_set_output(
     mut handler: Option<yaml_write_handler_t>,
     mut data: *mut libc::c_void,
 ) {
-    if !emitter.is_null() {
-    } else {
-        __assert_fail!(b"emitter\0" as *const u8 as *const libc::c_char);
-    }
-    if ((*emitter).write_handler).is_none() {
-    } else {
-        __assert_fail!(b"!emitter->write_handler\0" as *const u8 as *const libc::c_char);
-    }
-    if handler.is_some() {
-    } else {
-        __assert_fail!(b"handler\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!emitter.is_null());
+    __assert!(((*emitter).write_handler).is_none());
+    __assert!(handler.is_some());
     let ref mut fresh161 = (*emitter).write_handler;
     *fresh161 = handler;
     let ref mut fresh162 = (*emitter).write_handler_data;
@@ -916,14 +862,8 @@ pub unsafe extern "C" fn yaml_emitter_set_encoding(
     mut emitter: *mut yaml_emitter_t,
     mut encoding: yaml_encoding_t,
 ) {
-    if !emitter.is_null() {
-    } else {
-        __assert_fail!(b"emitter\0" as *const u8 as *const libc::c_char);
-    }
-    if (*emitter).encoding as u64 == 0 {
-    } else {
-        __assert_fail!(b"!emitter->encoding\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!emitter.is_null());
+    __assert!((*emitter).encoding as u64 == 0);
     (*emitter).encoding = encoding;
 }
 #[no_mangle]
@@ -931,10 +871,7 @@ pub unsafe extern "C" fn yaml_emitter_set_canonical(
     mut emitter: *mut yaml_emitter_t,
     mut canonical: libc::c_int,
 ) {
-    if !emitter.is_null() {
-    } else {
-        __assert_fail!(b"emitter\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!emitter.is_null());
     (*emitter).canonical = (canonical != 0 as libc::c_int) as libc::c_int;
 }
 #[no_mangle]
@@ -942,10 +879,7 @@ pub unsafe extern "C" fn yaml_emitter_set_indent(
     mut emitter: *mut yaml_emitter_t,
     mut indent: libc::c_int,
 ) {
-    if !emitter.is_null() {
-    } else {
-        __assert_fail!(b"emitter\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!emitter.is_null());
     (*emitter).best_indent = if (1 as libc::c_int) < indent && indent < 10 as libc::c_int {
         indent
     } else {
@@ -957,10 +891,7 @@ pub unsafe extern "C" fn yaml_emitter_set_width(
     mut emitter: *mut yaml_emitter_t,
     mut width: libc::c_int,
 ) {
-    if !emitter.is_null() {
-    } else {
-        __assert_fail!(b"emitter\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!emitter.is_null());
     (*emitter).best_width = if width >= 0 as libc::c_int {
         width
     } else {
@@ -972,10 +903,7 @@ pub unsafe extern "C" fn yaml_emitter_set_unicode(
     mut emitter: *mut yaml_emitter_t,
     mut unicode: libc::c_int,
 ) {
-    if !emitter.is_null() {
-    } else {
-        __assert_fail!(b"emitter\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!emitter.is_null());
     (*emitter).unicode = (unicode != 0 as libc::c_int) as libc::c_int;
 }
 #[no_mangle]
@@ -983,18 +911,12 @@ pub unsafe extern "C" fn yaml_emitter_set_break(
     mut emitter: *mut yaml_emitter_t,
     mut line_break: yaml_break_t,
 ) {
-    if !emitter.is_null() {
-    } else {
-        __assert_fail!(b"emitter\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!emitter.is_null());
     (*emitter).line_break = line_break;
 }
 #[no_mangle]
 pub unsafe extern "C" fn yaml_token_delete(mut token: *mut yaml_token_t) {
-    if !token.is_null() {
-    } else {
-        __assert_fail!(b"token\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!token.is_null());
     match (*token).type_0 as libc::c_uint {
         4 => {
             yaml_free((*token).data.tag_directive.handle as *mut libc::c_void);
@@ -1098,10 +1020,7 @@ pub unsafe extern "C" fn yaml_stream_start_event_initialize(
         };
         init
     };
-    if !event.is_null() {
-    } else {
-        __assert_fail!(b"event\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!event.is_null());
     memset(
         event as *mut libc::c_void,
         0 as libc::c_int,
@@ -1125,10 +1044,7 @@ pub unsafe extern "C" fn yaml_stream_end_event_initialize(
         };
         init
     };
-    if !event.is_null() {
-    } else {
-        __assert_fail!(b"event\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!event.is_null());
     memset(
         event as *mut libc::c_void,
         0 as libc::c_int,
@@ -1176,19 +1092,11 @@ pub unsafe extern "C" fn yaml_document_start_event_initialize(
         };
         init
     };
-    if !event.is_null() {
-    } else {
-        __assert_fail!(b"event\0" as *const u8 as *const libc::c_char);
-    }
-    if !tag_directives_start.is_null() && !tag_directives_end.is_null()
-        || tag_directives_start == tag_directives_end
-    {
-    } else {
-        __assert_fail!(
-            b"(tag_directives_start && tag_directives_end) || (tag_directives_start == tag_directives_end)\0"
-                as *const u8 as *const libc::c_char,
-        );
-    }
+    __assert!(!event.is_null());
+    __assert!(
+        !tag_directives_start.is_null() && !tag_directives_end.is_null()
+            || tag_directives_start == tag_directives_end
+    );
     if !version_directive.is_null() {
         version_directive_copy =
             yaml_malloc(::std::mem::size_of::<yaml_version_directive_t>() as libc::c_ulong)
@@ -1229,18 +1137,8 @@ pub unsafe extern "C" fn yaml_document_start_event_initialize(
                             current_block = 16203760046146113240;
                             break;
                         }
-                        if !((*tag_directive).handle).is_null() {
-                        } else {
-                            __assert_fail!(
-                                b"tag_directive->handle\0" as *const u8 as *const libc::c_char,
-                            );
-                        }
-                        if !((*tag_directive).prefix).is_null() {
-                        } else {
-                            __assert_fail!(
-                                b"tag_directive->prefix\0" as *const u8 as *const libc::c_char,
-                            );
-                        }
+                        __assert!(!((*tag_directive).handle).is_null());
+                        __assert!(!((*tag_directive).prefix).is_null());
                         if yaml_check_utf8(
                             (*tag_directive).handle,
                             strlen((*tag_directive).handle as *mut libc::c_char),
@@ -1345,10 +1243,7 @@ pub unsafe extern "C" fn yaml_document_end_event_initialize(
         };
         init
     };
-    if !event.is_null() {
-    } else {
-        __assert_fail!(b"event\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!event.is_null());
     memset(
         event as *mut libc::c_void,
         0 as libc::c_int,
@@ -1374,14 +1269,8 @@ pub unsafe extern "C" fn yaml_alias_event_initialize(
         init
     };
     let mut anchor_copy: *mut yaml_char_t = 0 as *mut yaml_char_t;
-    if !event.is_null() {
-    } else {
-        __assert_fail!(b"event\0" as *const u8 as *const libc::c_char);
-    }
-    if !anchor.is_null() {
-    } else {
-        __assert_fail!(b"anchor\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!event.is_null());
+    __assert!(!anchor.is_null());
     if yaml_check_utf8(anchor, strlen(anchor as *mut libc::c_char)) == 0 {
         return 0 as libc::c_int;
     }
@@ -1424,14 +1313,8 @@ pub unsafe extern "C" fn yaml_scalar_event_initialize(
     let mut anchor_copy: *mut yaml_char_t = 0 as *mut yaml_char_t;
     let mut tag_copy: *mut yaml_char_t = 0 as *mut yaml_char_t;
     let mut value_copy: *mut yaml_char_t = 0 as *mut yaml_char_t;
-    if !event.is_null() {
-    } else {
-        __assert_fail!(b"event\0" as *const u8 as *const libc::c_char);
-    }
-    if !value.is_null() {
-    } else {
-        __assert_fail!(b"value\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!event.is_null());
+    __assert!(!value.is_null());
     if !anchor.is_null() {
         if yaml_check_utf8(anchor, strlen(anchor as *mut libc::c_char)) == 0 {
             current_block = 16285396129609901221;
@@ -1528,10 +1411,7 @@ pub unsafe extern "C" fn yaml_sequence_start_event_initialize(
     };
     let mut anchor_copy: *mut yaml_char_t = 0 as *mut yaml_char_t;
     let mut tag_copy: *mut yaml_char_t = 0 as *mut yaml_char_t;
-    if !event.is_null() {
-    } else {
-        __assert_fail!(b"event\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!event.is_null());
     if !anchor.is_null() {
         if yaml_check_utf8(anchor, strlen(anchor as *mut libc::c_char)) == 0 {
             current_block = 8817775685815971442;
@@ -1601,10 +1481,7 @@ pub unsafe extern "C" fn yaml_sequence_end_event_initialize(
         };
         init
     };
-    if !event.is_null() {
-    } else {
-        __assert_fail!(b"event\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!event.is_null());
     memset(
         event as *mut libc::c_void,
         0 as libc::c_int,
@@ -1634,10 +1511,7 @@ pub unsafe extern "C" fn yaml_mapping_start_event_initialize(
     };
     let mut anchor_copy: *mut yaml_char_t = 0 as *mut yaml_char_t;
     let mut tag_copy: *mut yaml_char_t = 0 as *mut yaml_char_t;
-    if !event.is_null() {
-    } else {
-        __assert_fail!(b"event\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!event.is_null());
     if !anchor.is_null() {
         if yaml_check_utf8(anchor, strlen(anchor as *mut libc::c_char)) == 0 {
             current_block = 14748279734549812740;
@@ -1707,10 +1581,7 @@ pub unsafe extern "C" fn yaml_mapping_end_event_initialize(
         };
         init
     };
-    if !event.is_null() {
-    } else {
-        __assert_fail!(b"event\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!event.is_null());
     memset(
         event as *mut libc::c_void,
         0 as libc::c_int,
@@ -1724,10 +1595,7 @@ pub unsafe extern "C" fn yaml_mapping_end_event_initialize(
 #[no_mangle]
 pub unsafe extern "C" fn yaml_event_delete(mut event: *mut yaml_event_t) {
     let mut tag_directive: *mut yaml_tag_directive_t = 0 as *mut yaml_tag_directive_t;
-    if !event.is_null() {
-    } else {
-        __assert_fail!(b"event\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!event.is_null());
     match (*event).type_0 as libc::c_uint {
         3 => {
             yaml_free((*event).data.document_start.version_directive as *mut libc::c_void);
@@ -1809,19 +1677,11 @@ pub unsafe extern "C" fn yaml_document_initialize(
         };
         init
     };
-    if !document.is_null() {
-    } else {
-        __assert_fail!(b"document\0" as *const u8 as *const libc::c_char);
-    }
-    if !tag_directives_start.is_null() && !tag_directives_end.is_null()
-        || tag_directives_start == tag_directives_end
-    {
-    } else {
-        __assert_fail!(
-            b"(tag_directives_start && tag_directives_end) || (tag_directives_start == tag_directives_end)\0"
-                as *const u8 as *const libc::c_char,
-        );
-    }
+    __assert!(!document.is_null());
+    __assert!(
+        !tag_directives_start.is_null() && !tag_directives_end.is_null()
+            || tag_directives_start == tag_directives_end
+    );
     nodes.start = yaml_malloc(
         (16 as libc::c_int as libc::c_ulong)
             .wrapping_mul(::std::mem::size_of::<yaml_node_t>() as libc::c_ulong),
@@ -1877,18 +1737,8 @@ pub unsafe extern "C" fn yaml_document_initialize(
                                 current_block = 14818589718467733107;
                                 break;
                             }
-                            if !((*tag_directive).handle).is_null() {
-                            } else {
-                                __assert_fail!(
-                                    b"tag_directive->handle\0" as *const u8 as *const libc::c_char,
-                                );
-                            }
-                            if !((*tag_directive).prefix).is_null() {
-                            } else {
-                                __assert_fail!(
-                                    b"tag_directive->prefix\0" as *const u8 as *const libc::c_char,
-                                );
-                            }
+                            __assert!(!((*tag_directive).handle).is_null());
+                            __assert!(!((*tag_directive).prefix).is_null());
                             if yaml_check_utf8(
                                 (*tag_directive).handle,
                                 strlen((*tag_directive).handle as *mut libc::c_char),
@@ -1993,10 +1843,7 @@ pub unsafe extern "C" fn yaml_document_initialize(
 #[no_mangle]
 pub unsafe extern "C" fn yaml_document_delete(mut document: *mut yaml_document_t) {
     let mut tag_directive: *mut yaml_tag_directive_t = 0 as *mut yaml_tag_directive_t;
-    if !document.is_null() {
-    } else {
-        __assert_fail!(b"document\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!document.is_null());
     while !((*document).nodes.start == (*document).nodes.top) {
         let ref mut fresh182 = (*document).nodes.top;
         *fresh182 = (*fresh182).c_offset(-1);
@@ -2019,7 +1866,7 @@ pub unsafe extern "C" fn yaml_document_delete(mut document: *mut yaml_document_t
                 node.data.mapping.pairs.start = node.data.mapping.pairs.top;
             }
             _ => {
-                __assert_fail!(b"0\0" as *const u8 as *const libc::c_char);
+                __assert!(false);
             }
         }
     }
@@ -2049,10 +1896,7 @@ pub unsafe extern "C" fn yaml_document_get_node(
     mut document: *mut yaml_document_t,
     mut index: libc::c_int,
 ) -> *mut yaml_node_t {
-    if !document.is_null() {
-    } else {
-        __assert_fail!(b"document\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!document.is_null());
     if index > 0 as libc::c_int
         && ((*document).nodes.start).c_offset(index as isize) <= (*document).nodes.top
     {
@@ -2066,10 +1910,7 @@ pub unsafe extern "C" fn yaml_document_get_node(
 pub unsafe extern "C" fn yaml_document_get_root_node(
     mut document: *mut yaml_document_t,
 ) -> *mut yaml_node_t {
-    if !document.is_null() {
-    } else {
-        __assert_fail!(b"document\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!document.is_null());
     if (*document).nodes.top != (*document).nodes.start {
         return (*document).nodes.start;
     }
@@ -2117,14 +1958,8 @@ pub unsafe extern "C" fn yaml_document_add_scalar(
             column: 0,
         },
     };
-    if !document.is_null() {
-    } else {
-        __assert_fail!(b"document\0" as *const u8 as *const libc::c_char);
-    }
-    if !value.is_null() {
-    } else {
-        __assert_fail!(b"value\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!document.is_null());
+    __assert!(!value.is_null());
     if tag.is_null() {
         tag = b"tag:yaml.org,2002:str\0" as *const u8 as *const libc::c_char as *mut yaml_char_t;
     }
@@ -2233,10 +2068,7 @@ pub unsafe extern "C" fn yaml_document_add_sequence(
             column: 0,
         },
     };
-    if !document.is_null() {
-    } else {
-        __assert_fail!(b"document\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!document.is_null());
     if tag.is_null() {
         tag = b"tag:yaml.org,2002:seq\0" as *const u8 as *const libc::c_char as *mut yaml_char_t;
     }
@@ -2349,10 +2181,7 @@ pub unsafe extern "C" fn yaml_document_add_mapping(
             column: 0,
         },
     };
-    if !document.is_null() {
-    } else {
-        __assert_fail!(b"document\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!document.is_null());
     if tag.is_null() {
         tag = b"tag:yaml.org,2002:map\0" as *const u8 as *const libc::c_char as *mut yaml_char_t;
     }
@@ -2427,38 +2256,20 @@ pub unsafe extern "C" fn yaml_document_append_sequence_item(
     let mut context: Unnamed_34 = Unnamed_34 {
         error: YAML_NO_ERROR,
     };
-    if !document.is_null() {
-    } else {
-        __assert_fail!(b"document\0" as *const u8 as *const libc::c_char);
-    }
-    if sequence > 0 as libc::c_int
-        && ((*document).nodes.start).c_offset(sequence as isize) <= (*document).nodes.top
-    {
-    } else {
-        __assert_fail!(
-            b"sequence > 0 && document->nodes.start + sequence <= document->nodes.top\0"
-                as *const u8 as *const libc::c_char,
-        );
-    }
-    if (*((*document).nodes.start).c_offset((sequence - 1 as libc::c_int) as isize)).type_0
-        as libc::c_uint
-        == YAML_SEQUENCE_NODE as libc::c_int as libc::c_uint
-    {
-    } else {
-        __assert_fail!(
-            b"document->nodes.start[sequence-1].type == YAML_SEQUENCE_NODE\0" as *const u8
-                as *const libc::c_char,
-        );
-    }
-    if item > 0 as libc::c_int
-        && ((*document).nodes.start).c_offset(item as isize) <= (*document).nodes.top
-    {
-    } else {
-        __assert_fail!(
-            b"item > 0 && document->nodes.start + item <= document->nodes.top\0" as *const u8
-                as *const libc::c_char,
-        );
-    }
+    __assert!(!document.is_null());
+    __assert!(
+        sequence > 0 as libc::c_int
+            && ((*document).nodes.start).c_offset(sequence as isize) <= (*document).nodes.top
+    );
+    __assert!(
+        (*((*document).nodes.start).c_offset((sequence - 1 as libc::c_int) as isize)).type_0
+            as libc::c_uint
+            == YAML_SEQUENCE_NODE as libc::c_int as libc::c_uint
+    );
+    __assert!(
+        item > 0 as libc::c_int
+            && ((*document).nodes.start).c_offset(item as isize) <= (*document).nodes.top
+    );
     if if (*((*document).nodes.start).c_offset((sequence - 1 as libc::c_int) as isize))
         .data
         .sequence
@@ -2517,47 +2328,24 @@ pub unsafe extern "C" fn yaml_document_append_mapping_pair(
         error: YAML_NO_ERROR,
     };
     let mut pair: yaml_node_pair_t = yaml_node_pair_t { key: 0, value: 0 };
-    if !document.is_null() {
-    } else {
-        __assert_fail!(b"document\0" as *const u8 as *const libc::c_char);
-    }
-    if mapping > 0 as libc::c_int
-        && ((*document).nodes.start).c_offset(mapping as isize) <= (*document).nodes.top
-    {
-    } else {
-        __assert_fail!(
-            b"mapping > 0 && document->nodes.start + mapping <= document->nodes.top\0" as *const u8
-                as *const libc::c_char,
-        );
-    }
-    if (*((*document).nodes.start).c_offset((mapping - 1 as libc::c_int) as isize)).type_0
-        as libc::c_uint
-        == YAML_MAPPING_NODE as libc::c_int as libc::c_uint
-    {
-    } else {
-        __assert_fail!(
-            b"document->nodes.start[mapping-1].type == YAML_MAPPING_NODE\0" as *const u8
-                as *const libc::c_char,
-        );
-    }
-    if key > 0 as libc::c_int
-        && ((*document).nodes.start).c_offset(key as isize) <= (*document).nodes.top
-    {
-    } else {
-        __assert_fail!(
-            b"key > 0 && document->nodes.start + key <= document->nodes.top\0" as *const u8
-                as *const libc::c_char,
-        );
-    }
-    if value > 0 as libc::c_int
-        && ((*document).nodes.start).c_offset(value as isize) <= (*document).nodes.top
-    {
-    } else {
-        __assert_fail!(
-            b"value > 0 && document->nodes.start + value <= document->nodes.top\0" as *const u8
-                as *const libc::c_char,
-        );
-    }
+    __assert!(!document.is_null());
+    __assert!(
+        mapping > 0 as libc::c_int
+            && ((*document).nodes.start).c_offset(mapping as isize) <= (*document).nodes.top
+    );
+    __assert!(
+        (*((*document).nodes.start).c_offset((mapping - 1 as libc::c_int) as isize)).type_0
+            as libc::c_uint
+            == YAML_MAPPING_NODE as libc::c_int as libc::c_uint
+    );
+    __assert!(
+        key > 0 as libc::c_int
+            && ((*document).nodes.start).c_offset(key as isize) <= (*document).nodes.top
+    );
+    __assert!(
+        value > 0 as libc::c_int
+            && ((*document).nodes.start).c_offset(value as isize) <= (*document).nodes.top
+    );
     pair.key = key;
     pair.value = value;
     if if (*((*document).nodes.start).c_offset((mapping - 1 as libc::c_int) as isize))

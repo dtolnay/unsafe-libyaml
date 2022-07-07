@@ -34,14 +34,8 @@ pub unsafe extern "C" fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> 
         };
         init
     };
-    if !emitter.is_null() {
-    } else {
-        __assert_fail!(b"emitter\0" as *const u8 as *const libc::c_char);
-    }
-    if (*emitter).opened == 0 {
-    } else {
-        __assert_fail!(b"!emitter->opened\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!emitter.is_null());
+    __assert!((*emitter).opened == 0);
     memset(
         &mut event as *mut yaml_event_t as *mut libc::c_void,
         0 as libc::c_int,
@@ -85,14 +79,8 @@ pub unsafe extern "C" fn yaml_emitter_close(mut emitter: *mut yaml_emitter_t) ->
         };
         init
     };
-    if !emitter.is_null() {
-    } else {
-        __assert_fail!(b"emitter\0" as *const u8 as *const libc::c_char);
-    }
-    if (*emitter).opened != 0 {
-    } else {
-        __assert_fail!(b"emitter->opened\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!emitter.is_null());
+    __assert!((*emitter).opened != 0);
     if (*emitter).closed != 0 {
         return 1 as libc::c_int;
     }
@@ -142,14 +130,8 @@ pub unsafe extern "C" fn yaml_emitter_dump(
         };
         init
     };
-    if !emitter.is_null() {
-    } else {
-        __assert_fail!(b"emitter\0" as *const u8 as *const libc::c_char);
-    }
-    if !document.is_null() {
-    } else {
-        __assert_fail!(b"document\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!emitter.is_null());
+    __assert!(!document.is_null());
     let ref mut fresh0 = (*emitter).document;
     *fresh0 = document;
     if (*emitter).opened == 0 {
@@ -169,10 +151,7 @@ pub unsafe extern "C" fn yaml_emitter_dump(
                     return 1 as libc::c_int;
                 }
             } else {
-                if (*emitter).opened != 0 {
-                } else {
-                    __assert_fail!(b"emitter->opened\0" as *const u8 as *const libc::c_char);
-                }
+                __assert!((*emitter).opened != 0);
                 let ref mut fresh1 = (*emitter).anchors;
                 *fresh1 = yaml_malloc(
                     (::std::mem::size_of::<yaml_anchors_t>() as libc::c_ulong).wrapping_mul(
@@ -354,7 +333,7 @@ unsafe extern "C" fn yaml_emitter_dump_node(
         2 => return yaml_emitter_dump_sequence(emitter, node, anchor),
         3 => return yaml_emitter_dump_mapping(emitter, node, anchor),
         _ => {
-            __assert_fail!(b"0\0" as *const u8 as *const libc::c_char);
+            __assert!(false);
         }
     }
     return 0 as libc::c_int;

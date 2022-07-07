@@ -28,8 +28,7 @@ unsafe fn unsafe_main() -> ExitCode {
             return usage(ExitCode::FAILURE);
         }
     }
-    let input =
-        input.unwrap_or_else(|| __assert_fail!(b"input\0" as *const u8 as *const libc::c_char));
+    let input = input.unwrap_or_else(|| __assert!(false));
     if yaml_parser_initialize(parser) == 0 {
         let _ = writeln!(io::stderr(), "Could not initialize the parser object");
         return ExitCode::FAILURE;

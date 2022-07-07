@@ -14,18 +14,9 @@ unsafe extern "C" fn yaml_emitter_set_writer_error(
 pub unsafe extern "C" fn yaml_emitter_flush(mut emitter: *mut yaml_emitter_t) -> libc::c_int {
     let mut low: libc::c_int = 0;
     let mut high: libc::c_int = 0;
-    if !emitter.is_null() {
-    } else {
-        __assert_fail!(b"emitter\0" as *const u8 as *const libc::c_char);
-    }
-    if ((*emitter).write_handler).is_some() {
-    } else {
-        __assert_fail!(b"emitter->write_handler\0" as *const u8 as *const libc::c_char);
-    }
-    if (*emitter).encoding as u64 != 0 {
-    } else {
-        __assert_fail!(b"emitter->encoding\0" as *const u8 as *const libc::c_char);
-    }
+    __assert!(!emitter.is_null());
+    __assert!(((*emitter).write_handler).is_some());
+    __assert!((*emitter).encoding as u64 != 0);
     let ref mut fresh1 = (*emitter).buffer.last;
     *fresh1 = (*emitter).buffer.pointer;
     let ref mut fresh2 = (*emitter).buffer.pointer;

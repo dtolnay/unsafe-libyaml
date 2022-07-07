@@ -39,9 +39,7 @@ unsafe fn unsafe_main() -> ExitCode {
             foundfile = 1 as libc::c_int;
         }
     }
-    let input = input.unwrap_or_else(|| {
-        __assert_fail!(b"input\0" as *const u8 as *const libc::c_char);
-    });
+    let input = input.unwrap_or_else(|| __assert!(false));
     if yaml_emitter_initialize(emitter) == 0 {
         let _ = writeln!(io::stderr(), "Could not initalize the emitter object");
         return ExitCode::FAILURE;
