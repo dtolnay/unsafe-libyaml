@@ -8,6 +8,8 @@
     unused_variables
 )]
 
+use std::mem;
+
 pub mod libc {
     pub use std::os::raw::{
         c_char, c_int, c_long, c_schar, c_uchar, c_uint, c_ulong, c_ushort, c_void,
@@ -151,6 +153,16 @@ pub mod externs {
             CStr::from_ptr(__assertion).to_string_lossy(),
         );
         process::abort();
+    }
+}
+
+trait PointerExt: Sized {
+    fn c_offset_from(self, origin: Self) -> isize;
+}
+
+impl<T> PointerExt for *const T {
+    fn c_offset_from(self, origin: *const T) -> isize {
+        (self as isize - origin as isize) / mem::size_of::<T>() as isize
     }
 }
 

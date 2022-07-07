@@ -3,6 +3,7 @@ use crate::externs::*;
 use crate::libc;
 use crate::writer::yaml_emitter_flush;
 use crate::yaml::*;
+use crate::PointerExt;
 unsafe extern "C" fn yaml_emitter_set_emitter_error(
     mut emitter: *mut yaml_emitter_t,
     mut problem: *const libc::c_char,
@@ -73,7 +74,7 @@ unsafe extern "C" fn yaml_emitter_need_more_events(
         }
         _ => return 0 as libc::c_int,
     }
-    if ((*emitter).events.tail).offset_from((*emitter).events.head) as libc::c_long
+    if ((*emitter).events.tail).c_offset_from((*emitter).events.head) as libc::c_long
         > accumulate as libc::c_long
     {
         return 0 as libc::c_int;
@@ -1250,7 +1251,7 @@ unsafe extern "C" fn yaml_emitter_check_empty_document(
 unsafe extern "C" fn yaml_emitter_check_empty_sequence(
     mut emitter: *mut yaml_emitter_t,
 ) -> libc::c_int {
-    if (((*emitter).events.tail).offset_from((*emitter).events.head) as libc::c_long)
+    if (((*emitter).events.tail).c_offset_from((*emitter).events.head) as libc::c_long)
         < 2 as libc::c_int as libc::c_long
     {
         return 0 as libc::c_int;
@@ -1263,7 +1264,7 @@ unsafe extern "C" fn yaml_emitter_check_empty_sequence(
 unsafe extern "C" fn yaml_emitter_check_empty_mapping(
     mut emitter: *mut yaml_emitter_t,
 ) -> libc::c_int {
-    if (((*emitter).events.tail).offset_from((*emitter).events.head) as libc::c_long)
+    if (((*emitter).events.tail).c_offset_from((*emitter).events.head) as libc::c_long)
         < 2 as libc::c_int as libc::c_long
     {
         return 0 as libc::c_int;
@@ -1707,7 +1708,7 @@ unsafe extern "C" fn yaml_emitter_analyze_anchor(
     let ref mut fresh47 = (*emitter).anchor_data.anchor;
     *fresh47 = string.start;
     (*emitter).anchor_data.anchor_length =
-        (string.end).offset_from(string.start) as libc::c_long as size_t;
+        (string.end).c_offset_from(string.start) as libc::c_long as size_t;
     (*emitter).anchor_data.alias = alias;
     return 1 as libc::c_int;
 }
@@ -1735,7 +1736,7 @@ unsafe extern "C" fn yaml_emitter_analyze_tag(
     tag_directive = (*emitter).tag_directives.start;
     while tag_directive != (*emitter).tag_directives.top {
         let mut prefix_length: size_t = strlen((*tag_directive).prefix as *mut libc::c_char);
-        if prefix_length < (string.end).offset_from(string.start) as libc::c_long as size_t
+        if prefix_length < (string.end).c_offset_from(string.start) as libc::c_long as size_t
             && strncmp(
                 (*tag_directive).prefix as *mut libc::c_char,
                 string.start as *mut libc::c_char,
@@ -1748,7 +1749,7 @@ unsafe extern "C" fn yaml_emitter_analyze_tag(
                 strlen((*tag_directive).handle as *mut libc::c_char);
             let ref mut fresh49 = (*emitter).tag_data.suffix;
             *fresh49 = (string.start).offset(prefix_length as isize);
-            (*emitter).tag_data.suffix_length = ((string.end).offset_from(string.start)
+            (*emitter).tag_data.suffix_length = ((string.end).c_offset_from(string.start)
                 as libc::c_long as libc::c_ulong)
                 .wrapping_sub(prefix_length);
             return 1 as libc::c_int;
@@ -1758,7 +1759,7 @@ unsafe extern "C" fn yaml_emitter_analyze_tag(
     let ref mut fresh50 = (*emitter).tag_data.suffix;
     *fresh50 = string.start;
     (*emitter).tag_data.suffix_length =
-        (string.end).offset_from(string.start) as libc::c_long as size_t;
+        (string.end).c_offset_from(string.start) as libc::c_long as size_t;
     return 1 as libc::c_int;
 }
 unsafe extern "C" fn yaml_emitter_analyze_scalar(

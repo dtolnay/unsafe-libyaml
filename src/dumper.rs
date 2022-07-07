@@ -3,6 +3,7 @@ use crate::emitter::yaml_emitter_emit;
 use crate::externs::*;
 use crate::libc;
 use crate::yaml::*;
+use crate::PointerExt;
 use std::io::Write;
 use std::slice;
 #[no_mangle]
@@ -230,16 +231,17 @@ pub unsafe extern "C" fn yaml_emitter_dump(
                 }
                 let ref mut fresh1 = (*emitter).anchors;
                 *fresh1 = yaml_malloc(
-                    (::std::mem::size_of::<yaml_anchors_t>() as libc::c_ulong)
-                        .wrapping_mul(((*document).nodes.top).offset_from((*document).nodes.start)
-                            as libc::c_long as libc::c_ulong),
+                    (::std::mem::size_of::<yaml_anchors_t>() as libc::c_ulong).wrapping_mul(
+                        ((*document).nodes.top).c_offset_from((*document).nodes.start)
+                            as libc::c_long as libc::c_ulong,
+                    ),
                 ) as *mut yaml_anchors_t;
                 if !((*emitter).anchors).is_null() {
                     memset(
                         (*emitter).anchors as *mut libc::c_void,
                         0 as libc::c_int,
                         (::std::mem::size_of::<yaml_anchors_t>() as libc::c_ulong).wrapping_mul(
-                            ((*document).nodes.top).offset_from((*document).nodes.start)
+                            ((*document).nodes.top).c_offset_from((*document).nodes.start)
                                 as libc::c_long as libc::c_ulong,
                         ),
                     );

@@ -6,6 +6,7 @@ use crate::externs::*;
 use crate::libc;
 use crate::reader::yaml_parser_update_buffer;
 use crate::yaml::*;
+use crate::PointerExt;
 #[no_mangle]
 pub unsafe extern "C" fn yaml_parser_scan(
     mut parser: *mut yaml_parser_t,
@@ -616,10 +617,9 @@ unsafe extern "C" fn yaml_parser_save_simple_key(mut parser: *mut yaml_parser_t)
         };
         simple_key.possible = 1 as libc::c_int;
         simple_key.required = required;
-        simple_key.token_number =
-            ((*parser).tokens_parsed)
-                .wrapping_add(((*parser).tokens.tail).offset_from((*parser).tokens.head)
-                    as libc::c_long as libc::c_ulong);
+        simple_key.token_number = ((*parser).tokens_parsed)
+            .wrapping_add(((*parser).tokens.tail).c_offset_from((*parser).tokens.head)
+                as libc::c_long as libc::c_ulong);
         simple_key.mark = (*parser).mark;
         if yaml_parser_remove_simple_key(parser) == 0 {
             return 0 as libc::c_int;
@@ -801,7 +801,7 @@ unsafe extern "C" fn yaml_parser_roll_indent(
                 ((*parser).tokens.head).offset(
                     (number as libc::c_ulong).wrapping_sub((*parser).tokens_parsed) as isize,
                 ) as *const libc::c_void,
-                (((*parser).tokens.tail).offset_from((*parser).tokens.head) as libc::c_long
+                (((*parser).tokens.tail).c_offset_from((*parser).tokens.head) as libc::c_long
                     as libc::c_ulong)
                     .wrapping_sub((number as libc::c_ulong).wrapping_sub((*parser).tokens_parsed))
                     .wrapping_mul(::std::mem::size_of::<yaml_token_t>() as libc::c_ulong),
@@ -1895,7 +1895,7 @@ unsafe extern "C" fn yaml_parser_fetch_value(mut parser: *mut yaml_parser_t) -> 
                 ((*parser).tokens.head).offset(
                     ((*simple_key).token_number).wrapping_sub((*parser).tokens_parsed) as isize,
                 ) as *const libc::c_void,
-                (((*parser).tokens.tail).offset_from((*parser).tokens.head) as libc::c_long
+                (((*parser).tokens.tail).c_offset_from((*parser).tokens.head) as libc::c_long
                     as libc::c_ulong)
                     .wrapping_sub(
                         ((*simple_key).token_number).wrapping_sub((*parser).tokens_parsed),
@@ -5176,7 +5176,7 @@ unsafe extern "C" fn yaml_parser_scan_tag_uri(
                 return 0 as libc::c_int;
             }
             _ => {
-                if (string.end).offset_from(string.start) as libc::c_long as size_t <= length {
+                if (string.end).c_offset_from(string.start) as libc::c_long as size_t <= length {
                     if !(yaml_string_extend(
                         &mut string.start,
                         &mut string.pointer,
@@ -6742,7 +6742,7 @@ unsafe extern "C" fn yaml_parser_scan_block_scalar(
                                                                             memset(
                                                                                 leading_break.start as *mut libc::c_void,
                                                                                 0 as libc::c_int,
-                                                                                (leading_break.end).offset_from(leading_break.start)
+                                                                                (leading_break.end).c_offset_from(leading_break.start)
                                                                                     as libc::c_long as libc::c_ulong,
                                                                             );
                                                                         } else {
@@ -6769,7 +6769,7 @@ unsafe extern "C" fn yaml_parser_scan_block_scalar(
                                                                             memset(
                                                                                 leading_break.start as *mut libc::c_void,
                                                                                 0 as libc::c_int,
-                                                                                (leading_break.end).offset_from(leading_break.start)
+                                                                                (leading_break.end).c_offset_from(leading_break.start)
                                                                                     as libc::c_long as libc::c_ulong,
                                                                             );
                                                                         }
@@ -6796,7 +6796,7 @@ unsafe extern "C" fn yaml_parser_scan_block_scalar(
                                                                         memset(
                                                                             trailing_breaks.start as *mut libc::c_void,
                                                                             0 as libc::c_int,
-                                                                            (trailing_breaks.end).offset_from(trailing_breaks.start)
+                                                                            (trailing_breaks.end).c_offset_from(trailing_breaks.start)
                                                                                 as libc::c_long as libc::c_ulong,
                                                                         );
                                                                         leading_blank = (*((*parser).buffer.pointer)
@@ -7184,7 +7184,7 @@ unsafe extern "C" fn yaml_parser_scan_block_scalar(
                                                                                             (*token)
                                                                                                 .data
                                                                                                 .scalar
-                                                                                                .length = (string.pointer).offset_from(string.start)
+                                                                                                .length = (string.pointer).c_offset_from(string.start)
                                                                                                 as libc::c_long as size_t;
                                                                                             (*token)
                                                                                                 .data
@@ -9099,7 +9099,7 @@ unsafe extern "C" fn yaml_parser_scan_flow_scalar(
                                         memset(
                                             whitespaces.start as *mut libc::c_void,
                                             0 as libc::c_int,
-                                            (whitespaces.end).offset_from(whitespaces.start)
+                                            (whitespaces.end).c_offset_from(whitespaces.start)
                                                 as libc::c_long
                                                 as libc::c_ulong,
                                         );
@@ -9488,7 +9488,8 @@ unsafe extern "C" fn yaml_parser_scan_flow_scalar(
                                         memset(
                                             trailing_breaks.start as *mut libc::c_void,
                                             0 as libc::c_int,
-                                            (trailing_breaks.end).offset_from(trailing_breaks.start)
+                                            (trailing_breaks.end)
+                                                .c_offset_from(trailing_breaks.start)
                                                 as libc::c_long
                                                 as libc::c_ulong,
                                         );
@@ -9497,7 +9498,7 @@ unsafe extern "C" fn yaml_parser_scan_flow_scalar(
                                     memset(
                                         leading_break.start as *mut libc::c_void,
                                         0 as libc::c_int,
-                                        (leading_break.end).offset_from(leading_break.start)
+                                        (leading_break.end).c_offset_from(leading_break.start)
                                             as libc::c_long
                                             as libc::c_ulong,
                                     );
@@ -9544,7 +9545,7 @@ unsafe extern "C" fn yaml_parser_scan_flow_scalar(
                                     memset(
                                         leading_break.start as *mut libc::c_void,
                                         0 as libc::c_int,
-                                        (leading_break.end).offset_from(leading_break.start)
+                                        (leading_break.end).c_offset_from(leading_break.start)
                                             as libc::c_long
                                             as libc::c_ulong,
                                     );
@@ -9552,7 +9553,7 @@ unsafe extern "C" fn yaml_parser_scan_flow_scalar(
                                     memset(
                                         trailing_breaks.start as *mut libc::c_void,
                                         0 as libc::c_int,
-                                        (trailing_breaks.end).offset_from(trailing_breaks.start)
+                                        (trailing_breaks.end).c_offset_from(trailing_breaks.start)
                                             as libc::c_long
                                             as libc::c_ulong,
                                     );
@@ -9581,7 +9582,8 @@ unsafe extern "C" fn yaml_parser_scan_flow_scalar(
                                 memset(
                                     whitespaces.start as *mut libc::c_void,
                                     0 as libc::c_int,
-                                    (whitespaces.end).offset_from(whitespaces.start) as libc::c_long
+                                    (whitespaces.end).c_offset_from(whitespaces.start)
+                                        as libc::c_long
                                         as libc::c_ulong,
                                 );
                             }
@@ -9646,9 +9648,9 @@ unsafe extern "C" fn yaml_parser_scan_flow_scalar(
                             (*token).end_mark = end_mark;
                             let ref mut fresh716 = (*token).data.scalar.value;
                             *fresh716 = string.start;
-                            (*token).data.scalar.length = (string.pointer).offset_from(string.start)
-                                as libc::c_long
-                                as size_t;
+                            (*token).data.scalar.length =
+                                (string.pointer).c_offset_from(string.start) as libc::c_long
+                                    as size_t;
                             (*token).data.scalar.style = (if single != 0 {
                                 YAML_SINGLE_QUOTED_SCALAR_STYLE as libc::c_int
                             } else {
@@ -10106,7 +10108,7 @@ unsafe extern "C" fn yaml_parser_scan_plain_scalar(
                                                     trailing_breaks.start as *mut libc::c_void,
                                                     0 as libc::c_int,
                                                     (trailing_breaks.end)
-                                                        .offset_from(trailing_breaks.start)
+                                                        .c_offset_from(trailing_breaks.start)
                                                         as libc::c_long
                                                         as libc::c_ulong,
                                                 );
@@ -10115,7 +10117,8 @@ unsafe extern "C" fn yaml_parser_scan_plain_scalar(
                                             memset(
                                                 leading_break.start as *mut libc::c_void,
                                                 0 as libc::c_int,
-                                                (leading_break.end).offset_from(leading_break.start)
+                                                (leading_break.end)
+                                                    .c_offset_from(leading_break.start)
                                                     as libc::c_long
                                                     as libc::c_ulong,
                                             );
@@ -10162,7 +10165,8 @@ unsafe extern "C" fn yaml_parser_scan_plain_scalar(
                                             memset(
                                                 leading_break.start as *mut libc::c_void,
                                                 0 as libc::c_int,
-                                                (leading_break.end).offset_from(leading_break.start)
+                                                (leading_break.end)
+                                                    .c_offset_from(leading_break.start)
                                                     as libc::c_long
                                                     as libc::c_ulong,
                                             );
@@ -10171,7 +10175,7 @@ unsafe extern "C" fn yaml_parser_scan_plain_scalar(
                                                 trailing_breaks.start as *mut libc::c_void,
                                                 0 as libc::c_int,
                                                 (trailing_breaks.end)
-                                                    .offset_from(trailing_breaks.start)
+                                                    .c_offset_from(trailing_breaks.start)
                                                     as libc::c_long
                                                     as libc::c_ulong,
                                             );
@@ -10201,7 +10205,7 @@ unsafe extern "C" fn yaml_parser_scan_plain_scalar(
                                         memset(
                                             whitespaces.start as *mut libc::c_void,
                                             0 as libc::c_int,
-                                            (whitespaces.end).offset_from(whitespaces.start)
+                                            (whitespaces.end).c_offset_from(whitespaces.start)
                                                 as libc::c_long
                                                 as libc::c_ulong,
                                         );
@@ -10640,7 +10644,7 @@ unsafe extern "C" fn yaml_parser_scan_plain_scalar(
                                     memset(
                                         whitespaces.start as *mut libc::c_void,
                                         0 as libc::c_int,
-                                        (whitespaces.end).offset_from(whitespaces.start)
+                                        (whitespaces.end).c_offset_from(whitespaces.start)
                                             as libc::c_long
                                             as libc::c_ulong,
                                     );
@@ -10981,9 +10985,9 @@ unsafe extern "C" fn yaml_parser_scan_plain_scalar(
                             (*token).end_mark = end_mark;
                             let ref mut fresh842 = (*token).data.scalar.value;
                             *fresh842 = string.start;
-                            (*token).data.scalar.length = (string.pointer).offset_from(string.start)
-                                as libc::c_long
-                                as size_t;
+                            (*token).data.scalar.length =
+                                (string.pointer).c_offset_from(string.start) as libc::c_long
+                                    as size_t;
                             (*token).data.scalar.style = YAML_PLAIN_SCALAR_STYLE;
                             if leading_blanks != 0 {
                                 (*parser).simple_key_allowed = 1 as libc::c_int;

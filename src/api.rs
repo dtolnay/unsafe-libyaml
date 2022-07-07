@@ -1,6 +1,7 @@
 use crate::externs::*;
 use crate::libc;
 use crate::yaml::*;
+use crate::PointerExt;
 #[no_mangle]
 pub unsafe extern "C" fn yaml_get_version_string() -> *const libc::c_char {
     return b"0.2.5\0" as *const u8 as *const libc::c_char;
@@ -66,19 +67,20 @@ pub unsafe extern "C" fn yaml_string_extend(
 ) -> libc::c_int {
     let mut new_start: *mut yaml_char_t = yaml_realloc(
         *start as *mut libc::c_void,
-        ((*end).offset_from(*start) as libc::c_long * 2 as libc::c_int as libc::c_long) as size_t,
+        ((*end).c_offset_from(*start) as libc::c_long * 2 as libc::c_int as libc::c_long) as size_t,
     ) as *mut yaml_char_t;
     if new_start.is_null() {
         return 0 as libc::c_int;
     }
     memset(
-        new_start.offset((*end).offset_from(*start) as libc::c_long as isize) as *mut libc::c_void,
+        new_start.offset((*end).c_offset_from(*start) as libc::c_long as isize)
+            as *mut libc::c_void,
         0 as libc::c_int,
-        (*end).offset_from(*start) as libc::c_long as libc::c_ulong,
+        (*end).c_offset_from(*start) as libc::c_long as libc::c_ulong,
     );
-    *pointer = new_start.offset((*pointer).offset_from(*start) as libc::c_long as isize);
+    *pointer = new_start.offset((*pointer).c_offset_from(*start) as libc::c_long as isize);
     *end = new_start.offset(
-        ((*end).offset_from(*start) as libc::c_long * 2 as libc::c_int as libc::c_long) as isize,
+        ((*end).c_offset_from(*start) as libc::c_long * 2 as libc::c_int as libc::c_long) as isize,
     );
     *start = new_start;
     return 1 as libc::c_int;
@@ -95,8 +97,8 @@ pub unsafe extern "C" fn yaml_string_join(
     if *b_start == *b_pointer {
         return 1 as libc::c_int;
     }
-    while (*a_end).offset_from(*a_pointer) as libc::c_long
-        <= (*b_pointer).offset_from(*b_start) as libc::c_long
+    while (*a_end).c_offset_from(*a_pointer) as libc::c_long
+        <= (*b_pointer).c_offset_from(*b_start) as libc::c_long
     {
         if yaml_string_extend(a_start, a_pointer, a_end) == 0 {
             return 0 as libc::c_int;
@@ -105,9 +107,9 @@ pub unsafe extern "C" fn yaml_string_join(
     memcpy(
         *a_pointer as *mut libc::c_void,
         *b_start as *const libc::c_void,
-        (*b_pointer).offset_from(*b_start) as libc::c_long as libc::c_ulong,
+        (*b_pointer).c_offset_from(*b_start) as libc::c_long as libc::c_ulong,
     );
-    *a_pointer = (*a_pointer).offset((*b_pointer).offset_from(*b_start) as libc::c_long as isize);
+    *a_pointer = (*a_pointer).offset((*b_pointer).c_offset_from(*b_start) as libc::c_long as isize);
     return 1 as libc::c_int;
 }
 #[no_mangle]
@@ -117,25 +119,25 @@ pub unsafe extern "C" fn yaml_stack_extend(
     mut end: *mut *mut libc::c_void,
 ) -> libc::c_int {
     let mut new_start: *mut libc::c_void = 0 as *mut libc::c_void;
-    if (*end as *mut libc::c_char).offset_from(*start as *mut libc::c_char) as libc::c_long
+    if (*end as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
         >= (2147483647 as libc::c_int / 2 as libc::c_int) as libc::c_long
     {
         return 0 as libc::c_int;
     }
     new_start = yaml_realloc(
         *start,
-        ((*end as *mut libc::c_char).offset_from(*start as *mut libc::c_char) as libc::c_long
+        ((*end as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
             * 2 as libc::c_int as libc::c_long) as size_t,
     );
     if new_start.is_null() {
         return 0 as libc::c_int;
     }
     *top = (new_start as *mut libc::c_char).offset(
-        (*top as *mut libc::c_char).offset_from(*start as *mut libc::c_char) as libc::c_long
+        (*top as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
             as isize,
     ) as *mut libc::c_void;
     *end = (new_start as *mut libc::c_char).offset(
-        ((*end as *mut libc::c_char).offset_from(*start as *mut libc::c_char) as libc::c_long
+        ((*end as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
             * 2 as libc::c_int as libc::c_long) as isize,
     ) as *mut libc::c_void;
     *start = new_start;
@@ -151,22 +153,22 @@ pub unsafe extern "C" fn yaml_queue_extend(
     if *start == *head && *tail == *end {
         let mut new_start: *mut libc::c_void = yaml_realloc(
             *start,
-            ((*end as *mut libc::c_char).offset_from(*start as *mut libc::c_char) as libc::c_long
+            ((*end as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
                 * 2 as libc::c_int as libc::c_long) as size_t,
         );
         if new_start.is_null() {
             return 0 as libc::c_int;
         }
         *head = (new_start as *mut libc::c_char).offset(
-            (*head as *mut libc::c_char).offset_from(*start as *mut libc::c_char) as libc::c_long
+            (*head as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
                 as isize,
         ) as *mut libc::c_void;
         *tail = (new_start as *mut libc::c_char).offset(
-            (*tail as *mut libc::c_char).offset_from(*start as *mut libc::c_char) as libc::c_long
+            (*tail as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
                 as isize,
         ) as *mut libc::c_void;
         *end = (new_start as *mut libc::c_char).offset(
-            ((*end as *mut libc::c_char).offset_from(*start as *mut libc::c_char) as libc::c_long
+            ((*end as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
                 * 2 as libc::c_int as libc::c_long) as isize,
         ) as *mut libc::c_void;
         *start = new_start;
@@ -176,12 +178,12 @@ pub unsafe extern "C" fn yaml_queue_extend(
             memmove(
                 *start,
                 *head,
-                (*tail as *mut libc::c_char).offset_from(*head as *mut libc::c_char) as libc::c_long
-                    as libc::c_ulong,
+                (*tail as *mut libc::c_char).c_offset_from(*head as *mut libc::c_char)
+                    as libc::c_long as libc::c_ulong,
             );
         }
         *tail = (*start as *mut libc::c_char).offset(
-            (*tail as *mut libc::c_char).offset_from(*head as *mut libc::c_char) as libc::c_long
+            (*tail as *mut libc::c_char).c_offset_from(*head as *mut libc::c_char) as libc::c_long
                 as isize,
         ) as *mut libc::c_void;
         *head = *start;
@@ -512,10 +514,10 @@ unsafe extern "C" fn yaml_string_read_handler(
         return 1 as libc::c_int;
     }
     if size
-        > ((*parser).input.string.end).offset_from((*parser).input.string.current) as libc::c_long
+        > ((*parser).input.string.end).c_offset_from((*parser).input.string.current) as libc::c_long
             as size_t
     {
-        size = ((*parser).input.string.end).offset_from((*parser).input.string.current)
+        size = ((*parser).input.string.end).c_offset_from((*parser).input.string.current)
             as libc::c_long as size_t;
     }
     memcpy(
@@ -2638,7 +2640,7 @@ pub unsafe extern "C" fn yaml_document_add_scalar(
                         0 as libc::c_int
                     } == 0)
                     {
-                        return ((*document).nodes.top).offset_from((*document).nodes.start)
+                        return ((*document).nodes.top).c_offset_from((*document).nodes.start)
                             as libc::c_long as libc::c_int;
                     }
                 }
@@ -2763,7 +2765,7 @@ pub unsafe extern "C" fn yaml_document_add_sequence(
                     0 as libc::c_int
                 } == 0)
                 {
-                    return ((*document).nodes.top).offset_from((*document).nodes.start)
+                    return ((*document).nodes.top).c_offset_from((*document).nodes.start)
                         as libc::c_long as libc::c_int;
                 }
             }
@@ -2890,7 +2892,7 @@ pub unsafe extern "C" fn yaml_document_add_mapping(
                     0 as libc::c_int
                 } == 0)
                 {
-                    return ((*document).nodes.top).offset_from((*document).nodes.start)
+                    return ((*document).nodes.top).c_offset_from((*document).nodes.start)
                         as libc::c_long as libc::c_int;
                 }
             }

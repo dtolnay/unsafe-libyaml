@@ -3,6 +3,7 @@ use crate::externs::*;
 use crate::libc;
 use crate::parser::yaml_parser_parse;
 use crate::yaml::*;
+use crate::PointerExt;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct loader_ctx {
@@ -424,7 +425,7 @@ unsafe extern "C" fn yaml_parser_load_node_add(
     match (*parent).type_0 as libc::c_uint {
         2 => {
             if if (((*parent).data.sequence.items.top)
-                .offset_from((*parent).data.sequence.items.start)
+                .c_offset_from((*parent).data.sequence.items.start)
                 as libc::c_long)
                 < (2147483647 as libc::c_int - 1 as libc::c_int) as libc::c_long
             {
@@ -479,7 +480,7 @@ unsafe extern "C" fn yaml_parser_load_node_add(
                     pair.key = index;
                     pair.value = 0 as libc::c_int;
                     if if (((*parent).data.mapping.pairs.top)
-                        .offset_from((*parent).data.mapping.pairs.start)
+                        .c_offset_from((*parent).data.mapping.pairs.start)
                         as libc::c_long)
                         < (2147483647 as libc::c_int - 1 as libc::c_int) as libc::c_long
                     {
@@ -586,7 +587,7 @@ unsafe extern "C" fn yaml_parser_load_scalar(
     };
     let mut index: libc::c_int = 0;
     let mut tag: *mut yaml_char_t = (*event).data.scalar.tag;
-    if !(if (((*(*parser).document).nodes.top).offset_from((*(*parser).document).nodes.start)
+    if !(if (((*(*parser).document).nodes.top).c_offset_from((*(*parser).document).nodes.start)
         as libc::c_long)
         < (2147483647 as libc::c_int - 1 as libc::c_int) as libc::c_long
     {
@@ -650,7 +651,7 @@ unsafe extern "C" fn yaml_parser_load_scalar(
                 } == 0)
                 {
                     index = ((*(*parser).document).nodes.top)
-                        .offset_from((*(*parser).document).nodes.start)
+                        .c_offset_from((*(*parser).document).nodes.start)
                         as libc::c_long as libc::c_int;
                     if yaml_parser_register_anchor(parser, index, (*event).data.scalar.anchor) == 0
                     {
@@ -703,7 +704,7 @@ unsafe extern "C" fn yaml_parser_load_sequence(
     };
     let mut index: libc::c_int = 0;
     let mut tag: *mut yaml_char_t = (*event).data.sequence_start.tag;
-    if !(if (((*(*parser).document).nodes.top).offset_from((*(*parser).document).nodes.start)
+    if !(if (((*(*parser).document).nodes.top).c_offset_from((*(*parser).document).nodes.start)
         as libc::c_long)
         < (2147483647 as libc::c_int - 1 as libc::c_int) as libc::c_long
     {
@@ -781,7 +782,7 @@ unsafe extern "C" fn yaml_parser_load_sequence(
                     } == 0)
                     {
                         index = ((*(*parser).document).nodes.top)
-                            .offset_from((*(*parser).document).nodes.start)
+                            .c_offset_from((*(*parser).document).nodes.start)
                             as libc::c_long as libc::c_int;
                         if yaml_parser_register_anchor(
                             parser,
@@ -794,7 +795,7 @@ unsafe extern "C" fn yaml_parser_load_sequence(
                         if yaml_parser_load_node_add(parser, ctx, index) == 0 {
                             return 0 as libc::c_int;
                         }
-                        if if (((*ctx).top).offset_from((*ctx).start) as libc::c_long)
+                        if if (((*ctx).top).c_offset_from((*ctx).start) as libc::c_long)
                             < (2147483647 as libc::c_int - 1 as libc::c_int) as libc::c_long
                         {
                             1 as libc::c_int
@@ -841,7 +842,7 @@ unsafe extern "C" fn yaml_parser_load_sequence_end(
     mut ctx: *mut loader_ctx,
 ) -> libc::c_int {
     let mut index: libc::c_int = 0;
-    if ((*ctx).top).offset_from((*ctx).start) as libc::c_long > 0 as libc::c_int as libc::c_long {
+    if ((*ctx).top).c_offset_from((*ctx).start) as libc::c_long > 0 as libc::c_int as libc::c_long {
     } else {
         __assert_fail(
             b"((*ctx).top - (*ctx).start) > 0\0" as *const u8 as *const libc::c_char,
@@ -919,7 +920,7 @@ unsafe extern "C" fn yaml_parser_load_mapping(
     };
     let mut index: libc::c_int = 0;
     let mut tag: *mut yaml_char_t = (*event).data.mapping_start.tag;
-    if !(if (((*(*parser).document).nodes.top).offset_from((*(*parser).document).nodes.start)
+    if !(if (((*(*parser).document).nodes.top).c_offset_from((*(*parser).document).nodes.start)
         as libc::c_long)
         < (2147483647 as libc::c_int - 1 as libc::c_int) as libc::c_long
     {
@@ -997,7 +998,7 @@ unsafe extern "C" fn yaml_parser_load_mapping(
                     } == 0)
                     {
                         index = ((*(*parser).document).nodes.top)
-                            .offset_from((*(*parser).document).nodes.start)
+                            .c_offset_from((*(*parser).document).nodes.start)
                             as libc::c_long as libc::c_int;
                         if yaml_parser_register_anchor(
                             parser,
@@ -1010,7 +1011,7 @@ unsafe extern "C" fn yaml_parser_load_mapping(
                         if yaml_parser_load_node_add(parser, ctx, index) == 0 {
                             return 0 as libc::c_int;
                         }
-                        if if (((*ctx).top).offset_from((*ctx).start) as libc::c_long)
+                        if if (((*ctx).top).c_offset_from((*ctx).start) as libc::c_long)
                             < (2147483647 as libc::c_int - 1 as libc::c_int) as libc::c_long
                         {
                             1 as libc::c_int
@@ -1057,7 +1058,7 @@ unsafe extern "C" fn yaml_parser_load_mapping_end(
     mut ctx: *mut loader_ctx,
 ) -> libc::c_int {
     let mut index: libc::c_int = 0;
-    if ((*ctx).top).offset_from((*ctx).start) as libc::c_long > 0 as libc::c_int as libc::c_long {
+    if ((*ctx).top).c_offset_from((*ctx).start) as libc::c_long > 0 as libc::c_int as libc::c_long {
     } else {
         __assert_fail(
             b"((*ctx).top - (*ctx).start) > 0\0" as *const u8 as *const libc::c_char,

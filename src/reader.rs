@@ -1,6 +1,7 @@
 use crate::externs::*;
 use crate::libc;
 use crate::yaml::*;
+use crate::PointerExt;
 unsafe extern "C" fn yaml_parser_set_reader_error(
     mut parser: *mut yaml_parser_t,
     mut problem: *const libc::c_char,
@@ -16,14 +17,14 @@ unsafe extern "C" fn yaml_parser_set_reader_error(
 }
 unsafe extern "C" fn yaml_parser_determine_encoding(mut parser: *mut yaml_parser_t) -> libc::c_int {
     while (*parser).eof == 0
-        && (((*parser).raw_buffer.last).offset_from((*parser).raw_buffer.pointer) as libc::c_long)
+        && (((*parser).raw_buffer.last).c_offset_from((*parser).raw_buffer.pointer) as libc::c_long)
             < 3 as libc::c_int as libc::c_long
     {
         if yaml_parser_update_raw_buffer(parser) == 0 {
             return 0 as libc::c_int;
         }
     }
-    if ((*parser).raw_buffer.last).offset_from((*parser).raw_buffer.pointer) as libc::c_long
+    if ((*parser).raw_buffer.last).c_offset_from((*parser).raw_buffer.pointer) as libc::c_long
         >= 2 as libc::c_int as libc::c_long
         && memcmp(
             (*parser).raw_buffer.pointer as *const libc::c_void,
@@ -37,7 +38,8 @@ unsafe extern "C" fn yaml_parser_determine_encoding(mut parser: *mut yaml_parser
         let ref mut fresh2 = (*parser).offset;
         *fresh2 = (*fresh2 as libc::c_ulong).wrapping_add(2 as libc::c_int as libc::c_ulong)
             as size_t as size_t;
-    } else if ((*parser).raw_buffer.last).offset_from((*parser).raw_buffer.pointer) as libc::c_long
+    } else if ((*parser).raw_buffer.last).c_offset_from((*parser).raw_buffer.pointer)
+        as libc::c_long
         >= 2 as libc::c_int as libc::c_long
         && memcmp(
             (*parser).raw_buffer.pointer as *const libc::c_void,
@@ -51,7 +53,8 @@ unsafe extern "C" fn yaml_parser_determine_encoding(mut parser: *mut yaml_parser
         let ref mut fresh4 = (*parser).offset;
         *fresh4 = (*fresh4 as libc::c_ulong).wrapping_add(2 as libc::c_int as libc::c_ulong)
             as size_t as size_t;
-    } else if ((*parser).raw_buffer.last).offset_from((*parser).raw_buffer.pointer) as libc::c_long
+    } else if ((*parser).raw_buffer.last).c_offset_from((*parser).raw_buffer.pointer)
+        as libc::c_long
         >= 3 as libc::c_int as libc::c_long
         && memcmp(
             (*parser).raw_buffer.pointer as *const libc::c_void,
@@ -86,13 +89,13 @@ unsafe extern "C" fn yaml_parser_update_raw_buffer(mut parser: *mut yaml_parser_
         memmove(
             (*parser).raw_buffer.start as *mut libc::c_void,
             (*parser).raw_buffer.pointer as *const libc::c_void,
-            ((*parser).raw_buffer.last).offset_from((*parser).raw_buffer.pointer) as libc::c_long
+            ((*parser).raw_buffer.last).c_offset_from((*parser).raw_buffer.pointer) as libc::c_long
                 as libc::c_ulong,
         );
     }
     let ref mut fresh7 = (*parser).raw_buffer.last;
     *fresh7 = (*fresh7).offset(
-        -(((*parser).raw_buffer.pointer).offset_from((*parser).raw_buffer.start) as libc::c_long
+        -(((*parser).raw_buffer.pointer).c_offset_from((*parser).raw_buffer.start) as libc::c_long
             as isize),
     );
     let ref mut fresh8 = (*parser).raw_buffer.pointer;
@@ -100,7 +103,8 @@ unsafe extern "C" fn yaml_parser_update_raw_buffer(mut parser: *mut yaml_parser_
     if ((*parser).read_handler).expect("non-null function pointer")(
         (*parser).read_handler_data,
         (*parser).raw_buffer.last,
-        ((*parser).raw_buffer.end).offset_from((*parser).raw_buffer.last) as libc::c_long as size_t,
+        ((*parser).raw_buffer.end).c_offset_from((*parser).raw_buffer.last) as libc::c_long
+            as size_t,
         &mut size_read,
     ) == 0
     {
@@ -150,8 +154,8 @@ pub unsafe extern "C" fn yaml_parser_update_buffer(
     if (*parser).buffer.start < (*parser).buffer.pointer
         && (*parser).buffer.pointer < (*parser).buffer.last
     {
-        let mut size: size_t =
-            ((*parser).buffer.last).offset_from((*parser).buffer.pointer) as libc::c_long as size_t;
+        let mut size: size_t = ((*parser).buffer.last).c_offset_from((*parser).buffer.pointer)
+            as libc::c_long as size_t;
         memmove(
             (*parser).buffer.start as *mut libc::c_void,
             (*parser).buffer.pointer as *const libc::c_void,
@@ -184,7 +188,7 @@ pub unsafe extern "C" fn yaml_parser_update_buffer(
             let mut high: libc::c_int = 0;
             let mut k: size_t = 0;
             let mut raw_unread: size_t = ((*parser).raw_buffer.last)
-                .offset_from((*parser).raw_buffer.pointer)
+                .c_offset_from((*parser).raw_buffer.pointer)
                 as libc::c_long as size_t;
             match (*parser).encoding as libc::c_uint {
                 1 => {

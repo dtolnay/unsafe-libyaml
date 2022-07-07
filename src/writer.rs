@@ -1,6 +1,7 @@
 use crate::externs::__assert_fail;
 use crate::libc;
 use crate::yaml::*;
+use crate::PointerExt;
 unsafe extern "C" fn yaml_emitter_set_writer_error(
     mut emitter: *mut yaml_emitter_t,
     mut problem: *const libc::c_char,
@@ -61,7 +62,8 @@ pub unsafe extern "C" fn yaml_emitter_flush(mut emitter: *mut yaml_emitter_t) ->
         if ((*emitter).write_handler).expect("non-null function pointer")(
             (*emitter).write_handler_data,
             (*emitter).buffer.start,
-            ((*emitter).buffer.last).offset_from((*emitter).buffer.start) as libc::c_long as size_t,
+            ((*emitter).buffer.last).c_offset_from((*emitter).buffer.start) as libc::c_long
+                as size_t,
         ) != 0
         {
             let ref mut fresh3 = (*emitter).buffer.last;
@@ -154,7 +156,7 @@ pub unsafe extern "C" fn yaml_emitter_flush(mut emitter: *mut yaml_emitter_t) ->
     if ((*emitter).write_handler).expect("non-null function pointer")(
         (*emitter).write_handler_data,
         (*emitter).raw_buffer.start,
-        ((*emitter).raw_buffer.last).offset_from((*emitter).raw_buffer.start) as libc::c_long
+        ((*emitter).raw_buffer.last).c_offset_from((*emitter).raw_buffer.start) as libc::c_long
             as size_t,
     ) != 0
     {
