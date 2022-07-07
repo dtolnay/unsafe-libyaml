@@ -2,7 +2,7 @@ use crate::{
     libc, size_t, yaml_emitter_t, PointerExt, YAML_UTF16LE_ENCODING, YAML_UTF8_ENCODING,
     YAML_WRITER_ERROR,
 };
-use std::ptr::addr_of_mut;
+use core::ptr::addr_of_mut;
 unsafe fn yaml_emitter_set_writer_error(
     mut emitter: *mut yaml_emitter_t,
     problem: *const libc::c_char,

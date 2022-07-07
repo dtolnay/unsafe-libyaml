@@ -19,7 +19,7 @@ use crate::{
     YAML_SINGLE_QUOTED_SCALAR_STYLE, YAML_STREAM_END_EVENT, YAML_STREAM_START_EVENT,
     YAML_UTF8_ENCODING,
 };
-use std::ptr::{self, addr_of_mut};
+use core::ptr::{self, addr_of_mut};
 unsafe fn yaml_emitter_set_emitter_error(
     mut emitter: *mut yaml_emitter_t,
     problem: *const libc::c_char,

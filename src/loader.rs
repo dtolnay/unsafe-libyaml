@@ -8,8 +8,8 @@ use crate::{
     YAML_MAPPING_NODE, YAML_MEMORY_ERROR, YAML_NO_NODE, YAML_SCALAR_NODE, YAML_SEQUENCE_NODE,
     YAML_STREAM_END_EVENT, YAML_STREAM_START_EVENT,
 };
-use std::mem::{size_of, MaybeUninit};
-use std::ptr::{self, addr_of_mut};
+use core::mem::{size_of, MaybeUninit};
+use core::ptr::{self, addr_of_mut};
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]

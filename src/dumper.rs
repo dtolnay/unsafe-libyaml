@@ -8,10 +8,10 @@ use crate::yaml::{
     YAML_STREAM_START_EVENT,
 };
 use crate::{libc, yaml_document_delete, yaml_emitter_emit, yaml_free, yaml_malloc, PointerExt};
+use core::mem::{size_of, MaybeUninit};
+use core::ptr::{self, addr_of_mut};
+use core::slice;
 use std::io::Write;
-use std::mem::{size_of, MaybeUninit};
-use std::ptr::{self, addr_of_mut};
-use std::slice;
 pub unsafe fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> libc::c_int {
     let mut event = MaybeUninit::<yaml_event_t>::uninit();
     let event = event.as_mut_ptr();

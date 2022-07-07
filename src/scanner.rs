@@ -15,8 +15,8 @@ use crate::{
     YAML_STREAM_START_TOKEN, YAML_TAG_DIRECTIVE_TOKEN, YAML_TAG_TOKEN, YAML_VALUE_TOKEN,
     YAML_VERSION_DIRECTIVE_TOKEN,
 };
-use std::mem::{size_of, MaybeUninit};
-use std::ptr::{self, addr_of_mut};
+use core::mem::{size_of, MaybeUninit};
+use core::ptr::{self, addr_of_mut};
 pub unsafe fn yaml_parser_scan(
     mut parser: *mut yaml_parser_t,
     token: *mut yaml_token_t,

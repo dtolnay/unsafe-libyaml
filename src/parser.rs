@@ -26,8 +26,8 @@ use crate::{
     YAML_STREAM_END_TOKEN, YAML_STREAM_START_EVENT, YAML_STREAM_START_TOKEN,
     YAML_TAG_DIRECTIVE_TOKEN, YAML_TAG_TOKEN, YAML_VALUE_TOKEN, YAML_VERSION_DIRECTIVE_TOKEN,
 };
-use std::mem::size_of;
-use std::ptr::{self, addr_of_mut};
+use core::mem::size_of;
+use core::ptr::{self, addr_of_mut};
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
