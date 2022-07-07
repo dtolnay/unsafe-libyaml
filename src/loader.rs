@@ -4,6 +4,7 @@ use crate::libc;
 use crate::parser::yaml_parser_parse;
 use crate::yaml::*;
 use crate::PointerExt;
+use std::ptr;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct loader_ctx {
@@ -118,7 +119,7 @@ pub unsafe extern "C" fn yaml_parser_load(
                         if !(yaml_parser_load_document(parser, &mut event) == 0) {
                             yaml_parser_delete_aliases(parser);
                             let fresh7 = &mut (*parser).document;
-                            *fresh7 = 0 as *mut yaml_document_t;
+                            *fresh7 = ptr::null_mut::<yaml_document_t>();
                             return 1 as libc::c_int;
                         }
                     }
@@ -129,7 +130,7 @@ pub unsafe extern "C" fn yaml_parser_load(
     yaml_parser_delete_aliases(parser);
     yaml_document_delete(document);
     let fresh8 = &mut (*parser).document;
-    *fresh8 = 0 as *mut yaml_document_t;
+    *fresh8 = ptr::null_mut::<yaml_document_t>();
     0 as libc::c_int
 }
 unsafe extern "C" fn yaml_parser_set_composer_error(
@@ -167,7 +168,7 @@ unsafe extern "C" fn yaml_parser_delete_aliases(parser: *mut yaml_parser_t) {
     }
     yaml_free((*parser).aliases.start as *mut libc::c_void);
     let fresh13 = &mut (*parser).aliases.end;
-    *fresh13 = 0 as *mut yaml_alias_data_t;
+    *fresh13 = ptr::null_mut::<yaml_alias_data_t>();
     let fresh14 = &mut (*parser).aliases.top;
     *fresh14 = *fresh13;
     let fresh15 = &mut (*parser).aliases.start;
@@ -179,9 +180,9 @@ unsafe extern "C" fn yaml_parser_load_document(
 ) -> libc::c_int {
     let mut ctx: loader_ctx = {
         let init = loader_ctx {
-            start: 0 as *mut libc::c_int,
-            end: 0 as *mut libc::c_int,
-            top: 0 as *mut libc::c_int,
+            start: ptr::null_mut::<libc::c_int>(),
+            end: ptr::null_mut::<libc::c_int>(),
+            top: ptr::null_mut::<libc::c_int>(),
         };
         init
     };
@@ -213,13 +214,13 @@ unsafe extern "C" fn yaml_parser_load_document(
     }
     if yaml_parser_load_nodes(parser, &mut ctx) == 0 {
         yaml_free(ctx.start as *mut libc::c_void);
-        ctx.end = 0 as *mut libc::c_int;
+        ctx.end = ptr::null_mut::<libc::c_int>();
         ctx.top = ctx.end;
         ctx.start = ctx.top;
         return 0 as libc::c_int;
     }
     yaml_free(ctx.start as *mut libc::c_void);
-    ctx.end = 0 as *mut libc::c_int;
+    ctx.end = ptr::null_mut::<libc::c_int>();
     ctx.top = ctx.end;
     ctx.start = ctx.top;
     1 as libc::c_int
@@ -301,7 +302,7 @@ unsafe extern "C" fn yaml_parser_register_anchor(
     anchor: *mut yaml_char_t,
 ) -> libc::c_int {
     let mut data: yaml_alias_data_t = yaml_alias_data_t {
-        anchor: 0 as *mut yaml_char_t,
+        anchor: ptr::null_mut::<yaml_char_t>(),
         index: 0,
         mark: yaml_mark_t {
             index: 0,
@@ -506,10 +507,10 @@ unsafe extern "C" fn yaml_parser_load_scalar(
     let current_block: u64;
     let mut node: yaml_node_t = yaml_node_t {
         type_0: YAML_NO_NODE,
-        tag: 0 as *mut yaml_char_t,
+        tag: ptr::null_mut::<yaml_char_t>(),
         data: unnamed_yaml_node_s_data {
             scalar: unnamed_yaml_node_s_data_scalar {
-                value: 0 as *mut yaml_char_t,
+                value: ptr::null_mut::<yaml_char_t>(),
                 length: 0,
                 style: YAML_ANY_SCALAR_STYLE,
             },
@@ -615,10 +616,10 @@ unsafe extern "C" fn yaml_parser_load_sequence(
     let current_block: u64;
     let mut node: yaml_node_t = yaml_node_t {
         type_0: YAML_NO_NODE,
-        tag: 0 as *mut yaml_char_t,
+        tag: ptr::null_mut::<yaml_char_t>(),
         data: unnamed_yaml_node_s_data {
             scalar: unnamed_yaml_node_s_data_scalar {
-                value: 0 as *mut yaml_char_t,
+                value: ptr::null_mut::<yaml_char_t>(),
                 length: 0,
                 style: YAML_ANY_SCALAR_STYLE,
             },
@@ -636,9 +637,9 @@ unsafe extern "C" fn yaml_parser_load_sequence(
     };
     let mut items: Unnamed_36 = {
         let init = Unnamed_36 {
-            start: 0 as *mut yaml_node_item_t,
-            end: 0 as *mut yaml_node_item_t,
-            top: 0 as *mut yaml_node_item_t,
+            start: ptr::null_mut::<yaml_node_item_t>(),
+            end: ptr::null_mut::<yaml_node_item_t>(),
+            top: ptr::null_mut::<yaml_node_item_t>(),
         };
         init
     };
@@ -804,10 +805,10 @@ unsafe extern "C" fn yaml_parser_load_mapping(
     let current_block: u64;
     let mut node: yaml_node_t = yaml_node_t {
         type_0: YAML_NO_NODE,
-        tag: 0 as *mut yaml_char_t,
+        tag: ptr::null_mut::<yaml_char_t>(),
         data: unnamed_yaml_node_s_data {
             scalar: unnamed_yaml_node_s_data_scalar {
-                value: 0 as *mut yaml_char_t,
+                value: ptr::null_mut::<yaml_char_t>(),
                 length: 0,
                 style: YAML_ANY_SCALAR_STYLE,
             },
@@ -825,9 +826,9 @@ unsafe extern "C" fn yaml_parser_load_mapping(
     };
     let mut pairs: Unnamed_35 = {
         let init = Unnamed_35 {
-            start: 0 as *mut yaml_node_pair_t,
-            end: 0 as *mut yaml_node_pair_t,
-            top: 0 as *mut yaml_node_pair_t,
+            start: ptr::null_mut::<yaml_node_pair_t>(),
+            end: ptr::null_mut::<yaml_node_pair_t>(),
+            top: ptr::null_mut::<yaml_node_pair_t>(),
         };
         init
     };
