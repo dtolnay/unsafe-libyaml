@@ -293,11 +293,11 @@ unsafe extern "C" fn yaml_emitter_delete_document_and_anchors(mut emitter: *mut 
         return;
     }
     index = 0 as libc::c_int;
-    while ((*(*emitter).document).nodes.start).offset(index as isize)
+    while ((*(*emitter).document).nodes.start).c_offset(index as isize)
         < (*(*emitter).document).nodes.top
     {
-        let mut node: yaml_node_t = *((*(*emitter).document).nodes.start).offset(index as isize);
-        if (*((*emitter).anchors).offset(index as isize)).serialized == 0 {
+        let mut node: yaml_node_t = *((*(*emitter).document).nodes.start).c_offset(index as isize);
+        if (*((*emitter).anchors).c_offset(index as isize)).serialized == 0 {
             yaml_free(node.tag as *mut libc::c_void);
             if node.type_0 as libc::c_uint == YAML_SCALAR_NODE as libc::c_int as libc::c_uint {
                 yaml_free(node.data.scalar.value as *mut libc::c_void);
@@ -336,14 +336,14 @@ unsafe extern "C" fn yaml_emitter_anchor_node(
     mut index: libc::c_int,
 ) {
     let mut node: *mut yaml_node_t = ((*(*emitter).document).nodes.start)
-        .offset(index as isize)
-        .offset(-(1 as libc::c_int as isize));
+        .c_offset(index as isize)
+        .c_offset(-(1 as libc::c_int as isize));
     let mut item: *mut yaml_node_item_t = 0 as *mut yaml_node_item_t;
     let mut pair: *mut yaml_node_pair_t = 0 as *mut yaml_node_pair_t;
     let ref mut fresh8 =
-        (*((*emitter).anchors).offset((index - 1 as libc::c_int) as isize)).references;
+        (*((*emitter).anchors).c_offset((index - 1 as libc::c_int) as isize)).references;
     *fresh8 += 1;
-    if (*((*emitter).anchors).offset((index - 1 as libc::c_int) as isize)).references
+    if (*((*emitter).anchors).c_offset((index - 1 as libc::c_int) as isize)).references
         == 1 as libc::c_int
     {
         match (*node).type_0 as libc::c_uint {
@@ -351,7 +351,7 @@ unsafe extern "C" fn yaml_emitter_anchor_node(
                 item = (*node).data.sequence.items.start;
                 while item < (*node).data.sequence.items.top {
                     yaml_emitter_anchor_node(emitter, *item);
-                    item = item.offset(1);
+                    item = item.c_offset(1);
                 }
             }
             3 => {
@@ -359,17 +359,17 @@ unsafe extern "C" fn yaml_emitter_anchor_node(
                 while pair < (*node).data.mapping.pairs.top {
                     yaml_emitter_anchor_node(emitter, (*pair).key);
                     yaml_emitter_anchor_node(emitter, (*pair).value);
-                    pair = pair.offset(1);
+                    pair = pair.c_offset(1);
                 }
             }
             _ => {}
         }
-    } else if (*((*emitter).anchors).offset((index - 1 as libc::c_int) as isize)).references
+    } else if (*((*emitter).anchors).c_offset((index - 1 as libc::c_int) as isize)).references
         == 2 as libc::c_int
     {
         let ref mut fresh9 = (*emitter).last_anchor_id;
         *fresh9 += 1;
-        (*((*emitter).anchors).offset((index - 1 as libc::c_int) as isize)).anchor = *fresh9;
+        (*((*emitter).anchors).c_offset((index - 1 as libc::c_int) as isize)).anchor = *fresh9;
     }
 }
 unsafe extern "C" fn yaml_emitter_generate_anchor(
@@ -389,10 +389,10 @@ unsafe extern "C" fn yaml_emitter_dump_node(
     mut index: libc::c_int,
 ) -> libc::c_int {
     let mut node: *mut yaml_node_t = ((*(*emitter).document).nodes.start)
-        .offset(index as isize)
-        .offset(-(1 as libc::c_int as isize));
+        .c_offset(index as isize)
+        .c_offset(-(1 as libc::c_int as isize));
     let mut anchor_id: libc::c_int =
-        (*((*emitter).anchors).offset((index - 1 as libc::c_int) as isize)).anchor;
+        (*((*emitter).anchors).c_offset((index - 1 as libc::c_int) as isize)).anchor;
     let mut anchor: *mut yaml_char_t = 0 as *mut yaml_char_t;
     if anchor_id != 0 {
         anchor = yaml_emitter_generate_anchor(emitter, anchor_id);
@@ -400,10 +400,10 @@ unsafe extern "C" fn yaml_emitter_dump_node(
             return 0 as libc::c_int;
         }
     }
-    if (*((*emitter).anchors).offset((index - 1 as libc::c_int) as isize)).serialized != 0 {
+    if (*((*emitter).anchors).c_offset((index - 1 as libc::c_int) as isize)).serialized != 0 {
         return yaml_emitter_dump_alias(emitter, anchor);
     }
-    (*((*emitter).anchors).offset((index - 1 as libc::c_int) as isize)).serialized =
+    (*((*emitter).anchors).c_offset((index - 1 as libc::c_int) as isize)).serialized =
         1 as libc::c_int;
     match (*node).type_0 as libc::c_uint {
         1 => return yaml_emitter_dump_scalar(emitter, node, anchor),
@@ -576,7 +576,7 @@ unsafe extern "C" fn yaml_emitter_dump_sequence(
         if yaml_emitter_dump_node(emitter, *item) == 0 {
             return 0 as libc::c_int;
         }
-        item = item.offset(1);
+        item = item.c_offset(1);
     }
     memset(
         &mut event as *mut yaml_event_t as *mut libc::c_void,
@@ -650,7 +650,7 @@ unsafe extern "C" fn yaml_emitter_dump_mapping(
         if yaml_emitter_dump_node(emitter, (*pair).value) == 0 {
             return 0 as libc::c_int;
         }
-        pair = pair.offset(1);
+        pair = pair.c_offset(1);
     }
     memset(
         &mut event as *mut yaml_event_t as *mut libc::c_void,

@@ -73,13 +73,13 @@ pub unsafe extern "C" fn yaml_string_extend(
         return 0 as libc::c_int;
     }
     memset(
-        new_start.offset((*end).c_offset_from(*start) as libc::c_long as isize)
+        new_start.c_offset((*end).c_offset_from(*start) as libc::c_long as isize)
             as *mut libc::c_void,
         0 as libc::c_int,
         (*end).c_offset_from(*start) as libc::c_long as libc::c_ulong,
     );
-    *pointer = new_start.offset((*pointer).c_offset_from(*start) as libc::c_long as isize);
-    *end = new_start.offset(
+    *pointer = new_start.c_offset((*pointer).c_offset_from(*start) as libc::c_long as isize);
+    *end = new_start.c_offset(
         ((*end).c_offset_from(*start) as libc::c_long * 2 as libc::c_int as libc::c_long) as isize,
     );
     *start = new_start;
@@ -109,7 +109,8 @@ pub unsafe extern "C" fn yaml_string_join(
         *b_start as *const libc::c_void,
         (*b_pointer).c_offset_from(*b_start) as libc::c_long as libc::c_ulong,
     );
-    *a_pointer = (*a_pointer).offset((*b_pointer).c_offset_from(*b_start) as libc::c_long as isize);
+    *a_pointer =
+        (*a_pointer).c_offset((*b_pointer).c_offset_from(*b_start) as libc::c_long as isize);
     return 1 as libc::c_int;
 }
 #[no_mangle]
@@ -132,11 +133,11 @@ pub unsafe extern "C" fn yaml_stack_extend(
     if new_start.is_null() {
         return 0 as libc::c_int;
     }
-    *top = (new_start as *mut libc::c_char).offset(
+    *top = (new_start as *mut libc::c_char).c_offset(
         (*top as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
             as isize,
     ) as *mut libc::c_void;
-    *end = (new_start as *mut libc::c_char).offset(
+    *end = (new_start as *mut libc::c_char).c_offset(
         ((*end as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
             * 2 as libc::c_int as libc::c_long) as isize,
     ) as *mut libc::c_void;
@@ -159,15 +160,15 @@ pub unsafe extern "C" fn yaml_queue_extend(
         if new_start.is_null() {
             return 0 as libc::c_int;
         }
-        *head = (new_start as *mut libc::c_char).offset(
+        *head = (new_start as *mut libc::c_char).c_offset(
             (*head as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
                 as isize,
         ) as *mut libc::c_void;
-        *tail = (new_start as *mut libc::c_char).offset(
+        *tail = (new_start as *mut libc::c_char).c_offset(
             (*tail as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
                 as isize,
         ) as *mut libc::c_void;
-        *end = (new_start as *mut libc::c_char).offset(
+        *end = (new_start as *mut libc::c_char).c_offset(
             ((*end as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
                 * 2 as libc::c_int as libc::c_long) as isize,
         ) as *mut libc::c_void;
@@ -182,7 +183,7 @@ pub unsafe extern "C" fn yaml_queue_extend(
                     as libc::c_long as libc::c_ulong,
             );
         }
-        *tail = (*start as *mut libc::c_char).offset(
+        *tail = (*start as *mut libc::c_char).c_offset(
             (*tail as *mut libc::c_char).c_offset_from(*head as *mut libc::c_char) as libc::c_long
                 as isize,
         ) as *mut libc::c_void;
@@ -217,7 +218,7 @@ pub unsafe extern "C" fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) 
         let ref mut fresh2 = (*parser).raw_buffer.last;
         *fresh2 = *fresh1;
         let ref mut fresh3 = (*parser).raw_buffer.end;
-        *fresh3 = ((*parser).raw_buffer.start).offset(16384 as libc::c_int as isize);
+        *fresh3 = ((*parser).raw_buffer.start).c_offset(16384 as libc::c_int as isize);
         1 as libc::c_int
     } else {
         (*parser).error = YAML_MEMORY_ERROR;
@@ -233,8 +234,8 @@ pub unsafe extern "C" fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) 
             let ref mut fresh6 = (*parser).buffer.last;
             *fresh6 = *fresh5;
             let ref mut fresh7 = (*parser).buffer.end;
-            *fresh7 =
-                ((*parser).buffer.start).offset((16384 as libc::c_int * 3 as libc::c_int) as isize);
+            *fresh7 = ((*parser).buffer.start)
+                .c_offset((16384 as libc::c_int * 3 as libc::c_int) as isize);
             1 as libc::c_int
         } else {
             (*parser).error = YAML_MEMORY_ERROR;
@@ -252,7 +253,7 @@ pub unsafe extern "C" fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) 
                 let ref mut fresh10 = (*parser).tokens.head;
                 *fresh10 = *fresh9;
                 let ref mut fresh11 = (*parser).tokens.end;
-                *fresh11 = ((*parser).tokens.start).offset(16 as libc::c_int as isize);
+                *fresh11 = ((*parser).tokens.start).c_offset(16 as libc::c_int as isize);
                 1 as libc::c_int
             } else {
                 (*parser).error = YAML_MEMORY_ERROR;
@@ -268,7 +269,7 @@ pub unsafe extern "C" fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) 
                     let ref mut fresh13 = (*parser).indents.top;
                     *fresh13 = (*parser).indents.start;
                     let ref mut fresh14 = (*parser).indents.end;
-                    *fresh14 = ((*parser).indents.start).offset(16 as libc::c_int as isize);
+                    *fresh14 = ((*parser).indents.start).c_offset(16 as libc::c_int as isize);
                     1 as libc::c_int
                 } else {
                     (*parser).error = YAML_MEMORY_ERROR;
@@ -284,7 +285,8 @@ pub unsafe extern "C" fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) 
                         let ref mut fresh16 = (*parser).simple_keys.top;
                         *fresh16 = (*parser).simple_keys.start;
                         let ref mut fresh17 = (*parser).simple_keys.end;
-                        *fresh17 = ((*parser).simple_keys.start).offset(16 as libc::c_int as isize);
+                        *fresh17 =
+                            ((*parser).simple_keys.start).c_offset(16 as libc::c_int as isize);
                         1 as libc::c_int
                     } else {
                         (*parser).error = YAML_MEMORY_ERROR;
@@ -299,7 +301,8 @@ pub unsafe extern "C" fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) 
                             let ref mut fresh19 = (*parser).states.top;
                             *fresh19 = (*parser).states.start;
                             let ref mut fresh20 = (*parser).states.end;
-                            *fresh20 = ((*parser).states.start).offset(16 as libc::c_int as isize);
+                            *fresh20 =
+                                ((*parser).states.start).c_offset(16 as libc::c_int as isize);
                             1 as libc::c_int
                         } else {
                             (*parser).error = YAML_MEMORY_ERROR;
@@ -316,7 +319,7 @@ pub unsafe extern "C" fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) 
                                 *fresh22 = (*parser).marks.start;
                                 let ref mut fresh23 = (*parser).marks.end;
                                 *fresh23 =
-                                    ((*parser).marks.start).offset(16 as libc::c_int as isize);
+                                    ((*parser).marks.start).c_offset(16 as libc::c_int as isize);
                                 1 as libc::c_int
                             } else {
                                 (*parser).error = YAML_MEMORY_ERROR;
@@ -335,7 +338,7 @@ pub unsafe extern "C" fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) 
                                     *fresh25 = (*parser).tag_directives.start;
                                     let ref mut fresh26 = (*parser).tag_directives.end;
                                     *fresh26 = ((*parser).tag_directives.start)
-                                        .offset(16 as libc::c_int as isize);
+                                        .c_offset(16 as libc::c_int as isize);
                                     1 as libc::c_int
                                 } else {
                                     (*parser).error = YAML_MEMORY_ERROR;
@@ -442,7 +445,7 @@ pub unsafe extern "C" fn yaml_parser_delete(mut parser: *mut yaml_parser_t) {
     while !((*parser).tokens.head == (*parser).tokens.tail) {
         let ref mut fresh58 = (*parser).tokens.head;
         let fresh59 = *fresh58;
-        *fresh58 = (*fresh58).offset(1);
+        *fresh58 = (*fresh58).c_offset(1);
         yaml_token_delete(fresh59);
     }
     yaml_free((*parser).tokens.start as *mut libc::c_void);
@@ -484,7 +487,7 @@ pub unsafe extern "C" fn yaml_parser_delete(mut parser: *mut yaml_parser_t) {
     *fresh75 = *fresh74;
     while !((*parser).tag_directives.start == (*parser).tag_directives.top) {
         let ref mut fresh76 = (*parser).tag_directives.top;
-        *fresh76 = (*fresh76).offset(-1);
+        *fresh76 = (*fresh76).c_offset(-1);
         let mut tag_directive: yaml_tag_directive_t = **fresh76;
         yaml_free(tag_directive.handle as *mut libc::c_void);
         yaml_free(tag_directive.prefix as *mut libc::c_void);
@@ -526,7 +529,7 @@ unsafe extern "C" fn yaml_string_read_handler(
         size,
     );
     let ref mut fresh80 = (*parser).input.string.current;
-    *fresh80 = (*fresh80).offset(size as isize);
+    *fresh80 = (*fresh80).c_offset(size as isize);
     *size_read = size;
     return 1 as libc::c_int;
 }
@@ -598,7 +601,7 @@ pub unsafe extern "C" fn yaml_parser_set_input_string(
     let ref mut fresh84 = (*parser).input.string.current;
     *fresh84 = input;
     let ref mut fresh85 = (*parser).input.string.end;
-    *fresh85 = input.offset(size as isize);
+    *fresh85 = input.c_offset(size as isize);
 }
 #[no_mangle]
 pub unsafe extern "C" fn yaml_parser_set_input(
@@ -705,7 +708,7 @@ pub unsafe extern "C" fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_
         let ref mut fresh93 = (*emitter).buffer.last;
         *fresh93 = *fresh92;
         let ref mut fresh94 = (*emitter).buffer.end;
-        *fresh94 = ((*emitter).buffer.start).offset(16384 as libc::c_int as isize);
+        *fresh94 = ((*emitter).buffer.start).c_offset(16384 as libc::c_int as isize);
         1 as libc::c_int
     } else {
         (*emitter).error = YAML_MEMORY_ERROR;
@@ -723,7 +726,7 @@ pub unsafe extern "C" fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_
             *fresh97 = *fresh96;
             let ref mut fresh98 = (*emitter).raw_buffer.end;
             *fresh98 = ((*emitter).raw_buffer.start)
-                .offset((16384 as libc::c_int * 2 as libc::c_int + 2 as libc::c_int) as isize);
+                .c_offset((16384 as libc::c_int * 2 as libc::c_int + 2 as libc::c_int) as isize);
             1 as libc::c_int
         } else {
             (*emitter).error = YAML_MEMORY_ERROR;
@@ -739,7 +742,7 @@ pub unsafe extern "C" fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_
                 let ref mut fresh100 = (*emitter).states.top;
                 *fresh100 = (*emitter).states.start;
                 let ref mut fresh101 = (*emitter).states.end;
-                *fresh101 = ((*emitter).states.start).offset(16 as libc::c_int as isize);
+                *fresh101 = ((*emitter).states.start).c_offset(16 as libc::c_int as isize);
                 1 as libc::c_int
             } else {
                 (*emitter).error = YAML_MEMORY_ERROR;
@@ -757,7 +760,7 @@ pub unsafe extern "C" fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_
                     let ref mut fresh104 = (*emitter).events.head;
                     *fresh104 = *fresh103;
                     let ref mut fresh105 = (*emitter).events.end;
-                    *fresh105 = ((*emitter).events.start).offset(16 as libc::c_int as isize);
+                    *fresh105 = ((*emitter).events.start).c_offset(16 as libc::c_int as isize);
                     1 as libc::c_int
                 } else {
                     (*emitter).error = YAML_MEMORY_ERROR;
@@ -776,7 +779,7 @@ pub unsafe extern "C" fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_
                         let ref mut fresh107 = (*emitter).indents.top;
                         *fresh107 = (*emitter).indents.start;
                         let ref mut fresh108 = (*emitter).indents.end;
-                        *fresh108 = ((*emitter).indents.start).offset(16 as libc::c_int as isize);
+                        *fresh108 = ((*emitter).indents.start).c_offset(16 as libc::c_int as isize);
                         1 as libc::c_int
                     } else {
                         (*emitter).error = YAML_MEMORY_ERROR;
@@ -792,7 +795,7 @@ pub unsafe extern "C" fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_
                             *fresh110 = (*emitter).tag_directives.start;
                             let ref mut fresh111 = (*emitter).tag_directives.end;
                             *fresh111 = ((*emitter).tag_directives.start)
-                                .offset(16 as libc::c_int as isize);
+                                .c_offset(16 as libc::c_int as isize);
                             1 as libc::c_int
                         } else {
                             (*emitter).error = YAML_MEMORY_ERROR;
@@ -890,7 +893,7 @@ pub unsafe extern "C" fn yaml_emitter_delete(mut emitter: *mut yaml_emitter_t) {
     while !((*emitter).events.head == (*emitter).events.tail) {
         let ref mut fresh140 = (*emitter).events.head;
         let fresh141 = *fresh140;
-        *fresh140 = (*fresh140).offset(1);
+        *fresh140 = (*fresh140).c_offset(1);
         yaml_event_delete(fresh141);
     }
     yaml_free((*emitter).events.start as *mut libc::c_void);
@@ -911,7 +914,7 @@ pub unsafe extern "C" fn yaml_emitter_delete(mut emitter: *mut yaml_emitter_t) {
     *fresh148 = *fresh147;
     while !((*emitter).tag_directives.start == (*emitter).tag_directives.top) {
         let ref mut fresh149 = (*emitter).tag_directives.top;
-        *fresh149 = (*fresh149).offset(-1);
+        *fresh149 = (*fresh149).c_offset(-1);
         let mut tag_directive: yaml_tag_directive_t = **fresh149;
         yaml_free(tag_directive.handle as *mut libc::c_void);
         yaml_free(tag_directive.prefix as *mut libc::c_void);
@@ -939,7 +942,7 @@ unsafe extern "C" fn yaml_string_write_handler(
     if ((*emitter).output.string.size).wrapping_sub(*(*emitter).output.string.size_written) < size {
         memcpy(
             ((*emitter).output.string.buffer)
-                .offset(*(*emitter).output.string.size_written as isize)
+                .c_offset(*(*emitter).output.string.size_written as isize)
                 as *mut libc::c_void,
             buffer as *const libc::c_void,
             ((*emitter).output.string.size).wrapping_sub(*(*emitter).output.string.size_written),
@@ -948,7 +951,7 @@ unsafe extern "C" fn yaml_string_write_handler(
         return 0 as libc::c_int;
     }
     memcpy(
-        ((*emitter).output.string.buffer).offset(*(*emitter).output.string.size_written as isize)
+        ((*emitter).output.string.buffer).c_offset(*(*emitter).output.string.size_written as isize)
             as *mut libc::c_void,
         buffer as *const libc::c_void,
         size,
@@ -1248,14 +1251,14 @@ unsafe extern "C" fn yaml_check_utf8(
     mut start: *const yaml_char_t,
     mut length: size_t,
 ) -> libc::c_int {
-    let mut end: *const yaml_char_t = start.offset(length as isize);
+    let mut end: *const yaml_char_t = start.c_offset(length as isize);
     let mut pointer: *const yaml_char_t = start;
     while pointer < end {
         let mut octet: libc::c_uchar = 0;
         let mut width: libc::c_uint = 0;
         let mut value: libc::c_uint = 0;
         let mut k: size_t = 0;
-        octet = *pointer.offset(0 as libc::c_int as isize);
+        octet = *pointer.c_offset(0 as libc::c_int as isize);
         width = (if octet as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int {
             1 as libc::c_int
         } else if octet as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int {
@@ -1281,12 +1284,12 @@ unsafe extern "C" fn yaml_check_utf8(
         if width == 0 {
             return 0 as libc::c_int;
         }
-        if pointer.offset(width as isize) > end {
+        if pointer.c_offset(width as isize) > end {
             return 0 as libc::c_int;
         }
         k = 1 as libc::c_int as size_t;
         while k < width as libc::c_ulong {
-            octet = *pointer.offset(k as isize);
+            octet = *pointer.c_offset(k as isize);
             if octet as libc::c_int & 0xc0 as libc::c_int != 0x80 as libc::c_int {
                 return 0 as libc::c_int;
             }
@@ -1304,7 +1307,7 @@ unsafe extern "C" fn yaml_check_utf8(
         {
             return 0 as libc::c_int;
         }
-        pointer = pointer.offset(width as isize);
+        pointer = pointer.c_offset(width as isize);
     }
     return 1 as libc::c_int;
 }
@@ -1473,7 +1476,7 @@ pub unsafe extern "C" fn yaml_document_start_event_initialize(
                 if if !(tag_directives_copy.start).is_null() {
                     tag_directives_copy.top = tag_directives_copy.start;
                     tag_directives_copy.end =
-                        (tag_directives_copy.start).offset(16 as libc::c_int as isize);
+                        (tag_directives_copy.start).c_offset(16 as libc::c_int as isize);
                     1 as libc::c_int
                 } else {
                     context.error = YAML_MEMORY_ERROR;
@@ -1553,7 +1556,7 @@ pub unsafe extern "C" fn yaml_document_start_event_initialize(
                             ) != 0
                         {
                             let fresh163 = tag_directives_copy.top;
-                            tag_directives_copy.top = (tag_directives_copy.top).offset(1);
+                            tag_directives_copy.top = (tag_directives_copy.top).c_offset(1);
                             *fresh163 = value;
                             1 as libc::c_int
                         } else {
@@ -1566,7 +1569,7 @@ pub unsafe extern "C" fn yaml_document_start_event_initialize(
                         }
                         value.handle = 0 as *mut yaml_char_t;
                         value.prefix = 0 as *mut yaml_char_t;
-                        tag_directive = tag_directive.offset(1);
+                        tag_directive = tag_directive.c_offset(1);
                     }
                 }
             } else {
@@ -1598,7 +1601,7 @@ pub unsafe extern "C" fn yaml_document_start_event_initialize(
     }
     yaml_free(version_directive_copy as *mut libc::c_void);
     while !(tag_directives_copy.start == tag_directives_copy.top) {
-        tag_directives_copy.top = (tag_directives_copy.top).offset(-1);
+        tag_directives_copy.top = (tag_directives_copy.top).c_offset(-1);
         let mut value_0: yaml_tag_directive_t = *tag_directives_copy.top;
         yaml_free(value_0.handle as *mut libc::c_void);
         yaml_free(value_0.prefix as *mut libc::c_void);
@@ -1802,7 +1805,7 @@ pub unsafe extern "C" fn yaml_scalar_event_initialize(
                                 value as *const libc::c_void,
                                 length as libc::c_ulong,
                             );
-                            *value_copy.offset(length as isize) = '\0' as i32 as yaml_char_t;
+                            *value_copy.c_offset(length as isize) = '\0' as i32 as yaml_char_t;
                             memset(
                                 event as *mut libc::c_void,
                                 0 as libc::c_int,
@@ -2106,7 +2109,7 @@ pub unsafe extern "C" fn yaml_event_delete(mut event: *mut yaml_event_t) {
             while tag_directive != (*event).data.document_start.tag_directives.end {
                 yaml_free((*tag_directive).handle as *mut libc::c_void);
                 yaml_free((*tag_directive).prefix as *mut libc::c_void);
-                tag_directive = tag_directive.offset(1);
+                tag_directive = tag_directive.c_offset(1);
             }
             yaml_free((*event).data.document_start.tag_directives.start as *mut libc::c_void);
         }
@@ -2219,7 +2222,7 @@ pub unsafe extern "C" fn yaml_document_initialize(
     ) as *mut yaml_node_t;
     if !(if !(nodes.start).is_null() {
         nodes.top = nodes.start;
-        nodes.end = (nodes.start).offset(16 as libc::c_int as isize);
+        nodes.end = (nodes.start).c_offset(16 as libc::c_int as isize);
         1 as libc::c_int
     } else {
         context.error = YAML_MEMORY_ERROR;
@@ -2253,7 +2256,7 @@ pub unsafe extern "C" fn yaml_document_initialize(
                     if if !(tag_directives_copy.start).is_null() {
                         tag_directives_copy.top = tag_directives_copy.start;
                         tag_directives_copy.end =
-                            (tag_directives_copy.start).offset(16 as libc::c_int as isize);
+                            (tag_directives_copy.start).c_offset(16 as libc::c_int as isize);
                         1 as libc::c_int
                     } else {
                         context.error = YAML_MEMORY_ERROR;
@@ -2333,7 +2336,7 @@ pub unsafe extern "C" fn yaml_document_initialize(
                                 ) != 0
                             {
                                 let fresh175 = tag_directives_copy.top;
-                                tag_directives_copy.top = (tag_directives_copy.top).offset(1);
+                                tag_directives_copy.top = (tag_directives_copy.top).c_offset(1);
                                 *fresh175 = value;
                                 1 as libc::c_int
                             } else {
@@ -2346,7 +2349,7 @@ pub unsafe extern "C" fn yaml_document_initialize(
                             }
                             value.handle = 0 as *mut yaml_char_t;
                             value.prefix = 0 as *mut yaml_char_t;
-                            tag_directive = tag_directive.offset(1);
+                            tag_directive = tag_directive.c_offset(1);
                         }
                     }
                 } else {
@@ -2388,7 +2391,7 @@ pub unsafe extern "C" fn yaml_document_initialize(
     nodes.start = nodes.top;
     yaml_free(version_directive_copy as *mut libc::c_void);
     while !(tag_directives_copy.start == tag_directives_copy.top) {
-        tag_directives_copy.top = (tag_directives_copy.top).offset(-1);
+        tag_directives_copy.top = (tag_directives_copy.top).c_offset(-1);
         let mut value_0: yaml_tag_directive_t = *tag_directives_copy.top;
         yaml_free(value_0.handle as *mut libc::c_void);
         yaml_free(value_0.prefix as *mut libc::c_void);
@@ -2418,7 +2421,7 @@ pub unsafe extern "C" fn yaml_document_delete(mut document: *mut yaml_document_t
     }
     while !((*document).nodes.start == (*document).nodes.top) {
         let ref mut fresh182 = (*document).nodes.top;
-        *fresh182 = (*fresh182).offset(-1);
+        *fresh182 = (*fresh182).c_offset(-1);
         let mut node: yaml_node_t = **fresh182;
         yaml_free(node.tag as *mut libc::c_void);
         match node.type_0 as libc::c_uint {
@@ -2462,7 +2465,7 @@ pub unsafe extern "C" fn yaml_document_delete(mut document: *mut yaml_document_t
     while tag_directive != (*document).tag_directives.end {
         yaml_free((*tag_directive).handle as *mut libc::c_void);
         yaml_free((*tag_directive).prefix as *mut libc::c_void);
-        tag_directive = tag_directive.offset(1);
+        tag_directive = tag_directive.c_offset(1);
     }
     yaml_free((*document).tag_directives.start as *mut libc::c_void);
     memset(
@@ -2489,11 +2492,11 @@ pub unsafe extern "C" fn yaml_document_get_node(
         );
     }
     if index > 0 as libc::c_int
-        && ((*document).nodes.start).offset(index as isize) <= (*document).nodes.top
+        && ((*document).nodes.start).c_offset(index as isize) <= (*document).nodes.top
     {
         return ((*document).nodes.start)
-            .offset(index as isize)
-            .offset(-(1 as libc::c_int as isize));
+            .c_offset(index as isize)
+            .c_offset(-(1 as libc::c_int as isize));
     }
     return 0 as *mut yaml_node_t;
 }
@@ -2607,7 +2610,7 @@ pub unsafe extern "C" fn yaml_document_add_scalar(
                         value as *const libc::c_void,
                         length as libc::c_ulong,
                     );
-                    *value_copy.offset(length as isize) = '\0' as i32 as yaml_char_t;
+                    *value_copy.c_offset(length as isize) = '\0' as i32 as yaml_char_t;
                     memset(
                         &mut node as *mut yaml_node_t as *mut libc::c_void,
                         0 as libc::c_int,
@@ -2632,7 +2635,7 @@ pub unsafe extern "C" fn yaml_document_add_scalar(
                     {
                         let ref mut fresh186 = (*document).nodes.top;
                         let fresh187 = *fresh186;
-                        *fresh186 = (*fresh186).offset(1);
+                        *fresh186 = (*fresh186).c_offset(1);
                         *fresh187 = node;
                         1 as libc::c_int
                     } else {
@@ -2725,7 +2728,7 @@ pub unsafe extern "C" fn yaml_document_add_sequence(
             ) as *mut yaml_node_item_t;
             if !(if !(items.start).is_null() {
                 items.top = items.start;
-                items.end = (items.start).offset(16 as libc::c_int as isize);
+                items.end = (items.start).c_offset(16 as libc::c_int as isize);
                 1 as libc::c_int
             } else {
                 context.error = YAML_MEMORY_ERROR;
@@ -2757,7 +2760,7 @@ pub unsafe extern "C" fn yaml_document_add_sequence(
                 {
                     let ref mut fresh188 = (*document).nodes.top;
                     let fresh189 = *fresh188;
-                    *fresh188 = (*fresh188).offset(1);
+                    *fresh188 = (*fresh188).c_offset(1);
                     *fresh189 = node;
                     1 as libc::c_int
                 } else {
@@ -2852,7 +2855,7 @@ pub unsafe extern "C" fn yaml_document_add_mapping(
             ) as *mut yaml_node_pair_t;
             if !(if !(pairs.start).is_null() {
                 pairs.top = pairs.start;
-                pairs.end = (pairs.start).offset(16 as libc::c_int as isize);
+                pairs.end = (pairs.start).c_offset(16 as libc::c_int as isize);
                 1 as libc::c_int
             } else {
                 context.error = YAML_MEMORY_ERROR;
@@ -2884,7 +2887,7 @@ pub unsafe extern "C" fn yaml_document_add_mapping(
                 {
                     let ref mut fresh190 = (*document).nodes.top;
                     let fresh191 = *fresh190;
-                    *fresh190 = (*fresh190).offset(1);
+                    *fresh190 = (*fresh190).c_offset(1);
                     *fresh191 = node;
                     1 as libc::c_int
                 } else {
@@ -2927,7 +2930,7 @@ pub unsafe extern "C" fn yaml_document_append_sequence_item(
         );
     }
     if sequence > 0 as libc::c_int
-        && ((*document).nodes.start).offset(sequence as isize) <= (*document).nodes.top
+        && ((*document).nodes.start).c_offset(sequence as isize) <= (*document).nodes.top
     {
     } else {
         __assert_fail(
@@ -2941,7 +2944,7 @@ pub unsafe extern "C" fn yaml_document_append_sequence_item(
             .as_ptr(),
         );
     }
-    if (*((*document).nodes.start).offset((sequence - 1 as libc::c_int) as isize)).type_0
+    if (*((*document).nodes.start).c_offset((sequence - 1 as libc::c_int) as isize)).type_0
         as libc::c_uint
         == YAML_SEQUENCE_NODE as libc::c_int as libc::c_uint
     {
@@ -2958,7 +2961,7 @@ pub unsafe extern "C" fn yaml_document_append_sequence_item(
         );
     }
     if item > 0 as libc::c_int
-        && ((*document).nodes.start).offset(item as isize) <= (*document).nodes.top
+        && ((*document).nodes.start).c_offset(item as isize) <= (*document).nodes.top
     {
     } else {
         __assert_fail(
@@ -2972,28 +2975,28 @@ pub unsafe extern "C" fn yaml_document_append_sequence_item(
             .as_ptr(),
         );
     }
-    if if (*((*document).nodes.start).offset((sequence - 1 as libc::c_int) as isize))
+    if if (*((*document).nodes.start).c_offset((sequence - 1 as libc::c_int) as isize))
         .data
         .sequence
         .items
         .top
-        != (*((*document).nodes.start).offset((sequence - 1 as libc::c_int) as isize))
+        != (*((*document).nodes.start).c_offset((sequence - 1 as libc::c_int) as isize))
             .data
             .sequence
             .items
             .end
         || yaml_stack_extend(
-            &mut (*((*document).nodes.start).offset((sequence - 1 as libc::c_int) as isize))
+            &mut (*((*document).nodes.start).c_offset((sequence - 1 as libc::c_int) as isize))
                 .data
                 .sequence
                 .items
                 .start as *mut *mut yaml_node_item_t as *mut *mut libc::c_void,
-            &mut (*((*document).nodes.start).offset((sequence - 1 as libc::c_int) as isize))
+            &mut (*((*document).nodes.start).c_offset((sequence - 1 as libc::c_int) as isize))
                 .data
                 .sequence
                 .items
                 .top as *mut *mut yaml_node_item_t as *mut *mut libc::c_void,
-            &mut (*((*document).nodes.start).offset((sequence - 1 as libc::c_int) as isize))
+            &mut (*((*document).nodes.start).c_offset((sequence - 1 as libc::c_int) as isize))
                 .data
                 .sequence
                 .items
@@ -3001,13 +3004,13 @@ pub unsafe extern "C" fn yaml_document_append_sequence_item(
         ) != 0
     {
         let ref mut fresh192 = (*((*document).nodes.start)
-            .offset((sequence - 1 as libc::c_int) as isize))
+            .c_offset((sequence - 1 as libc::c_int) as isize))
         .data
         .sequence
         .items
         .top;
         let fresh193 = *fresh192;
-        *fresh192 = (*fresh192).offset(1);
+        *fresh192 = (*fresh192).c_offset(1);
         *fresh193 = item;
         1 as libc::c_int
     } else {
@@ -3043,7 +3046,7 @@ pub unsafe extern "C" fn yaml_document_append_mapping_pair(
         );
     }
     if mapping > 0 as libc::c_int
-        && ((*document).nodes.start).offset(mapping as isize) <= (*document).nodes.top
+        && ((*document).nodes.start).c_offset(mapping as isize) <= (*document).nodes.top
     {
     } else {
         __assert_fail(
@@ -3057,7 +3060,7 @@ pub unsafe extern "C" fn yaml_document_append_mapping_pair(
             .as_ptr(),
         );
     }
-    if (*((*document).nodes.start).offset((mapping - 1 as libc::c_int) as isize)).type_0
+    if (*((*document).nodes.start).c_offset((mapping - 1 as libc::c_int) as isize)).type_0
         as libc::c_uint
         == YAML_MAPPING_NODE as libc::c_int as libc::c_uint
     {
@@ -3074,7 +3077,7 @@ pub unsafe extern "C" fn yaml_document_append_mapping_pair(
         );
     }
     if key > 0 as libc::c_int
-        && ((*document).nodes.start).offset(key as isize) <= (*document).nodes.top
+        && ((*document).nodes.start).c_offset(key as isize) <= (*document).nodes.top
     {
     } else {
         __assert_fail(
@@ -3089,7 +3092,7 @@ pub unsafe extern "C" fn yaml_document_append_mapping_pair(
         );
     }
     if value > 0 as libc::c_int
-        && ((*document).nodes.start).offset(value as isize) <= (*document).nodes.top
+        && ((*document).nodes.start).c_offset(value as isize) <= (*document).nodes.top
     {
     } else {
         __assert_fail(
@@ -3105,28 +3108,28 @@ pub unsafe extern "C" fn yaml_document_append_mapping_pair(
     }
     pair.key = key;
     pair.value = value;
-    if if (*((*document).nodes.start).offset((mapping - 1 as libc::c_int) as isize))
+    if if (*((*document).nodes.start).c_offset((mapping - 1 as libc::c_int) as isize))
         .data
         .mapping
         .pairs
         .top
-        != (*((*document).nodes.start).offset((mapping - 1 as libc::c_int) as isize))
+        != (*((*document).nodes.start).c_offset((mapping - 1 as libc::c_int) as isize))
             .data
             .mapping
             .pairs
             .end
         || yaml_stack_extend(
-            &mut (*((*document).nodes.start).offset((mapping - 1 as libc::c_int) as isize))
+            &mut (*((*document).nodes.start).c_offset((mapping - 1 as libc::c_int) as isize))
                 .data
                 .mapping
                 .pairs
                 .start as *mut *mut yaml_node_pair_t as *mut *mut libc::c_void,
-            &mut (*((*document).nodes.start).offset((mapping - 1 as libc::c_int) as isize))
+            &mut (*((*document).nodes.start).c_offset((mapping - 1 as libc::c_int) as isize))
                 .data
                 .mapping
                 .pairs
                 .top as *mut *mut yaml_node_pair_t as *mut *mut libc::c_void,
-            &mut (*((*document).nodes.start).offset((mapping - 1 as libc::c_int) as isize))
+            &mut (*((*document).nodes.start).c_offset((mapping - 1 as libc::c_int) as isize))
                 .data
                 .mapping
                 .pairs
@@ -3134,13 +3137,13 @@ pub unsafe extern "C" fn yaml_document_append_mapping_pair(
         ) != 0
     {
         let ref mut fresh194 = (*((*document).nodes.start)
-            .offset((mapping - 1 as libc::c_int) as isize))
+            .c_offset((mapping - 1 as libc::c_int) as isize))
         .data
         .mapping
         .pairs
         .top;
         let fresh195 = *fresh194;
-        *fresh194 = (*fresh194).offset(1);
+        *fresh194 = (*fresh194).c_offset(1);
         *fresh195 = pair;
         1 as libc::c_int
     } else {
