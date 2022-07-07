@@ -116,13 +116,12 @@ pub unsafe extern "C" fn yaml_stack_extend(
     top: *mut *mut libc::c_void,
     end: *mut *mut libc::c_void,
 ) -> libc::c_int {
-    let new_start: *mut libc::c_void;
     if (*end as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
         >= (2147483647 as libc::c_int / 2 as libc::c_int) as libc::c_long
     {
         return 0 as libc::c_int;
     }
-    new_start = yaml_realloc(
+    let new_start: *mut libc::c_void = yaml_realloc(
         *start,
         ((*end as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
             * 2 as libc::c_int as libc::c_long) as size_t,
@@ -945,11 +944,11 @@ unsafe extern "C" fn yaml_check_utf8(start: *const yaml_char_t, length: size_t) 
     let mut pointer: *const yaml_char_t = start;
     while pointer < end {
         let mut octet: libc::c_uchar;
-        let width: libc::c_uint;
         let mut value: libc::c_uint;
         let mut k: size_t;
         octet = *pointer.c_offset(0 as libc::c_int as isize);
-        width = (if octet as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int {
+        let width: libc::c_uint = (if octet as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
+        {
             1 as libc::c_int
         } else if octet as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int {
             2 as libc::c_int
@@ -1262,13 +1261,12 @@ pub unsafe extern "C" fn yaml_alias_event_initialize(
         };
         init
     };
-    let anchor_copy: *mut yaml_char_t;
     __assert!(!event.is_null());
     __assert!(!anchor.is_null());
     if yaml_check_utf8(anchor, strlen(anchor as *mut libc::c_char)) == 0 {
         return 0 as libc::c_int;
     }
-    anchor_copy = yaml_strdup(anchor);
+    let anchor_copy: *mut yaml_char_t = yaml_strdup(anchor);
     if anchor_copy.is_null() {
         return 0 as libc::c_int;
     }

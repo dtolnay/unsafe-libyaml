@@ -12,8 +12,6 @@ unsafe extern "C" fn yaml_emitter_set_writer_error(
 }
 #[no_mangle]
 pub unsafe extern "C" fn yaml_emitter_flush(emitter: *mut yaml_emitter_t) -> libc::c_int {
-    let low: libc::c_int;
-    let high: libc::c_int;
     __assert!(!emitter.is_null());
     __assert!(((*emitter).write_handler).is_some());
     __assert!((*emitter).encoding as u64 != 0);
@@ -44,14 +42,14 @@ pub unsafe extern "C" fn yaml_emitter_flush(emitter: *mut yaml_emitter_t) -> lib
             );
         }
     }
-    low = if (*emitter).encoding as libc::c_uint
+    let low: libc::c_int = if (*emitter).encoding as libc::c_uint
         == YAML_UTF16LE_ENCODING as libc::c_int as libc::c_uint
     {
         0 as libc::c_int
     } else {
         1 as libc::c_int
     };
-    high = if (*emitter).encoding as libc::c_uint
+    let high: libc::c_int = if (*emitter).encoding as libc::c_uint
         == YAML_UTF16LE_ENCODING as libc::c_int as libc::c_uint
     {
         1 as libc::c_int
@@ -60,11 +58,11 @@ pub unsafe extern "C" fn yaml_emitter_flush(emitter: *mut yaml_emitter_t) -> lib
     };
     while (*emitter).buffer.pointer != (*emitter).buffer.last {
         let mut octet: libc::c_uchar;
-        let width: libc::c_uint;
         let mut value: libc::c_uint;
         let mut k: size_t;
         octet = *((*emitter).buffer.pointer).c_offset(0 as libc::c_int as isize);
-        width = (if octet as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int {
+        let width: libc::c_uint = (if octet as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
+        {
             1 as libc::c_int
         } else if octet as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int {
             2 as libc::c_int

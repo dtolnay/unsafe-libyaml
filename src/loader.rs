@@ -363,14 +363,13 @@ unsafe extern "C" fn yaml_parser_load_node_add(
     ctx: *mut loader_ctx,
     index: libc::c_int,
 ) -> libc::c_int {
-    let parent: *mut yaml_node_s;
-    let parent_index: libc::c_int;
     if (*ctx).start == (*ctx).top {
         return 1 as libc::c_int;
     }
-    parent_index = *((*ctx).top).c_offset(-(1 as libc::c_int as isize));
-    parent = &mut *((*(*parser).document).nodes.start)
-        .c_offset((parent_index - 1 as libc::c_int) as isize) as *mut yaml_node_t;
+    let parent_index: libc::c_int = *((*ctx).top).c_offset(-(1 as libc::c_int as isize));
+    let parent: *mut yaml_node_s = &mut *((*(*parser).document).nodes.start)
+        .c_offset((parent_index - 1 as libc::c_int) as isize)
+        as *mut yaml_node_t;
     let current_block_17: u64;
     match (*parent).type_0 as libc::c_uint {
         2 => {
@@ -782,11 +781,10 @@ unsafe extern "C" fn yaml_parser_load_sequence_end(
     event: *mut yaml_event_t,
     ctx: *mut loader_ctx,
 ) -> libc::c_int {
-    let index: libc::c_int;
     __assert!(
         ((*ctx).top).c_offset_from((*ctx).start) as libc::c_long > 0 as libc::c_int as libc::c_long
     );
-    index = *((*ctx).top).c_offset(-(1 as libc::c_int as isize));
+    let index: libc::c_int = *((*ctx).top).c_offset(-(1 as libc::c_int as isize));
     __assert!(
         (*((*(*parser).document).nodes.start).c_offset((index - 1 as libc::c_int) as isize)).type_0
             as libc::c_uint
@@ -972,11 +970,10 @@ unsafe extern "C" fn yaml_parser_load_mapping_end(
     event: *mut yaml_event_t,
     ctx: *mut loader_ctx,
 ) -> libc::c_int {
-    let index: libc::c_int;
     __assert!(
         ((*ctx).top).c_offset_from((*ctx).start) as libc::c_long > 0 as libc::c_int as libc::c_long
     );
-    index = *((*ctx).top).c_offset(-(1 as libc::c_int as isize));
+    let index: libc::c_int = *((*ctx).top).c_offset(-(1 as libc::c_int as isize));
     __assert!(
         (*((*(*parser).document).nodes.start).c_offset((index - 1 as libc::c_int) as isize)).type_0
             as libc::c_uint

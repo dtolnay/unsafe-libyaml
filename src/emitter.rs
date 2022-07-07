@@ -55,23 +55,16 @@ pub unsafe extern "C" fn yaml_emitter_emit(
 }
 unsafe extern "C" fn yaml_emitter_need_more_events(emitter: *mut yaml_emitter_t) -> libc::c_int {
     let mut level: libc::c_int = 0 as libc::c_int;
-    let accumulate: libc::c_int;
     let mut event: *mut yaml_event_t;
     if (*emitter).events.head == (*emitter).events.tail {
         return 1 as libc::c_int;
     }
-    match (*(*emitter).events.head).type_0 as libc::c_uint {
-        3 => {
-            accumulate = 1 as libc::c_int;
-        }
-        7 => {
-            accumulate = 2 as libc::c_int;
-        }
-        9 => {
-            accumulate = 3 as libc::c_int;
-        }
+    let accumulate = match (*(*emitter).events.head).type_0 as libc::c_uint {
+        3 => 1 as libc::c_int,
+        7 => 2 as libc::c_int,
+        9 => 3 as libc::c_int,
         _ => return 0 as libc::c_int,
-    }
+    };
     if ((*emitter).events.tail).c_offset_from((*emitter).events.head) as libc::c_long
         > accumulate as libc::c_long
     {
@@ -1536,10 +1529,8 @@ unsafe extern "C" fn yaml_emitter_analyze_tag_directive(
         end: 0 as *mut yaml_char_t,
         pointer: 0 as *mut yaml_char_t,
     };
-    let handle_length: size_t;
-    let prefix_length: size_t;
-    handle_length = strlen(tag_directive.handle as *mut libc::c_char);
-    prefix_length = strlen(tag_directive.prefix as *mut libc::c_char);
+    let handle_length: size_t = strlen(tag_directive.handle as *mut libc::c_char);
+    let prefix_length: size_t = strlen(tag_directive.prefix as *mut libc::c_char);
     handle.start = tag_directive.handle;
     handle.end = (tag_directive.handle).c_offset(handle_length as isize);
     handle.pointer = tag_directive.handle;
@@ -1626,13 +1617,12 @@ unsafe extern "C" fn yaml_emitter_analyze_anchor(
     anchor: *mut yaml_char_t,
     alias: libc::c_int,
 ) -> libc::c_int {
-    let anchor_length: size_t;
     let mut string: yaml_string_t = yaml_string_t {
         start: 0 as *mut yaml_char_t,
         end: 0 as *mut yaml_char_t,
         pointer: 0 as *mut yaml_char_t,
     };
-    anchor_length = strlen(anchor as *mut libc::c_char);
+    let anchor_length: size_t = strlen(anchor as *mut libc::c_char);
     string.start = anchor;
     string.end = anchor.c_offset(anchor_length as isize);
     string.pointer = anchor;
@@ -1710,14 +1700,13 @@ unsafe extern "C" fn yaml_emitter_analyze_tag(
     mut emitter: *mut yaml_emitter_t,
     tag: *mut yaml_char_t,
 ) -> libc::c_int {
-    let tag_length: size_t;
     let mut string: yaml_string_t = yaml_string_t {
         start: 0 as *mut yaml_char_t,
         end: 0 as *mut yaml_char_t,
         pointer: 0 as *mut yaml_char_t,
     };
     let mut tag_directive: *mut yaml_tag_directive_t;
-    tag_length = strlen(tag as *mut libc::c_char);
+    let tag_length: size_t = strlen(tag as *mut libc::c_char);
     string.start = tag;
     string.end = tag.c_offset(tag_length as isize);
     string.pointer = tag;
@@ -3256,13 +3245,12 @@ unsafe extern "C" fn yaml_emitter_write_indicator(
     is_whitespace: libc::c_int,
     is_indention: libc::c_int,
 ) -> libc::c_int {
-    let indicator_length: size_t;
     let mut string: yaml_string_t = yaml_string_t {
         start: 0 as *mut yaml_char_t,
         end: 0 as *mut yaml_char_t,
         pointer: 0 as *mut yaml_char_t,
     };
-    indicator_length = strlen(indicator);
+    let indicator_length: size_t = strlen(indicator);
     string.start = indicator as *mut yaml_char_t;
     string.end = (indicator as *mut yaml_char_t).c_offset(indicator_length as isize);
     string.pointer = indicator as *mut yaml_char_t;

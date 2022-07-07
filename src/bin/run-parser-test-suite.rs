@@ -51,7 +51,6 @@ unsafe fn unsafe_main() -> ExitCode {
         ptr::addr_of_mut!(remaining).cast(),
     );
     loop {
-        let type_0: yaml_event_type_t;
         if yaml_parser_parse(parser, event) == 0 {
             let _ = writeln!(
                 io::stderr(),
@@ -68,7 +67,7 @@ unsafe fn unsafe_main() -> ExitCode {
             }
             return ExitCode::FAILURE;
         }
-        type_0 = (*event).type_0;
+        let type_0: yaml_event_type_t = (*event).type_0;
         if type_0 as libc::c_uint == YAML_NO_EVENT as libc::c_int as libc::c_uint {
             let _ = writeln!(io::stdout(), "???");
         } else if type_0 as libc::c_uint == YAML_STREAM_START_EVENT as libc::c_int as libc::c_uint {

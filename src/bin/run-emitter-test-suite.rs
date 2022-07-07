@@ -328,13 +328,11 @@ pub unsafe extern "C" fn get_tag(
     line: *mut libc::c_char,
     tag: *mut libc::c_char,
 ) -> *mut libc::c_char {
-    let start: *mut libc::c_char;
-    let end: *mut libc::c_char;
-    start = strchr(line, '<' as i32);
+    let start: *mut libc::c_char = strchr(line, '<' as i32);
     if start.is_null() {
         return ptr::null_mut::<libc::c_char>();
     }
-    end = strchr(line, '>' as i32);
+    let end: *mut libc::c_char = strchr(line, '>' as i32);
     if end.is_null() {
         return ptr::null_mut::<libc::c_char>();
     }
