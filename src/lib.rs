@@ -192,7 +192,7 @@ trait PointerExt: Sized {
 
 impl<T> PointerExt for *const T {
     fn c_offset(self, count: isize) -> *const T {
-        (self as isize + count * size_of::<T>() as isize) as *const T
+        self.wrapping_offset(count)
     }
 
     fn c_offset_from(self, origin: *const T) -> isize {
@@ -202,7 +202,7 @@ impl<T> PointerExt for *const T {
 
 impl<T> PointerExt for *mut T {
     fn c_offset(self, count: isize) -> *mut T {
-        (self as isize + count * size_of::<T>() as isize) as *mut T
+        self.wrapping_offset(count)
     }
 
     fn c_offset_from(self, origin: *mut T) -> isize {
