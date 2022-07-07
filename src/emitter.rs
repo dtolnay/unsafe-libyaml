@@ -3007,7 +3007,6 @@ unsafe extern "C" fn yaml_emitter_write_indent(mut emitter: *mut yaml_emitter_t)
                     let fresh69 = *fresh68;
                     *fresh68 = (*fresh68).c_offset(1);
                     *fresh69 = '\n' as i32 as yaml_char_t;
-                } else {
                 };
                 (*emitter).column = 0 as libc::c_int;
                 let fresh70 = &mut (*emitter).line;
@@ -3147,7 +3146,6 @@ unsafe extern "C" fn yaml_emitter_write_indicator(
                     let fresh106 = *fresh105;
                     *fresh105 = (*fresh105).c_offset(1);
                     *fresh106 = *fresh104;
-                } else {
                 };
                 let fresh107 = &mut (*emitter).column;
                 *fresh107 += 1;
@@ -3249,7 +3247,6 @@ unsafe extern "C" fn yaml_emitter_write_anchor(
                     let fresh137 = *fresh136;
                     *fresh136 = (*fresh136).c_offset(1);
                     *fresh137 = *fresh135;
-                } else {
                 };
                 let fresh138 = &mut (*emitter).column;
                 *fresh138 += 1;
@@ -3368,7 +3365,6 @@ unsafe extern "C" fn yaml_emitter_write_tag_handle(
                     let fresh171 = *fresh170;
                     *fresh170 = (*fresh170).c_offset(1);
                     *fresh171 = *fresh169;
-                } else {
                 };
                 let fresh172 = &mut (*emitter).column;
                 *fresh172 += 1;
@@ -3541,7 +3537,6 @@ unsafe extern "C" fn yaml_emitter_write_tag_content(
                         let fresh205 = *fresh204;
                         *fresh204 = (*fresh204).c_offset(1);
                         *fresh205 = *fresh203;
-                    } else {
                     };
                     let fresh206 = &mut (*emitter).column;
                     *fresh206 += 1;
@@ -3796,7 +3791,6 @@ unsafe extern "C" fn yaml_emitter_write_plain_scalar(
                         let fresh250 = *fresh249;
                         *fresh249 = (*fresh249).c_offset(1);
                         *fresh250 = *fresh248;
-                    } else {
                     };
                     let fresh251 = &mut (*emitter).column;
                     *fresh251 += 1;
@@ -3865,7 +3859,6 @@ unsafe extern "C" fn yaml_emitter_write_plain_scalar(
                             let fresh259 = *fresh258;
                             *fresh258 = (*fresh258).c_offset(1);
                             *fresh259 = '\n' as i32 as yaml_char_t;
-                        } else {
                         };
                         (*emitter).column = 0 as libc::c_int;
                         let fresh260 = &mut (*emitter).line;
@@ -3912,7 +3905,6 @@ unsafe extern "C" fn yaml_emitter_write_plain_scalar(
                                 let fresh268 = *fresh267;
                                 *fresh267 = (*fresh267).c_offset(1);
                                 *fresh268 = '\n' as i32 as yaml_char_t;
-                            } else {
                             };
                             (*emitter).column = 0 as libc::c_int;
                             let fresh269 = &mut (*emitter).line;
@@ -3993,7 +3985,6 @@ unsafe extern "C" fn yaml_emitter_write_plain_scalar(
                         let fresh299 = *fresh298;
                         *fresh298 = (*fresh298).c_offset(1);
                         *fresh299 = *fresh297;
-                    } else {
                     };
                     (*emitter).column = 0 as libc::c_int;
                     let fresh300 = &mut (*emitter).line;
@@ -4085,7 +4076,6 @@ unsafe extern "C" fn yaml_emitter_write_plain_scalar(
                         let fresh330 = *fresh329;
                         *fresh329 = (*fresh329).c_offset(1);
                         *fresh330 = *fresh328;
-                    } else {
                     };
                     let fresh331 = &mut (*emitter).column;
                     *fresh331 += 1;
@@ -4243,7 +4233,6 @@ unsafe extern "C" fn yaml_emitter_write_single_quoted_scalar(
                         let fresh361 = *fresh360;
                         *fresh360 = (*fresh360).c_offset(1);
                         *fresh361 = *fresh359;
-                    } else {
                     };
                     let fresh362 = &mut (*emitter).column;
                     *fresh362 += 1;
@@ -4312,7 +4301,6 @@ unsafe extern "C" fn yaml_emitter_write_single_quoted_scalar(
                             let fresh370 = *fresh369;
                             *fresh369 = (*fresh369).c_offset(1);
                             *fresh370 = '\n' as i32 as yaml_char_t;
-                        } else {
                         };
                         (*emitter).column = 0 as libc::c_int;
                         let fresh371 = &mut (*emitter).line;
@@ -4359,7 +4347,6 @@ unsafe extern "C" fn yaml_emitter_write_single_quoted_scalar(
                                 let fresh379 = *fresh378;
                                 *fresh378 = (*fresh378).c_offset(1);
                                 *fresh379 = '\n' as i32 as yaml_char_t;
-                            } else {
                             };
                             (*emitter).column = 0 as libc::c_int;
                             let fresh380 = &mut (*emitter).line;
@@ -4440,7 +4427,6 @@ unsafe extern "C" fn yaml_emitter_write_single_quoted_scalar(
                         let fresh410 = *fresh409;
                         *fresh409 = (*fresh409).c_offset(1);
                         *fresh410 = *fresh408;
-                    } else {
                     };
                     (*emitter).column = 0 as libc::c_int;
                     let fresh411 = &mut (*emitter).line;
@@ -4551,7 +4537,6 @@ unsafe extern "C" fn yaml_emitter_write_single_quoted_scalar(
                         let fresh444 = *fresh443;
                         *fresh443 = (*fresh443).c_offset(1);
                         *fresh444 = *fresh442;
-                    } else {
                     };
                     let fresh445 = &mut (*emitter).column;
                     *fresh445 += 1;
@@ -5212,7 +5197,6 @@ unsafe extern "C" fn yaml_emitter_write_double_quoted_scalar(
                         let fresh538 = *fresh537;
                         *fresh537 = (*fresh537).c_offset(1);
                         *fresh538 = *fresh536;
-                    } else {
                     };
                     let fresh539 = &mut (*emitter).column;
                     *fresh539 += 1;
@@ -5297,7 +5281,6 @@ unsafe extern "C" fn yaml_emitter_write_double_quoted_scalar(
                         let fresh569 = *fresh568;
                         *fresh568 = (*fresh568).c_offset(1);
                         *fresh569 = *fresh567;
-                    } else {
                     };
                     let fresh570 = &mut (*emitter).column;
                     *fresh570 += 1;
@@ -5518,7 +5501,6 @@ unsafe extern "C" fn yaml_emitter_write_literal_scalar(
                 let fresh578 = *fresh577;
                 *fresh577 = (*fresh577).c_offset(1);
                 *fresh578 = '\n' as i32 as yaml_char_t;
-            } else {
             };
             (*emitter).column = 0 as libc::c_int;
             let fresh579 = &mut (*emitter).line;
@@ -5593,7 +5575,6 @@ unsafe extern "C" fn yaml_emitter_write_literal_scalar(
                                 let fresh587 = *fresh586;
                                 *fresh586 = (*fresh586).c_offset(1);
                                 *fresh587 = '\n' as i32 as yaml_char_t;
-                            } else {
                             };
                             (*emitter).column = 0 as libc::c_int;
                             let fresh588 = &mut (*emitter).line;
@@ -5674,7 +5655,6 @@ unsafe extern "C" fn yaml_emitter_write_literal_scalar(
                         let fresh618 = *fresh617;
                         *fresh617 = (*fresh617).c_offset(1);
                         *fresh618 = *fresh616;
-                    } else {
                     };
                     (*emitter).column = 0 as libc::c_int;
                     let fresh619 = &mut (*emitter).line;
@@ -5766,7 +5746,6 @@ unsafe extern "C" fn yaml_emitter_write_literal_scalar(
                         let fresh649 = *fresh648;
                         *fresh648 = (*fresh648).c_offset(1);
                         *fresh649 = *fresh647;
-                    } else {
                     };
                     let fresh650 = &mut (*emitter).column;
                     *fresh650 += 1;
@@ -5836,7 +5815,6 @@ unsafe extern "C" fn yaml_emitter_write_folded_scalar(
                 let fresh658 = *fresh657;
                 *fresh657 = (*fresh657).c_offset(1);
                 *fresh658 = '\n' as i32 as yaml_char_t;
-            } else {
             };
             (*emitter).column = 0 as libc::c_int;
             let fresh659 = &mut (*emitter).line;
@@ -5992,7 +5970,6 @@ unsafe extern "C" fn yaml_emitter_write_folded_scalar(
                                 let fresh667 = *fresh666;
                                 *fresh666 = (*fresh666).c_offset(1);
                                 *fresh667 = '\n' as i32 as yaml_char_t;
-                            } else {
                             };
                             (*emitter).column = 0 as libc::c_int;
                             let fresh668 = &mut (*emitter).line;
@@ -6040,7 +6017,6 @@ unsafe extern "C" fn yaml_emitter_write_folded_scalar(
                                 let fresh676 = *fresh675;
                                 *fresh675 = (*fresh675).c_offset(1);
                                 *fresh676 = '\n' as i32 as yaml_char_t;
-                            } else {
                             };
                             (*emitter).column = 0 as libc::c_int;
                             let fresh677 = &mut (*emitter).line;
@@ -6121,7 +6097,6 @@ unsafe extern "C" fn yaml_emitter_write_folded_scalar(
                         let fresh707 = *fresh706;
                         *fresh706 = (*fresh706).c_offset(1);
                         *fresh707 = *fresh705;
-                    } else {
                     };
                     (*emitter).column = 0 as libc::c_int;
                     let fresh708 = &mut (*emitter).line;
@@ -6254,7 +6229,6 @@ unsafe extern "C" fn yaml_emitter_write_folded_scalar(
                         let fresh738 = *fresh737;
                         *fresh737 = (*fresh737).c_offset(1);
                         *fresh738 = *fresh736;
-                    } else {
                     };
                     let fresh739 = &mut (*emitter).column;
                     *fresh739 += 1;

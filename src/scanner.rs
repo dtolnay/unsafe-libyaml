@@ -2447,7 +2447,6 @@ unsafe extern "C" fn yaml_parser_scan_to_next_token(mut parser: *mut yaml_parser
                     0 as libc::c_int
                 }) as isize,
             );
-        } else {
         };
         if (*parser).flow_level == 0 {
             (*parser).simple_key_allowed = 1 as libc::c_int;
@@ -2991,7 +2990,6 @@ unsafe extern "C" fn yaml_parser_scan_directive(
                                                         })
                                                             as isize,
                                                     );
-                                                } else {
                                                 };
                                                 current_block = 652864300344834934;
                                             }
@@ -3163,7 +3161,6 @@ unsafe extern "C" fn yaml_parser_scan_directive_name(
                         let fresh159 = string.pointer;
                         string.pointer = (string.pointer).c_offset(1);
                         *fresh159 = *fresh158;
-                    } else {
                     };
                     let fresh160 = &mut (*parser).mark.index;
                     *fresh160 = (*fresh160).wrapping_add(1);
@@ -3898,7 +3895,6 @@ unsafe extern "C" fn yaml_parser_scan_anchor(
                         let fresh216 = string.pointer;
                         string.pointer = (string.pointer).c_offset(1);
                         *fresh216 = *fresh215;
-                    } else {
                     };
                     let fresh217 = &mut (*parser).mark.index;
                     *fresh217 = (*fresh217).wrapping_add(1);
@@ -4486,7 +4482,6 @@ unsafe extern "C" fn yaml_parser_scan_tag_handle(
                     let fresh265 = string.pointer;
                     string.pointer = (string.pointer).c_offset(1);
                     *fresh265 = *fresh264;
-                } else {
                 };
                 let fresh266 = &mut (*parser).mark.index;
                 *fresh266 = (*fresh266).wrapping_add(1);
@@ -4619,7 +4614,6 @@ unsafe extern "C" fn yaml_parser_scan_tag_handle(
                                 let fresh298 = string.pointer;
                                 string.pointer = (string.pointer).c_offset(1);
                                 *fresh298 = *fresh297;
-                            } else {
                             };
                             let fresh299 = &mut (*parser).mark.index;
                             *fresh299 = (*fresh299).wrapping_add(1);
@@ -4742,7 +4736,6 @@ unsafe extern "C" fn yaml_parser_scan_tag_handle(
                                         let fresh331 = string.pointer;
                                         string.pointer = (string.pointer).c_offset(1);
                                         *fresh331 = *fresh330;
-                                    } else {
                                     };
                                     let fresh332 = &mut (*parser).mark.index;
                                     *fresh332 = (*fresh332).wrapping_add(1);
@@ -5082,7 +5075,6 @@ unsafe extern "C" fn yaml_parser_scan_tag_uri(
                                 let fresh364 = string.pointer;
                                 string.pointer = (string.pointer).c_offset(1);
                                 *fresh364 = *fresh363;
-                            } else {
                             };
                             let fresh365 = &mut (*parser).mark.index;
                             *fresh365 = (*fresh365).wrapping_add(1);
@@ -6321,7 +6313,6 @@ unsafe extern "C" fn yaml_parser_scan_block_scalar(
                                                                     })
                                                                         as isize,
                                                                 );
-                                                            } else {
                                                             };
                                                             current_block = 13619784596304402172;
                                                         }
@@ -7122,7 +7113,6 @@ unsafe extern "C" fn yaml_parser_scan_block_scalar_breaks(
                 *fresh515 = (*fresh515).wrapping_add(1);
                 let fresh516 = &mut (*parser).unread;
                 *fresh516 = (*fresh516).wrapping_sub(1);
-            } else {
             };
             1 as libc::c_int
         } else {
@@ -7792,7 +7782,6 @@ unsafe extern "C" fn yaml_parser_scan_flow_scalar(
                                                 })
                                                     as isize,
                                             );
-                                        } else {
                                         };
                                         leading_blanks = 1 as libc::c_int;
                                         break;
@@ -8376,7 +8365,6 @@ unsafe extern "C" fn yaml_parser_scan_flow_scalar(
                                             let fresh616 = string.pointer;
                                             string.pointer = (string.pointer).c_offset(1);
                                             *fresh616 = *fresh615;
-                                        } else {
                                         };
                                         let fresh617 = &mut (*parser).mark.index;
                                         *fresh617 = (*fresh617).wrapping_add(1);
@@ -8585,7 +8573,6 @@ unsafe extern "C" fn yaml_parser_scan_flow_scalar(
                                                 whitespaces.pointer =
                                                     (whitespaces.pointer).c_offset(1);
                                                 *fresh649 = *fresh648;
-                                            } else {
                                             };
                                             let fresh650 = &mut (*parser).mark.index;
                                             *fresh650 = (*fresh650).wrapping_add(1);
@@ -8799,7 +8786,6 @@ unsafe extern "C" fn yaml_parser_scan_flow_scalar(
                                                 *fresh682 = (*fresh682).wrapping_add(1);
                                                 let fresh683 = &mut (*parser).unread;
                                                 *fresh683 = (*fresh683).wrapping_sub(1);
-                                            } else {
                                             };
                                             1 as libc::c_int
                                         } else {
@@ -8944,7 +8930,6 @@ unsafe extern "C" fn yaml_parser_scan_flow_scalar(
                                             *fresh709 = (*fresh709).wrapping_add(1);
                                             let fresh710 = &mut (*parser).unread;
                                             *fresh710 = (*fresh710).wrapping_sub(1);
-                                        } else {
                                         };
                                         1 as libc::c_int
                                     } else {
@@ -9831,7 +9816,6 @@ unsafe extern "C" fn yaml_parser_scan_plain_scalar(
                                         let fresh747 = string.pointer;
                                         string.pointer = (string.pointer).c_offset(1);
                                         *fresh747 = *fresh746;
-                                    } else {
                                     };
                                     let fresh748 = &mut (*parser).mark.index;
                                     *fresh748 = (*fresh748).wrapping_add(1);
@@ -10072,7 +10056,6 @@ unsafe extern "C" fn yaml_parser_scan_plain_scalar(
                                             let fresh780 = whitespaces.pointer;
                                             whitespaces.pointer = (whitespaces.pointer).c_offset(1);
                                             *fresh780 = *fresh779;
-                                        } else {
                                         };
                                         let fresh781 = &mut (*parser).mark.index;
                                         *fresh781 = (*fresh781).wrapping_add(1);
@@ -10283,7 +10266,6 @@ unsafe extern "C" fn yaml_parser_scan_plain_scalar(
                                             *fresh813 = (*fresh813).wrapping_add(1);
                                             let fresh814 = &mut (*parser).unread;
                                             *fresh814 = (*fresh814).wrapping_sub(1);
-                                        } else {
                                         };
                                         1 as libc::c_int
                                     } else {
@@ -10426,7 +10408,6 @@ unsafe extern "C" fn yaml_parser_scan_plain_scalar(
                                         *fresh840 = (*fresh840).wrapping_add(1);
                                         let fresh841 = &mut (*parser).unread;
                                         *fresh841 = (*fresh841).wrapping_sub(1);
-                                    } else {
                                     };
                                     1 as libc::c_int
                                 } else {
