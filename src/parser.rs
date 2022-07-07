@@ -478,7 +478,7 @@ unsafe fn yaml_parser_parse_node(
     let mut tag: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
     let mut start_mark: yaml_mark_t;
     let mut end_mark: yaml_mark_t;
-    let mut tag_mark: yaml_mark_t = yaml_mark_t {
+    let mut tag_mark = yaml_mark_t {
         index: 0,
         line: 0,
         column: 0,
@@ -1987,7 +1987,7 @@ unsafe fn yaml_parser_process_directives(
                 } else if (*token).type_0 as libc::c_uint
                     == YAML_TAG_DIRECTIVE_TOKEN as libc::c_int as libc::c_uint
                 {
-                    let mut value: yaml_tag_directive_t = yaml_tag_directive_t {
+                    let mut value = yaml_tag_directive_t {
                         handle: ptr::null_mut::<yaml_char_t>(),
                         prefix: ptr::null_mut::<yaml_char_t>(),
                     };
@@ -2119,7 +2119,7 @@ unsafe fn yaml_parser_append_tag_directive(
     mark: yaml_mark_t,
 ) -> libc::c_int {
     let mut tag_directive: *mut yaml_tag_directive_t;
-    let mut copy: yaml_tag_directive_t = yaml_tag_directive_t {
+    let mut copy = yaml_tag_directive_t {
         handle: ptr::null_mut::<yaml_char_t>(),
         prefix: ptr::null_mut::<yaml_char_t>(),
     };

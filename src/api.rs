@@ -973,7 +973,7 @@ pub unsafe fn yaml_stream_start_event_initialize(
     mut event: *mut yaml_event_t,
     encoding: yaml_encoding_t,
 ) -> libc::c_int {
-    let mark: yaml_mark_t = yaml_mark_t {
+    let mark = yaml_mark_t {
         index: 0 as libc::c_int as size_t,
         line: 0 as libc::c_int as size_t,
         column: 0 as libc::c_int as size_t,
@@ -991,7 +991,7 @@ pub unsafe fn yaml_stream_start_event_initialize(
     1 as libc::c_int
 }
 pub unsafe fn yaml_stream_end_event_initialize(mut event: *mut yaml_event_t) -> libc::c_int {
-    let mark: yaml_mark_t = yaml_mark_t {
+    let mark = yaml_mark_t {
         index: 0 as libc::c_int as size_t,
         line: 0 as libc::c_int as size_t,
         column: 0 as libc::c_int as size_t,
@@ -1018,7 +1018,7 @@ pub unsafe fn yaml_document_start_event_initialize(
     let mut context: Unnamed_17 = Unnamed_17 {
         error: YAML_NO_ERROR,
     };
-    let mark: yaml_mark_t = yaml_mark_t {
+    let mark = yaml_mark_t {
         index: 0 as libc::c_int as size_t,
         line: 0 as libc::c_int as size_t,
         column: 0 as libc::c_int as size_t,
@@ -1030,7 +1030,7 @@ pub unsafe fn yaml_document_start_event_initialize(
         end: ptr::null_mut::<yaml_tag_directive_t>(),
         top: ptr::null_mut::<yaml_tag_directive_t>(),
     };
-    let mut value: yaml_tag_directive_t = yaml_tag_directive_t {
+    let mut value = yaml_tag_directive_t {
         handle: ptr::null_mut::<yaml_char_t>(),
         prefix: ptr::null_mut::<yaml_char_t>(),
     };
@@ -1176,7 +1176,7 @@ pub unsafe fn yaml_document_end_event_initialize(
     mut event: *mut yaml_event_t,
     implicit: libc::c_int,
 ) -> libc::c_int {
-    let mark: yaml_mark_t = yaml_mark_t {
+    let mark = yaml_mark_t {
         index: 0 as libc::c_int as size_t,
         line: 0 as libc::c_int as size_t,
         column: 0 as libc::c_int as size_t,
@@ -1197,7 +1197,7 @@ pub unsafe fn yaml_alias_event_initialize(
     mut event: *mut yaml_event_t,
     anchor: *const yaml_char_t,
 ) -> libc::c_int {
-    let mark: yaml_mark_t = yaml_mark_t {
+    let mark = yaml_mark_t {
         index: 0 as libc::c_int as size_t,
         line: 0 as libc::c_int as size_t,
         column: 0 as libc::c_int as size_t,
@@ -1234,7 +1234,7 @@ pub unsafe fn yaml_scalar_event_initialize(
     style: yaml_scalar_style_t,
 ) -> libc::c_int {
     let mut current_block: u64;
-    let mark: yaml_mark_t = yaml_mark_t {
+    let mark = yaml_mark_t {
         index: 0 as libc::c_int as size_t,
         line: 0 as libc::c_int as size_t,
         column: 0 as libc::c_int as size_t,
@@ -1329,7 +1329,7 @@ pub unsafe fn yaml_sequence_start_event_initialize(
     style: yaml_sequence_style_t,
 ) -> libc::c_int {
     let mut current_block: u64;
-    let mark: yaml_mark_t = yaml_mark_t {
+    let mark = yaml_mark_t {
         index: 0 as libc::c_int as size_t,
         line: 0 as libc::c_int as size_t,
         column: 0 as libc::c_int as size_t,
@@ -1395,7 +1395,7 @@ pub unsafe fn yaml_sequence_start_event_initialize(
     0 as libc::c_int
 }
 pub unsafe fn yaml_sequence_end_event_initialize(mut event: *mut yaml_event_t) -> libc::c_int {
-    let mark: yaml_mark_t = yaml_mark_t {
+    let mark = yaml_mark_t {
         index: 0 as libc::c_int as size_t,
         line: 0 as libc::c_int as size_t,
         column: 0 as libc::c_int as size_t,
@@ -1419,7 +1419,7 @@ pub unsafe fn yaml_mapping_start_event_initialize(
     style: yaml_mapping_style_t,
 ) -> libc::c_int {
     let mut current_block: u64;
-    let mark: yaml_mark_t = yaml_mark_t {
+    let mark = yaml_mark_t {
         index: 0 as libc::c_int as size_t,
         line: 0 as libc::c_int as size_t,
         column: 0 as libc::c_int as size_t,
@@ -1485,7 +1485,7 @@ pub unsafe fn yaml_mapping_start_event_initialize(
     0 as libc::c_int
 }
 pub unsafe fn yaml_mapping_end_event_initialize(mut event: *mut yaml_event_t) -> libc::c_int {
-    let mark: yaml_mark_t = yaml_mark_t {
+    let mark = yaml_mark_t {
         index: 0 as libc::c_int as size_t,
         line: 0 as libc::c_int as size_t,
         column: 0 as libc::c_int as size_t,
@@ -1563,11 +1563,11 @@ pub unsafe fn yaml_document_initialize(
         end: ptr::null_mut::<yaml_tag_directive_t>(),
         top: ptr::null_mut::<yaml_tag_directive_t>(),
     };
-    let mut value: yaml_tag_directive_t = yaml_tag_directive_t {
+    let mut value = yaml_tag_directive_t {
         handle: ptr::null_mut::<yaml_char_t>(),
         prefix: ptr::null_mut::<yaml_char_t>(),
     };
-    let mark: yaml_mark_t = yaml_mark_t {
+    let mark = yaml_mark_t {
         index: 0 as libc::c_int as size_t,
         line: 0 as libc::c_int as size_t,
         column: 0 as libc::c_int as size_t,
@@ -1818,14 +1818,14 @@ pub unsafe fn yaml_document_add_scalar(
     let mut context: Unnamed_29 = Unnamed_29 {
         error: YAML_NO_ERROR,
     };
-    let mark: yaml_mark_t = yaml_mark_t {
+    let mark = yaml_mark_t {
         index: 0 as libc::c_int as size_t,
         line: 0 as libc::c_int as size_t,
         column: 0 as libc::c_int as size_t,
     };
     let mut tag_copy: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
     let mut value_copy: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
-    let mut node: yaml_node_t = yaml_node_t {
+    let mut node = yaml_node_t {
         type_0: YAML_NO_NODE,
         tag: ptr::null_mut::<yaml_char_t>(),
         data: unnamed_yaml_node_s_data {
@@ -1914,7 +1914,7 @@ pub unsafe fn yaml_document_add_sequence(
     let mut context: Unnamed_31 = Unnamed_31 {
         error: YAML_NO_ERROR,
     };
-    let mark: yaml_mark_t = yaml_mark_t {
+    let mark = yaml_mark_t {
         index: 0 as libc::c_int as size_t,
         line: 0 as libc::c_int as size_t,
         column: 0 as libc::c_int as size_t,
@@ -1925,7 +1925,7 @@ pub unsafe fn yaml_document_add_sequence(
         end: ptr::null_mut::<yaml_node_item_t>(),
         top: ptr::null_mut::<yaml_node_item_t>(),
     };
-    let mut node: yaml_node_t = yaml_node_t {
+    let mut node = yaml_node_t {
         type_0: YAML_NO_NODE,
         tag: ptr::null_mut::<yaml_char_t>(),
         data: unnamed_yaml_node_s_data {
@@ -2017,7 +2017,7 @@ pub unsafe fn yaml_document_add_mapping(
     let mut context: Unnamed_33 = Unnamed_33 {
         error: YAML_NO_ERROR,
     };
-    let mark: yaml_mark_t = yaml_mark_t {
+    let mark = yaml_mark_t {
         index: 0 as libc::c_int as size_t,
         line: 0 as libc::c_int as size_t,
         column: 0 as libc::c_int as size_t,
@@ -2028,7 +2028,7 @@ pub unsafe fn yaml_document_add_mapping(
         end: ptr::null_mut::<yaml_node_pair_t>(),
         top: ptr::null_mut::<yaml_node_pair_t>(),
     };
-    let mut node: yaml_node_t = yaml_node_t {
+    let mut node = yaml_node_t {
         type_0: YAML_NO_NODE,
         tag: ptr::null_mut::<yaml_char_t>(),
         data: unnamed_yaml_node_s_data {
@@ -2196,7 +2196,7 @@ pub unsafe fn yaml_document_append_mapping_pair(
     let mut context: Unnamed_35 = Unnamed_35 {
         error: YAML_NO_ERROR,
     };
-    let mut pair: yaml_node_pair_t = yaml_node_pair_t { key: 0, value: 0 };
+    let mut pair = yaml_node_pair_t { key: 0, value: 0 };
     __assert!(!document.is_null());
     __assert!(
         mapping > 0 as libc::c_int

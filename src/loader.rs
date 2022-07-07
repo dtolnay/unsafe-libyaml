@@ -42,7 +42,7 @@ pub unsafe fn yaml_parser_load(
     document: *mut yaml_document_t,
 ) -> libc::c_int {
     let current_block: u64;
-    let mut event: yaml_event_t = yaml_event_t {
+    let mut event = yaml_event_t {
         type_0: YAML_NO_EVENT,
         data: unnamed_yaml_event_s_data {
             stream_start: unnamed_yaml_event_s_data_stream_start {
@@ -191,7 +191,7 @@ unsafe fn yaml_parser_load_document(
     mut parser: *mut yaml_parser_t,
     event: *mut yaml_event_t,
 ) -> libc::c_int {
-    let mut ctx: loader_ctx = loader_ctx {
+    let mut ctx = loader_ctx {
         start: ptr::null_mut::<libc::c_int>(),
         end: ptr::null_mut::<libc::c_int>(),
         top: ptr::null_mut::<libc::c_int>(),
@@ -239,7 +239,7 @@ unsafe fn yaml_parser_load_nodes(
     mut parser: *mut yaml_parser_t,
     ctx: *mut loader_ctx,
 ) -> libc::c_int {
-    let mut event: yaml_event_t = yaml_event_t {
+    let mut event = yaml_event_t {
         type_0: YAML_NO_EVENT,
         data: unnamed_yaml_event_s_data {
             stream_start: unnamed_yaml_event_s_data_stream_start {
@@ -311,7 +311,7 @@ unsafe fn yaml_parser_register_anchor(
     index: libc::c_int,
     anchor: *mut yaml_char_t,
 ) -> libc::c_int {
-    let mut data: yaml_alias_data_t = yaml_alias_data_t {
+    let mut data = yaml_alias_data_t {
         anchor: ptr::null_mut::<yaml_char_t>(),
         index: 0,
         mark: yaml_mark_t {
@@ -419,7 +419,7 @@ unsafe fn yaml_parser_load_node_add(
             }
         }
         3 => {
-            let mut pair: yaml_node_pair_t = yaml_node_pair_t { key: 0, value: 0 };
+            let mut pair = yaml_node_pair_t { key: 0, value: 0 };
             if !((*parent).data.mapping.pairs.start == (*parent).data.mapping.pairs.top) {
                 let mut p: *mut yaml_node_pair_t =
                     ((*parent).data.mapping.pairs.top).c_offset(-(1 as libc::c_int as isize));
@@ -513,7 +513,7 @@ unsafe fn yaml_parser_load_scalar(
     ctx: *mut loader_ctx,
 ) -> libc::c_int {
     let current_block: u64;
-    let mut node: yaml_node_t = yaml_node_t {
+    let mut node = yaml_node_t {
         type_0: YAML_NO_NODE,
         tag: ptr::null_mut::<yaml_char_t>(),
         data: unnamed_yaml_node_s_data {
@@ -622,7 +622,7 @@ unsafe fn yaml_parser_load_sequence(
     ctx: *mut loader_ctx,
 ) -> libc::c_int {
     let current_block: u64;
-    let mut node: yaml_node_t = yaml_node_t {
+    let mut node = yaml_node_t {
         type_0: YAML_NO_NODE,
         tag: ptr::null_mut::<yaml_char_t>(),
         data: unnamed_yaml_node_s_data {
@@ -807,7 +807,7 @@ unsafe fn yaml_parser_load_mapping(
     ctx: *mut loader_ctx,
 ) -> libc::c_int {
     let current_block: u64;
-    let mut node: yaml_node_t = yaml_node_t {
+    let mut node = yaml_node_t {
         type_0: YAML_NO_NODE,
         tag: ptr::null_mut::<yaml_char_t>(),
         data: unnamed_yaml_node_s_data {

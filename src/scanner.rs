@@ -591,7 +591,7 @@ unsafe fn yaml_parser_save_simple_key(parser: *mut yaml_parser_t) -> libc::c_int
         && (*parser).indent as libc::c_long == (*parser).mark.column as ptrdiff_t)
         as libc::c_int;
     if (*parser).simple_key_allowed != 0 {
-        let mut simple_key: yaml_simple_key_t = yaml_simple_key_t {
+        let mut simple_key = yaml_simple_key_t {
             possible: 0,
             required: 0,
             token_number: 0,
@@ -631,7 +631,7 @@ unsafe fn yaml_parser_remove_simple_key(parser: *mut yaml_parser_t) -> libc::c_i
     1 as libc::c_int
 }
 unsafe fn yaml_parser_increase_flow_level(mut parser: *mut yaml_parser_t) -> libc::c_int {
-    let empty_simple_key: yaml_simple_key_t = yaml_simple_key_t {
+    let empty_simple_key = yaml_simple_key_t {
         possible: 0 as libc::c_int,
         required: 0 as libc::c_int,
         token_number: 0 as libc::c_int as size_t,
@@ -684,7 +684,7 @@ unsafe fn yaml_parser_roll_indent(
     type_0: yaml_token_type_t,
     mark: yaml_mark_t,
 ) -> libc::c_int {
-    let mut token: yaml_token_t = yaml_token_t {
+    let mut token = yaml_token_t {
         type_0: YAML_NO_TOKEN,
         data: unnamed_yaml_token_s_data {
             stream_start: unnamed_yaml_token_s_data_stream_start {
@@ -801,7 +801,7 @@ unsafe fn yaml_parser_unroll_indent(
     mut parser: *mut yaml_parser_t,
     column: ptrdiff_t,
 ) -> libc::c_int {
-    let mut token: yaml_token_t = yaml_token_t {
+    let mut token = yaml_token_t {
         type_0: YAML_NO_TOKEN,
         data: unnamed_yaml_token_s_data {
             stream_start: unnamed_yaml_token_s_data_stream_start {
@@ -858,7 +858,7 @@ unsafe fn yaml_parser_unroll_indent(
     1 as libc::c_int
 }
 unsafe fn yaml_parser_fetch_stream_start(mut parser: *mut yaml_parser_t) -> libc::c_int {
-    let simple_key: yaml_simple_key_t = yaml_simple_key_t {
+    let simple_key = yaml_simple_key_t {
         possible: 0 as libc::c_int,
         required: 0 as libc::c_int,
         token_number: 0 as libc::c_int as size_t,
@@ -868,7 +868,7 @@ unsafe fn yaml_parser_fetch_stream_start(mut parser: *mut yaml_parser_t) -> libc
             column: 0 as libc::c_int as size_t,
         },
     };
-    let mut token: yaml_token_t = yaml_token_t {
+    let mut token = yaml_token_t {
         type_0: YAML_NO_TOKEN,
         data: unnamed_yaml_token_s_data {
             stream_start: unnamed_yaml_token_s_data_stream_start {
@@ -940,7 +940,7 @@ unsafe fn yaml_parser_fetch_stream_start(mut parser: *mut yaml_parser_t) -> libc
     1 as libc::c_int
 }
 unsafe fn yaml_parser_fetch_stream_end(mut parser: *mut yaml_parser_t) -> libc::c_int {
-    let mut token: yaml_token_t = yaml_token_t {
+    let mut token = yaml_token_t {
         type_0: YAML_NO_TOKEN,
         data: unnamed_yaml_token_s_data {
             stream_start: unnamed_yaml_token_s_data_stream_start {
@@ -1001,7 +1001,7 @@ unsafe fn yaml_parser_fetch_stream_end(mut parser: *mut yaml_parser_t) -> libc::
     1 as libc::c_int
 }
 unsafe fn yaml_parser_fetch_directive(mut parser: *mut yaml_parser_t) -> libc::c_int {
-    let mut token: yaml_token_t = yaml_token_t {
+    let mut token = yaml_token_t {
         type_0: YAML_NO_TOKEN,
         data: unnamed_yaml_token_s_data {
             stream_start: unnamed_yaml_token_s_data_stream_start {
@@ -1056,7 +1056,7 @@ unsafe fn yaml_parser_fetch_document_indicator(
     mut parser: *mut yaml_parser_t,
     type_0: yaml_token_type_t,
 ) -> libc::c_int {
-    let mut token: yaml_token_t = yaml_token_t {
+    let mut token = yaml_token_t {
         type_0: YAML_NO_TOKEN,
         data: unnamed_yaml_token_s_data {
             stream_start: unnamed_yaml_token_s_data_stream_start {
@@ -1213,7 +1213,7 @@ unsafe fn yaml_parser_fetch_flow_collection_start(
     mut parser: *mut yaml_parser_t,
     type_0: yaml_token_type_t,
 ) -> libc::c_int {
-    let mut token: yaml_token_t = yaml_token_t {
+    let mut token = yaml_token_t {
         type_0: YAML_NO_TOKEN,
         data: unnamed_yaml_token_s_data {
             stream_start: unnamed_yaml_token_s_data_stream_start {
@@ -1306,7 +1306,7 @@ unsafe fn yaml_parser_fetch_flow_collection_end(
     mut parser: *mut yaml_parser_t,
     type_0: yaml_token_type_t,
 ) -> libc::c_int {
-    let mut token: yaml_token_t = yaml_token_t {
+    let mut token = yaml_token_t {
         type_0: YAML_NO_TOKEN,
         data: unnamed_yaml_token_s_data {
             stream_start: unnamed_yaml_token_s_data_stream_start {
@@ -1396,7 +1396,7 @@ unsafe fn yaml_parser_fetch_flow_collection_end(
     1 as libc::c_int
 }
 unsafe fn yaml_parser_fetch_flow_entry(mut parser: *mut yaml_parser_t) -> libc::c_int {
-    let mut token: yaml_token_t = yaml_token_t {
+    let mut token = yaml_token_t {
         type_0: YAML_NO_TOKEN,
         data: unnamed_yaml_token_s_data {
             stream_start: unnamed_yaml_token_s_data_stream_start {
@@ -1483,7 +1483,7 @@ unsafe fn yaml_parser_fetch_flow_entry(mut parser: *mut yaml_parser_t) -> libc::
     1 as libc::c_int
 }
 unsafe fn yaml_parser_fetch_block_entry(mut parser: *mut yaml_parser_t) -> libc::c_int {
-    let mut token: yaml_token_t = yaml_token_t {
+    let mut token = yaml_token_t {
         type_0: YAML_NO_TOKEN,
         data: unnamed_yaml_token_s_data {
             stream_start: unnamed_yaml_token_s_data_stream_start {
@@ -1591,7 +1591,7 @@ unsafe fn yaml_parser_fetch_block_entry(mut parser: *mut yaml_parser_t) -> libc:
     1 as libc::c_int
 }
 unsafe fn yaml_parser_fetch_key(mut parser: *mut yaml_parser_t) -> libc::c_int {
-    let mut token: yaml_token_t = yaml_token_t {
+    let mut token = yaml_token_t {
         type_0: YAML_NO_TOKEN,
         data: unnamed_yaml_token_s_data {
             stream_start: unnamed_yaml_token_s_data_stream_start {
@@ -1699,7 +1699,7 @@ unsafe fn yaml_parser_fetch_key(mut parser: *mut yaml_parser_t) -> libc::c_int {
     1 as libc::c_int
 }
 unsafe fn yaml_parser_fetch_value(mut parser: *mut yaml_parser_t) -> libc::c_int {
-    let mut token: yaml_token_t = yaml_token_t {
+    let mut token = yaml_token_t {
         type_0: YAML_NO_TOKEN,
         data: unnamed_yaml_token_s_data {
             stream_start: unnamed_yaml_token_s_data_stream_start {
@@ -1869,7 +1869,7 @@ unsafe fn yaml_parser_fetch_anchor(
     mut parser: *mut yaml_parser_t,
     type_0: yaml_token_type_t,
 ) -> libc::c_int {
-    let mut token: yaml_token_t = yaml_token_t {
+    let mut token = yaml_token_t {
         type_0: YAML_NO_TOKEN,
         data: unnamed_yaml_token_s_data {
             stream_start: unnamed_yaml_token_s_data_stream_start {
@@ -1918,7 +1918,7 @@ unsafe fn yaml_parser_fetch_anchor(
     1 as libc::c_int
 }
 unsafe fn yaml_parser_fetch_tag(mut parser: *mut yaml_parser_t) -> libc::c_int {
-    let mut token: yaml_token_t = yaml_token_t {
+    let mut token = yaml_token_t {
         type_0: YAML_NO_TOKEN,
         data: unnamed_yaml_token_s_data {
             stream_start: unnamed_yaml_token_s_data_stream_start {
@@ -1970,7 +1970,7 @@ unsafe fn yaml_parser_fetch_block_scalar(
     mut parser: *mut yaml_parser_t,
     literal: libc::c_int,
 ) -> libc::c_int {
-    let mut token: yaml_token_t = yaml_token_t {
+    let mut token = yaml_token_t {
         type_0: YAML_NO_TOKEN,
         data: unnamed_yaml_token_s_data {
             stream_start: unnamed_yaml_token_s_data_stream_start {
@@ -2022,7 +2022,7 @@ unsafe fn yaml_parser_fetch_flow_scalar(
     mut parser: *mut yaml_parser_t,
     single: libc::c_int,
 ) -> libc::c_int {
-    let mut token: yaml_token_t = yaml_token_t {
+    let mut token = yaml_token_t {
         type_0: YAML_NO_TOKEN,
         data: unnamed_yaml_token_s_data {
             stream_start: unnamed_yaml_token_s_data_stream_start {
@@ -2071,7 +2071,7 @@ unsafe fn yaml_parser_fetch_flow_scalar(
     1 as libc::c_int
 }
 unsafe fn yaml_parser_fetch_plain_scalar(mut parser: *mut yaml_parser_t) -> libc::c_int {
-    let mut token: yaml_token_t = yaml_token_t {
+    let mut token = yaml_token_t {
         type_0: YAML_NO_TOKEN,
         data: unnamed_yaml_token_s_data {
             stream_start: unnamed_yaml_token_s_data_stream_start {
@@ -3018,7 +3018,7 @@ unsafe fn yaml_parser_scan_directive_name(
     name: *mut *mut yaml_char_t,
 ) -> libc::c_int {
     let current_block: u64;
-    let mut string: yaml_string_t = yaml_string_t {
+    let mut string = yaml_string_t {
         start: ptr::null_mut::<yaml_char_t>(),
         end: ptr::null_mut::<yaml_char_t>(),
         pointer: ptr::null_mut::<yaml_char_t>(),
@@ -3717,7 +3717,7 @@ unsafe fn yaml_parser_scan_anchor(
     let mut length: libc::c_int = 0 as libc::c_int;
     let start_mark: yaml_mark_t;
     let end_mark: yaml_mark_t;
-    let mut string: yaml_string_t = yaml_string_t {
+    let mut string = yaml_string_t {
         start: ptr::null_mut::<yaml_char_t>(),
         end: ptr::null_mut::<yaml_char_t>(),
         pointer: ptr::null_mut::<yaml_char_t>(),
@@ -4351,7 +4351,7 @@ unsafe fn yaml_parser_scan_tag_handle(
     handle: *mut *mut yaml_char_t,
 ) -> libc::c_int {
     let mut current_block: u64;
-    let mut string: yaml_string_t = yaml_string_t {
+    let mut string = yaml_string_t {
         start: ptr::null_mut::<yaml_char_t>(),
         end: ptr::null_mut::<yaml_char_t>(),
         pointer: ptr::null_mut::<yaml_char_t>(),
@@ -4794,7 +4794,7 @@ unsafe fn yaml_parser_scan_tag_uri(
     } else {
         0 as libc::c_int as libc::c_ulong
     };
-    let mut string: yaml_string_t = yaml_string_t {
+    let mut string = yaml_string_t {
         start: ptr::null_mut::<yaml_char_t>(),
         end: ptr::null_mut::<yaml_char_t>(),
         pointer: ptr::null_mut::<yaml_char_t>(),
@@ -5377,17 +5377,17 @@ unsafe fn yaml_parser_scan_block_scalar(
     let mut current_block: u64;
     let start_mark: yaml_mark_t;
     let mut end_mark: yaml_mark_t;
-    let mut string: yaml_string_t = yaml_string_t {
+    let mut string = yaml_string_t {
         start: ptr::null_mut::<yaml_char_t>(),
         end: ptr::null_mut::<yaml_char_t>(),
         pointer: ptr::null_mut::<yaml_char_t>(),
     };
-    let mut leading_break: yaml_string_t = yaml_string_t {
+    let mut leading_break = yaml_string_t {
         start: ptr::null_mut::<yaml_char_t>(),
         end: ptr::null_mut::<yaml_char_t>(),
         pointer: ptr::null_mut::<yaml_char_t>(),
     };
-    let mut trailing_breaks: yaml_string_t = yaml_string_t {
+    let mut trailing_breaks = yaml_string_t {
         start: ptr::null_mut::<yaml_char_t>(),
         end: ptr::null_mut::<yaml_char_t>(),
         pointer: ptr::null_mut::<yaml_char_t>(),
@@ -7123,22 +7123,22 @@ unsafe fn yaml_parser_scan_flow_scalar(
     let current_block: u64;
     let start_mark: yaml_mark_t;
     let end_mark: yaml_mark_t;
-    let mut string: yaml_string_t = yaml_string_t {
+    let mut string = yaml_string_t {
         start: ptr::null_mut::<yaml_char_t>(),
         end: ptr::null_mut::<yaml_char_t>(),
         pointer: ptr::null_mut::<yaml_char_t>(),
     };
-    let mut leading_break: yaml_string_t = yaml_string_t {
+    let mut leading_break = yaml_string_t {
         start: ptr::null_mut::<yaml_char_t>(),
         end: ptr::null_mut::<yaml_char_t>(),
         pointer: ptr::null_mut::<yaml_char_t>(),
     };
-    let mut trailing_breaks: yaml_string_t = yaml_string_t {
+    let mut trailing_breaks = yaml_string_t {
         start: ptr::null_mut::<yaml_char_t>(),
         end: ptr::null_mut::<yaml_char_t>(),
         pointer: ptr::null_mut::<yaml_char_t>(),
     };
-    let mut whitespaces: yaml_string_t = yaml_string_t {
+    let mut whitespaces = yaml_string_t {
         start: ptr::null_mut::<yaml_char_t>(),
         end: ptr::null_mut::<yaml_char_t>(),
         pointer: ptr::null_mut::<yaml_char_t>(),
@@ -9183,22 +9183,22 @@ unsafe fn yaml_parser_scan_plain_scalar(
     let current_block: u64;
     let start_mark: yaml_mark_t;
     let mut end_mark: yaml_mark_t;
-    let mut string: yaml_string_t = yaml_string_t {
+    let mut string = yaml_string_t {
         start: ptr::null_mut::<yaml_char_t>(),
         end: ptr::null_mut::<yaml_char_t>(),
         pointer: ptr::null_mut::<yaml_char_t>(),
     };
-    let mut leading_break: yaml_string_t = yaml_string_t {
+    let mut leading_break = yaml_string_t {
         start: ptr::null_mut::<yaml_char_t>(),
         end: ptr::null_mut::<yaml_char_t>(),
         pointer: ptr::null_mut::<yaml_char_t>(),
     };
-    let mut trailing_breaks: yaml_string_t = yaml_string_t {
+    let mut trailing_breaks = yaml_string_t {
         start: ptr::null_mut::<yaml_char_t>(),
         end: ptr::null_mut::<yaml_char_t>(),
         pointer: ptr::null_mut::<yaml_char_t>(),
     };
-    let mut whitespaces: yaml_string_t = yaml_string_t {
+    let mut whitespaces = yaml_string_t {
         start: ptr::null_mut::<yaml_char_t>(),
         end: ptr::null_mut::<yaml_char_t>(),
         pointer: ptr::null_mut::<yaml_char_t>(),

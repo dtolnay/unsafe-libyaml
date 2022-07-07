@@ -13,7 +13,7 @@ use std::mem;
 use std::ptr;
 use std::slice;
 pub unsafe fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> libc::c_int {
-    let mut event: yaml_event_t = yaml_event_t {
+    let mut event = yaml_event_t {
         type_0: YAML_NO_EVENT,
         data: unnamed_yaml_event_s_data {
             stream_start: unnamed_yaml_event_s_data_stream_start {
@@ -31,7 +31,7 @@ pub unsafe fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> libc::c_int
             column: 0,
         },
     };
-    let mark: yaml_mark_t = yaml_mark_t {
+    let mark = yaml_mark_t {
         index: 0 as libc::c_int as size_t,
         line: 0 as libc::c_int as size_t,
         column: 0 as libc::c_int as size_t,
@@ -54,7 +54,7 @@ pub unsafe fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> libc::c_int
     1 as libc::c_int
 }
 pub unsafe fn yaml_emitter_close(mut emitter: *mut yaml_emitter_t) -> libc::c_int {
-    let mut event: yaml_event_t = yaml_event_t {
+    let mut event = yaml_event_t {
         type_0: YAML_NO_EVENT,
         data: unnamed_yaml_event_s_data {
             stream_start: unnamed_yaml_event_s_data_stream_start {
@@ -72,7 +72,7 @@ pub unsafe fn yaml_emitter_close(mut emitter: *mut yaml_emitter_t) -> libc::c_in
             column: 0,
         },
     };
-    let mark: yaml_mark_t = yaml_mark_t {
+    let mark = yaml_mark_t {
         index: 0 as libc::c_int as size_t,
         line: 0 as libc::c_int as size_t,
         column: 0 as libc::c_int as size_t,
@@ -101,7 +101,7 @@ pub unsafe fn yaml_emitter_dump(
     document: *mut yaml_document_t,
 ) -> libc::c_int {
     let current_block: u64;
-    let mut event: yaml_event_t = yaml_event_t {
+    let mut event = yaml_event_t {
         type_0: YAML_NO_EVENT,
         data: unnamed_yaml_event_s_data {
             stream_start: unnamed_yaml_event_s_data_stream_start {
@@ -119,7 +119,7 @@ pub unsafe fn yaml_emitter_dump(
             column: 0,
         },
     };
-    let mark: yaml_mark_t = yaml_mark_t {
+    let mark = yaml_mark_t {
         index: 0 as libc::c_int as size_t,
         line: 0 as libc::c_int as size_t,
         column: 0 as libc::c_int as size_t,
@@ -327,7 +327,7 @@ unsafe fn yaml_emitter_dump_alias(
     emitter: *mut yaml_emitter_t,
     anchor: *mut yaml_char_t,
 ) -> libc::c_int {
-    let mut event: yaml_event_t = yaml_event_t {
+    let mut event = yaml_event_t {
         type_0: YAML_NO_EVENT,
         data: unnamed_yaml_event_s_data {
             stream_start: unnamed_yaml_event_s_data_stream_start {
@@ -345,7 +345,7 @@ unsafe fn yaml_emitter_dump_alias(
             column: 0,
         },
     };
-    let mark: yaml_mark_t = yaml_mark_t {
+    let mark = yaml_mark_t {
         index: 0 as libc::c_int as size_t,
         line: 0 as libc::c_int as size_t,
         column: 0 as libc::c_int as size_t,
@@ -366,7 +366,7 @@ unsafe fn yaml_emitter_dump_scalar(
     node: *mut yaml_node_t,
     anchor: *mut yaml_char_t,
 ) -> libc::c_int {
-    let mut event: yaml_event_t = yaml_event_t {
+    let mut event = yaml_event_t {
         type_0: YAML_NO_EVENT,
         data: unnamed_yaml_event_s_data {
             stream_start: unnamed_yaml_event_s_data_stream_start {
@@ -384,7 +384,7 @@ unsafe fn yaml_emitter_dump_scalar(
             column: 0,
         },
     };
-    let mark: yaml_mark_t = yaml_mark_t {
+    let mark = yaml_mark_t {
         index: 0 as libc::c_int as size_t,
         line: 0 as libc::c_int as size_t,
         column: 0 as libc::c_int as size_t,
@@ -419,7 +419,7 @@ unsafe fn yaml_emitter_dump_sequence(
     node: *mut yaml_node_t,
     anchor: *mut yaml_char_t,
 ) -> libc::c_int {
-    let mut event: yaml_event_t = yaml_event_t {
+    let mut event = yaml_event_t {
         type_0: YAML_NO_EVENT,
         data: unnamed_yaml_event_s_data {
             stream_start: unnamed_yaml_event_s_data_stream_start {
@@ -437,7 +437,7 @@ unsafe fn yaml_emitter_dump_sequence(
             column: 0,
         },
     };
-    let mark: yaml_mark_t = yaml_mark_t {
+    let mark = yaml_mark_t {
         index: 0 as libc::c_int as size_t,
         line: 0 as libc::c_int as size_t,
         column: 0 as libc::c_int as size_t,
@@ -487,7 +487,7 @@ unsafe fn yaml_emitter_dump_mapping(
     node: *mut yaml_node_t,
     anchor: *mut yaml_char_t,
 ) -> libc::c_int {
-    let mut event: yaml_event_t = yaml_event_t {
+    let mut event = yaml_event_t {
         type_0: YAML_NO_EVENT,
         data: unnamed_yaml_event_s_data {
             stream_start: unnamed_yaml_event_s_data_stream_start {
@@ -505,7 +505,7 @@ unsafe fn yaml_emitter_dump_mapping(
             column: 0,
         },
     };
-    let mark: yaml_mark_t = yaml_mark_t {
+    let mark = yaml_mark_t {
         index: 0 as libc::c_int as size_t,
         line: 0 as libc::c_int as size_t,
         column: 0 as libc::c_int as size_t,
