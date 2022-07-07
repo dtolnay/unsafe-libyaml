@@ -16,6 +16,7 @@ pub mod libc {
     };
 }
 
+#[macro_use]
 pub mod externs {
     use crate::libc;
     use std::alloc::Layout;
@@ -136,6 +137,18 @@ pub mod externs {
         } else {
             (*lhs).cmp(&*rhs) as libc::c_int
         }
+    }
+
+    #[macro_export]
+    macro_rules! __assert_fail {
+        (
+            $assertion:expr,
+            $file:expr,
+            $line:expr,
+            $function:expr,
+        ) => {
+            $crate::externs::__assert_fail($assertion, $file, $line, $function)
+        };
     }
 
     pub unsafe fn __assert_fail(

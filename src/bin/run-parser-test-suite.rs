@@ -11,7 +11,6 @@ use std::ptr;
 use unsafe_libyaml::api::{
     yaml_event_delete, yaml_parser_delete, yaml_parser_initialize, yaml_parser_set_input,
 };
-use unsafe_libyaml::externs::__assert_fail;
 use unsafe_libyaml::parser::yaml_parser_parse;
 use unsafe_libyaml::*;
 unsafe fn unsafe_main() -> ExitCode {
@@ -30,7 +29,7 @@ unsafe fn unsafe_main() -> ExitCode {
         }
     }
     let input = input.unwrap_or_else(|| {
-        __assert_fail(
+        __assert_fail!(
             b"input\0" as *const u8 as *const libc::c_char,
             b"run-parser-test-suite.c\0" as *const u8 as *const libc::c_char,
             46 as libc::c_int as libc::c_uint,

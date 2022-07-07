@@ -18,7 +18,7 @@ use unsafe_libyaml::api::{
     yaml_stream_start_event_initialize,
 };
 use unsafe_libyaml::emitter::yaml_emitter_emit;
-use unsafe_libyaml::externs::{__assert_fail, memcpy, strlen, strncmp};
+use unsafe_libyaml::externs::{memcpy, strlen, strncmp};
 use unsafe_libyaml::*;
 unsafe fn unsafe_main() -> ExitCode {
     let mut current_block: u64;
@@ -40,7 +40,7 @@ unsafe fn unsafe_main() -> ExitCode {
         }
     }
     let input = input.unwrap_or_else(|| {
-        __assert_fail(
+        __assert_fail!(
             b"input\0" as *const u8 as *const libc::c_char,
             b"run-emitter-test-suite.c\0" as *const u8 as *const libc::c_char,
             72 as libc::c_int as libc::c_uint,

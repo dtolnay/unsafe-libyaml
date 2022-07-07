@@ -51,7 +51,7 @@ pub unsafe extern "C" fn yaml_parser_load(
     };
     if !parser.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"parser\0" as *const u8 as *const libc::c_char,
             b"loader.c\0" as *const u8 as *const libc::c_char,
             91 as libc::c_int as libc::c_uint,
@@ -63,7 +63,7 @@ pub unsafe extern "C" fn yaml_parser_load(
     }
     if !document.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"document\0" as *const u8 as *const libc::c_char,
             b"loader.c\0" as *const u8 as *const libc::c_char,
             92 as libc::c_int as libc::c_uint,
@@ -102,7 +102,7 @@ pub unsafe extern "C" fn yaml_parser_load(
                     == YAML_STREAM_START_EVENT as libc::c_int as libc::c_uint
                 {
                 } else {
-                    __assert_fail(
+                    __assert_fail!(
                         b"event.type == YAML_STREAM_START_EVENT\0" as *const u8
                             as *const libc::c_char,
                         b"loader.c\0" as *const u8 as *const libc::c_char,
@@ -220,7 +220,7 @@ unsafe extern "C" fn yaml_parser_load_document(
     };
     if (*event).type_0 as libc::c_uint == YAML_DOCUMENT_START_EVENT as libc::c_int as libc::c_uint {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"event->type == YAML_DOCUMENT_START_EVENT\0" as *const u8 as *const libc::c_char,
             b"loader.c\0" as *const u8 as *const libc::c_char,
             189 as libc::c_int as libc::c_uint,
@@ -325,7 +325,7 @@ unsafe extern "C" fn yaml_parser_load_nodes(
             }
             4 => {}
             _ => {
-                __assert_fail(
+                __assert_fail!(
                     b"0\0" as *const u8 as *const libc::c_char,
                     b"loader.c\0" as *const u8 as *const libc::c_char,
                     246 as libc::c_int as libc::c_uint,
@@ -519,7 +519,7 @@ unsafe extern "C" fn yaml_parser_load_node_add(
             }
         }
         _ => {
-            __assert_fail(
+            __assert_fail!(
                 b"0\0" as *const u8 as *const libc::c_char,
                 b"loader.c\0" as *const u8 as *const libc::c_char,
                 340 as libc::c_int as libc::c_uint,
@@ -845,7 +845,7 @@ unsafe extern "C" fn yaml_parser_load_sequence_end(
     let mut index: libc::c_int = 0;
     if ((*ctx).top).c_offset_from((*ctx).start) as libc::c_long > 0 as libc::c_int as libc::c_long {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"((*ctx).top - (*ctx).start) > 0\0" as *const u8 as *const libc::c_char,
             b"loader.c\0" as *const u8 as *const libc::c_char,
             467 as libc::c_int as libc::c_uint,
@@ -864,7 +864,7 @@ unsafe extern "C" fn yaml_parser_load_sequence_end(
         == YAML_SEQUENCE_NODE as libc::c_int as libc::c_uint
     {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"parser->document->nodes.start[index-1].type == YAML_SEQUENCE_NODE\0"
                 as *const u8 as *const libc::c_char,
             b"loader.c\0" as *const u8 as *const libc::c_char,
@@ -1061,7 +1061,7 @@ unsafe extern "C" fn yaml_parser_load_mapping_end(
     let mut index: libc::c_int = 0;
     if ((*ctx).top).c_offset_from((*ctx).start) as libc::c_long > 0 as libc::c_int as libc::c_long {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"((*ctx).top - (*ctx).start) > 0\0" as *const u8 as *const libc::c_char,
             b"loader.c\0" as *const u8 as *const libc::c_char,
             535 as libc::c_int as libc::c_uint,
@@ -1080,7 +1080,7 @@ unsafe extern "C" fn yaml_parser_load_mapping_end(
         == YAML_MAPPING_NODE as libc::c_int as libc::c_uint
     {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"parser->document->nodes.start[index-1].type == YAML_MAPPING_NODE\0"
                 as *const u8 as *const libc::c_char,
             b"loader.c\0" as *const u8 as *const libc::c_char,

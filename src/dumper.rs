@@ -36,7 +36,7 @@ pub unsafe extern "C" fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> 
     };
     if !emitter.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"emitter\0" as *const u8 as *const libc::c_char,
             b"dumper.c\0" as *const u8 as *const libc::c_char,
             67 as libc::c_int as libc::c_uint,
@@ -48,7 +48,7 @@ pub unsafe extern "C" fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> 
     }
     if (*emitter).opened == 0 {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"!emitter->opened\0" as *const u8 as *const libc::c_char,
             b"dumper.c\0" as *const u8 as *const libc::c_char,
             68 as libc::c_int as libc::c_uint,
@@ -103,7 +103,7 @@ pub unsafe extern "C" fn yaml_emitter_close(mut emitter: *mut yaml_emitter_t) ->
     };
     if !emitter.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"emitter\0" as *const u8 as *const libc::c_char,
             b"dumper.c\0" as *const u8 as *const libc::c_char,
             91 as libc::c_int as libc::c_uint,
@@ -115,7 +115,7 @@ pub unsafe extern "C" fn yaml_emitter_close(mut emitter: *mut yaml_emitter_t) ->
     }
     if (*emitter).opened != 0 {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"emitter->opened\0" as *const u8 as *const libc::c_char,
             b"dumper.c\0" as *const u8 as *const libc::c_char,
             92 as libc::c_int as libc::c_uint,
@@ -176,7 +176,7 @@ pub unsafe extern "C" fn yaml_emitter_dump(
     };
     if !emitter.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"emitter\0" as *const u8 as *const libc::c_char,
             b"dumper.c\0" as *const u8 as *const libc::c_char,
             117 as libc::c_int as libc::c_uint,
@@ -188,7 +188,7 @@ pub unsafe extern "C" fn yaml_emitter_dump(
     }
     if !document.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"document\0" as *const u8 as *const libc::c_char,
             b"dumper.c\0" as *const u8 as *const libc::c_char,
             118 as libc::c_int as libc::c_uint,
@@ -219,7 +219,7 @@ pub unsafe extern "C" fn yaml_emitter_dump(
             } else {
                 if (*emitter).opened != 0 {
                 } else {
-                    __assert_fail(
+                    __assert_fail!(
                         b"emitter->opened\0" as *const u8 as *const libc::c_char,
                         b"dumper.c\0" as *const u8 as *const libc::c_char,
                         132 as libc::c_int as libc::c_uint,
@@ -410,7 +410,7 @@ unsafe extern "C" fn yaml_emitter_dump_node(
         2 => return yaml_emitter_dump_sequence(emitter, node, anchor),
         3 => return yaml_emitter_dump_mapping(emitter, node, anchor),
         _ => {
-            __assert_fail(
+            __assert_fail!(
                 b"0\0" as *const u8 as *const libc::c_char,
                 b"dumper.c\0" as *const u8 as *const libc::c_char,
                 289 as libc::c_int as libc::c_uint,

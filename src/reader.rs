@@ -130,7 +130,7 @@ pub unsafe extern "C" fn yaml_parser_update_buffer(
     let mut first: libc::c_int = 1 as libc::c_int;
     if ((*parser).read_handler).is_some() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"parser->read_handler\0" as *const u8 as *const libc::c_char,
             b"reader.c\0" as *const u8 as *const libc::c_char,
             146 as libc::c_int as libc::c_uint,

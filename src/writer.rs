@@ -1,4 +1,3 @@
-use crate::externs::__assert_fail;
 use crate::libc;
 use crate::yaml::*;
 use crate::PointerExt;
@@ -17,7 +16,7 @@ pub unsafe extern "C" fn yaml_emitter_flush(mut emitter: *mut yaml_emitter_t) ->
     let mut high: libc::c_int = 0;
     if !emitter.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"emitter\0" as *const u8 as *const libc::c_char,
             b"writer.c\0" as *const u8 as *const libc::c_char,
             36 as libc::c_int as libc::c_uint,
@@ -29,7 +28,7 @@ pub unsafe extern "C" fn yaml_emitter_flush(mut emitter: *mut yaml_emitter_t) ->
     }
     if ((*emitter).write_handler).is_some() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"emitter->write_handler\0" as *const u8 as *const libc::c_char,
             b"writer.c\0" as *const u8 as *const libc::c_char,
             37 as libc::c_int as libc::c_uint,
@@ -41,7 +40,7 @@ pub unsafe extern "C" fn yaml_emitter_flush(mut emitter: *mut yaml_emitter_t) ->
     }
     if (*emitter).encoding as u64 != 0 {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"emitter->encoding\0" as *const u8 as *const libc::c_char,
             b"writer.c\0" as *const u8 as *const libc::c_char,
             38 as libc::c_int as libc::c_uint,

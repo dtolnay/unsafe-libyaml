@@ -14,7 +14,7 @@ pub unsafe extern "C" fn yaml_parser_scan(
 ) -> libc::c_int {
     if !parser.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"parser\0" as *const u8 as *const libc::c_char,
             b"scanner.c\0" as *const u8 as *const libc::c_char,
             745 as libc::c_int as libc::c_uint,
@@ -26,7 +26,7 @@ pub unsafe extern "C" fn yaml_parser_scan(
     }
     if !token.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"token\0" as *const u8 as *const libc::c_char,
             b"scanner.c\0" as *const u8 as *const libc::c_char,
             746 as libc::c_int as libc::c_uint,

@@ -195,7 +195,7 @@ pub unsafe extern "C" fn yaml_queue_extend(
 pub unsafe extern "C" fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) -> libc::c_int {
     if !parser.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"parser\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             179 as libc::c_int as libc::c_uint,
@@ -418,7 +418,7 @@ pub unsafe extern "C" fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) 
 pub unsafe extern "C" fn yaml_parser_delete(mut parser: *mut yaml_parser_t) {
     if !parser.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"parser\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             222 as libc::c_int as libc::c_uint,
@@ -541,7 +541,7 @@ pub unsafe extern "C" fn yaml_parser_set_input_string(
 ) {
     if !parser.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"parser\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             292 as libc::c_int as libc::c_uint,
@@ -556,7 +556,7 @@ pub unsafe extern "C" fn yaml_parser_set_input_string(
     }
     if ((*parser).read_handler).is_none() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"!parser->read_handler\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             293 as libc::c_int as libc::c_uint,
@@ -571,7 +571,7 @@ pub unsafe extern "C" fn yaml_parser_set_input_string(
     }
     if !input.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"input\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             294 as libc::c_int as libc::c_uint,
@@ -611,7 +611,7 @@ pub unsafe extern "C" fn yaml_parser_set_input(
 ) {
     if !parser.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"parser\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             329 as libc::c_int as libc::c_uint,
@@ -623,7 +623,7 @@ pub unsafe extern "C" fn yaml_parser_set_input(
     }
     if ((*parser).read_handler).is_none() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"!parser->read_handler\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             330 as libc::c_int as libc::c_uint,
@@ -635,7 +635,7 @@ pub unsafe extern "C" fn yaml_parser_set_input(
     }
     if handler.is_some() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"handler\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             331 as libc::c_int as libc::c_uint,
@@ -657,7 +657,7 @@ pub unsafe extern "C" fn yaml_parser_set_encoding(
 ) {
     if !parser.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"parser\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             344 as libc::c_int as libc::c_uint,
@@ -669,7 +669,7 @@ pub unsafe extern "C" fn yaml_parser_set_encoding(
     }
     if (*parser).encoding as u64 == 0 {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"!parser->encoding\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             345 as libc::c_int as libc::c_uint,
@@ -685,7 +685,7 @@ pub unsafe extern "C" fn yaml_parser_set_encoding(
 pub unsafe extern "C" fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> libc::c_int {
     if !emitter.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"emitter\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             357 as libc::c_int as libc::c_uint,
@@ -859,7 +859,7 @@ pub unsafe extern "C" fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_
 pub unsafe extern "C" fn yaml_emitter_delete(mut emitter: *mut yaml_emitter_t) {
     if !emitter.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"emitter\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             394 as libc::c_int as libc::c_uint,
@@ -969,7 +969,7 @@ pub unsafe extern "C" fn yaml_emitter_set_output_string(
 ) {
     if !emitter.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"emitter\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             460 as libc::c_int as libc::c_uint,
@@ -984,7 +984,7 @@ pub unsafe extern "C" fn yaml_emitter_set_output_string(
     }
     if ((*emitter).write_handler).is_none() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"!emitter->write_handler\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             461 as libc::c_int as libc::c_uint,
@@ -999,7 +999,7 @@ pub unsafe extern "C" fn yaml_emitter_set_output_string(
     }
     if !output.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"output\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             462 as libc::c_int as libc::c_uint,
@@ -1034,7 +1034,7 @@ pub unsafe extern "C" fn yaml_emitter_set_output(
 ) {
     if !emitter.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"emitter\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             498 as libc::c_int as libc::c_uint,
@@ -1046,7 +1046,7 @@ pub unsafe extern "C" fn yaml_emitter_set_output(
     }
     if ((*emitter).write_handler).is_none() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"!emitter->write_handler\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             499 as libc::c_int as libc::c_uint,
@@ -1058,7 +1058,7 @@ pub unsafe extern "C" fn yaml_emitter_set_output(
     }
     if handler.is_some() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"handler\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             500 as libc::c_int as libc::c_uint,
@@ -1080,7 +1080,7 @@ pub unsafe extern "C" fn yaml_emitter_set_encoding(
 ) {
     if !emitter.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"emitter\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             513 as libc::c_int as libc::c_uint,
@@ -1092,7 +1092,7 @@ pub unsafe extern "C" fn yaml_emitter_set_encoding(
     }
     if (*emitter).encoding as u64 == 0 {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"!emitter->encoding\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             514 as libc::c_int as libc::c_uint,
@@ -1111,7 +1111,7 @@ pub unsafe extern "C" fn yaml_emitter_set_canonical(
 ) {
     if !emitter.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"emitter\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             526 as libc::c_int as libc::c_uint,
@@ -1130,7 +1130,7 @@ pub unsafe extern "C" fn yaml_emitter_set_indent(
 ) {
     if !emitter.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"emitter\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             538 as libc::c_int as libc::c_uint,
@@ -1153,7 +1153,7 @@ pub unsafe extern "C" fn yaml_emitter_set_width(
 ) {
     if !emitter.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"emitter\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             550 as libc::c_int as libc::c_uint,
@@ -1176,7 +1176,7 @@ pub unsafe extern "C" fn yaml_emitter_set_unicode(
 ) {
     if !emitter.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"emitter\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             562 as libc::c_int as libc::c_uint,
@@ -1195,7 +1195,7 @@ pub unsafe extern "C" fn yaml_emitter_set_break(
 ) {
     if !emitter.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"emitter\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             574 as libc::c_int as libc::c_uint,
@@ -1211,7 +1211,7 @@ pub unsafe extern "C" fn yaml_emitter_set_break(
 pub unsafe extern "C" fn yaml_token_delete(mut token: *mut yaml_token_t) {
     if !token.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"token\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             586 as libc::c_int as libc::c_uint,
@@ -1326,7 +1326,7 @@ pub unsafe extern "C" fn yaml_stream_start_event_initialize(
     };
     if !event.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"event\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             674 as libc::c_int as libc::c_uint,
@@ -1361,7 +1361,7 @@ pub unsafe extern "C" fn yaml_stream_end_event_initialize(
     };
     if !event.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"event\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             690 as libc::c_int as libc::c_uint,
@@ -1420,7 +1420,7 @@ pub unsafe extern "C" fn yaml_document_start_event_initialize(
     };
     if !event.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"event\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             720 as libc::c_int as libc::c_uint,
@@ -1437,7 +1437,7 @@ pub unsafe extern "C" fn yaml_document_start_event_initialize(
         || tag_directives_start == tag_directives_end
     {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"(tag_directives_start && tag_directives_end) || (tag_directives_start == tag_directives_end)\0"
                 as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
@@ -1493,7 +1493,7 @@ pub unsafe extern "C" fn yaml_document_start_event_initialize(
                         }
                         if !((*tag_directive).handle).is_null() {
                         } else {
-                            __assert_fail(
+                            __assert_fail!(
                                 b"tag_directive->handle\0" as *const u8
                                     as *const libc::c_char,
                                 b"api.c\0" as *const u8 as *const libc::c_char,
@@ -1509,7 +1509,7 @@ pub unsafe extern "C" fn yaml_document_start_event_initialize(
                         }
                         if !((*tag_directive).prefix).is_null() {
                         } else {
-                            __assert_fail(
+                            __assert_fail!(
                                 b"tag_directive->prefix\0" as *const u8
                                     as *const libc::c_char,
                                 b"api.c\0" as *const u8 as *const libc::c_char,
@@ -1629,7 +1629,7 @@ pub unsafe extern "C" fn yaml_document_end_event_initialize(
     };
     if !event.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"event\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             785 as libc::c_int as libc::c_uint,
@@ -1666,7 +1666,7 @@ pub unsafe extern "C" fn yaml_alias_event_initialize(
     let mut anchor_copy: *mut yaml_char_t = 0 as *mut yaml_char_t;
     if !event.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"event\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             802 as libc::c_int as libc::c_uint,
@@ -1678,7 +1678,7 @@ pub unsafe extern "C" fn yaml_alias_event_initialize(
     }
     if !anchor.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"anchor\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             803 as libc::c_int as libc::c_uint,
@@ -1732,7 +1732,7 @@ pub unsafe extern "C" fn yaml_scalar_event_initialize(
     let mut value_copy: *mut yaml_char_t = 0 as *mut yaml_char_t;
     if !event.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"event\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             832 as libc::c_int as libc::c_uint,
@@ -1747,7 +1747,7 @@ pub unsafe extern "C" fn yaml_scalar_event_initialize(
     }
     if !value.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"value\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             833 as libc::c_int as libc::c_uint,
@@ -1858,7 +1858,7 @@ pub unsafe extern "C" fn yaml_sequence_start_event_initialize(
     let mut tag_copy: *mut yaml_char_t = 0 as *mut yaml_char_t;
     if !event.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"event\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             883 as libc::c_int as libc::c_uint,
@@ -1942,7 +1942,7 @@ pub unsafe extern "C" fn yaml_sequence_end_event_initialize(
     };
     if !event.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"event\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             918 as libc::c_int as libc::c_uint,
@@ -1983,7 +1983,7 @@ pub unsafe extern "C" fn yaml_mapping_start_event_initialize(
     let mut tag_copy: *mut yaml_char_t = 0 as *mut yaml_char_t;
     if !event.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"event\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             938 as libc::c_int as libc::c_uint,
@@ -2067,7 +2067,7 @@ pub unsafe extern "C" fn yaml_mapping_end_event_initialize(
     };
     if !event.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"event\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             973 as libc::c_int as libc::c_uint,
@@ -2092,7 +2092,7 @@ pub unsafe extern "C" fn yaml_event_delete(mut event: *mut yaml_event_t) {
     let mut tag_directive: *mut yaml_tag_directive_t = 0 as *mut yaml_tag_directive_t;
     if !event.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"event\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             989 as libc::c_int as libc::c_uint,
@@ -2185,7 +2185,7 @@ pub unsafe extern "C" fn yaml_document_initialize(
     };
     if !document.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"document\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             1059 as libc::c_int as libc::c_uint,
@@ -2202,7 +2202,7 @@ pub unsafe extern "C" fn yaml_document_initialize(
         || tag_directives_start == tag_directives_end
     {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"(tag_directives_start && tag_directives_end) || (tag_directives_start == tag_directives_end)\0"
                 as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
@@ -2273,7 +2273,7 @@ pub unsafe extern "C" fn yaml_document_initialize(
                             }
                             if !((*tag_directive).handle).is_null() {
                             } else {
-                                __assert_fail(
+                                __assert_fail!(
                                     b"tag_directive->handle\0" as *const u8
                                         as *const libc::c_char,
                                     b"api.c\0" as *const u8 as *const libc::c_char,
@@ -2289,7 +2289,7 @@ pub unsafe extern "C" fn yaml_document_initialize(
                             }
                             if !((*tag_directive).prefix).is_null() {
                             } else {
-                                __assert_fail(
+                                __assert_fail!(
                                     b"tag_directive->prefix\0" as *const u8
                                         as *const libc::c_char,
                                     b"api.c\0" as *const u8 as *const libc::c_char,
@@ -2409,7 +2409,7 @@ pub unsafe extern "C" fn yaml_document_delete(mut document: *mut yaml_document_t
     let mut tag_directive: *mut yaml_tag_directive_t = 0 as *mut yaml_tag_directive_t;
     if !document.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"document\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             1127 as libc::c_int as libc::c_uint,
@@ -2441,7 +2441,7 @@ pub unsafe extern "C" fn yaml_document_delete(mut document: *mut yaml_document_t
                 node.data.mapping.pairs.start = node.data.mapping.pairs.top;
             }
             _ => {
-                __assert_fail(
+                __assert_fail!(
                     b"0\0" as *const u8 as *const libc::c_char,
                     b"api.c\0" as *const u8 as *const libc::c_char,
                     1143 as libc::c_int as libc::c_uint,
@@ -2481,7 +2481,7 @@ pub unsafe extern "C" fn yaml_document_get_node(
 ) -> *mut yaml_node_t {
     if !document.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"document\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             1167 as libc::c_int as libc::c_uint,
@@ -2506,7 +2506,7 @@ pub unsafe extern "C" fn yaml_document_get_root_node(
 ) -> *mut yaml_node_t {
     if !document.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"document\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             1182 as libc::c_int as libc::c_uint,
@@ -2565,7 +2565,7 @@ pub unsafe extern "C" fn yaml_document_add_scalar(
     };
     if !document.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"document\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             1207 as libc::c_int as libc::c_uint,
@@ -2580,7 +2580,7 @@ pub unsafe extern "C" fn yaml_document_add_scalar(
     }
     if !value.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"value\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             1208 as libc::c_int as libc::c_uint,
@@ -2703,7 +2703,7 @@ pub unsafe extern "C" fn yaml_document_add_sequence(
     };
     if !document.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"document\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             1260 as libc::c_int as libc::c_uint,
@@ -2830,7 +2830,7 @@ pub unsafe extern "C" fn yaml_document_add_mapping(
     };
     if !document.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"document\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             1305 as libc::c_int as libc::c_uint,
@@ -2919,7 +2919,7 @@ pub unsafe extern "C" fn yaml_document_append_sequence_item(
     };
     if !document.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"document\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             1342 as libc::c_int as libc::c_uint,
@@ -2933,7 +2933,7 @@ pub unsafe extern "C" fn yaml_document_append_sequence_item(
         && ((*document).nodes.start).c_offset(sequence as isize) <= (*document).nodes.top
     {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"sequence > 0 && document->nodes.start + sequence <= document->nodes.top\0"
                 as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
@@ -2949,7 +2949,7 @@ pub unsafe extern "C" fn yaml_document_append_sequence_item(
         == YAML_SEQUENCE_NODE as libc::c_int as libc::c_uint
     {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"document->nodes.start[sequence-1].type == YAML_SEQUENCE_NODE\0" as *const u8
                 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
@@ -2964,7 +2964,7 @@ pub unsafe extern "C" fn yaml_document_append_sequence_item(
         && ((*document).nodes.start).c_offset(item as isize) <= (*document).nodes.top
     {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"item > 0 && document->nodes.start + item <= document->nodes.top\0" as *const u8
                 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
@@ -3035,7 +3035,7 @@ pub unsafe extern "C" fn yaml_document_append_mapping_pair(
     let mut pair: yaml_node_pair_t = yaml_node_pair_t { key: 0, value: 0 };
     if !document.is_null() {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"document\0" as *const u8 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
             1372 as libc::c_int as libc::c_uint,
@@ -3049,7 +3049,7 @@ pub unsafe extern "C" fn yaml_document_append_mapping_pair(
         && ((*document).nodes.start).c_offset(mapping as isize) <= (*document).nodes.top
     {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"mapping > 0 && document->nodes.start + mapping <= document->nodes.top\0" as *const u8
                 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
@@ -3065,7 +3065,7 @@ pub unsafe extern "C" fn yaml_document_append_mapping_pair(
         == YAML_MAPPING_NODE as libc::c_int as libc::c_uint
     {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"document->nodes.start[mapping-1].type == YAML_MAPPING_NODE\0" as *const u8
                 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
@@ -3080,7 +3080,7 @@ pub unsafe extern "C" fn yaml_document_append_mapping_pair(
         && ((*document).nodes.start).c_offset(key as isize) <= (*document).nodes.top
     {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"key > 0 && document->nodes.start + key <= document->nodes.top\0" as *const u8
                 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
@@ -3095,7 +3095,7 @@ pub unsafe extern "C" fn yaml_document_append_mapping_pair(
         && ((*document).nodes.start).c_offset(value as isize) <= (*document).nodes.top
     {
     } else {
-        __assert_fail(
+        __assert_fail!(
             b"value > 0 && document->nodes.start + value <= document->nodes.top\0" as *const u8
                 as *const libc::c_char,
             b"api.c\0" as *const u8 as *const libc::c_char,
