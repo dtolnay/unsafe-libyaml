@@ -19,10 +19,6 @@ use std::io::{self, Write as _};
 use std::mem::MaybeUninit;
 use std::process::{self, ExitCode};
 use std::ptr;
-use unsafe_libyaml::api::{
-    yaml_event_delete, yaml_parser_delete, yaml_parser_initialize, yaml_parser_set_input,
-};
-use unsafe_libyaml::parser::yaml_parser_parse;
 use unsafe_libyaml::*;
 unsafe fn unsafe_main() -> ExitCode {
     let mut input = None;

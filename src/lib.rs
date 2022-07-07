@@ -211,15 +211,22 @@ impl<T> PointerExt for *mut T {
     }
 }
 
+mod api;
+mod dumper;
+mod emitter;
+mod loader;
+mod parser;
+mod reader;
+mod scanner;
+mod writer;
 mod yaml;
 
-pub mod api;
-pub mod dumper;
-pub mod emitter;
-pub mod loader;
-pub mod parser;
-pub mod reader;
-pub mod scanner;
-pub mod writer;
-
+pub use crate::api::*;
+pub use crate::dumper::*;
+pub use crate::emitter::*;
+pub use crate::loader::*;
+pub use crate::parser::*;
+pub use crate::reader::*;
+pub use crate::scanner::*;
+pub use crate::writer::*;
 pub use crate::yaml::*;
