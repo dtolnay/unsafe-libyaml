@@ -36,7 +36,7 @@ unsafe fn yaml_parser_determine_encoding(mut parser: *mut yaml_parser_t) -> libc
     {
         (*parser).encoding = YAML_UTF16LE_ENCODING;
         let fresh1 = addr_of_mut!((*parser).raw_buffer.pointer);
-        *fresh1 = (*fresh1).c_offset(2 as libc::c_int as isize);
+        *fresh1 = (*fresh1).wrapping_offset(2 as libc::c_int as isize);
         let fresh2 = addr_of_mut!((*parser).offset);
         *fresh2 = (*fresh2 as libc::c_ulong).wrapping_add(2 as libc::c_int as libc::c_ulong)
             as size_t as size_t;
@@ -51,7 +51,7 @@ unsafe fn yaml_parser_determine_encoding(mut parser: *mut yaml_parser_t) -> libc
     {
         (*parser).encoding = YAML_UTF16BE_ENCODING;
         let fresh3 = addr_of_mut!((*parser).raw_buffer.pointer);
-        *fresh3 = (*fresh3).c_offset(2 as libc::c_int as isize);
+        *fresh3 = (*fresh3).wrapping_offset(2 as libc::c_int as isize);
         let fresh4 = addr_of_mut!((*parser).offset);
         *fresh4 = (*fresh4 as libc::c_ulong).wrapping_add(2 as libc::c_int as libc::c_ulong)
             as size_t as size_t;
@@ -66,7 +66,7 @@ unsafe fn yaml_parser_determine_encoding(mut parser: *mut yaml_parser_t) -> libc
     {
         (*parser).encoding = YAML_UTF8_ENCODING;
         let fresh5 = addr_of_mut!((*parser).raw_buffer.pointer);
-        *fresh5 = (*fresh5).c_offset(3 as libc::c_int as isize);
+        *fresh5 = (*fresh5).wrapping_offset(3 as libc::c_int as isize);
         let fresh6 = addr_of_mut!((*parser).offset);
         *fresh6 = (*fresh6 as libc::c_ulong).wrapping_add(3 as libc::c_int as libc::c_ulong)
             as size_t as size_t;
@@ -96,7 +96,7 @@ unsafe fn yaml_parser_update_raw_buffer(mut parser: *mut yaml_parser_t) -> libc:
         );
     }
     let fresh7 = addr_of_mut!((*parser).raw_buffer.last);
-    *fresh7 = (*fresh7).c_offset(
+    *fresh7 = (*fresh7).wrapping_offset(
         -(((*parser).raw_buffer.pointer).c_offset_from((*parser).raw_buffer.start) as libc::c_long
             as isize),
     );
@@ -118,7 +118,7 @@ unsafe fn yaml_parser_update_raw_buffer(mut parser: *mut yaml_parser_t) -> libc:
         );
     }
     let fresh9 = addr_of_mut!((*parser).raw_buffer.last);
-    *fresh9 = (*fresh9).c_offset(size_read as isize);
+    *fresh9 = (*fresh9).wrapping_offset(size_read as isize);
     if size_read == 0 {
         (*parser).eof = 1 as libc::c_int;
     }
@@ -151,7 +151,7 @@ pub unsafe fn yaml_parser_update_buffer(parser: *mut yaml_parser_t, length: size
         let fresh10 = addr_of_mut!((*parser).buffer.pointer);
         *fresh10 = (*parser).buffer.start;
         let fresh11 = addr_of_mut!((*parser).buffer.last);
-        *fresh11 = ((*parser).buffer.start).c_offset(size as isize);
+        *fresh11 = ((*parser).buffer.start).wrapping_offset(size as isize);
     } else if (*parser).buffer.pointer == (*parser).buffer.last {
         let fresh12 = addr_of_mut!((*parser).buffer.pointer);
         *fresh12 = (*parser).buffer.start;
@@ -179,7 +179,8 @@ pub unsafe fn yaml_parser_update_buffer(parser: *mut yaml_parser_t, length: size
                 as libc::c_long as size_t;
             match (*parser).encoding as libc::c_uint {
                 1 => {
-                    octet = *((*parser).raw_buffer.pointer).c_offset(0 as libc::c_int as isize);
+                    octet =
+                        *((*parser).raw_buffer.pointer).wrapping_offset(0 as libc::c_int as isize);
                     width = (if octet as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int {
                         1 as libc::c_int
                     } else if octet as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int {
@@ -227,7 +228,7 @@ pub unsafe fn yaml_parser_update_buffer(parser: *mut yaml_parser_t, length: size
                         }) as libc::c_uint;
                         k = 1 as libc::c_int as size_t;
                         while k < width as libc::c_ulong {
-                            octet = *((*parser).raw_buffer.pointer).c_offset(k as isize);
+                            octet = *((*parser).raw_buffer.pointer).wrapping_offset(k as isize);
                             if octet as libc::c_int & 0xc0 as libc::c_int != 0x80 as libc::c_int {
                                 return yaml_parser_set_reader_error(
                                     parser,
@@ -298,9 +299,9 @@ pub unsafe fn yaml_parser_update_buffer(parser: *mut yaml_parser_t, length: size
                         }
                         incomplete = 1 as libc::c_int;
                     } else {
-                        value = (*((*parser).raw_buffer.pointer).c_offset(low as isize)
+                        value = (*((*parser).raw_buffer.pointer).wrapping_offset(low as isize)
                             as libc::c_int
-                            + ((*((*parser).raw_buffer.pointer).c_offset(high as isize)
+                            + ((*((*parser).raw_buffer.pointer).wrapping_offset(high as isize)
                                 as libc::c_int)
                                 << 8 as libc::c_int))
                             as libc::c_uint;
@@ -332,10 +333,10 @@ pub unsafe fn yaml_parser_update_buffer(parser: *mut yaml_parser_t, length: size
                                 incomplete = 1 as libc::c_int;
                             } else {
                                 value2 = (*((*parser).raw_buffer.pointer)
-                                    .c_offset((low + 2 as libc::c_int) as isize)
+                                    .wrapping_offset((low + 2 as libc::c_int) as isize)
                                     as libc::c_int
                                     + ((*((*parser).raw_buffer.pointer)
-                                        .c_offset((high + 2 as libc::c_int) as isize)
+                                        .wrapping_offset((high + 2 as libc::c_int) as isize)
                                         as libc::c_int)
                                         << 8 as libc::c_int))
                                     as libc::c_uint;
@@ -389,69 +390,69 @@ pub unsafe fn yaml_parser_update_buffer(parser: *mut yaml_parser_t, length: size
                 );
             }
             let fresh14 = addr_of_mut!((*parser).raw_buffer.pointer);
-            *fresh14 = (*fresh14).c_offset(width as isize);
+            *fresh14 = (*fresh14).wrapping_offset(width as isize);
             let fresh15 = addr_of_mut!((*parser).offset);
             *fresh15 = (*fresh15 as libc::c_ulong).wrapping_add(width as libc::c_ulong) as size_t
                 as size_t;
             if value <= 0x7f as libc::c_int as libc::c_uint {
                 let fresh16 = addr_of_mut!((*parser).buffer.last);
                 let fresh17 = *fresh16;
-                *fresh16 = (*fresh16).c_offset(1);
+                *fresh16 = (*fresh16).wrapping_offset(1);
                 *fresh17 = value as yaml_char_t;
             } else if value <= 0x7ff as libc::c_int as libc::c_uint {
                 let fresh18 = addr_of_mut!((*parser).buffer.last);
                 let fresh19 = *fresh18;
-                *fresh18 = (*fresh18).c_offset(1);
+                *fresh18 = (*fresh18).wrapping_offset(1);
                 *fresh19 = (0xc0 as libc::c_int as libc::c_uint)
                     .wrapping_add(value >> 6 as libc::c_int)
                     as yaml_char_t;
                 let fresh20 = addr_of_mut!((*parser).buffer.last);
                 let fresh21 = *fresh20;
-                *fresh20 = (*fresh20).c_offset(1);
+                *fresh20 = (*fresh20).wrapping_offset(1);
                 *fresh21 = (0x80 as libc::c_int as libc::c_uint)
                     .wrapping_add(value & 0x3f as libc::c_int as libc::c_uint)
                     as yaml_char_t;
             } else if value <= 0xffff as libc::c_int as libc::c_uint {
                 let fresh22 = addr_of_mut!((*parser).buffer.last);
                 let fresh23 = *fresh22;
-                *fresh22 = (*fresh22).c_offset(1);
+                *fresh22 = (*fresh22).wrapping_offset(1);
                 *fresh23 = (0xe0 as libc::c_int as libc::c_uint)
                     .wrapping_add(value >> 12 as libc::c_int)
                     as yaml_char_t;
                 let fresh24 = addr_of_mut!((*parser).buffer.last);
                 let fresh25 = *fresh24;
-                *fresh24 = (*fresh24).c_offset(1);
+                *fresh24 = (*fresh24).wrapping_offset(1);
                 *fresh25 = (0x80 as libc::c_int as libc::c_uint)
                     .wrapping_add(value >> 6 as libc::c_int & 0x3f as libc::c_int as libc::c_uint)
                     as yaml_char_t;
                 let fresh26 = addr_of_mut!((*parser).buffer.last);
                 let fresh27 = *fresh26;
-                *fresh26 = (*fresh26).c_offset(1);
+                *fresh26 = (*fresh26).wrapping_offset(1);
                 *fresh27 = (0x80 as libc::c_int as libc::c_uint)
                     .wrapping_add(value & 0x3f as libc::c_int as libc::c_uint)
                     as yaml_char_t;
             } else {
                 let fresh28 = addr_of_mut!((*parser).buffer.last);
                 let fresh29 = *fresh28;
-                *fresh28 = (*fresh28).c_offset(1);
+                *fresh28 = (*fresh28).wrapping_offset(1);
                 *fresh29 = (0xf0 as libc::c_int as libc::c_uint)
                     .wrapping_add(value >> 18 as libc::c_int)
                     as yaml_char_t;
                 let fresh30 = addr_of_mut!((*parser).buffer.last);
                 let fresh31 = *fresh30;
-                *fresh30 = (*fresh30).c_offset(1);
+                *fresh30 = (*fresh30).wrapping_offset(1);
                 *fresh31 = (0x80 as libc::c_int as libc::c_uint)
                     .wrapping_add(value >> 12 as libc::c_int & 0x3f as libc::c_int as libc::c_uint)
                     as yaml_char_t;
                 let fresh32 = addr_of_mut!((*parser).buffer.last);
                 let fresh33 = *fresh32;
-                *fresh32 = (*fresh32).c_offset(1);
+                *fresh32 = (*fresh32).wrapping_offset(1);
                 *fresh33 = (0x80 as libc::c_int as libc::c_uint)
                     .wrapping_add(value >> 6 as libc::c_int & 0x3f as libc::c_int as libc::c_uint)
                     as yaml_char_t;
                 let fresh34 = addr_of_mut!((*parser).buffer.last);
                 let fresh35 = *fresh34;
-                *fresh34 = (*fresh34).c_offset(1);
+                *fresh34 = (*fresh34).wrapping_offset(1);
                 *fresh35 = (0x80 as libc::c_int as libc::c_uint)
                     .wrapping_add(value & 0x3f as libc::c_int as libc::c_uint)
                     as yaml_char_t;
@@ -462,7 +463,7 @@ pub unsafe fn yaml_parser_update_buffer(parser: *mut yaml_parser_t, length: size
         if (*parser).eof != 0 {
             let fresh37 = addr_of_mut!((*parser).buffer.last);
             let fresh38 = *fresh37;
-            *fresh37 = (*fresh37).c_offset(1);
+            *fresh37 = (*fresh37).wrapping_offset(1);
             *fresh38 = '\0' as i32 as yaml_char_t;
             let fresh39 = addr_of_mut!((*parser).unread);
             *fresh39 = (*fresh39).wrapping_add(1);

@@ -61,7 +61,7 @@ pub unsafe fn yaml_emitter_flush(emitter: *mut yaml_emitter_t) -> libc::c_int {
         let mut octet: libc::c_uchar;
         let mut value: libc::c_uint;
         let mut k: size_t;
-        octet = *((*emitter).buffer.pointer).c_offset(0 as libc::c_int as isize);
+        octet = *((*emitter).buffer.pointer).wrapping_offset(0 as libc::c_int as isize);
         let width: libc::c_uint = (if octet as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
         {
             1 as libc::c_int
@@ -87,35 +87,35 @@ pub unsafe fn yaml_emitter_flush(emitter: *mut yaml_emitter_t) -> libc::c_int {
         }) as libc::c_uint;
         k = 1 as libc::c_int as size_t;
         while k < width as libc::c_ulong {
-            octet = *((*emitter).buffer.pointer).c_offset(k as isize);
+            octet = *((*emitter).buffer.pointer).wrapping_offset(k as isize);
             value = (value << 6 as libc::c_int)
                 .wrapping_add((octet as libc::c_int & 0x3f as libc::c_int) as libc::c_uint);
             k = k.wrapping_add(1);
         }
         let fresh5 = addr_of_mut!((*emitter).buffer.pointer);
-        *fresh5 = (*fresh5).c_offset(width as isize);
+        *fresh5 = (*fresh5).wrapping_offset(width as isize);
         if value < 0x10000 as libc::c_int as libc::c_uint {
-            *((*emitter).raw_buffer.last).c_offset(high as isize) =
+            *((*emitter).raw_buffer.last).wrapping_offset(high as isize) =
                 (value >> 8 as libc::c_int) as libc::c_uchar;
-            *((*emitter).raw_buffer.last).c_offset(low as isize) =
+            *((*emitter).raw_buffer.last).wrapping_offset(low as isize) =
                 (value & 0xff as libc::c_int as libc::c_uint) as libc::c_uchar;
             let fresh6 = addr_of_mut!((*emitter).raw_buffer.last);
-            *fresh6 = (*fresh6).c_offset(2 as libc::c_int as isize);
+            *fresh6 = (*fresh6).wrapping_offset(2 as libc::c_int as isize);
         } else {
             value = value.wrapping_sub(0x10000 as libc::c_int as libc::c_uint);
-            *((*emitter).raw_buffer.last).c_offset(high as isize) =
+            *((*emitter).raw_buffer.last).wrapping_offset(high as isize) =
                 (0xd8 as libc::c_int as libc::c_uint).wrapping_add(value >> 18 as libc::c_int)
                     as libc::c_uchar;
-            *((*emitter).raw_buffer.last).c_offset(low as isize) =
+            *((*emitter).raw_buffer.last).wrapping_offset(low as isize) =
                 (value >> 10 as libc::c_int & 0xff as libc::c_int as libc::c_uint) as libc::c_uchar;
-            *((*emitter).raw_buffer.last).c_offset((high + 2 as libc::c_int) as isize) =
+            *((*emitter).raw_buffer.last).wrapping_offset((high + 2 as libc::c_int) as isize) =
                 (0xdc as libc::c_int as libc::c_uint)
                     .wrapping_add(value >> 8 as libc::c_int & 0xff as libc::c_int as libc::c_uint)
                     as libc::c_uchar;
-            *((*emitter).raw_buffer.last).c_offset((low + 2 as libc::c_int) as isize) =
+            *((*emitter).raw_buffer.last).wrapping_offset((low + 2 as libc::c_int) as isize) =
                 (value & 0xff as libc::c_int as libc::c_uint) as libc::c_uchar;
             let fresh7 = addr_of_mut!((*emitter).raw_buffer.last);
-            *fresh7 = (*fresh7).c_offset(4 as libc::c_int as isize);
+            *fresh7 = (*fresh7).wrapping_offset(4 as libc::c_int as isize);
         }
     }
     if ((*emitter).write_handler).expect("non-null function pointer")(

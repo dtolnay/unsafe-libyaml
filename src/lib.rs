@@ -186,25 +186,16 @@ pub mod externs {
 }
 
 trait PointerExt: Sized {
-    fn c_offset(self, count: isize) -> Self;
     fn c_offset_from(self, origin: Self) -> isize;
 }
 
 impl<T> PointerExt for *const T {
-    fn c_offset(self, count: isize) -> *const T {
-        self.wrapping_offset(count)
-    }
-
     fn c_offset_from(self, origin: *const T) -> isize {
         (self as isize - origin as isize) / size_of::<T>() as isize
     }
 }
 
 impl<T> PointerExt for *mut T {
-    fn c_offset(self, count: isize) -> *mut T {
-        self.wrapping_offset(count)
-    }
-
     fn c_offset_from(self, origin: *mut T) -> isize {
         (self as isize - origin as isize) / size_of::<T>() as isize
     }
