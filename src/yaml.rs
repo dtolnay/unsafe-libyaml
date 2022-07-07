@@ -4,96 +4,86 @@ pub type yaml_char_t = libc::c_uchar;
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct yaml_version_directive_s {
+pub struct yaml_version_directive_t {
     pub major: libc::c_int,
     pub minor: libc::c_int,
 }
-pub type yaml_version_directive_t = yaml_version_directive_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct yaml_tag_directive_s {
+pub struct yaml_tag_directive_t {
     pub handle: *mut yaml_char_t,
     pub prefix: *mut yaml_char_t,
 }
-pub type yaml_tag_directive_t = yaml_tag_directive_s;
-pub type yaml_encoding_e = libc::c_uint;
-pub const YAML_UTF16BE_ENCODING: yaml_encoding_e = 3;
-pub const YAML_UTF16LE_ENCODING: yaml_encoding_e = 2;
-pub const YAML_UTF8_ENCODING: yaml_encoding_e = 1;
-pub const YAML_ANY_ENCODING: yaml_encoding_e = 0;
-pub type yaml_encoding_t = yaml_encoding_e;
-pub type yaml_break_e = libc::c_uint;
-pub const YAML_CRLN_BREAK: yaml_break_e = 3;
-pub const YAML_LN_BREAK: yaml_break_e = 2;
-pub const YAML_CR_BREAK: yaml_break_e = 1;
-pub const YAML_ANY_BREAK: yaml_break_e = 0;
-pub type yaml_break_t = yaml_break_e;
-pub type yaml_error_type_e = libc::c_uint;
-pub const YAML_EMITTER_ERROR: yaml_error_type_e = 7;
-pub const YAML_WRITER_ERROR: yaml_error_type_e = 6;
-pub const YAML_COMPOSER_ERROR: yaml_error_type_e = 5;
-pub const YAML_PARSER_ERROR: yaml_error_type_e = 4;
-pub const YAML_SCANNER_ERROR: yaml_error_type_e = 3;
-pub const YAML_READER_ERROR: yaml_error_type_e = 2;
-pub const YAML_MEMORY_ERROR: yaml_error_type_e = 1;
-pub const YAML_NO_ERROR: yaml_error_type_e = 0;
-pub type yaml_error_type_t = yaml_error_type_e;
+pub type yaml_encoding_t = libc::c_uint;
+pub const YAML_UTF16BE_ENCODING: yaml_encoding_t = 3;
+pub const YAML_UTF16LE_ENCODING: yaml_encoding_t = 2;
+pub const YAML_UTF8_ENCODING: yaml_encoding_t = 1;
+pub const YAML_ANY_ENCODING: yaml_encoding_t = 0;
+pub type yaml_break_t = libc::c_uint;
+pub const YAML_CRLN_BREAK: yaml_break_t = 3;
+pub const YAML_LN_BREAK: yaml_break_t = 2;
+pub const YAML_CR_BREAK: yaml_break_t = 1;
+pub const YAML_ANY_BREAK: yaml_break_t = 0;
+pub type yaml_error_type_t = libc::c_uint;
+pub const YAML_EMITTER_ERROR: yaml_error_type_t = 7;
+pub const YAML_WRITER_ERROR: yaml_error_type_t = 6;
+pub const YAML_COMPOSER_ERROR: yaml_error_type_t = 5;
+pub const YAML_PARSER_ERROR: yaml_error_type_t = 4;
+pub const YAML_SCANNER_ERROR: yaml_error_type_t = 3;
+pub const YAML_READER_ERROR: yaml_error_type_t = 2;
+pub const YAML_MEMORY_ERROR: yaml_error_type_t = 1;
+pub const YAML_NO_ERROR: yaml_error_type_t = 0;
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct yaml_mark_s {
+pub struct yaml_mark_t {
     pub index: size_t,
     pub line: size_t,
     pub column: size_t,
 }
-pub type yaml_mark_t = yaml_mark_s;
-pub type yaml_scalar_style_e = libc::c_uint;
-pub const YAML_FOLDED_SCALAR_STYLE: yaml_scalar_style_e = 5;
-pub const YAML_LITERAL_SCALAR_STYLE: yaml_scalar_style_e = 4;
-pub const YAML_DOUBLE_QUOTED_SCALAR_STYLE: yaml_scalar_style_e = 3;
-pub const YAML_SINGLE_QUOTED_SCALAR_STYLE: yaml_scalar_style_e = 2;
-pub const YAML_PLAIN_SCALAR_STYLE: yaml_scalar_style_e = 1;
-pub const YAML_ANY_SCALAR_STYLE: yaml_scalar_style_e = 0;
-pub type yaml_scalar_style_t = yaml_scalar_style_e;
-pub type yaml_sequence_style_e = libc::c_uint;
-pub const YAML_FLOW_SEQUENCE_STYLE: yaml_sequence_style_e = 2;
-pub const YAML_BLOCK_SEQUENCE_STYLE: yaml_sequence_style_e = 1;
-pub const YAML_ANY_SEQUENCE_STYLE: yaml_sequence_style_e = 0;
-pub type yaml_sequence_style_t = yaml_sequence_style_e;
-pub type yaml_mapping_style_e = libc::c_uint;
-pub const YAML_FLOW_MAPPING_STYLE: yaml_mapping_style_e = 2;
-pub const YAML_BLOCK_MAPPING_STYLE: yaml_mapping_style_e = 1;
-pub const YAML_ANY_MAPPING_STYLE: yaml_mapping_style_e = 0;
-pub type yaml_mapping_style_t = yaml_mapping_style_e;
-pub type yaml_token_type_e = libc::c_uint;
-pub const YAML_SCALAR_TOKEN: yaml_token_type_e = 21;
-pub const YAML_TAG_TOKEN: yaml_token_type_e = 20;
-pub const YAML_ANCHOR_TOKEN: yaml_token_type_e = 19;
-pub const YAML_ALIAS_TOKEN: yaml_token_type_e = 18;
-pub const YAML_VALUE_TOKEN: yaml_token_type_e = 17;
-pub const YAML_KEY_TOKEN: yaml_token_type_e = 16;
-pub const YAML_FLOW_ENTRY_TOKEN: yaml_token_type_e = 15;
-pub const YAML_BLOCK_ENTRY_TOKEN: yaml_token_type_e = 14;
-pub const YAML_FLOW_MAPPING_END_TOKEN: yaml_token_type_e = 13;
-pub const YAML_FLOW_MAPPING_START_TOKEN: yaml_token_type_e = 12;
-pub const YAML_FLOW_SEQUENCE_END_TOKEN: yaml_token_type_e = 11;
-pub const YAML_FLOW_SEQUENCE_START_TOKEN: yaml_token_type_e = 10;
-pub const YAML_BLOCK_END_TOKEN: yaml_token_type_e = 9;
-pub const YAML_BLOCK_MAPPING_START_TOKEN: yaml_token_type_e = 8;
-pub const YAML_BLOCK_SEQUENCE_START_TOKEN: yaml_token_type_e = 7;
-pub const YAML_DOCUMENT_END_TOKEN: yaml_token_type_e = 6;
-pub const YAML_DOCUMENT_START_TOKEN: yaml_token_type_e = 5;
-pub const YAML_TAG_DIRECTIVE_TOKEN: yaml_token_type_e = 4;
-pub const YAML_VERSION_DIRECTIVE_TOKEN: yaml_token_type_e = 3;
-pub const YAML_STREAM_END_TOKEN: yaml_token_type_e = 2;
-pub const YAML_STREAM_START_TOKEN: yaml_token_type_e = 1;
-pub const YAML_NO_TOKEN: yaml_token_type_e = 0;
-pub type yaml_token_type_t = yaml_token_type_e;
+pub type yaml_scalar_style_t = libc::c_uint;
+pub const YAML_FOLDED_SCALAR_STYLE: yaml_scalar_style_t = 5;
+pub const YAML_LITERAL_SCALAR_STYLE: yaml_scalar_style_t = 4;
+pub const YAML_DOUBLE_QUOTED_SCALAR_STYLE: yaml_scalar_style_t = 3;
+pub const YAML_SINGLE_QUOTED_SCALAR_STYLE: yaml_scalar_style_t = 2;
+pub const YAML_PLAIN_SCALAR_STYLE: yaml_scalar_style_t = 1;
+pub const YAML_ANY_SCALAR_STYLE: yaml_scalar_style_t = 0;
+pub type yaml_sequence_style_t = libc::c_uint;
+pub const YAML_FLOW_SEQUENCE_STYLE: yaml_sequence_style_t = 2;
+pub const YAML_BLOCK_SEQUENCE_STYLE: yaml_sequence_style_t = 1;
+pub const YAML_ANY_SEQUENCE_STYLE: yaml_sequence_style_t = 0;
+pub type yaml_mapping_style_t = libc::c_uint;
+pub const YAML_FLOW_MAPPING_STYLE: yaml_mapping_style_t = 2;
+pub const YAML_BLOCK_MAPPING_STYLE: yaml_mapping_style_t = 1;
+pub const YAML_ANY_MAPPING_STYLE: yaml_mapping_style_t = 0;
+pub type yaml_token_type_t = libc::c_uint;
+pub const YAML_SCALAR_TOKEN: yaml_token_type_t = 21;
+pub const YAML_TAG_TOKEN: yaml_token_type_t = 20;
+pub const YAML_ANCHOR_TOKEN: yaml_token_type_t = 19;
+pub const YAML_ALIAS_TOKEN: yaml_token_type_t = 18;
+pub const YAML_VALUE_TOKEN: yaml_token_type_t = 17;
+pub const YAML_KEY_TOKEN: yaml_token_type_t = 16;
+pub const YAML_FLOW_ENTRY_TOKEN: yaml_token_type_t = 15;
+pub const YAML_BLOCK_ENTRY_TOKEN: yaml_token_type_t = 14;
+pub const YAML_FLOW_MAPPING_END_TOKEN: yaml_token_type_t = 13;
+pub const YAML_FLOW_MAPPING_START_TOKEN: yaml_token_type_t = 12;
+pub const YAML_FLOW_SEQUENCE_END_TOKEN: yaml_token_type_t = 11;
+pub const YAML_FLOW_SEQUENCE_START_TOKEN: yaml_token_type_t = 10;
+pub const YAML_BLOCK_END_TOKEN: yaml_token_type_t = 9;
+pub const YAML_BLOCK_MAPPING_START_TOKEN: yaml_token_type_t = 8;
+pub const YAML_BLOCK_SEQUENCE_START_TOKEN: yaml_token_type_t = 7;
+pub const YAML_DOCUMENT_END_TOKEN: yaml_token_type_t = 6;
+pub const YAML_DOCUMENT_START_TOKEN: yaml_token_type_t = 5;
+pub const YAML_TAG_DIRECTIVE_TOKEN: yaml_token_type_t = 4;
+pub const YAML_VERSION_DIRECTIVE_TOKEN: yaml_token_type_t = 3;
+pub const YAML_STREAM_END_TOKEN: yaml_token_type_t = 2;
+pub const YAML_STREAM_START_TOKEN: yaml_token_type_t = 1;
+pub const YAML_NO_TOKEN: yaml_token_type_t = 0;
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct yaml_token_s {
+pub struct yaml_token_t {
     pub type_0: yaml_token_type_t,
     pub data: unnamed_yaml_token_s_data,
     pub start_mark: yaml_mark_t,
@@ -157,24 +147,22 @@ pub struct unnamed_yaml_token_s_data_alias {
 pub struct unnamed_yaml_token_s_data_stream_start {
     pub encoding: yaml_encoding_t,
 }
-pub type yaml_token_t = yaml_token_s;
-pub type yaml_event_type_e = libc::c_uint;
-pub const YAML_MAPPING_END_EVENT: yaml_event_type_e = 10;
-pub const YAML_MAPPING_START_EVENT: yaml_event_type_e = 9;
-pub const YAML_SEQUENCE_END_EVENT: yaml_event_type_e = 8;
-pub const YAML_SEQUENCE_START_EVENT: yaml_event_type_e = 7;
-pub const YAML_SCALAR_EVENT: yaml_event_type_e = 6;
-pub const YAML_ALIAS_EVENT: yaml_event_type_e = 5;
-pub const YAML_DOCUMENT_END_EVENT: yaml_event_type_e = 4;
-pub const YAML_DOCUMENT_START_EVENT: yaml_event_type_e = 3;
-pub const YAML_STREAM_END_EVENT: yaml_event_type_e = 2;
-pub const YAML_STREAM_START_EVENT: yaml_event_type_e = 1;
-pub const YAML_NO_EVENT: yaml_event_type_e = 0;
-pub type yaml_event_type_t = yaml_event_type_e;
+pub type yaml_event_type_t = libc::c_uint;
+pub const YAML_MAPPING_END_EVENT: yaml_event_type_t = 10;
+pub const YAML_MAPPING_START_EVENT: yaml_event_type_t = 9;
+pub const YAML_SEQUENCE_END_EVENT: yaml_event_type_t = 8;
+pub const YAML_SEQUENCE_START_EVENT: yaml_event_type_t = 7;
+pub const YAML_SCALAR_EVENT: yaml_event_type_t = 6;
+pub const YAML_ALIAS_EVENT: yaml_event_type_t = 5;
+pub const YAML_DOCUMENT_END_EVENT: yaml_event_type_t = 4;
+pub const YAML_DOCUMENT_START_EVENT: yaml_event_type_t = 3;
+pub const YAML_STREAM_END_EVENT: yaml_event_type_t = 2;
+pub const YAML_STREAM_START_EVENT: yaml_event_type_t = 1;
+pub const YAML_NO_EVENT: yaml_event_type_t = 0;
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct yaml_event_s {
+pub struct yaml_event_t {
     pub type_0: yaml_event_type_t,
     pub data: unnamed_yaml_event_s_data,
     pub start_mark: yaml_mark_t,
@@ -254,7 +242,6 @@ pub struct unnamed_yaml_event_s_data_document_start_tag_directives {
 pub struct unnamed_yaml_event_s_data_stream_start {
     pub encoding: yaml_encoding_t,
 }
-pub type yaml_event_t = yaml_event_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -269,16 +256,15 @@ pub struct Unnamed_16 {
 pub struct Unnamed_17 {
     pub error: yaml_error_type_t,
 }
-pub type yaml_node_type_e = libc::c_uint;
-pub const YAML_MAPPING_NODE: yaml_node_type_e = 3;
-pub const YAML_SEQUENCE_NODE: yaml_node_type_e = 2;
-pub const YAML_SCALAR_NODE: yaml_node_type_e = 1;
-pub const YAML_NO_NODE: yaml_node_type_e = 0;
-pub type yaml_node_type_t = yaml_node_type_e;
+pub type yaml_node_type_t = libc::c_uint;
+pub const YAML_MAPPING_NODE: yaml_node_type_t = 3;
+pub const YAML_SEQUENCE_NODE: yaml_node_type_t = 2;
+pub const YAML_SCALAR_NODE: yaml_node_type_t = 1;
+pub const YAML_NO_NODE: yaml_node_type_t = 0;
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct yaml_node_s {
+pub struct yaml_node_t {
     pub type_0: yaml_node_type_t,
     pub tag: *mut yaml_char_t,
     pub data: unnamed_yaml_node_s_data,
@@ -307,11 +293,10 @@ pub struct unnamed_yaml_node_s_data_mapping_pairs {
     pub end: *mut yaml_node_pair_t,
     pub top: *mut yaml_node_pair_t,
 }
-pub type yaml_node_pair_t = yaml_node_pair_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct yaml_node_pair_s {
+pub struct yaml_node_pair_t {
     pub key: libc::c_int,
     pub value: libc::c_int,
 }
@@ -339,11 +324,10 @@ pub struct unnamed_yaml_node_s_data_scalar {
     pub length: size_t,
     pub style: yaml_scalar_style_t,
 }
-pub type yaml_node_t = yaml_node_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct yaml_document_s {
+pub struct yaml_document_t {
     pub nodes: unnamed_yaml_document_s_nodes,
     pub version_directive: *mut yaml_version_directive_t,
     pub tag_directives: unnamed_yaml_document_s_tag_directives,
@@ -367,7 +351,6 @@ pub struct unnamed_yaml_document_s_nodes {
     pub end: *mut yaml_node_t,
     pub top: *mut yaml_node_t,
 }
-pub type yaml_document_t = yaml_document_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -441,52 +424,49 @@ pub type yaml_read_handler_t =
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct yaml_simple_key_s {
+pub struct yaml_simple_key_t {
     pub possible: libc::c_int,
     pub required: libc::c_int,
     pub token_number: size_t,
     pub mark: yaml_mark_t,
 }
-pub type yaml_simple_key_t = yaml_simple_key_s;
-pub type yaml_parser_state_e = libc::c_uint;
-pub const YAML_PARSE_END_STATE: yaml_parser_state_e = 23;
-pub const YAML_PARSE_FLOW_MAPPING_EMPTY_VALUE_STATE: yaml_parser_state_e = 22;
-pub const YAML_PARSE_FLOW_MAPPING_VALUE_STATE: yaml_parser_state_e = 21;
-pub const YAML_PARSE_FLOW_MAPPING_KEY_STATE: yaml_parser_state_e = 20;
-pub const YAML_PARSE_FLOW_MAPPING_FIRST_KEY_STATE: yaml_parser_state_e = 19;
-pub const YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_END_STATE: yaml_parser_state_e = 18;
-pub const YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_VALUE_STATE: yaml_parser_state_e = 17;
-pub const YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_KEY_STATE: yaml_parser_state_e = 16;
-pub const YAML_PARSE_FLOW_SEQUENCE_ENTRY_STATE: yaml_parser_state_e = 15;
-pub const YAML_PARSE_FLOW_SEQUENCE_FIRST_ENTRY_STATE: yaml_parser_state_e = 14;
-pub const YAML_PARSE_BLOCK_MAPPING_VALUE_STATE: yaml_parser_state_e = 13;
-pub const YAML_PARSE_BLOCK_MAPPING_KEY_STATE: yaml_parser_state_e = 12;
-pub const YAML_PARSE_BLOCK_MAPPING_FIRST_KEY_STATE: yaml_parser_state_e = 11;
-pub const YAML_PARSE_INDENTLESS_SEQUENCE_ENTRY_STATE: yaml_parser_state_e = 10;
-pub const YAML_PARSE_BLOCK_SEQUENCE_ENTRY_STATE: yaml_parser_state_e = 9;
-pub const YAML_PARSE_BLOCK_SEQUENCE_FIRST_ENTRY_STATE: yaml_parser_state_e = 8;
-pub const YAML_PARSE_FLOW_NODE_STATE: yaml_parser_state_e = 7;
-pub const YAML_PARSE_BLOCK_NODE_OR_INDENTLESS_SEQUENCE_STATE: yaml_parser_state_e = 6;
-pub const YAML_PARSE_BLOCK_NODE_STATE: yaml_parser_state_e = 5;
-pub const YAML_PARSE_DOCUMENT_END_STATE: yaml_parser_state_e = 4;
-pub const YAML_PARSE_DOCUMENT_CONTENT_STATE: yaml_parser_state_e = 3;
-pub const YAML_PARSE_DOCUMENT_START_STATE: yaml_parser_state_e = 2;
-pub const YAML_PARSE_IMPLICIT_DOCUMENT_START_STATE: yaml_parser_state_e = 1;
-pub const YAML_PARSE_STREAM_START_STATE: yaml_parser_state_e = 0;
-pub type yaml_parser_state_t = yaml_parser_state_e;
+pub type yaml_parser_state_t = libc::c_uint;
+pub const YAML_PARSE_END_STATE: yaml_parser_state_t = 23;
+pub const YAML_PARSE_FLOW_MAPPING_EMPTY_VALUE_STATE: yaml_parser_state_t = 22;
+pub const YAML_PARSE_FLOW_MAPPING_VALUE_STATE: yaml_parser_state_t = 21;
+pub const YAML_PARSE_FLOW_MAPPING_KEY_STATE: yaml_parser_state_t = 20;
+pub const YAML_PARSE_FLOW_MAPPING_FIRST_KEY_STATE: yaml_parser_state_t = 19;
+pub const YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_END_STATE: yaml_parser_state_t = 18;
+pub const YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_VALUE_STATE: yaml_parser_state_t = 17;
+pub const YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_KEY_STATE: yaml_parser_state_t = 16;
+pub const YAML_PARSE_FLOW_SEQUENCE_ENTRY_STATE: yaml_parser_state_t = 15;
+pub const YAML_PARSE_FLOW_SEQUENCE_FIRST_ENTRY_STATE: yaml_parser_state_t = 14;
+pub const YAML_PARSE_BLOCK_MAPPING_VALUE_STATE: yaml_parser_state_t = 13;
+pub const YAML_PARSE_BLOCK_MAPPING_KEY_STATE: yaml_parser_state_t = 12;
+pub const YAML_PARSE_BLOCK_MAPPING_FIRST_KEY_STATE: yaml_parser_state_t = 11;
+pub const YAML_PARSE_INDENTLESS_SEQUENCE_ENTRY_STATE: yaml_parser_state_t = 10;
+pub const YAML_PARSE_BLOCK_SEQUENCE_ENTRY_STATE: yaml_parser_state_t = 9;
+pub const YAML_PARSE_BLOCK_SEQUENCE_FIRST_ENTRY_STATE: yaml_parser_state_t = 8;
+pub const YAML_PARSE_FLOW_NODE_STATE: yaml_parser_state_t = 7;
+pub const YAML_PARSE_BLOCK_NODE_OR_INDENTLESS_SEQUENCE_STATE: yaml_parser_state_t = 6;
+pub const YAML_PARSE_BLOCK_NODE_STATE: yaml_parser_state_t = 5;
+pub const YAML_PARSE_DOCUMENT_END_STATE: yaml_parser_state_t = 4;
+pub const YAML_PARSE_DOCUMENT_CONTENT_STATE: yaml_parser_state_t = 3;
+pub const YAML_PARSE_DOCUMENT_START_STATE: yaml_parser_state_t = 2;
+pub const YAML_PARSE_IMPLICIT_DOCUMENT_START_STATE: yaml_parser_state_t = 1;
+pub const YAML_PARSE_STREAM_START_STATE: yaml_parser_state_t = 0;
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct yaml_alias_data_s {
+pub struct yaml_alias_data_t {
     pub anchor: *mut yaml_char_t,
     pub index: libc::c_int,
     pub mark: yaml_mark_t,
 }
-pub type yaml_alias_data_t = yaml_alias_data_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct yaml_parser_s {
+pub struct yaml_parser_t {
     pub error: yaml_error_type_t,
     pub problem: *const libc::c_char,
     pub problem_offset: size_t,
@@ -609,42 +589,39 @@ pub struct unnamed_yaml_parser_s_input_string {
     pub end: *const libc::c_uchar,
     pub current: *const libc::c_uchar,
 }
-pub type yaml_parser_t = yaml_parser_s;
 pub type yaml_write_handler_t =
     unsafe fn(*mut libc::c_void, *mut libc::c_uchar, size_t) -> libc::c_int;
-pub type yaml_emitter_state_e = libc::c_uint;
-pub const YAML_EMIT_END_STATE: yaml_emitter_state_e = 17;
-pub const YAML_EMIT_BLOCK_MAPPING_VALUE_STATE: yaml_emitter_state_e = 16;
-pub const YAML_EMIT_BLOCK_MAPPING_SIMPLE_VALUE_STATE: yaml_emitter_state_e = 15;
-pub const YAML_EMIT_BLOCK_MAPPING_KEY_STATE: yaml_emitter_state_e = 14;
-pub const YAML_EMIT_BLOCK_MAPPING_FIRST_KEY_STATE: yaml_emitter_state_e = 13;
-pub const YAML_EMIT_BLOCK_SEQUENCE_ITEM_STATE: yaml_emitter_state_e = 12;
-pub const YAML_EMIT_BLOCK_SEQUENCE_FIRST_ITEM_STATE: yaml_emitter_state_e = 11;
-pub const YAML_EMIT_FLOW_MAPPING_VALUE_STATE: yaml_emitter_state_e = 10;
-pub const YAML_EMIT_FLOW_MAPPING_SIMPLE_VALUE_STATE: yaml_emitter_state_e = 9;
-pub const YAML_EMIT_FLOW_MAPPING_KEY_STATE: yaml_emitter_state_e = 8;
-pub const YAML_EMIT_FLOW_MAPPING_FIRST_KEY_STATE: yaml_emitter_state_e = 7;
-pub const YAML_EMIT_FLOW_SEQUENCE_ITEM_STATE: yaml_emitter_state_e = 6;
-pub const YAML_EMIT_FLOW_SEQUENCE_FIRST_ITEM_STATE: yaml_emitter_state_e = 5;
-pub const YAML_EMIT_DOCUMENT_END_STATE: yaml_emitter_state_e = 4;
-pub const YAML_EMIT_DOCUMENT_CONTENT_STATE: yaml_emitter_state_e = 3;
-pub const YAML_EMIT_DOCUMENT_START_STATE: yaml_emitter_state_e = 2;
-pub const YAML_EMIT_FIRST_DOCUMENT_START_STATE: yaml_emitter_state_e = 1;
-pub const YAML_EMIT_STREAM_START_STATE: yaml_emitter_state_e = 0;
-pub type yaml_emitter_state_t = yaml_emitter_state_e;
+pub type yaml_emitter_state_t = libc::c_uint;
+pub const YAML_EMIT_END_STATE: yaml_emitter_state_t = 17;
+pub const YAML_EMIT_BLOCK_MAPPING_VALUE_STATE: yaml_emitter_state_t = 16;
+pub const YAML_EMIT_BLOCK_MAPPING_SIMPLE_VALUE_STATE: yaml_emitter_state_t = 15;
+pub const YAML_EMIT_BLOCK_MAPPING_KEY_STATE: yaml_emitter_state_t = 14;
+pub const YAML_EMIT_BLOCK_MAPPING_FIRST_KEY_STATE: yaml_emitter_state_t = 13;
+pub const YAML_EMIT_BLOCK_SEQUENCE_ITEM_STATE: yaml_emitter_state_t = 12;
+pub const YAML_EMIT_BLOCK_SEQUENCE_FIRST_ITEM_STATE: yaml_emitter_state_t = 11;
+pub const YAML_EMIT_FLOW_MAPPING_VALUE_STATE: yaml_emitter_state_t = 10;
+pub const YAML_EMIT_FLOW_MAPPING_SIMPLE_VALUE_STATE: yaml_emitter_state_t = 9;
+pub const YAML_EMIT_FLOW_MAPPING_KEY_STATE: yaml_emitter_state_t = 8;
+pub const YAML_EMIT_FLOW_MAPPING_FIRST_KEY_STATE: yaml_emitter_state_t = 7;
+pub const YAML_EMIT_FLOW_SEQUENCE_ITEM_STATE: yaml_emitter_state_t = 6;
+pub const YAML_EMIT_FLOW_SEQUENCE_FIRST_ITEM_STATE: yaml_emitter_state_t = 5;
+pub const YAML_EMIT_DOCUMENT_END_STATE: yaml_emitter_state_t = 4;
+pub const YAML_EMIT_DOCUMENT_CONTENT_STATE: yaml_emitter_state_t = 3;
+pub const YAML_EMIT_DOCUMENT_START_STATE: yaml_emitter_state_t = 2;
+pub const YAML_EMIT_FIRST_DOCUMENT_START_STATE: yaml_emitter_state_t = 1;
+pub const YAML_EMIT_STREAM_START_STATE: yaml_emitter_state_t = 0;
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct yaml_anchors_s {
+pub struct yaml_anchors_t {
     pub references: libc::c_int,
     pub anchor: libc::c_int,
     pub serialized: libc::c_int,
 }
-pub type yaml_anchors_t = yaml_anchors_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct yaml_emitter_s {
+pub struct yaml_emitter_t {
     pub error: yaml_error_type_t,
     pub problem: *const libc::c_char,
     pub write_handler: Option<yaml_write_handler_t>,
@@ -777,7 +754,6 @@ pub struct unnamed_yaml_emitter_s_output_string {
     pub size: size_t,
     pub size_written: *mut size_t,
 }
-pub type yaml_emitter_t = yaml_emitter_s;
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]

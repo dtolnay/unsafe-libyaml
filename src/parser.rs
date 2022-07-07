@@ -2,15 +2,15 @@ use crate::externs::{memcpy, memset, strcmp, strlen};
 use crate::{
     libc, size_t, yaml_char_t, yaml_event_t, yaml_free, yaml_malloc, yaml_mark_t,
     yaml_parser_fetch_more_tokens, yaml_parser_t, yaml_stack_extend, yaml_strdup,
-    yaml_tag_directive_s, yaml_tag_directive_t, yaml_token_t, yaml_version_directive_t, PointerExt,
-    YAML_ALIAS_EVENT, YAML_ALIAS_TOKEN, YAML_ANCHOR_TOKEN, YAML_BLOCK_END_TOKEN,
-    YAML_BLOCK_ENTRY_TOKEN, YAML_BLOCK_MAPPING_START_TOKEN, YAML_BLOCK_MAPPING_STYLE,
-    YAML_BLOCK_SEQUENCE_START_TOKEN, YAML_BLOCK_SEQUENCE_STYLE, YAML_DOCUMENT_END_EVENT,
-    YAML_DOCUMENT_END_TOKEN, YAML_DOCUMENT_START_EVENT, YAML_DOCUMENT_START_TOKEN,
-    YAML_FLOW_ENTRY_TOKEN, YAML_FLOW_MAPPING_END_TOKEN, YAML_FLOW_MAPPING_START_TOKEN,
-    YAML_FLOW_MAPPING_STYLE, YAML_FLOW_SEQUENCE_END_TOKEN, YAML_FLOW_SEQUENCE_START_TOKEN,
-    YAML_FLOW_SEQUENCE_STYLE, YAML_KEY_TOKEN, YAML_MAPPING_END_EVENT, YAML_MAPPING_START_EVENT,
-    YAML_MEMORY_ERROR, YAML_PARSER_ERROR, YAML_PARSE_BLOCK_MAPPING_FIRST_KEY_STATE,
+    yaml_tag_directive_t, yaml_token_t, yaml_version_directive_t, PointerExt, YAML_ALIAS_EVENT,
+    YAML_ALIAS_TOKEN, YAML_ANCHOR_TOKEN, YAML_BLOCK_END_TOKEN, YAML_BLOCK_ENTRY_TOKEN,
+    YAML_BLOCK_MAPPING_START_TOKEN, YAML_BLOCK_MAPPING_STYLE, YAML_BLOCK_SEQUENCE_START_TOKEN,
+    YAML_BLOCK_SEQUENCE_STYLE, YAML_DOCUMENT_END_EVENT, YAML_DOCUMENT_END_TOKEN,
+    YAML_DOCUMENT_START_EVENT, YAML_DOCUMENT_START_TOKEN, YAML_FLOW_ENTRY_TOKEN,
+    YAML_FLOW_MAPPING_END_TOKEN, YAML_FLOW_MAPPING_START_TOKEN, YAML_FLOW_MAPPING_STYLE,
+    YAML_FLOW_SEQUENCE_END_TOKEN, YAML_FLOW_SEQUENCE_START_TOKEN, YAML_FLOW_SEQUENCE_STYLE,
+    YAML_KEY_TOKEN, YAML_MAPPING_END_EVENT, YAML_MAPPING_START_EVENT, YAML_MEMORY_ERROR,
+    YAML_PARSER_ERROR, YAML_PARSE_BLOCK_MAPPING_FIRST_KEY_STATE,
     YAML_PARSE_BLOCK_MAPPING_KEY_STATE, YAML_PARSE_BLOCK_MAPPING_VALUE_STATE,
     YAML_PARSE_BLOCK_NODE_STATE, YAML_PARSE_BLOCK_SEQUENCE_ENTRY_STATE,
     YAML_PARSE_BLOCK_SEQUENCE_FIRST_ENTRY_STATE, YAML_PARSE_DOCUMENT_CONTENT_STATE,
@@ -1899,20 +1899,20 @@ unsafe fn yaml_parser_process_directives(
     let mut current_block: u64;
     let mut default_tag_directives: [yaml_tag_directive_t; 3] = [
         {
-            yaml_tag_directive_s {
+            yaml_tag_directive_t {
                 handle: b"!\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
                 prefix: b"!\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
             }
         },
         {
-            yaml_tag_directive_s {
+            yaml_tag_directive_t {
                 handle: b"!!\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
                 prefix: b"tag:yaml.org,2002:\0" as *const u8 as *const libc::c_char
                     as *mut yaml_char_t,
             }
         },
         {
-            yaml_tag_directive_s {
+            yaml_tag_directive_t {
                 handle: ptr::null_mut::<yaml_char_t>(),
                 prefix: ptr::null_mut::<yaml_char_t>(),
             }
@@ -2131,7 +2131,7 @@ unsafe fn yaml_parser_append_tag_directive(
 ) -> libc::c_int {
     let mut tag_directive: *mut yaml_tag_directive_t;
     let mut copy: yaml_tag_directive_t = {
-        yaml_tag_directive_s {
+        yaml_tag_directive_t {
             handle: ptr::null_mut::<yaml_char_t>(),
             prefix: ptr::null_mut::<yaml_char_t>(),
         }

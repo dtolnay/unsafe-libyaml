@@ -2,8 +2,8 @@ use crate::externs::{strcmp, strlen, strncmp};
 use crate::{
     libc, size_t, yaml_char_t, yaml_emitter_flush, yaml_emitter_t, yaml_event_delete, yaml_event_t,
     yaml_free, yaml_queue_extend, yaml_scalar_style_t, yaml_stack_extend, yaml_strdup,
-    yaml_string_t, yaml_tag_directive_s, yaml_tag_directive_t, yaml_version_directive_t,
-    PointerExt, YAML_ANY_SCALAR_STYLE, YAML_CRLN_BREAK, YAML_CR_BREAK, YAML_DOCUMENT_END_EVENT,
+    yaml_string_t, yaml_tag_directive_t, yaml_version_directive_t, PointerExt,
+    YAML_ANY_SCALAR_STYLE, YAML_CRLN_BREAK, YAML_CR_BREAK, YAML_DOCUMENT_END_EVENT,
     YAML_DOCUMENT_START_EVENT, YAML_DOUBLE_QUOTED_SCALAR_STYLE, YAML_EMITTER_ERROR,
     YAML_EMIT_BLOCK_MAPPING_FIRST_KEY_STATE, YAML_EMIT_BLOCK_MAPPING_KEY_STATE,
     YAML_EMIT_BLOCK_MAPPING_SIMPLE_VALUE_STATE, YAML_EMIT_BLOCK_MAPPING_VALUE_STATE,
@@ -110,7 +110,7 @@ unsafe fn yaml_emitter_append_tag_directive(
 ) -> libc::c_int {
     let mut tag_directive: *mut yaml_tag_directive_t;
     let mut copy: yaml_tag_directive_t = {
-        yaml_tag_directive_s {
+        yaml_tag_directive_t {
             handle: ptr::null_mut::<yaml_char_t>(),
             prefix: ptr::null_mut::<yaml_char_t>(),
         }
@@ -299,20 +299,20 @@ unsafe fn yaml_emitter_emit_document_start(
     if (*event).type_0 as libc::c_uint == YAML_DOCUMENT_START_EVENT as libc::c_int as libc::c_uint {
         let mut default_tag_directives: [yaml_tag_directive_t; 3] = [
             {
-                yaml_tag_directive_s {
+                yaml_tag_directive_t {
                     handle: b"!\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
                     prefix: b"!\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
                 }
             },
             {
-                yaml_tag_directive_s {
+                yaml_tag_directive_t {
                     handle: b"!!\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
                     prefix: b"tag:yaml.org,2002:\0" as *const u8 as *const libc::c_char
                         as *mut yaml_char_t,
                 }
             },
             {
-                yaml_tag_directive_s {
+                yaml_tag_directive_t {
                     handle: ptr::null_mut::<yaml_char_t>(),
                     prefix: ptr::null_mut::<yaml_char_t>(),
                 }
