@@ -10,7 +10,7 @@ use crate::yaml::{
 use crate::{libc, yaml_document_delete, yaml_emitter_emit, yaml_free, yaml_malloc, PointerExt};
 use std::io::Write;
 use std::mem::{size_of, MaybeUninit};
-use std::ptr;
+use std::ptr::{self, addr_of_mut};
 use std::slice;
 pub unsafe fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> libc::c_int {
     let mut event = MaybeUninit::<yaml_event_t>::uninit();
@@ -78,7 +78,7 @@ pub unsafe fn yaml_emitter_dump(
     };
     __assert!(!emitter.is_null());
     __assert!(!document.is_null());
-    let fresh0 = &mut (*emitter).document;
+    let fresh0 = addr_of_mut!((*emitter).document);
     *fresh0 = document;
     if (*emitter).opened == 0 {
         if yaml_emitter_open(emitter) == 0 {
@@ -98,7 +98,7 @@ pub unsafe fn yaml_emitter_dump(
                 }
             } else {
                 __assert!((*emitter).opened != 0);
-                let fresh1 = &mut (*emitter).anchors;
+                let fresh1 = addr_of_mut!((*emitter).anchors);
                 *fresh1 = yaml_malloc((size_of::<yaml_anchors_t>() as libc::c_ulong).wrapping_mul(
                     ((*document).nodes.top).c_offset_from((*document).nodes.start) as libc::c_long
                         as libc::c_ulong,
@@ -156,7 +156,7 @@ unsafe fn yaml_emitter_delete_document_and_anchors(mut emitter: *mut yaml_emitte
     let mut index: libc::c_int;
     if ((*emitter).anchors).is_null() {
         yaml_document_delete((*emitter).document);
-        let fresh2 = &mut (*emitter).document;
+        let fresh2 = addr_of_mut!((*emitter).document);
         *fresh2 = ptr::null_mut::<yaml_document_t>();
         return;
     }
@@ -186,17 +186,17 @@ unsafe fn yaml_emitter_delete_document_and_anchors(mut emitter: *mut yaml_emitte
         index += 1;
     }
     yaml_free((*(*emitter).document).nodes.start as *mut libc::c_void);
-    let fresh3 = &mut (*(*emitter).document).nodes.end;
+    let fresh3 = addr_of_mut!((*(*emitter).document).nodes.end);
     *fresh3 = ptr::null_mut::<yaml_node_t>();
-    let fresh4 = &mut (*(*emitter).document).nodes.top;
+    let fresh4 = addr_of_mut!((*(*emitter).document).nodes.top);
     *fresh4 = *fresh3;
-    let fresh5 = &mut (*(*emitter).document).nodes.start;
+    let fresh5 = addr_of_mut!((*(*emitter).document).nodes.start);
     *fresh5 = *fresh4;
     yaml_free((*emitter).anchors as *mut libc::c_void);
-    let fresh6 = &mut (*emitter).anchors;
+    let fresh6 = addr_of_mut!((*emitter).anchors);
     *fresh6 = ptr::null_mut::<yaml_anchors_t>();
     (*emitter).last_anchor_id = 0 as libc::c_int;
-    let fresh7 = &mut (*emitter).document;
+    let fresh7 = addr_of_mut!((*emitter).document);
     *fresh7 = ptr::null_mut::<yaml_document_t>();
 }
 unsafe fn yaml_emitter_anchor_node(emitter: *mut yaml_emitter_t, index: libc::c_int) {
@@ -205,8 +205,9 @@ unsafe fn yaml_emitter_anchor_node(emitter: *mut yaml_emitter_t, index: libc::c_
         .c_offset(-(1 as libc::c_int as isize));
     let mut item: *mut yaml_node_item_t;
     let mut pair: *mut yaml_node_pair_t;
-    let fresh8 =
-        &mut (*((*emitter).anchors).c_offset((index - 1 as libc::c_int) as isize)).references;
+    let fresh8 = addr_of_mut!(
+        (*((*emitter).anchors).c_offset((index - 1 as libc::c_int) as isize)).references
+    );
     *fresh8 += 1;
     if (*((*emitter).anchors).c_offset((index - 1 as libc::c_int) as isize)).references
         == 1 as libc::c_int
@@ -232,7 +233,7 @@ unsafe fn yaml_emitter_anchor_node(emitter: *mut yaml_emitter_t, index: libc::c_
     } else if (*((*emitter).anchors).c_offset((index - 1 as libc::c_int) as isize)).references
         == 2 as libc::c_int
     {
-        let fresh9 = &mut (*emitter).last_anchor_id;
+        let fresh9 = addr_of_mut!((*emitter).last_anchor_id);
         *fresh9 += 1;
         (*((*emitter).anchors).c_offset((index - 1 as libc::c_int) as isize)).anchor = *fresh9;
     }

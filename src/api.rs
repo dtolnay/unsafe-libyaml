@@ -199,14 +199,14 @@ pub unsafe fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) -> libc::c_
         0 as libc::c_int,
         size_of::<yaml_parser_t>() as libc::c_ulong,
     );
-    let fresh0 = &mut (*parser).raw_buffer.start;
+    let fresh0 = addr_of_mut!((*parser).raw_buffer.start);
     *fresh0 = yaml_malloc(16384 as libc::c_int as size_t) as *mut yaml_char_t;
     if !(if !(*fresh0).is_null() {
-        let fresh1 = &mut (*parser).raw_buffer.pointer;
+        let fresh1 = addr_of_mut!((*parser).raw_buffer.pointer);
         *fresh1 = (*parser).raw_buffer.start;
-        let fresh2 = &mut (*parser).raw_buffer.last;
+        let fresh2 = addr_of_mut!((*parser).raw_buffer.last);
         *fresh2 = *fresh1;
-        let fresh3 = &mut (*parser).raw_buffer.end;
+        let fresh3 = addr_of_mut!((*parser).raw_buffer.end);
         *fresh3 = ((*parser).raw_buffer.start).c_offset(16384 as libc::c_int as isize);
         1 as libc::c_int
     } else {
@@ -214,15 +214,15 @@ pub unsafe fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) -> libc::c_
         0 as libc::c_int
     } == 0)
     {
-        let fresh4 = &mut (*parser).buffer.start;
+        let fresh4 = addr_of_mut!((*parser).buffer.start);
         *fresh4 =
             yaml_malloc((16384 as libc::c_int * 3 as libc::c_int) as size_t) as *mut yaml_char_t;
         if !(if !(*fresh4).is_null() {
-            let fresh5 = &mut (*parser).buffer.pointer;
+            let fresh5 = addr_of_mut!((*parser).buffer.pointer);
             *fresh5 = (*parser).buffer.start;
-            let fresh6 = &mut (*parser).buffer.last;
+            let fresh6 = addr_of_mut!((*parser).buffer.last);
             *fresh6 = *fresh5;
-            let fresh7 = &mut (*parser).buffer.end;
+            let fresh7 = addr_of_mut!((*parser).buffer.end);
             *fresh7 = ((*parser).buffer.start)
                 .c_offset((16384 as libc::c_int * 3 as libc::c_int) as isize);
             1 as libc::c_int
@@ -231,17 +231,17 @@ pub unsafe fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) -> libc::c_
             0 as libc::c_int
         } == 0)
         {
-            let fresh8 = &mut (*parser).tokens.start;
+            let fresh8 = addr_of_mut!((*parser).tokens.start);
             *fresh8 = yaml_malloc(
                 (16 as libc::c_int as libc::c_ulong)
                     .wrapping_mul(size_of::<yaml_token_t>() as libc::c_ulong),
             ) as *mut yaml_token_t;
             if !(if !(*fresh8).is_null() {
-                let fresh9 = &mut (*parser).tokens.tail;
+                let fresh9 = addr_of_mut!((*parser).tokens.tail);
                 *fresh9 = (*parser).tokens.start;
-                let fresh10 = &mut (*parser).tokens.head;
+                let fresh10 = addr_of_mut!((*parser).tokens.head);
                 *fresh10 = *fresh9;
-                let fresh11 = &mut (*parser).tokens.end;
+                let fresh11 = addr_of_mut!((*parser).tokens.end);
                 *fresh11 = ((*parser).tokens.start).c_offset(16 as libc::c_int as isize);
                 1 as libc::c_int
             } else {
@@ -249,7 +249,7 @@ pub unsafe fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) -> libc::c_
                 0 as libc::c_int
             } == 0)
             {
-                let fresh12 = &mut (*parser).indents.start;
+                let fresh12 = addr_of_mut!((*parser).indents.start);
                 *fresh12 =
                     yaml_malloc((16 as libc::c_int as libc::c_ulong).wrapping_mul(size_of::<
                         libc::c_int,
@@ -257,9 +257,9 @@ pub unsafe fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) -> libc::c_
                     )
                         as libc::c_ulong)) as *mut libc::c_int;
                 if !(if !(*fresh12).is_null() {
-                    let fresh13 = &mut (*parser).indents.top;
+                    let fresh13 = addr_of_mut!((*parser).indents.top);
                     *fresh13 = (*parser).indents.start;
-                    let fresh14 = &mut (*parser).indents.end;
+                    let fresh14 = addr_of_mut!((*parser).indents.end);
                     *fresh14 = ((*parser).indents.start).c_offset(16 as libc::c_int as isize);
                     1 as libc::c_int
                 } else {
@@ -267,7 +267,7 @@ pub unsafe fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) -> libc::c_
                     0 as libc::c_int
                 } == 0)
                 {
-                    let fresh15 = &mut (*parser).simple_keys.start;
+                    let fresh15 = addr_of_mut!((*parser).simple_keys.start);
                     *fresh15 =
                         yaml_malloc((16 as libc::c_int as libc::c_ulong).wrapping_mul(size_of::<
                             yaml_simple_key_t,
@@ -275,9 +275,9 @@ pub unsafe fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) -> libc::c_
                         )
                             as libc::c_ulong)) as *mut yaml_simple_key_t;
                     if !(if !(*fresh15).is_null() {
-                        let fresh16 = &mut (*parser).simple_keys.top;
+                        let fresh16 = addr_of_mut!((*parser).simple_keys.top);
                         *fresh16 = (*parser).simple_keys.start;
-                        let fresh17 = &mut (*parser).simple_keys.end;
+                        let fresh17 = addr_of_mut!((*parser).simple_keys.end);
                         *fresh17 =
                             ((*parser).simple_keys.start).c_offset(16 as libc::c_int as isize);
                         1 as libc::c_int
@@ -286,7 +286,7 @@ pub unsafe fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) -> libc::c_
                         0 as libc::c_int
                     } == 0)
                     {
-                        let fresh18 = &mut (*parser).states.start;
+                        let fresh18 = addr_of_mut!((*parser).states.start);
                         *fresh18 = yaml_malloc(
                             (16 as libc::c_int as libc::c_ulong).wrapping_mul(size_of::<
                                 yaml_parser_state_t,
@@ -295,9 +295,9 @@ pub unsafe fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) -> libc::c_
                                 as libc::c_ulong),
                         ) as *mut yaml_parser_state_t;
                         if !(if !(*fresh18).is_null() {
-                            let fresh19 = &mut (*parser).states.top;
+                            let fresh19 = addr_of_mut!((*parser).states.top);
                             *fresh19 = (*parser).states.start;
-                            let fresh20 = &mut (*parser).states.end;
+                            let fresh20 = addr_of_mut!((*parser).states.end);
                             *fresh20 =
                                 ((*parser).states.start).c_offset(16 as libc::c_int as isize);
                             1 as libc::c_int
@@ -306,7 +306,7 @@ pub unsafe fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) -> libc::c_
                             0 as libc::c_int
                         } == 0)
                         {
-                            let fresh21 = &mut (*parser).marks.start;
+                            let fresh21 = addr_of_mut!((*parser).marks.start);
                             *fresh21 = yaml_malloc(
                                 (16 as libc::c_int as libc::c_ulong).wrapping_mul(size_of::<
                                     yaml_mark_t,
@@ -315,9 +315,9 @@ pub unsafe fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) -> libc::c_
                                     as libc::c_ulong),
                             ) as *mut yaml_mark_t;
                             if !(if !(*fresh21).is_null() {
-                                let fresh22 = &mut (*parser).marks.top;
+                                let fresh22 = addr_of_mut!((*parser).marks.top);
                                 *fresh22 = (*parser).marks.start;
-                                let fresh23 = &mut (*parser).marks.end;
+                                let fresh23 = addr_of_mut!((*parser).marks.end);
                                 *fresh23 =
                                     ((*parser).marks.start).c_offset(16 as libc::c_int as isize);
                                 1 as libc::c_int
@@ -326,16 +326,16 @@ pub unsafe fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) -> libc::c_
                                 0 as libc::c_int
                             } == 0)
                             {
-                                let fresh24 = &mut (*parser).tag_directives.start;
+                                let fresh24 = addr_of_mut!((*parser).tag_directives.start);
                                 *fresh24 =
                                     yaml_malloc((16 as libc::c_int as libc::c_ulong).wrapping_mul(
                                         size_of::<yaml_tag_directive_t>() as libc::c_ulong,
                                     ))
                                         as *mut yaml_tag_directive_t;
                                 if !(if !(*fresh24).is_null() {
-                                    let fresh25 = &mut (*parser).tag_directives.top;
+                                    let fresh25 = addr_of_mut!((*parser).tag_directives.top);
                                     *fresh25 = (*parser).tag_directives.start;
-                                    let fresh26 = &mut (*parser).tag_directives.end;
+                                    let fresh26 = addr_of_mut!((*parser).tag_directives.end);
                                     *fresh26 = ((*parser).tag_directives.start)
                                         .c_offset(16 as libc::c_int as isize);
                                     1 as libc::c_int
@@ -354,137 +354,137 @@ pub unsafe fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) -> libc::c_
         }
     }
     yaml_free((*parser).raw_buffer.start as *mut libc::c_void);
-    let fresh27 = &mut (*parser).raw_buffer.end;
+    let fresh27 = addr_of_mut!((*parser).raw_buffer.end);
     *fresh27 = ptr::null_mut::<libc::c_uchar>();
-    let fresh28 = &mut (*parser).raw_buffer.pointer;
+    let fresh28 = addr_of_mut!((*parser).raw_buffer.pointer);
     *fresh28 = *fresh27;
-    let fresh29 = &mut (*parser).raw_buffer.start;
+    let fresh29 = addr_of_mut!((*parser).raw_buffer.start);
     *fresh29 = *fresh28;
     yaml_free((*parser).buffer.start as *mut libc::c_void);
-    let fresh30 = &mut (*parser).buffer.end;
+    let fresh30 = addr_of_mut!((*parser).buffer.end);
     *fresh30 = ptr::null_mut::<yaml_char_t>();
-    let fresh31 = &mut (*parser).buffer.pointer;
+    let fresh31 = addr_of_mut!((*parser).buffer.pointer);
     *fresh31 = *fresh30;
-    let fresh32 = &mut (*parser).buffer.start;
+    let fresh32 = addr_of_mut!((*parser).buffer.start);
     *fresh32 = *fresh31;
     yaml_free((*parser).tokens.start as *mut libc::c_void);
-    let fresh33 = &mut (*parser).tokens.end;
+    let fresh33 = addr_of_mut!((*parser).tokens.end);
     *fresh33 = ptr::null_mut::<yaml_token_t>();
-    let fresh34 = &mut (*parser).tokens.tail;
+    let fresh34 = addr_of_mut!((*parser).tokens.tail);
     *fresh34 = *fresh33;
-    let fresh35 = &mut (*parser).tokens.head;
+    let fresh35 = addr_of_mut!((*parser).tokens.head);
     *fresh35 = *fresh34;
-    let fresh36 = &mut (*parser).tokens.start;
+    let fresh36 = addr_of_mut!((*parser).tokens.start);
     *fresh36 = *fresh35;
     yaml_free((*parser).indents.start as *mut libc::c_void);
-    let fresh37 = &mut (*parser).indents.end;
+    let fresh37 = addr_of_mut!((*parser).indents.end);
     *fresh37 = ptr::null_mut::<libc::c_int>();
-    let fresh38 = &mut (*parser).indents.top;
+    let fresh38 = addr_of_mut!((*parser).indents.top);
     *fresh38 = *fresh37;
-    let fresh39 = &mut (*parser).indents.start;
+    let fresh39 = addr_of_mut!((*parser).indents.start);
     *fresh39 = *fresh38;
     yaml_free((*parser).simple_keys.start as *mut libc::c_void);
-    let fresh40 = &mut (*parser).simple_keys.end;
+    let fresh40 = addr_of_mut!((*parser).simple_keys.end);
     *fresh40 = ptr::null_mut::<yaml_simple_key_t>();
-    let fresh41 = &mut (*parser).simple_keys.top;
+    let fresh41 = addr_of_mut!((*parser).simple_keys.top);
     *fresh41 = *fresh40;
-    let fresh42 = &mut (*parser).simple_keys.start;
+    let fresh42 = addr_of_mut!((*parser).simple_keys.start);
     *fresh42 = *fresh41;
     yaml_free((*parser).states.start as *mut libc::c_void);
-    let fresh43 = &mut (*parser).states.end;
+    let fresh43 = addr_of_mut!((*parser).states.end);
     *fresh43 = ptr::null_mut::<yaml_parser_state_t>();
-    let fresh44 = &mut (*parser).states.top;
+    let fresh44 = addr_of_mut!((*parser).states.top);
     *fresh44 = *fresh43;
-    let fresh45 = &mut (*parser).states.start;
+    let fresh45 = addr_of_mut!((*parser).states.start);
     *fresh45 = *fresh44;
     yaml_free((*parser).marks.start as *mut libc::c_void);
-    let fresh46 = &mut (*parser).marks.end;
+    let fresh46 = addr_of_mut!((*parser).marks.end);
     *fresh46 = ptr::null_mut::<yaml_mark_t>();
-    let fresh47 = &mut (*parser).marks.top;
+    let fresh47 = addr_of_mut!((*parser).marks.top);
     *fresh47 = *fresh46;
-    let fresh48 = &mut (*parser).marks.start;
+    let fresh48 = addr_of_mut!((*parser).marks.start);
     *fresh48 = *fresh47;
     yaml_free((*parser).tag_directives.start as *mut libc::c_void);
-    let fresh49 = &mut (*parser).tag_directives.end;
+    let fresh49 = addr_of_mut!((*parser).tag_directives.end);
     *fresh49 = ptr::null_mut::<yaml_tag_directive_t>();
-    let fresh50 = &mut (*parser).tag_directives.top;
+    let fresh50 = addr_of_mut!((*parser).tag_directives.top);
     *fresh50 = *fresh49;
-    let fresh51 = &mut (*parser).tag_directives.start;
+    let fresh51 = addr_of_mut!((*parser).tag_directives.start);
     *fresh51 = *fresh50;
     0 as libc::c_int
 }
 pub unsafe fn yaml_parser_delete(parser: *mut yaml_parser_t) {
     __assert!(!parser.is_null());
     yaml_free((*parser).raw_buffer.start as *mut libc::c_void);
-    let fresh52 = &mut (*parser).raw_buffer.end;
+    let fresh52 = addr_of_mut!((*parser).raw_buffer.end);
     *fresh52 = ptr::null_mut::<libc::c_uchar>();
-    let fresh53 = &mut (*parser).raw_buffer.pointer;
+    let fresh53 = addr_of_mut!((*parser).raw_buffer.pointer);
     *fresh53 = *fresh52;
-    let fresh54 = &mut (*parser).raw_buffer.start;
+    let fresh54 = addr_of_mut!((*parser).raw_buffer.start);
     *fresh54 = *fresh53;
     yaml_free((*parser).buffer.start as *mut libc::c_void);
-    let fresh55 = &mut (*parser).buffer.end;
+    let fresh55 = addr_of_mut!((*parser).buffer.end);
     *fresh55 = ptr::null_mut::<yaml_char_t>();
-    let fresh56 = &mut (*parser).buffer.pointer;
+    let fresh56 = addr_of_mut!((*parser).buffer.pointer);
     *fresh56 = *fresh55;
-    let fresh57 = &mut (*parser).buffer.start;
+    let fresh57 = addr_of_mut!((*parser).buffer.start);
     *fresh57 = *fresh56;
     while !((*parser).tokens.head == (*parser).tokens.tail) {
-        let fresh58 = &mut (*parser).tokens.head;
+        let fresh58 = addr_of_mut!((*parser).tokens.head);
         let fresh59 = *fresh58;
         *fresh58 = (*fresh58).c_offset(1);
         yaml_token_delete(fresh59);
     }
     yaml_free((*parser).tokens.start as *mut libc::c_void);
-    let fresh60 = &mut (*parser).tokens.end;
+    let fresh60 = addr_of_mut!((*parser).tokens.end);
     *fresh60 = ptr::null_mut::<yaml_token_t>();
-    let fresh61 = &mut (*parser).tokens.tail;
+    let fresh61 = addr_of_mut!((*parser).tokens.tail);
     *fresh61 = *fresh60;
-    let fresh62 = &mut (*parser).tokens.head;
+    let fresh62 = addr_of_mut!((*parser).tokens.head);
     *fresh62 = *fresh61;
-    let fresh63 = &mut (*parser).tokens.start;
+    let fresh63 = addr_of_mut!((*parser).tokens.start);
     *fresh63 = *fresh62;
     yaml_free((*parser).indents.start as *mut libc::c_void);
-    let fresh64 = &mut (*parser).indents.end;
+    let fresh64 = addr_of_mut!((*parser).indents.end);
     *fresh64 = ptr::null_mut::<libc::c_int>();
-    let fresh65 = &mut (*parser).indents.top;
+    let fresh65 = addr_of_mut!((*parser).indents.top);
     *fresh65 = *fresh64;
-    let fresh66 = &mut (*parser).indents.start;
+    let fresh66 = addr_of_mut!((*parser).indents.start);
     *fresh66 = *fresh65;
     yaml_free((*parser).simple_keys.start as *mut libc::c_void);
-    let fresh67 = &mut (*parser).simple_keys.end;
+    let fresh67 = addr_of_mut!((*parser).simple_keys.end);
     *fresh67 = ptr::null_mut::<yaml_simple_key_t>();
-    let fresh68 = &mut (*parser).simple_keys.top;
+    let fresh68 = addr_of_mut!((*parser).simple_keys.top);
     *fresh68 = *fresh67;
-    let fresh69 = &mut (*parser).simple_keys.start;
+    let fresh69 = addr_of_mut!((*parser).simple_keys.start);
     *fresh69 = *fresh68;
     yaml_free((*parser).states.start as *mut libc::c_void);
-    let fresh70 = &mut (*parser).states.end;
+    let fresh70 = addr_of_mut!((*parser).states.end);
     *fresh70 = ptr::null_mut::<yaml_parser_state_t>();
-    let fresh71 = &mut (*parser).states.top;
+    let fresh71 = addr_of_mut!((*parser).states.top);
     *fresh71 = *fresh70;
-    let fresh72 = &mut (*parser).states.start;
+    let fresh72 = addr_of_mut!((*parser).states.start);
     *fresh72 = *fresh71;
     yaml_free((*parser).marks.start as *mut libc::c_void);
-    let fresh73 = &mut (*parser).marks.end;
+    let fresh73 = addr_of_mut!((*parser).marks.end);
     *fresh73 = ptr::null_mut::<yaml_mark_t>();
-    let fresh74 = &mut (*parser).marks.top;
+    let fresh74 = addr_of_mut!((*parser).marks.top);
     *fresh74 = *fresh73;
-    let fresh75 = &mut (*parser).marks.start;
+    let fresh75 = addr_of_mut!((*parser).marks.start);
     *fresh75 = *fresh74;
     while !((*parser).tag_directives.start == (*parser).tag_directives.top) {
-        let fresh76 = &mut (*parser).tag_directives.top;
+        let fresh76 = addr_of_mut!((*parser).tag_directives.top);
         *fresh76 = (*fresh76).c_offset(-1);
         let tag_directive: yaml_tag_directive_t = **fresh76;
         yaml_free(tag_directive.handle as *mut libc::c_void);
         yaml_free(tag_directive.prefix as *mut libc::c_void);
     }
     yaml_free((*parser).tag_directives.start as *mut libc::c_void);
-    let fresh77 = &mut (*parser).tag_directives.end;
+    let fresh77 = addr_of_mut!((*parser).tag_directives.end);
     *fresh77 = ptr::null_mut::<yaml_tag_directive_t>();
-    let fresh78 = &mut (*parser).tag_directives.top;
+    let fresh78 = addr_of_mut!((*parser).tag_directives.top);
     *fresh78 = *fresh77;
-    let fresh79 = &mut (*parser).tag_directives.start;
+    let fresh79 = addr_of_mut!((*parser).tag_directives.start);
     *fresh79 = *fresh78;
     memset(
         parser as *mut libc::c_void,
@@ -515,7 +515,7 @@ unsafe fn yaml_string_read_handler(
         (*parser).input.string.current as *const libc::c_void,
         size,
     );
-    let fresh80 = &mut (*parser).input.string.current;
+    let fresh80 = addr_of_mut!((*parser).input.string.current);
     *fresh80 = (*fresh80).c_offset(size as isize);
     *size_read = size;
     1 as libc::c_int
@@ -528,18 +528,18 @@ pub unsafe fn yaml_parser_set_input_string(
     __assert!(!parser.is_null());
     __assert!(((*parser).read_handler).is_none());
     __assert!(!input.is_null());
-    let fresh81 = &mut (*parser).read_handler;
+    let fresh81 = addr_of_mut!((*parser).read_handler);
     *fresh81 = Some(
         yaml_string_read_handler
             as unsafe fn(*mut libc::c_void, *mut libc::c_uchar, size_t, *mut size_t) -> libc::c_int,
     );
-    let fresh82 = &mut (*parser).read_handler_data;
+    let fresh82 = addr_of_mut!((*parser).read_handler_data);
     *fresh82 = parser as *mut libc::c_void;
-    let fresh83 = &mut (*parser).input.string.start;
+    let fresh83 = addr_of_mut!((*parser).input.string.start);
     *fresh83 = input;
-    let fresh84 = &mut (*parser).input.string.current;
+    let fresh84 = addr_of_mut!((*parser).input.string.current);
     *fresh84 = input;
-    let fresh85 = &mut (*parser).input.string.end;
+    let fresh85 = addr_of_mut!((*parser).input.string.end);
     *fresh85 = input.c_offset(size as isize);
 }
 pub unsafe fn yaml_parser_set_input(
@@ -550,9 +550,9 @@ pub unsafe fn yaml_parser_set_input(
     __assert!(!parser.is_null());
     __assert!(((*parser).read_handler).is_none());
     __assert!(handler.is_some());
-    let fresh89 = &mut (*parser).read_handler;
+    let fresh89 = addr_of_mut!((*parser).read_handler);
     *fresh89 = handler;
-    let fresh90 = &mut (*parser).read_handler_data;
+    let fresh90 = addr_of_mut!((*parser).read_handler_data);
     *fresh90 = data;
 }
 pub unsafe fn yaml_parser_set_encoding(mut parser: *mut yaml_parser_t, encoding: yaml_encoding_t) {
@@ -567,14 +567,14 @@ pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> libc:
         0 as libc::c_int,
         size_of::<yaml_emitter_t>() as libc::c_ulong,
     );
-    let fresh91 = &mut (*emitter).buffer.start;
+    let fresh91 = addr_of_mut!((*emitter).buffer.start);
     *fresh91 = yaml_malloc(16384 as libc::c_int as size_t) as *mut yaml_char_t;
     if !(if !(*fresh91).is_null() {
-        let fresh92 = &mut (*emitter).buffer.pointer;
+        let fresh92 = addr_of_mut!((*emitter).buffer.pointer);
         *fresh92 = (*emitter).buffer.start;
-        let fresh93 = &mut (*emitter).buffer.last;
+        let fresh93 = addr_of_mut!((*emitter).buffer.last);
         *fresh93 = *fresh92;
-        let fresh94 = &mut (*emitter).buffer.end;
+        let fresh94 = addr_of_mut!((*emitter).buffer.end);
         *fresh94 = ((*emitter).buffer.start).c_offset(16384 as libc::c_int as isize);
         1 as libc::c_int
     } else {
@@ -582,16 +582,16 @@ pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> libc:
         0 as libc::c_int
     } == 0)
     {
-        let fresh95 = &mut (*emitter).raw_buffer.start;
+        let fresh95 = addr_of_mut!((*emitter).raw_buffer.start);
         *fresh95 =
             yaml_malloc((16384 as libc::c_int * 2 as libc::c_int + 2 as libc::c_int) as size_t)
                 as *mut yaml_char_t;
         if !(if !(*fresh95).is_null() {
-            let fresh96 = &mut (*emitter).raw_buffer.pointer;
+            let fresh96 = addr_of_mut!((*emitter).raw_buffer.pointer);
             *fresh96 = (*emitter).raw_buffer.start;
-            let fresh97 = &mut (*emitter).raw_buffer.last;
+            let fresh97 = addr_of_mut!((*emitter).raw_buffer.last);
             *fresh97 = *fresh96;
-            let fresh98 = &mut (*emitter).raw_buffer.end;
+            let fresh98 = addr_of_mut!((*emitter).raw_buffer.end);
             *fresh98 = ((*emitter).raw_buffer.start)
                 .c_offset((16384 as libc::c_int * 2 as libc::c_int + 2 as libc::c_int) as isize);
             1 as libc::c_int
@@ -600,15 +600,15 @@ pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> libc:
             0 as libc::c_int
         } == 0)
         {
-            let fresh99 = &mut (*emitter).states.start;
+            let fresh99 = addr_of_mut!((*emitter).states.start);
             *fresh99 = yaml_malloc(
                 (16 as libc::c_int as libc::c_ulong)
                     .wrapping_mul(size_of::<yaml_emitter_state_t>() as libc::c_ulong),
             ) as *mut yaml_emitter_state_t;
             if !(if !(*fresh99).is_null() {
-                let fresh100 = &mut (*emitter).states.top;
+                let fresh100 = addr_of_mut!((*emitter).states.top);
                 *fresh100 = (*emitter).states.start;
-                let fresh101 = &mut (*emitter).states.end;
+                let fresh101 = addr_of_mut!((*emitter).states.end);
                 *fresh101 = ((*emitter).states.start).c_offset(16 as libc::c_int as isize);
                 1 as libc::c_int
             } else {
@@ -616,7 +616,7 @@ pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> libc:
                 0 as libc::c_int
             } == 0)
             {
-                let fresh102 = &mut (*emitter).events.start;
+                let fresh102 = addr_of_mut!((*emitter).events.start);
                 *fresh102 =
                     yaml_malloc((16 as libc::c_int as libc::c_ulong).wrapping_mul(size_of::<
                         yaml_event_t,
@@ -624,11 +624,11 @@ pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> libc:
                     )
                         as libc::c_ulong)) as *mut yaml_event_t;
                 if !(if !(*fresh102).is_null() {
-                    let fresh103 = &mut (*emitter).events.tail;
+                    let fresh103 = addr_of_mut!((*emitter).events.tail);
                     *fresh103 = (*emitter).events.start;
-                    let fresh104 = &mut (*emitter).events.head;
+                    let fresh104 = addr_of_mut!((*emitter).events.head);
                     *fresh104 = *fresh103;
-                    let fresh105 = &mut (*emitter).events.end;
+                    let fresh105 = addr_of_mut!((*emitter).events.end);
                     *fresh105 = ((*emitter).events.start).c_offset(16 as libc::c_int as isize);
                     1 as libc::c_int
                 } else {
@@ -636,7 +636,7 @@ pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> libc:
                     0 as libc::c_int
                 } == 0)
                 {
-                    let fresh106 = &mut (*emitter).indents.start;
+                    let fresh106 = addr_of_mut!((*emitter).indents.start);
                     *fresh106 =
                         yaml_malloc((16 as libc::c_int as libc::c_ulong).wrapping_mul(size_of::<
                             libc::c_int,
@@ -644,9 +644,9 @@ pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> libc:
                         )
                             as libc::c_ulong)) as *mut libc::c_int;
                     if !(if !(*fresh106).is_null() {
-                        let fresh107 = &mut (*emitter).indents.top;
+                        let fresh107 = addr_of_mut!((*emitter).indents.top);
                         *fresh107 = (*emitter).indents.start;
-                        let fresh108 = &mut (*emitter).indents.end;
+                        let fresh108 = addr_of_mut!((*emitter).indents.end);
                         *fresh108 = ((*emitter).indents.start).c_offset(16 as libc::c_int as isize);
                         1 as libc::c_int
                     } else {
@@ -654,7 +654,7 @@ pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> libc:
                         0 as libc::c_int
                     } == 0)
                     {
-                        let fresh109 = &mut (*emitter).tag_directives.start;
+                        let fresh109 = addr_of_mut!((*emitter).tag_directives.start);
                         *fresh109 = yaml_malloc(
                             (16 as libc::c_int as libc::c_ulong).wrapping_mul(size_of::<
                                 yaml_tag_directive_t,
@@ -663,9 +663,9 @@ pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> libc:
                                 as libc::c_ulong),
                         ) as *mut yaml_tag_directive_t;
                         if !(if !(*fresh109).is_null() {
-                            let fresh110 = &mut (*emitter).tag_directives.top;
+                            let fresh110 = addr_of_mut!((*emitter).tag_directives.top);
                             *fresh110 = (*emitter).tag_directives.start;
-                            let fresh111 = &mut (*emitter).tag_directives.end;
+                            let fresh111 = addr_of_mut!((*emitter).tag_directives.end);
                             *fresh111 = ((*emitter).tag_directives.start)
                                 .c_offset(16 as libc::c_int as isize);
                             1 as libc::c_int
@@ -682,109 +682,109 @@ pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> libc:
         }
     }
     yaml_free((*emitter).buffer.start as *mut libc::c_void);
-    let fresh112 = &mut (*emitter).buffer.end;
+    let fresh112 = addr_of_mut!((*emitter).buffer.end);
     *fresh112 = ptr::null_mut::<yaml_char_t>();
-    let fresh113 = &mut (*emitter).buffer.pointer;
+    let fresh113 = addr_of_mut!((*emitter).buffer.pointer);
     *fresh113 = *fresh112;
-    let fresh114 = &mut (*emitter).buffer.start;
+    let fresh114 = addr_of_mut!((*emitter).buffer.start);
     *fresh114 = *fresh113;
     yaml_free((*emitter).raw_buffer.start as *mut libc::c_void);
-    let fresh115 = &mut (*emitter).raw_buffer.end;
+    let fresh115 = addr_of_mut!((*emitter).raw_buffer.end);
     *fresh115 = ptr::null_mut::<libc::c_uchar>();
-    let fresh116 = &mut (*emitter).raw_buffer.pointer;
+    let fresh116 = addr_of_mut!((*emitter).raw_buffer.pointer);
     *fresh116 = *fresh115;
-    let fresh117 = &mut (*emitter).raw_buffer.start;
+    let fresh117 = addr_of_mut!((*emitter).raw_buffer.start);
     *fresh117 = *fresh116;
     yaml_free((*emitter).states.start as *mut libc::c_void);
-    let fresh118 = &mut (*emitter).states.end;
+    let fresh118 = addr_of_mut!((*emitter).states.end);
     *fresh118 = ptr::null_mut::<yaml_emitter_state_t>();
-    let fresh119 = &mut (*emitter).states.top;
+    let fresh119 = addr_of_mut!((*emitter).states.top);
     *fresh119 = *fresh118;
-    let fresh120 = &mut (*emitter).states.start;
+    let fresh120 = addr_of_mut!((*emitter).states.start);
     *fresh120 = *fresh119;
     yaml_free((*emitter).events.start as *mut libc::c_void);
-    let fresh121 = &mut (*emitter).events.end;
+    let fresh121 = addr_of_mut!((*emitter).events.end);
     *fresh121 = ptr::null_mut::<yaml_event_t>();
-    let fresh122 = &mut (*emitter).events.tail;
+    let fresh122 = addr_of_mut!((*emitter).events.tail);
     *fresh122 = *fresh121;
-    let fresh123 = &mut (*emitter).events.head;
+    let fresh123 = addr_of_mut!((*emitter).events.head);
     *fresh123 = *fresh122;
-    let fresh124 = &mut (*emitter).events.start;
+    let fresh124 = addr_of_mut!((*emitter).events.start);
     *fresh124 = *fresh123;
     yaml_free((*emitter).indents.start as *mut libc::c_void);
-    let fresh125 = &mut (*emitter).indents.end;
+    let fresh125 = addr_of_mut!((*emitter).indents.end);
     *fresh125 = ptr::null_mut::<libc::c_int>();
-    let fresh126 = &mut (*emitter).indents.top;
+    let fresh126 = addr_of_mut!((*emitter).indents.top);
     *fresh126 = *fresh125;
-    let fresh127 = &mut (*emitter).indents.start;
+    let fresh127 = addr_of_mut!((*emitter).indents.start);
     *fresh127 = *fresh126;
     yaml_free((*emitter).tag_directives.start as *mut libc::c_void);
-    let fresh128 = &mut (*emitter).tag_directives.end;
+    let fresh128 = addr_of_mut!((*emitter).tag_directives.end);
     *fresh128 = ptr::null_mut::<yaml_tag_directive_t>();
-    let fresh129 = &mut (*emitter).tag_directives.top;
+    let fresh129 = addr_of_mut!((*emitter).tag_directives.top);
     *fresh129 = *fresh128;
-    let fresh130 = &mut (*emitter).tag_directives.start;
+    let fresh130 = addr_of_mut!((*emitter).tag_directives.start);
     *fresh130 = *fresh129;
     0 as libc::c_int
 }
 pub unsafe fn yaml_emitter_delete(emitter: *mut yaml_emitter_t) {
     __assert!(!emitter.is_null());
     yaml_free((*emitter).buffer.start as *mut libc::c_void);
-    let fresh131 = &mut (*emitter).buffer.end;
+    let fresh131 = addr_of_mut!((*emitter).buffer.end);
     *fresh131 = ptr::null_mut::<yaml_char_t>();
-    let fresh132 = &mut (*emitter).buffer.pointer;
+    let fresh132 = addr_of_mut!((*emitter).buffer.pointer);
     *fresh132 = *fresh131;
-    let fresh133 = &mut (*emitter).buffer.start;
+    let fresh133 = addr_of_mut!((*emitter).buffer.start);
     *fresh133 = *fresh132;
     yaml_free((*emitter).raw_buffer.start as *mut libc::c_void);
-    let fresh134 = &mut (*emitter).raw_buffer.end;
+    let fresh134 = addr_of_mut!((*emitter).raw_buffer.end);
     *fresh134 = ptr::null_mut::<libc::c_uchar>();
-    let fresh135 = &mut (*emitter).raw_buffer.pointer;
+    let fresh135 = addr_of_mut!((*emitter).raw_buffer.pointer);
     *fresh135 = *fresh134;
-    let fresh136 = &mut (*emitter).raw_buffer.start;
+    let fresh136 = addr_of_mut!((*emitter).raw_buffer.start);
     *fresh136 = *fresh135;
     yaml_free((*emitter).states.start as *mut libc::c_void);
-    let fresh137 = &mut (*emitter).states.end;
+    let fresh137 = addr_of_mut!((*emitter).states.end);
     *fresh137 = ptr::null_mut::<yaml_emitter_state_t>();
-    let fresh138 = &mut (*emitter).states.top;
+    let fresh138 = addr_of_mut!((*emitter).states.top);
     *fresh138 = *fresh137;
-    let fresh139 = &mut (*emitter).states.start;
+    let fresh139 = addr_of_mut!((*emitter).states.start);
     *fresh139 = *fresh138;
     while !((*emitter).events.head == (*emitter).events.tail) {
-        let fresh140 = &mut (*emitter).events.head;
+        let fresh140 = addr_of_mut!((*emitter).events.head);
         let fresh141 = *fresh140;
         *fresh140 = (*fresh140).c_offset(1);
         yaml_event_delete(fresh141);
     }
     yaml_free((*emitter).events.start as *mut libc::c_void);
-    let fresh142 = &mut (*emitter).events.end;
+    let fresh142 = addr_of_mut!((*emitter).events.end);
     *fresh142 = ptr::null_mut::<yaml_event_t>();
-    let fresh143 = &mut (*emitter).events.tail;
+    let fresh143 = addr_of_mut!((*emitter).events.tail);
     *fresh143 = *fresh142;
-    let fresh144 = &mut (*emitter).events.head;
+    let fresh144 = addr_of_mut!((*emitter).events.head);
     *fresh144 = *fresh143;
-    let fresh145 = &mut (*emitter).events.start;
+    let fresh145 = addr_of_mut!((*emitter).events.start);
     *fresh145 = *fresh144;
     yaml_free((*emitter).indents.start as *mut libc::c_void);
-    let fresh146 = &mut (*emitter).indents.end;
+    let fresh146 = addr_of_mut!((*emitter).indents.end);
     *fresh146 = ptr::null_mut::<libc::c_int>();
-    let fresh147 = &mut (*emitter).indents.top;
+    let fresh147 = addr_of_mut!((*emitter).indents.top);
     *fresh147 = *fresh146;
-    let fresh148 = &mut (*emitter).indents.start;
+    let fresh148 = addr_of_mut!((*emitter).indents.start);
     *fresh148 = *fresh147;
     while !((*emitter).tag_directives.start == (*emitter).tag_directives.top) {
-        let fresh149 = &mut (*emitter).tag_directives.top;
+        let fresh149 = addr_of_mut!((*emitter).tag_directives.top);
         *fresh149 = (*fresh149).c_offset(-1);
         let tag_directive: yaml_tag_directive_t = **fresh149;
         yaml_free(tag_directive.handle as *mut libc::c_void);
         yaml_free(tag_directive.prefix as *mut libc::c_void);
     }
     yaml_free((*emitter).tag_directives.start as *mut libc::c_void);
-    let fresh150 = &mut (*emitter).tag_directives.end;
+    let fresh150 = addr_of_mut!((*emitter).tag_directives.end);
     *fresh150 = ptr::null_mut::<yaml_tag_directive_t>();
-    let fresh151 = &mut (*emitter).tag_directives.top;
+    let fresh151 = addr_of_mut!((*emitter).tag_directives.top);
     *fresh151 = *fresh150;
-    let fresh152 = &mut (*emitter).tag_directives.start;
+    let fresh152 = addr_of_mut!((*emitter).tag_directives.start);
     *fresh152 = *fresh151;
     yaml_free((*emitter).anchors as *mut libc::c_void);
     memset(
@@ -816,7 +816,7 @@ unsafe fn yaml_string_write_handler(
         buffer as *const libc::c_void,
         size,
     );
-    let fresh153 = &mut (*(*emitter).output.string.size_written);
+    let fresh153 = addr_of_mut!((*(*emitter).output.string.size_written));
     *fresh153 = (*fresh153 as libc::c_ulong).wrapping_add(size) as size_t as size_t;
     1 as libc::c_int
 }
@@ -829,17 +829,17 @@ pub unsafe fn yaml_emitter_set_output_string(
     __assert!(!emitter.is_null());
     __assert!(((*emitter).write_handler).is_none());
     __assert!(!output.is_null());
-    let fresh154 = &mut (*emitter).write_handler;
+    let fresh154 = addr_of_mut!((*emitter).write_handler);
     *fresh154 = Some(
         yaml_string_write_handler
             as unsafe fn(*mut libc::c_void, *mut libc::c_uchar, size_t) -> libc::c_int,
     );
-    let fresh155 = &mut (*emitter).write_handler_data;
+    let fresh155 = addr_of_mut!((*emitter).write_handler_data);
     *fresh155 = emitter as *mut libc::c_void;
-    let fresh156 = &mut (*emitter).output.string.buffer;
+    let fresh156 = addr_of_mut!((*emitter).output.string.buffer);
     *fresh156 = output;
     (*emitter).output.string.size = size;
-    let fresh157 = &mut (*emitter).output.string.size_written;
+    let fresh157 = addr_of_mut!((*emitter).output.string.size_written);
     *fresh157 = size_written;
     *size_written = 0 as libc::c_int as size_t;
 }
@@ -851,9 +851,9 @@ pub unsafe fn yaml_emitter_set_output(
     __assert!(!emitter.is_null());
     __assert!(((*emitter).write_handler).is_none());
     __assert!(handler.is_some());
-    let fresh161 = &mut (*emitter).write_handler;
+    let fresh161 = addr_of_mut!((*emitter).write_handler);
     *fresh161 = handler;
-    let fresh162 = &mut (*emitter).write_handler_data;
+    let fresh162 = addr_of_mut!((*emitter).write_handler_data);
     *fresh162 = data;
 }
 pub unsafe fn yaml_emitter_set_encoding(
@@ -1154,11 +1154,11 @@ pub unsafe fn yaml_document_start_event_initialize(
                     (*event).type_0 = YAML_DOCUMENT_START_EVENT;
                     (*event).start_mark = mark;
                     (*event).end_mark = mark;
-                    let fresh164 = &mut (*event).data.document_start.version_directive;
+                    let fresh164 = addr_of_mut!((*event).data.document_start.version_directive);
                     *fresh164 = version_directive_copy;
-                    let fresh165 = &mut (*event).data.document_start.tag_directives.start;
+                    let fresh165 = addr_of_mut!((*event).data.document_start.tag_directives.start);
                     *fresh165 = tag_directives_copy.start;
-                    let fresh166 = &mut (*event).data.document_start.tag_directives.end;
+                    let fresh166 = addr_of_mut!((*event).data.document_start.tag_directives.end);
                     *fresh166 = tag_directives_copy.top;
                     (*event).data.document_start.implicit = implicit;
                     return 1 as libc::c_int;
@@ -1229,7 +1229,7 @@ pub unsafe fn yaml_alias_event_initialize(
     (*event).type_0 = YAML_ALIAS_EVENT;
     (*event).start_mark = mark;
     (*event).end_mark = mark;
-    let fresh167 = &mut (*event).data.alias.anchor;
+    let fresh167 = addr_of_mut!((*event).data.alias.anchor);
     *fresh167 = anchor_copy;
     1 as libc::c_int
 }
@@ -1308,11 +1308,11 @@ pub unsafe fn yaml_scalar_event_initialize(
                             (*event).type_0 = YAML_SCALAR_EVENT;
                             (*event).start_mark = mark;
                             (*event).end_mark = mark;
-                            let fresh168 = &mut (*event).data.scalar.anchor;
+                            let fresh168 = addr_of_mut!((*event).data.scalar.anchor);
                             *fresh168 = anchor_copy;
-                            let fresh169 = &mut (*event).data.scalar.tag;
+                            let fresh169 = addr_of_mut!((*event).data.scalar.tag);
                             *fresh169 = tag_copy;
-                            let fresh170 = &mut (*event).data.scalar.value;
+                            let fresh170 = addr_of_mut!((*event).data.scalar.value);
                             *fresh170 = value_copy;
                             (*event).data.scalar.length = length as size_t;
                             (*event).data.scalar.plain_implicit = plain_implicit;
@@ -1388,9 +1388,9 @@ pub unsafe fn yaml_sequence_start_event_initialize(
                     (*event).type_0 = YAML_SEQUENCE_START_EVENT;
                     (*event).start_mark = mark;
                     (*event).end_mark = mark;
-                    let fresh171 = &mut (*event).data.sequence_start.anchor;
+                    let fresh171 = addr_of_mut!((*event).data.sequence_start.anchor);
                     *fresh171 = anchor_copy;
-                    let fresh172 = &mut (*event).data.sequence_start.tag;
+                    let fresh172 = addr_of_mut!((*event).data.sequence_start.tag);
                     *fresh172 = tag_copy;
                     (*event).data.sequence_start.implicit = implicit;
                     (*event).data.sequence_start.style = style;
@@ -1478,9 +1478,9 @@ pub unsafe fn yaml_mapping_start_event_initialize(
                     (*event).type_0 = YAML_MAPPING_START_EVENT;
                     (*event).start_mark = mark;
                     (*event).end_mark = mark;
-                    let fresh173 = &mut (*event).data.mapping_start.anchor;
+                    let fresh173 = addr_of_mut!((*event).data.mapping_start.anchor);
                     *fresh173 = anchor_copy;
-                    let fresh174 = &mut (*event).data.mapping_start.tag;
+                    let fresh174 = addr_of_mut!((*event).data.mapping_start.tag);
                     *fresh174 = tag_copy;
                     (*event).data.mapping_start.implicit = implicit;
                     (*event).data.mapping_start.style = style;
@@ -1703,17 +1703,17 @@ pub unsafe fn yaml_document_initialize(
                             0 as libc::c_int,
                             size_of::<yaml_document_t>() as libc::c_ulong,
                         );
-                        let fresh176 = &mut (*document).nodes.start;
+                        let fresh176 = addr_of_mut!((*document).nodes.start);
                         *fresh176 = nodes.start;
-                        let fresh177 = &mut (*document).nodes.end;
+                        let fresh177 = addr_of_mut!((*document).nodes.end);
                         *fresh177 = nodes.end;
-                        let fresh178 = &mut (*document).nodes.top;
+                        let fresh178 = addr_of_mut!((*document).nodes.top);
                         *fresh178 = nodes.start;
-                        let fresh179 = &mut (*document).version_directive;
+                        let fresh179 = addr_of_mut!((*document).version_directive);
                         *fresh179 = version_directive_copy;
-                        let fresh180 = &mut (*document).tag_directives.start;
+                        let fresh180 = addr_of_mut!((*document).tag_directives.start);
                         *fresh180 = tag_directives_copy.start;
-                        let fresh181 = &mut (*document).tag_directives.end;
+                        let fresh181 = addr_of_mut!((*document).tag_directives.end);
                         *fresh181 = tag_directives_copy.top;
                         (*document).start_implicit = start_implicit;
                         (*document).end_implicit = end_implicit;
@@ -1748,7 +1748,7 @@ pub unsafe fn yaml_document_delete(document: *mut yaml_document_t) {
     let mut tag_directive: *mut yaml_tag_directive_t;
     __assert!(!document.is_null());
     while !((*document).nodes.start == (*document).nodes.top) {
-        let fresh182 = &mut (*document).nodes.top;
+        let fresh182 = addr_of_mut!((*document).nodes.top);
         *fresh182 = (*fresh182).c_offset(-1);
         let mut node: yaml_node_t = **fresh182;
         yaml_free(node.tag as *mut libc::c_void);
@@ -1774,11 +1774,11 @@ pub unsafe fn yaml_document_delete(document: *mut yaml_document_t) {
         }
     }
     yaml_free((*document).nodes.start as *mut libc::c_void);
-    let fresh183 = &mut (*document).nodes.end;
+    let fresh183 = addr_of_mut!((*document).nodes.end);
     *fresh183 = ptr::null_mut::<yaml_node_t>();
-    let fresh184 = &mut (*document).nodes.top;
+    let fresh184 = addr_of_mut!((*document).nodes.top);
     *fresh184 = *fresh183;
-    let fresh185 = &mut (*document).nodes.start;
+    let fresh185 = addr_of_mut!((*document).nodes.start);
     *fresh185 = *fresh184;
     yaml_free((*document).version_directive as *mut libc::c_void);
     tag_directive = (*document).tag_directives.start;
@@ -1892,7 +1892,7 @@ pub unsafe fn yaml_document_add_scalar(
                             addr_of_mut!((*document).nodes.end) as *mut *mut libc::c_void,
                         ) != 0
                     {
-                        let fresh186 = &mut (*document).nodes.top;
+                        let fresh186 = addr_of_mut!((*document).nodes.top);
                         let fresh187 = *fresh186;
                         *fresh186 = (*fresh186).c_offset(1);
                         *fresh187 = node;
@@ -1994,7 +1994,7 @@ pub unsafe fn yaml_document_add_sequence(
                         addr_of_mut!((*document).nodes.end) as *mut *mut libc::c_void,
                     ) != 0
                 {
-                    let fresh188 = &mut (*document).nodes.top;
+                    let fresh188 = addr_of_mut!((*document).nodes.top);
                     let fresh189 = *fresh188;
                     *fresh188 = (*fresh188).c_offset(1);
                     *fresh189 = node;
@@ -2098,7 +2098,7 @@ pub unsafe fn yaml_document_add_mapping(
                         addr_of_mut!((*document).nodes.end) as *mut *mut libc::c_void,
                     ) != 0
                 {
-                    let fresh190 = &mut (*document).nodes.top;
+                    let fresh190 = addr_of_mut!((*document).nodes.top);
                     let fresh191 = *fresh190;
                     *fresh190 = (*fresh190).c_offset(1);
                     *fresh191 = node;
@@ -2177,12 +2177,13 @@ pub unsafe fn yaml_document_append_sequence_item(
             ) as *mut *mut libc::c_void,
         ) != 0
     {
-        let fresh192 = &mut (*((*document).nodes.start)
-            .c_offset((sequence - 1 as libc::c_int) as isize))
-        .data
-        .sequence
-        .items
-        .top;
+        let fresh192 = addr_of_mut!(
+            (*((*document).nodes.start).c_offset((sequence - 1 as libc::c_int) as isize))
+                .data
+                .sequence
+                .items
+                .top
+        );
         let fresh193 = *fresh192;
         *fresh192 = (*fresh192).c_offset(1);
         *fresh193 = item;
@@ -2260,12 +2261,13 @@ pub unsafe fn yaml_document_append_mapping_pair(
             ) as *mut *mut libc::c_void,
         ) != 0
     {
-        let fresh194 = &mut (*((*document).nodes.start)
-            .c_offset((mapping - 1 as libc::c_int) as isize))
-        .data
-        .mapping
-        .pairs
-        .top;
+        let fresh194 = addr_of_mut!(
+            (*((*document).nodes.start).c_offset((mapping - 1 as libc::c_int) as isize))
+                .data
+                .mapping
+                .pairs
+                .top
+        );
         let fresh195 = *fresh194;
         *fresh194 = (*fresh194).c_offset(1);
         *fresh195 = pair;
