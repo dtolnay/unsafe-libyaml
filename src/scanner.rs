@@ -7,6 +7,7 @@ use crate::libc;
 use crate::reader::yaml_parser_update_buffer;
 use crate::yaml::*;
 use crate::PointerExt;
+use std::mem;
 use std::ptr;
 #[no_mangle]
 pub unsafe extern "C" fn yaml_parser_scan(
@@ -18,7 +19,7 @@ pub unsafe extern "C" fn yaml_parser_scan(
     memset(
         token as *mut libc::c_void,
         0 as libc::c_int,
-        ::std::mem::size_of::<yaml_token_t>() as libc::c_ulong,
+        mem::size_of::<yaml_token_t>() as libc::c_ulong,
     );
     if (*parser).stream_end_produced != 0 || (*parser).error as libc::c_uint != 0 {
         return 1 as libc::c_int;
@@ -734,7 +735,7 @@ unsafe extern "C" fn yaml_parser_roll_indent(
         memset(
             ptr::addr_of_mut!(token) as *mut libc::c_void,
             0 as libc::c_int,
-            ::std::mem::size_of::<yaml_token_t>() as libc::c_ulong,
+            mem::size_of::<yaml_token_t>() as libc::c_ulong,
         );
         token.type_0 = type_0;
         token.start_mark = mark;
@@ -780,7 +781,7 @@ unsafe extern "C" fn yaml_parser_roll_indent(
                 (((*parser).tokens.tail).c_offset_from((*parser).tokens.head) as libc::c_long
                     as libc::c_ulong)
                     .wrapping_sub((number as libc::c_ulong).wrapping_sub((*parser).tokens_parsed))
-                    .wrapping_mul(::std::mem::size_of::<yaml_token_t>() as libc::c_ulong),
+                    .wrapping_mul(mem::size_of::<yaml_token_t>() as libc::c_ulong),
             );
             *((*parser).tokens.head).c_offset(
                 (number as libc::c_ulong).wrapping_sub((*parser).tokens_parsed) as isize,
@@ -827,7 +828,7 @@ unsafe extern "C" fn yaml_parser_unroll_indent(
         memset(
             ptr::addr_of_mut!(token) as *mut libc::c_void,
             0 as libc::c_int,
-            ::std::mem::size_of::<yaml_token_t>() as libc::c_ulong,
+            mem::size_of::<yaml_token_t>() as libc::c_ulong,
         );
         token.type_0 = YAML_BLOCK_END_TOKEN;
         token.start_mark = (*parser).mark;
@@ -916,7 +917,7 @@ unsafe extern "C" fn yaml_parser_fetch_stream_start(mut parser: *mut yaml_parser
     memset(
         ptr::addr_of_mut!(token) as *mut libc::c_void,
         0 as libc::c_int,
-        ::std::mem::size_of::<yaml_token_t>() as libc::c_ulong,
+        mem::size_of::<yaml_token_t>() as libc::c_ulong,
     );
     token.type_0 = YAML_STREAM_START_TOKEN;
     token.start_mark = (*parser).mark;
@@ -978,7 +979,7 @@ unsafe extern "C" fn yaml_parser_fetch_stream_end(mut parser: *mut yaml_parser_t
     memset(
         ptr::addr_of_mut!(token) as *mut libc::c_void,
         0 as libc::c_int,
-        ::std::mem::size_of::<yaml_token_t>() as libc::c_ulong,
+        mem::size_of::<yaml_token_t>() as libc::c_ulong,
     );
     token.type_0 = YAML_STREAM_END_TOKEN;
     token.start_mark = (*parser).mark;
@@ -1187,7 +1188,7 @@ unsafe extern "C" fn yaml_parser_fetch_document_indicator(
     memset(
         ptr::addr_of_mut!(token) as *mut libc::c_void,
         0 as libc::c_int,
-        ::std::mem::size_of::<yaml_token_t>() as libc::c_ulong,
+        mem::size_of::<yaml_token_t>() as libc::c_ulong,
     );
     token.type_0 = type_0;
     token.start_mark = start_mark;
@@ -1280,7 +1281,7 @@ unsafe extern "C" fn yaml_parser_fetch_flow_collection_start(
     memset(
         ptr::addr_of_mut!(token) as *mut libc::c_void,
         0 as libc::c_int,
-        ::std::mem::size_of::<yaml_token_t>() as libc::c_ulong,
+        mem::size_of::<yaml_token_t>() as libc::c_ulong,
     );
     token.type_0 = type_0;
     token.start_mark = start_mark;
@@ -1373,7 +1374,7 @@ unsafe extern "C" fn yaml_parser_fetch_flow_collection_end(
     memset(
         ptr::addr_of_mut!(token) as *mut libc::c_void,
         0 as libc::c_int,
-        ::std::mem::size_of::<yaml_token_t>() as libc::c_ulong,
+        mem::size_of::<yaml_token_t>() as libc::c_ulong,
     );
     token.type_0 = type_0;
     token.start_mark = start_mark;
@@ -1460,7 +1461,7 @@ unsafe extern "C" fn yaml_parser_fetch_flow_entry(mut parser: *mut yaml_parser_t
     memset(
         ptr::addr_of_mut!(token) as *mut libc::c_void,
         0 as libc::c_int,
-        ::std::mem::size_of::<yaml_token_t>() as libc::c_ulong,
+        mem::size_of::<yaml_token_t>() as libc::c_ulong,
     );
     token.type_0 = YAML_FLOW_ENTRY_TOKEN;
     token.start_mark = start_mark;
@@ -1568,7 +1569,7 @@ unsafe extern "C" fn yaml_parser_fetch_block_entry(mut parser: *mut yaml_parser_
     memset(
         ptr::addr_of_mut!(token) as *mut libc::c_void,
         0 as libc::c_int,
-        ::std::mem::size_of::<yaml_token_t>() as libc::c_ulong,
+        mem::size_of::<yaml_token_t>() as libc::c_ulong,
     );
     token.type_0 = YAML_BLOCK_ENTRY_TOKEN;
     token.start_mark = start_mark;
@@ -1676,7 +1677,7 @@ unsafe extern "C" fn yaml_parser_fetch_key(mut parser: *mut yaml_parser_t) -> li
     memset(
         ptr::addr_of_mut!(token) as *mut libc::c_void,
         0 as libc::c_int,
-        ::std::mem::size_of::<yaml_token_t>() as libc::c_ulong,
+        mem::size_of::<yaml_token_t>() as libc::c_ulong,
     );
     token.type_0 = YAML_KEY_TOKEN;
     token.start_mark = start_mark;
@@ -1728,7 +1729,7 @@ unsafe extern "C" fn yaml_parser_fetch_value(mut parser: *mut yaml_parser_t) -> 
         memset(
             ptr::addr_of_mut!(token) as *mut libc::c_void,
             0 as libc::c_int,
-            ::std::mem::size_of::<yaml_token_t>() as libc::c_ulong,
+            mem::size_of::<yaml_token_t>() as libc::c_ulong,
         );
         token.type_0 = YAML_KEY_TOKEN;
         token.start_mark = (*simple_key).mark;
@@ -1755,7 +1756,7 @@ unsafe extern "C" fn yaml_parser_fetch_value(mut parser: *mut yaml_parser_t) -> 
                     .wrapping_sub(
                         ((*simple_key).token_number).wrapping_sub((*parser).tokens_parsed),
                     )
-                    .wrapping_mul(::std::mem::size_of::<yaml_token_t>() as libc::c_ulong),
+                    .wrapping_mul(mem::size_of::<yaml_token_t>() as libc::c_ulong),
             );
             *((*parser).tokens.head).c_offset(
                 ((*simple_key).token_number).wrapping_sub((*parser).tokens_parsed) as isize,
@@ -1843,7 +1844,7 @@ unsafe extern "C" fn yaml_parser_fetch_value(mut parser: *mut yaml_parser_t) -> 
     memset(
         ptr::addr_of_mut!(token) as *mut libc::c_void,
         0 as libc::c_int,
-        ::std::mem::size_of::<yaml_token_t>() as libc::c_ulong,
+        mem::size_of::<yaml_token_t>() as libc::c_ulong,
     );
     token.type_0 = YAML_VALUE_TOKEN;
     token.start_mark = start_mark;
@@ -2513,7 +2514,7 @@ unsafe extern "C" fn yaml_parser_scan_directive(
                 memset(
                     token as *mut libc::c_void,
                     0 as libc::c_int,
-                    ::std::mem::size_of::<yaml_token_t>() as libc::c_ulong,
+                    mem::size_of::<yaml_token_t>() as libc::c_ulong,
                 );
                 (*token).type_0 = YAML_VERSION_DIRECTIVE_TOKEN;
                 (*token).start_mark = start_mark;
@@ -2536,7 +2537,7 @@ unsafe extern "C" fn yaml_parser_scan_directive(
                 memset(
                     token as *mut libc::c_void,
                     0 as libc::c_int,
-                    ::std::mem::size_of::<yaml_token_t>() as libc::c_ulong,
+                    mem::size_of::<yaml_token_t>() as libc::c_ulong,
                 );
                 (*token).type_0 = YAML_TAG_DIRECTIVE_TOKEN;
                 (*token).start_mark = start_mark;
@@ -4015,7 +4016,7 @@ unsafe extern "C" fn yaml_parser_scan_anchor(
                             memset(
                                 token as *mut libc::c_void,
                                 0 as libc::c_int,
-                                ::std::mem::size_of::<yaml_token_t>() as libc::c_ulong,
+                                mem::size_of::<yaml_token_t>() as libc::c_ulong,
                             );
                             (*token).type_0 = YAML_ANCHOR_TOKEN;
                             (*token).start_mark = start_mark;
@@ -4026,7 +4027,7 @@ unsafe extern "C" fn yaml_parser_scan_anchor(
                             memset(
                                 token as *mut libc::c_void,
                                 0 as libc::c_int,
-                                ::std::mem::size_of::<yaml_token_t>() as libc::c_ulong,
+                                mem::size_of::<yaml_token_t>() as libc::c_ulong,
                             );
                             (*token).type_0 = YAML_ALIAS_TOKEN;
                             (*token).start_mark = start_mark;
@@ -4333,7 +4334,7 @@ unsafe extern "C" fn yaml_parser_scan_tag(
                             memset(
                                 token as *mut libc::c_void,
                                 0 as libc::c_int,
-                                ::std::mem::size_of::<yaml_token_t>() as libc::c_ulong,
+                                mem::size_of::<yaml_token_t>() as libc::c_ulong,
                             );
                             (*token).type_0 = YAML_TAG_TOKEN;
                             (*token).start_mark = start_mark;
@@ -6817,7 +6818,7 @@ unsafe extern "C" fn yaml_parser_scan_block_scalar(
                                                                                             memset(
                                                                                                 token as *mut libc::c_void,
                                                                                                 0 as libc::c_int,
-                                                                                                ::std::mem::size_of::<yaml_token_t>() as libc::c_ulong,
+                                                                                                mem::size_of::<yaml_token_t>() as libc::c_ulong,
                                                                                             );
                                                                                             (*token).type_0 = YAML_SCALAR_TOKEN;
                                                                                             (*token).start_mark = start_mark;
@@ -9150,7 +9151,7 @@ unsafe extern "C" fn yaml_parser_scan_flow_scalar(
                             memset(
                                 token as *mut libc::c_void,
                                 0 as libc::c_int,
-                                ::std::mem::size_of::<yaml_token_t>() as libc::c_ulong,
+                                mem::size_of::<yaml_token_t>() as libc::c_ulong,
                             );
                             (*token).type_0 = YAML_SCALAR_TOKEN;
                             (*token).start_mark = start_mark;
@@ -10441,7 +10442,7 @@ unsafe extern "C" fn yaml_parser_scan_plain_scalar(
                             memset(
                                 token as *mut libc::c_void,
                                 0 as libc::c_int,
-                                ::std::mem::size_of::<yaml_token_t>() as libc::c_ulong,
+                                mem::size_of::<yaml_token_t>() as libc::c_ulong,
                             );
                             (*token).type_0 = YAML_SCALAR_TOKEN;
                             (*token).start_mark = start_mark;

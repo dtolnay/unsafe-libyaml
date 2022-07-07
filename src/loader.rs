@@ -4,6 +4,7 @@ use crate::libc;
 use crate::parser::yaml_parser_parse;
 use crate::yaml::*;
 use crate::PointerExt;
+use std::mem;
 use std::ptr;
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -58,12 +59,12 @@ pub unsafe extern "C" fn yaml_parser_load(
     memset(
         document as *mut libc::c_void,
         0 as libc::c_int,
-        ::std::mem::size_of::<yaml_document_t>() as libc::c_ulong,
+        mem::size_of::<yaml_document_t>() as libc::c_ulong,
     );
     let fresh0 = &mut (*document).nodes.start;
     *fresh0 = yaml_malloc(
         (16 as libc::c_int as libc::c_ulong)
-            .wrapping_mul(::std::mem::size_of::<yaml_node_t>() as libc::c_ulong),
+            .wrapping_mul(mem::size_of::<yaml_node_t>() as libc::c_ulong),
     ) as *mut yaml_node_t;
     if !(if !(*fresh0).is_null() {
         let fresh1 = &mut (*document).nodes.top;
@@ -102,10 +103,13 @@ pub unsafe extern "C" fn yaml_parser_load(
                         return 1 as libc::c_int;
                     }
                     let fresh3 = &mut (*parser).aliases.start;
-                    *fresh3 =
-                        yaml_malloc((16 as libc::c_int as libc::c_ulong).wrapping_mul(
-                            ::std::mem::size_of::<yaml_alias_data_t>() as libc::c_ulong,
-                        )) as *mut yaml_alias_data_t;
+                    *fresh3 = yaml_malloc(
+                        (16 as libc::c_int as libc::c_ulong).wrapping_mul(mem::size_of::<
+                            yaml_alias_data_t,
+                        >(
+                        )
+                            as libc::c_ulong),
+                    ) as *mut yaml_alias_data_t;
                     if !(if !(*fresh3).is_null() {
                         let fresh4 = &mut (*parser).aliases.top;
                         *fresh4 = (*parser).aliases.start;
@@ -201,7 +205,7 @@ unsafe extern "C" fn yaml_parser_load_document(
     (*(*parser).document).start_mark = (*event).start_mark;
     ctx.start = yaml_malloc(
         (16 as libc::c_int as libc::c_ulong)
-            .wrapping_mul(::std::mem::size_of::<libc::c_int>() as libc::c_ulong),
+            .wrapping_mul(mem::size_of::<libc::c_int>() as libc::c_ulong),
     ) as *mut libc::c_int;
     if if !(ctx.start).is_null() {
         ctx.top = ctx.start;
@@ -562,7 +566,7 @@ unsafe extern "C" fn yaml_parser_load_scalar(
                 memset(
                     ptr::addr_of_mut!(node) as *mut libc::c_void,
                     0 as libc::c_int,
-                    ::std::mem::size_of::<yaml_node_t>() as libc::c_ulong,
+                    mem::size_of::<yaml_node_t>() as libc::c_ulong,
                 );
                 node.type_0 = YAML_SCALAR_NODE;
                 node.tag = tag;
@@ -677,7 +681,7 @@ unsafe extern "C" fn yaml_parser_load_sequence(
             _ => {
                 items.start = yaml_malloc(
                     (16 as libc::c_int as libc::c_ulong)
-                        .wrapping_mul(::std::mem::size_of::<yaml_node_item_t>() as libc::c_ulong),
+                        .wrapping_mul(mem::size_of::<yaml_node_item_t>() as libc::c_ulong),
                 ) as *mut yaml_node_item_t;
                 if !(if !(items.start).is_null() {
                     items.top = items.start;
@@ -691,7 +695,7 @@ unsafe extern "C" fn yaml_parser_load_sequence(
                     memset(
                         ptr::addr_of_mut!(node) as *mut libc::c_void,
                         0 as libc::c_int,
-                        ::std::mem::size_of::<yaml_node_t>() as libc::c_ulong,
+                        mem::size_of::<yaml_node_t>() as libc::c_ulong,
                     );
                     node.type_0 = YAML_SEQUENCE_NODE;
                     node.tag = tag;
@@ -864,7 +868,7 @@ unsafe extern "C" fn yaml_parser_load_mapping(
             _ => {
                 pairs.start = yaml_malloc(
                     (16 as libc::c_int as libc::c_ulong)
-                        .wrapping_mul(::std::mem::size_of::<yaml_node_pair_t>() as libc::c_ulong),
+                        .wrapping_mul(mem::size_of::<yaml_node_pair_t>() as libc::c_ulong),
                 ) as *mut yaml_node_pair_t;
                 if !(if !(pairs.start).is_null() {
                     pairs.top = pairs.start;
@@ -878,7 +882,7 @@ unsafe extern "C" fn yaml_parser_load_mapping(
                     memset(
                         ptr::addr_of_mut!(node) as *mut libc::c_void,
                         0 as libc::c_int,
-                        ::std::mem::size_of::<yaml_node_t>() as libc::c_ulong,
+                        mem::size_of::<yaml_node_t>() as libc::c_ulong,
                     );
                     node.type_0 = YAML_MAPPING_NODE;
                     node.tag = tag;
