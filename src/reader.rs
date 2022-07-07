@@ -1,7 +1,8 @@
-use crate::externs::*;
-use crate::libc;
-use crate::yaml::*;
-use crate::PointerExt;
+use crate::externs::{memcmp, memmove};
+use crate::{
+    libc, size_t, yaml_char_t, yaml_parser_t, PointerExt, YAML_READER_ERROR, YAML_UTF16BE_ENCODING,
+    YAML_UTF16LE_ENCODING, YAML_UTF8_ENCODING,
+};
 unsafe fn yaml_parser_set_reader_error(
     mut parser: *mut yaml_parser_t,
     problem: *const libc::c_char,

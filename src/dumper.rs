@@ -1,9 +1,14 @@
-use crate::api::{yaml_document_delete, yaml_free, yaml_malloc};
-use crate::emitter::yaml_emitter_emit;
-use crate::externs::*;
-use crate::libc;
-use crate::yaml::*;
-use crate::PointerExt;
+use crate::externs::{memset, strcmp};
+use crate::yaml::{
+    size_t, unnamed_yaml_event_s_data, unnamed_yaml_event_s_data_stream_start, yaml_anchors_t,
+    yaml_char_t, yaml_document_t, yaml_emitter_t, yaml_event_t, yaml_mark_s, yaml_mark_t,
+    yaml_node_item_t, yaml_node_pair_t, yaml_node_t, YAML_ALIAS_EVENT, YAML_ANY_ENCODING,
+    YAML_DOCUMENT_END_EVENT, YAML_DOCUMENT_START_EVENT, YAML_MAPPING_END_EVENT, YAML_MAPPING_NODE,
+    YAML_MAPPING_START_EVENT, YAML_NO_EVENT, YAML_SCALAR_EVENT, YAML_SCALAR_NODE,
+    YAML_SEQUENCE_END_EVENT, YAML_SEQUENCE_NODE, YAML_SEQUENCE_START_EVENT, YAML_STREAM_END_EVENT,
+    YAML_STREAM_START_EVENT,
+};
+use crate::{libc, yaml_document_delete, yaml_emitter_emit, yaml_free, yaml_malloc, PointerExt};
 use std::io::Write;
 use std::mem;
 use std::ptr;

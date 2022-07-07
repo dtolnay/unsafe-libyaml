@@ -7,8 +7,7 @@
     clippy::items_after_statements,
     clippy::let_underscore_drop,
     clippy::missing_safety_doc,
-    clippy::too_many_lines,
-    clippy::wildcard_imports
+    clippy::too_many_lines
 )]
 
 use std::cmp;
@@ -19,7 +18,14 @@ use std::io::{self, Write as _};
 use std::mem::MaybeUninit;
 use std::process::{self, ExitCode};
 use std::ptr;
-use unsafe_libyaml::*;
+use unsafe_libyaml::{
+    __assert, libc, size_t, yaml_char_t, yaml_event_delete, yaml_event_t, yaml_event_type_t,
+    yaml_parser_delete, yaml_parser_initialize, yaml_parser_parse, yaml_parser_set_input,
+    yaml_parser_t, YAML_ALIAS_EVENT, YAML_DOCUMENT_END_EVENT, YAML_DOCUMENT_START_EVENT,
+    YAML_MAPPING_END_EVENT, YAML_MAPPING_START_EVENT, YAML_NO_EVENT, YAML_SCALAR_EVENT,
+    YAML_SEQUENCE_END_EVENT, YAML_SEQUENCE_START_EVENT, YAML_STREAM_END_EVENT,
+    YAML_STREAM_START_EVENT,
+};
 unsafe fn unsafe_main() -> ExitCode {
     let mut input = None;
     let mut parser = MaybeUninit::<yaml_parser_t>::uninit();

@@ -1,9 +1,24 @@
-use crate::api::{yaml_event_delete, yaml_free, yaml_queue_extend, yaml_stack_extend, yaml_strdup};
-use crate::externs::*;
-use crate::libc;
-use crate::writer::yaml_emitter_flush;
-use crate::yaml::*;
-use crate::PointerExt;
+use crate::externs::{strcmp, strlen, strncmp};
+use crate::{
+    libc, size_t, yaml_char_t, yaml_emitter_flush, yaml_emitter_t, yaml_event_delete, yaml_event_t,
+    yaml_free, yaml_queue_extend, yaml_scalar_style_t, yaml_stack_extend, yaml_strdup,
+    yaml_string_t, yaml_tag_directive_s, yaml_tag_directive_t, yaml_version_directive_t,
+    PointerExt, YAML_ANY_SCALAR_STYLE, YAML_CRLN_BREAK, YAML_CR_BREAK, YAML_DOCUMENT_END_EVENT,
+    YAML_DOCUMENT_START_EVENT, YAML_DOUBLE_QUOTED_SCALAR_STYLE, YAML_EMITTER_ERROR,
+    YAML_EMIT_BLOCK_MAPPING_FIRST_KEY_STATE, YAML_EMIT_BLOCK_MAPPING_KEY_STATE,
+    YAML_EMIT_BLOCK_MAPPING_SIMPLE_VALUE_STATE, YAML_EMIT_BLOCK_MAPPING_VALUE_STATE,
+    YAML_EMIT_BLOCK_SEQUENCE_FIRST_ITEM_STATE, YAML_EMIT_BLOCK_SEQUENCE_ITEM_STATE,
+    YAML_EMIT_DOCUMENT_CONTENT_STATE, YAML_EMIT_DOCUMENT_END_STATE, YAML_EMIT_DOCUMENT_START_STATE,
+    YAML_EMIT_END_STATE, YAML_EMIT_FIRST_DOCUMENT_START_STATE,
+    YAML_EMIT_FLOW_MAPPING_FIRST_KEY_STATE, YAML_EMIT_FLOW_MAPPING_KEY_STATE,
+    YAML_EMIT_FLOW_MAPPING_SIMPLE_VALUE_STATE, YAML_EMIT_FLOW_MAPPING_VALUE_STATE,
+    YAML_EMIT_FLOW_SEQUENCE_FIRST_ITEM_STATE, YAML_EMIT_FLOW_SEQUENCE_ITEM_STATE,
+    YAML_FLOW_MAPPING_STYLE, YAML_FLOW_SEQUENCE_STYLE, YAML_FOLDED_SCALAR_STYLE,
+    YAML_LITERAL_SCALAR_STYLE, YAML_LN_BREAK, YAML_MAPPING_END_EVENT, YAML_MAPPING_START_EVENT,
+    YAML_MEMORY_ERROR, YAML_PLAIN_SCALAR_STYLE, YAML_SEQUENCE_END_EVENT, YAML_SEQUENCE_START_EVENT,
+    YAML_SINGLE_QUOTED_SCALAR_STYLE, YAML_STREAM_END_EVENT, YAML_STREAM_START_EVENT,
+    YAML_UTF8_ENCODING,
+};
 use std::ptr;
 unsafe fn yaml_emitter_set_emitter_error(
     mut emitter: *mut yaml_emitter_t,

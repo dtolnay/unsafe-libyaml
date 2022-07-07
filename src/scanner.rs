@@ -1,12 +1,20 @@
-use crate::api::{
-    yaml_free, yaml_malloc, yaml_queue_extend, yaml_stack_extend, yaml_string_extend,
-    yaml_string_join, yaml_token_delete,
+use crate::externs::{memcpy, memmove, memset, strcmp, strlen};
+use crate::yaml::{unnamed_yaml_token_s_data, unnamed_yaml_token_s_data_stream_start};
+use crate::{
+    libc, ptrdiff_t, size_t, yaml_char_t, yaml_free, yaml_malloc, yaml_mark_s, yaml_mark_t,
+    yaml_parser_t, yaml_parser_update_buffer, yaml_queue_extend, yaml_scalar_style_t,
+    yaml_simple_key_s, yaml_simple_key_t, yaml_stack_extend, yaml_string_extend, yaml_string_join,
+    yaml_string_t, yaml_token_delete, yaml_token_t, yaml_token_type_t, PointerExt,
+    YAML_ALIAS_TOKEN, YAML_ANCHOR_TOKEN, YAML_ANY_ENCODING, YAML_BLOCK_END_TOKEN,
+    YAML_BLOCK_ENTRY_TOKEN, YAML_BLOCK_MAPPING_START_TOKEN, YAML_BLOCK_SEQUENCE_START_TOKEN,
+    YAML_DOCUMENT_END_TOKEN, YAML_DOCUMENT_START_TOKEN, YAML_DOUBLE_QUOTED_SCALAR_STYLE,
+    YAML_FLOW_ENTRY_TOKEN, YAML_FLOW_MAPPING_END_TOKEN, YAML_FLOW_MAPPING_START_TOKEN,
+    YAML_FLOW_SEQUENCE_END_TOKEN, YAML_FLOW_SEQUENCE_START_TOKEN, YAML_FOLDED_SCALAR_STYLE,
+    YAML_KEY_TOKEN, YAML_LITERAL_SCALAR_STYLE, YAML_MEMORY_ERROR, YAML_NO_TOKEN,
+    YAML_PLAIN_SCALAR_STYLE, YAML_SCALAR_TOKEN, YAML_SCANNER_ERROR,
+    YAML_SINGLE_QUOTED_SCALAR_STYLE, YAML_STREAM_END_TOKEN, YAML_STREAM_START_TOKEN,
+    YAML_TAG_DIRECTIVE_TOKEN, YAML_TAG_TOKEN, YAML_VALUE_TOKEN, YAML_VERSION_DIRECTIVE_TOKEN,
 };
-use crate::externs::*;
-use crate::libc;
-use crate::reader::yaml_parser_update_buffer;
-use crate::yaml::*;
-use crate::PointerExt;
 use std::mem;
 use std::ptr;
 pub unsafe fn yaml_parser_scan(

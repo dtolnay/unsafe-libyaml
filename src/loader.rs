@@ -1,9 +1,16 @@
-use crate::api::{yaml_document_delete, yaml_free, yaml_malloc, yaml_stack_extend, yaml_strdup};
-use crate::externs::*;
-use crate::libc;
-use crate::parser::yaml_parser_parse;
-use crate::yaml::*;
-use crate::PointerExt;
+use crate::externs::{memset, strcmp};
+use crate::yaml::{
+    unnamed_yaml_event_s_data, unnamed_yaml_event_s_data_stream_start, unnamed_yaml_node_s_data,
+    unnamed_yaml_node_s_data_scalar,
+};
+use crate::{
+    libc, yaml_alias_data_t, yaml_char_t, yaml_document_delete, yaml_document_t, yaml_event_t,
+    yaml_free, yaml_malloc, yaml_mark_t, yaml_node_item_t, yaml_node_pair_t, yaml_node_s,
+    yaml_node_t, yaml_parser_parse, yaml_parser_t, yaml_stack_extend, yaml_strdup, PointerExt,
+    YAML_ANY_ENCODING, YAML_ANY_SCALAR_STYLE, YAML_COMPOSER_ERROR, YAML_DOCUMENT_END_EVENT,
+    YAML_DOCUMENT_START_EVENT, YAML_MAPPING_NODE, YAML_MEMORY_ERROR, YAML_NO_EVENT, YAML_NO_NODE,
+    YAML_SCALAR_NODE, YAML_SEQUENCE_NODE, YAML_STREAM_END_EVENT, YAML_STREAM_START_EVENT,
+};
 use std::mem;
 use std::ptr;
 #[derive(Copy, Clone)]

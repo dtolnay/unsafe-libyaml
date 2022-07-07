@@ -10,8 +10,7 @@
     clippy::ptr_as_ptr,
     clippy::single_match_else,
     clippy::too_many_lines,
-    clippy::unreadable_literal,
-    clippy::wildcard_imports
+    clippy::unreadable_literal
 )]
 
 use std::env;
@@ -23,7 +22,19 @@ use std::process::{self, ExitCode};
 use std::ptr;
 use std::slice;
 use unsafe_libyaml::externs::{memcpy, strlen, strncmp};
-use unsafe_libyaml::*;
+use unsafe_libyaml::{
+    __assert, libc, size_t, yaml_alias_event_initialize, yaml_char_t,
+    yaml_document_end_event_initialize, yaml_document_start_event_initialize, yaml_emitter_delete,
+    yaml_emitter_emit, yaml_emitter_initialize, yaml_emitter_set_canonical,
+    yaml_emitter_set_output, yaml_emitter_set_unicode, yaml_emitter_t, yaml_event_t,
+    yaml_mapping_end_event_initialize, yaml_mapping_start_event_initialize, yaml_mapping_style_t,
+    yaml_scalar_event_initialize, yaml_scalar_style_t, yaml_sequence_end_event_initialize,
+    yaml_sequence_start_event_initialize, yaml_sequence_style_t, yaml_stream_end_event_initialize,
+    yaml_stream_start_event_initialize, yaml_tag_directive_t, yaml_version_directive_t,
+    YAML_BLOCK_MAPPING_STYLE, YAML_BLOCK_SEQUENCE_STYLE, YAML_DOUBLE_QUOTED_SCALAR_STYLE,
+    YAML_FOLDED_SCALAR_STYLE, YAML_LITERAL_SCALAR_STYLE, YAML_PLAIN_SCALAR_STYLE,
+    YAML_SINGLE_QUOTED_SCALAR_STYLE, YAML_UTF8_ENCODING,
+};
 unsafe fn unsafe_main() -> ExitCode {
     let current_block: u64;
     let mut input = None;

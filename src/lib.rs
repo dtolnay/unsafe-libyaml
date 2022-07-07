@@ -21,8 +21,7 @@
     clippy::single_match_else,
     clippy::too_many_arguments,
     clippy::too_many_lines,
-    clippy::unreadable_literal,
-    clippy::wildcard_imports
+    clippy::unreadable_literal
 )]
 
 use std::mem;
