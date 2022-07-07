@@ -10,6 +10,7 @@
     clippy::if_not_else,
     clippy::let_underscore_drop,
     clippy::manual_swap,
+    clippy::missing_panics_doc,
     clippy::missing_safety_doc,
     clippy::module_name_repetitions,
     clippy::must_use_candidate,
@@ -48,8 +49,6 @@ pub mod externs {
     use core::ptr;
     use core::slice;
     use std::ffi::CStr;
-    use std::io::{self, Write};
-    use std::process;
 
     const HEADER: usize = mem::size_of::<usize>();
 
@@ -176,14 +175,14 @@ pub mod externs {
     }
 
     pub unsafe fn __assert_fail(__assertion: &'static str, __file: &'static str, __line: u32) -> ! {
-        let _ = writeln!(
-            io::stderr(),
-            "{}:{}: Assertion `{}` failed.",
-            __file,
-            __line,
-            __assertion,
-        );
-        process::abort();
+        struct Abort;
+        impl Drop for Abort {
+            fn drop(&mut self) {
+                panic!();
+            }
+        }
+        let _abort_on_panic = Abort;
+        panic!("{}:{}: Assertion `{}` failed.", __file, __line, __assertion);
     }
 }
 
