@@ -31,12 +31,10 @@ pub unsafe fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> libc::c_int
             column: 0,
         },
     };
-    let mark: yaml_mark_t = {
-        yaml_mark_t {
-            index: 0 as libc::c_int as size_t,
-            line: 0 as libc::c_int as size_t,
-            column: 0 as libc::c_int as size_t,
-        }
+    let mark: yaml_mark_t = yaml_mark_t {
+        index: 0 as libc::c_int as size_t,
+        line: 0 as libc::c_int as size_t,
+        column: 0 as libc::c_int as size_t,
     };
     __assert!(!emitter.is_null());
     __assert!((*emitter).opened == 0);
@@ -74,12 +72,10 @@ pub unsafe fn yaml_emitter_close(mut emitter: *mut yaml_emitter_t) -> libc::c_in
             column: 0,
         },
     };
-    let mark: yaml_mark_t = {
-        yaml_mark_t {
-            index: 0 as libc::c_int as size_t,
-            line: 0 as libc::c_int as size_t,
-            column: 0 as libc::c_int as size_t,
-        }
+    let mark: yaml_mark_t = yaml_mark_t {
+        index: 0 as libc::c_int as size_t,
+        line: 0 as libc::c_int as size_t,
+        column: 0 as libc::c_int as size_t,
     };
     __assert!(!emitter.is_null());
     __assert!((*emitter).opened != 0);
@@ -123,12 +119,10 @@ pub unsafe fn yaml_emitter_dump(
             column: 0,
         },
     };
-    let mark: yaml_mark_t = {
-        yaml_mark_t {
-            index: 0 as libc::c_int as size_t,
-            line: 0 as libc::c_int as size_t,
-            column: 0 as libc::c_int as size_t,
-        }
+    let mark: yaml_mark_t = yaml_mark_t {
+        index: 0 as libc::c_int as size_t,
+        line: 0 as libc::c_int as size_t,
+        column: 0 as libc::c_int as size_t,
     };
     __assert!(!emitter.is_null());
     __assert!(!document.is_null());
@@ -351,12 +345,10 @@ unsafe fn yaml_emitter_dump_alias(
             column: 0,
         },
     };
-    let mark: yaml_mark_t = {
-        yaml_mark_t {
-            index: 0 as libc::c_int as size_t,
-            line: 0 as libc::c_int as size_t,
-            column: 0 as libc::c_int as size_t,
-        }
+    let mark: yaml_mark_t = yaml_mark_t {
+        index: 0 as libc::c_int as size_t,
+        line: 0 as libc::c_int as size_t,
+        column: 0 as libc::c_int as size_t,
     };
     memset(
         ptr::addr_of_mut!(event) as *mut libc::c_void,
@@ -392,12 +384,10 @@ unsafe fn yaml_emitter_dump_scalar(
             column: 0,
         },
     };
-    let mark: yaml_mark_t = {
-        yaml_mark_t {
-            index: 0 as libc::c_int as size_t,
-            line: 0 as libc::c_int as size_t,
-            column: 0 as libc::c_int as size_t,
-        }
+    let mark: yaml_mark_t = yaml_mark_t {
+        index: 0 as libc::c_int as size_t,
+        line: 0 as libc::c_int as size_t,
+        column: 0 as libc::c_int as size_t,
     };
     let plain_implicit: libc::c_int = (strcmp(
         (*node).tag as *mut libc::c_char,
@@ -447,12 +437,10 @@ unsafe fn yaml_emitter_dump_sequence(
             column: 0,
         },
     };
-    let mark: yaml_mark_t = {
-        yaml_mark_t {
-            index: 0 as libc::c_int as size_t,
-            line: 0 as libc::c_int as size_t,
-            column: 0 as libc::c_int as size_t,
-        }
+    let mark: yaml_mark_t = yaml_mark_t {
+        index: 0 as libc::c_int as size_t,
+        line: 0 as libc::c_int as size_t,
+        column: 0 as libc::c_int as size_t,
     };
     let implicit: libc::c_int = (strcmp(
         (*node).tag as *mut libc::c_char,
@@ -517,12 +505,10 @@ unsafe fn yaml_emitter_dump_mapping(
             column: 0,
         },
     };
-    let mark: yaml_mark_t = {
-        yaml_mark_t {
-            index: 0 as libc::c_int as size_t,
-            line: 0 as libc::c_int as size_t,
-            column: 0 as libc::c_int as size_t,
-        }
+    let mark: yaml_mark_t = yaml_mark_t {
+        index: 0 as libc::c_int as size_t,
+        line: 0 as libc::c_int as size_t,
+        column: 0 as libc::c_int as size_t,
     };
     let implicit: libc::c_int = (strcmp(
         (*node).tag as *mut libc::c_char,

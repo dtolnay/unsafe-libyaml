@@ -191,12 +191,10 @@ unsafe fn yaml_parser_load_document(
     mut parser: *mut yaml_parser_t,
     event: *mut yaml_event_t,
 ) -> libc::c_int {
-    let mut ctx: loader_ctx = {
-        loader_ctx {
-            start: ptr::null_mut::<libc::c_int>(),
-            end: ptr::null_mut::<libc::c_int>(),
-            top: ptr::null_mut::<libc::c_int>(),
-        }
+    let mut ctx: loader_ctx = loader_ctx {
+        start: ptr::null_mut::<libc::c_int>(),
+        end: ptr::null_mut::<libc::c_int>(),
+        top: ptr::null_mut::<libc::c_int>(),
     };
     __assert!(
         (*event).type_0 as libc::c_uint == YAML_DOCUMENT_START_EVENT as libc::c_int as libc::c_uint
@@ -645,12 +643,10 @@ unsafe fn yaml_parser_load_sequence(
             column: 0,
         },
     };
-    let mut items: Unnamed_36 = {
-        Unnamed_36 {
-            start: ptr::null_mut::<yaml_node_item_t>(),
-            end: ptr::null_mut::<yaml_node_item_t>(),
-            top: ptr::null_mut::<yaml_node_item_t>(),
-        }
+    let mut items: Unnamed_36 = Unnamed_36 {
+        start: ptr::null_mut::<yaml_node_item_t>(),
+        end: ptr::null_mut::<yaml_node_item_t>(),
+        top: ptr::null_mut::<yaml_node_item_t>(),
     };
     let index: libc::c_int;
     let mut tag: *mut yaml_char_t = (*event).data.sequence_start.tag;
@@ -832,12 +828,10 @@ unsafe fn yaml_parser_load_mapping(
             column: 0,
         },
     };
-    let mut pairs: Unnamed_35 = {
-        Unnamed_35 {
-            start: ptr::null_mut::<yaml_node_pair_t>(),
-            end: ptr::null_mut::<yaml_node_pair_t>(),
-            top: ptr::null_mut::<yaml_node_pair_t>(),
-        }
+    let mut pairs: Unnamed_35 = Unnamed_35 {
+        start: ptr::null_mut::<yaml_node_pair_t>(),
+        end: ptr::null_mut::<yaml_node_pair_t>(),
+        top: ptr::null_mut::<yaml_node_pair_t>(),
     };
     let index: libc::c_int;
     let mut tag: *mut yaml_char_t = (*event).data.mapping_start.tag;

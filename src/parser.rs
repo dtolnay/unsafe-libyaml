@@ -187,11 +187,9 @@ unsafe fn yaml_parser_parse_document_start(
     let mut token: *mut yaml_token_t;
     let mut version_directive: *mut yaml_version_directive_t =
         ptr::null_mut::<yaml_version_directive_t>();
-    let mut tag_directives: Unnamed_35 = {
-        Unnamed_35 {
-            start: ptr::null_mut::<yaml_tag_directive_t>(),
-            end: ptr::null_mut::<yaml_tag_directive_t>(),
-        }
+    let mut tag_directives: Unnamed_35 = Unnamed_35 {
+        start: ptr::null_mut::<yaml_tag_directive_t>(),
+        end: ptr::null_mut::<yaml_tag_directive_t>(),
     };
     token = if (*parser).token_available != 0 || yaml_parser_fetch_more_tokens(parser) != 0 {
         (*parser).tokens.head
@@ -1898,35 +1896,26 @@ unsafe fn yaml_parser_process_directives(
 ) -> libc::c_int {
     let mut current_block: u64;
     let mut default_tag_directives: [yaml_tag_directive_t; 3] = [
-        {
-            yaml_tag_directive_t {
-                handle: b"!\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
-                prefix: b"!\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
-            }
+        yaml_tag_directive_t {
+            handle: b"!\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
+            prefix: b"!\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
         },
-        {
-            yaml_tag_directive_t {
-                handle: b"!!\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
-                prefix: b"tag:yaml.org,2002:\0" as *const u8 as *const libc::c_char
-                    as *mut yaml_char_t,
-            }
+        yaml_tag_directive_t {
+            handle: b"!!\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
+            prefix: b"tag:yaml.org,2002:\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
         },
-        {
-            yaml_tag_directive_t {
-                handle: ptr::null_mut::<yaml_char_t>(),
-                prefix: ptr::null_mut::<yaml_char_t>(),
-            }
+        yaml_tag_directive_t {
+            handle: ptr::null_mut::<yaml_char_t>(),
+            prefix: ptr::null_mut::<yaml_char_t>(),
         },
     ];
     let mut default_tag_directive: *mut yaml_tag_directive_t;
     let mut version_directive: *mut yaml_version_directive_t =
         ptr::null_mut::<yaml_version_directive_t>();
-    let mut tag_directives: Unnamed_36 = {
-        Unnamed_36 {
-            start: ptr::null_mut::<yaml_tag_directive_t>(),
-            end: ptr::null_mut::<yaml_tag_directive_t>(),
-            top: ptr::null_mut::<yaml_tag_directive_t>(),
-        }
+    let mut tag_directives: Unnamed_36 = Unnamed_36 {
+        start: ptr::null_mut::<yaml_tag_directive_t>(),
+        end: ptr::null_mut::<yaml_tag_directive_t>(),
+        top: ptr::null_mut::<yaml_tag_directive_t>(),
     };
     let mut token: *mut yaml_token_t;
     tag_directives.start = yaml_malloc(
@@ -2130,11 +2119,9 @@ unsafe fn yaml_parser_append_tag_directive(
     mark: yaml_mark_t,
 ) -> libc::c_int {
     let mut tag_directive: *mut yaml_tag_directive_t;
-    let mut copy: yaml_tag_directive_t = {
-        yaml_tag_directive_t {
-            handle: ptr::null_mut::<yaml_char_t>(),
-            prefix: ptr::null_mut::<yaml_char_t>(),
-        }
+    let mut copy: yaml_tag_directive_t = yaml_tag_directive_t {
+        handle: ptr::null_mut::<yaml_char_t>(),
+        prefix: ptr::null_mut::<yaml_char_t>(),
     };
     tag_directive = (*parser).tag_directives.start;
     while tag_directive != (*parser).tag_directives.top {

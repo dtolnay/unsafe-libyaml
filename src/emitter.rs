@@ -109,11 +109,9 @@ unsafe fn yaml_emitter_append_tag_directive(
     allow_duplicates: libc::c_int,
 ) -> libc::c_int {
     let mut tag_directive: *mut yaml_tag_directive_t;
-    let mut copy: yaml_tag_directive_t = {
-        yaml_tag_directive_t {
-            handle: ptr::null_mut::<yaml_char_t>(),
-            prefix: ptr::null_mut::<yaml_char_t>(),
-        }
+    let mut copy: yaml_tag_directive_t = yaml_tag_directive_t {
+        handle: ptr::null_mut::<yaml_char_t>(),
+        prefix: ptr::null_mut::<yaml_char_t>(),
     };
     tag_directive = (*emitter).tag_directives.start;
     while tag_directive != (*emitter).tag_directives.top {
@@ -298,24 +296,18 @@ unsafe fn yaml_emitter_emit_document_start(
 ) -> libc::c_int {
     if (*event).type_0 as libc::c_uint == YAML_DOCUMENT_START_EVENT as libc::c_int as libc::c_uint {
         let mut default_tag_directives: [yaml_tag_directive_t; 3] = [
-            {
-                yaml_tag_directive_t {
-                    handle: b"!\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
-                    prefix: b"!\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
-                }
+            yaml_tag_directive_t {
+                handle: b"!\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
+                prefix: b"!\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
             },
-            {
-                yaml_tag_directive_t {
-                    handle: b"!!\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
-                    prefix: b"tag:yaml.org,2002:\0" as *const u8 as *const libc::c_char
-                        as *mut yaml_char_t,
-                }
+            yaml_tag_directive_t {
+                handle: b"!!\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
+                prefix: b"tag:yaml.org,2002:\0" as *const u8 as *const libc::c_char
+                    as *mut yaml_char_t,
             },
-            {
-                yaml_tag_directive_t {
-                    handle: ptr::null_mut::<yaml_char_t>(),
-                    prefix: ptr::null_mut::<yaml_char_t>(),
-                }
+            yaml_tag_directive_t {
+                handle: ptr::null_mut::<yaml_char_t>(),
+                prefix: ptr::null_mut::<yaml_char_t>(),
             },
         ];
         let mut tag_directive: *mut yaml_tag_directive_t;
