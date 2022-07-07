@@ -1,4 +1,32 @@
 #![allow(non_camel_case_types)]
+#![warn(clippy::pedantic)]
+#![allow(
+    clippy::borrow_as_ptr,
+    clippy::cast_lossless,
+    clippy::cast_possible_truncation,
+    clippy::cast_possible_wrap,
+    clippy::cast_ptr_alignment,
+    clippy::cast_sign_loss,
+    clippy::collapsible_else_if,
+    clippy::collapsible_if,
+    clippy::if_not_else,
+    clippy::let_underscore_drop,
+    clippy::manual_swap,
+    clippy::missing_safety_doc,
+    clippy::module_name_repetitions,
+    clippy::must_use_candidate,
+    clippy::nonminimal_bool,
+    clippy::ptr_as_ptr,
+    clippy::redundant_else,
+    clippy::similar_names,
+    clippy::single_match,
+    clippy::single_match_else,
+    clippy::too_many_arguments,
+    clippy::too_many_lines,
+    clippy::unnecessary_operation,
+    clippy::unreadable_literal,
+    clippy::wildcard_imports
+)]
 
 use std::mem;
 

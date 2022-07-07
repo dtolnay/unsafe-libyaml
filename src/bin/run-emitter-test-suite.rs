@@ -1,3 +1,18 @@
+#![warn(clippy::pedantic)]
+#![allow(
+    clippy::cast_possible_truncation,
+    clippy::cast_possible_wrap,
+    clippy::cast_sign_loss,
+    clippy::items_after_statements,
+    clippy::let_underscore_drop,
+    clippy::missing_safety_doc,
+    clippy::ptr_as_ptr,
+    clippy::single_match_else,
+    clippy::too_many_lines,
+    clippy::unreadable_literal,
+    clippy::wildcard_imports
+)]
+
 use std::env;
 use std::ffi::CStr;
 use std::fs::File;
