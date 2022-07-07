@@ -402,34 +402,34 @@ pub unsafe extern "C" fn get_value(
             c = c.offset(1);
             if *c as libc::c_int == '\\' as i32 {
                 let fresh0 = i;
-                i = i + 1;
+                i += 1;
                 *value.offset(fresh0 as isize) = '\\' as i32 as libc::c_char;
             } else if *c as libc::c_int == '0' as i32 {
                 let fresh1 = i;
-                i = i + 1;
+                i += 1;
                 *value.offset(fresh1 as isize) = '\0' as i32 as libc::c_char;
             } else if *c as libc::c_int == 'b' as i32 {
                 let fresh2 = i;
-                i = i + 1;
+                i += 1;
                 *value.offset(fresh2 as isize) = '\u{8}' as i32 as libc::c_char;
             } else if *c as libc::c_int == 'n' as i32 {
                 let fresh3 = i;
-                i = i + 1;
+                i += 1;
                 *value.offset(fresh3 as isize) = '\n' as i32 as libc::c_char;
             } else if *c as libc::c_int == 'r' as i32 {
                 let fresh4 = i;
-                i = i + 1;
+                i += 1;
                 *value.offset(fresh4 as isize) = '\r' as i32 as libc::c_char;
             } else if *c as libc::c_int == 't' as i32 {
                 let fresh5 = i;
-                i = i + 1;
+                i += 1;
                 *value.offset(fresh5 as isize) = '\t' as i32 as libc::c_char;
             } else {
                 process::abort();
             }
         } else {
             let fresh6 = i;
-            i = i + 1;
+            i += 1;
             *value.offset(fresh6 as isize) = *c;
         }
         c = c.offset(1);

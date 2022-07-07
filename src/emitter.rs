@@ -3807,7 +3807,7 @@ unsafe extern "C" fn yaml_emitter_write_tag_content(
             let mut value_0: libc::c_uint;
             loop {
                 let fresh207 = width;
-                width = width - 1;
+                width -= 1;
                 if !(fresh207 != 0) {
                     break;
                 }
