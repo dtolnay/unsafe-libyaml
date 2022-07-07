@@ -28,12 +28,11 @@ pub unsafe extern "C" fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> 
         },
     };
     let mark: yaml_mark_t = {
-        let init = yaml_mark_s {
+        yaml_mark_s {
             index: 0 as libc::c_int as size_t,
             line: 0 as libc::c_int as size_t,
             column: 0 as libc::c_int as size_t,
-        };
-        init
+        }
     };
     __assert!(!emitter.is_null());
     __assert!((*emitter).opened == 0);
@@ -73,12 +72,11 @@ pub unsafe extern "C" fn yaml_emitter_close(mut emitter: *mut yaml_emitter_t) ->
         },
     };
     let mark: yaml_mark_t = {
-        let init = yaml_mark_s {
+        yaml_mark_s {
             index: 0 as libc::c_int as size_t,
             line: 0 as libc::c_int as size_t,
             column: 0 as libc::c_int as size_t,
-        };
-        init
+        }
     };
     __assert!(!emitter.is_null());
     __assert!((*emitter).opened != 0);
@@ -124,12 +122,11 @@ pub unsafe extern "C" fn yaml_emitter_dump(
         },
     };
     let mark: yaml_mark_t = {
-        let init = yaml_mark_s {
+        yaml_mark_s {
             index: 0 as libc::c_int as size_t,
             line: 0 as libc::c_int as size_t,
             column: 0 as libc::c_int as size_t,
-        };
-        init
+        }
     };
     __assert!(!emitter.is_null());
     __assert!(!document.is_null());
@@ -356,12 +353,11 @@ unsafe extern "C" fn yaml_emitter_dump_alias(
         },
     };
     let mark: yaml_mark_t = {
-        let init = yaml_mark_s {
+        yaml_mark_s {
             index: 0 as libc::c_int as size_t,
             line: 0 as libc::c_int as size_t,
             column: 0 as libc::c_int as size_t,
-        };
-        init
+        }
     };
     memset(
         &mut event as *mut yaml_event_t as *mut libc::c_void,
@@ -398,12 +394,11 @@ unsafe extern "C" fn yaml_emitter_dump_scalar(
         },
     };
     let mark: yaml_mark_t = {
-        let init = yaml_mark_s {
+        yaml_mark_s {
             index: 0 as libc::c_int as size_t,
             line: 0 as libc::c_int as size_t,
             column: 0 as libc::c_int as size_t,
-        };
-        init
+        }
     };
     let plain_implicit: libc::c_int = (strcmp(
         (*node).tag as *mut libc::c_char,
@@ -454,12 +449,11 @@ unsafe extern "C" fn yaml_emitter_dump_sequence(
         },
     };
     let mark: yaml_mark_t = {
-        let init = yaml_mark_s {
+        yaml_mark_s {
             index: 0 as libc::c_int as size_t,
             line: 0 as libc::c_int as size_t,
             column: 0 as libc::c_int as size_t,
-        };
-        init
+        }
     };
     let implicit: libc::c_int = (strcmp(
         (*node).tag as *mut libc::c_char,
@@ -525,12 +519,11 @@ unsafe extern "C" fn yaml_emitter_dump_mapping(
         },
     };
     let mark: yaml_mark_t = {
-        let init = yaml_mark_s {
+        yaml_mark_s {
             index: 0 as libc::c_int as size_t,
             line: 0 as libc::c_int as size_t,
             column: 0 as libc::c_int as size_t,
-        };
-        init
+        }
     };
     let implicit: libc::c_int = (strcmp(
         (*node).tag as *mut libc::c_char,

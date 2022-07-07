@@ -96,11 +96,10 @@ unsafe extern "C" fn yaml_emitter_append_tag_directive(
 ) -> libc::c_int {
     let mut tag_directive: *mut yaml_tag_directive_t;
     let mut copy: yaml_tag_directive_t = {
-        let init = yaml_tag_directive_s {
+        yaml_tag_directive_s {
             handle: ptr::null_mut::<yaml_char_t>(),
             prefix: ptr::null_mut::<yaml_char_t>(),
-        };
-        init
+        }
     };
     tag_directive = (*emitter).tag_directives.start;
     while tag_directive != (*emitter).tag_directives.top {
@@ -289,26 +288,23 @@ unsafe extern "C" fn yaml_emitter_emit_document_start(
     if (*event).type_0 as libc::c_uint == YAML_DOCUMENT_START_EVENT as libc::c_int as libc::c_uint {
         let mut default_tag_directives: [yaml_tag_directive_t; 3] = [
             {
-                let init = yaml_tag_directive_s {
+                yaml_tag_directive_s {
                     handle: b"!\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
                     prefix: b"!\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
-                };
-                init
+                }
             },
             {
-                let init = yaml_tag_directive_s {
+                yaml_tag_directive_s {
                     handle: b"!!\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
                     prefix: b"tag:yaml.org,2002:\0" as *const u8 as *const libc::c_char
                         as *mut yaml_char_t,
-                };
-                init
+                }
             },
             {
-                let init = yaml_tag_directive_s {
+                yaml_tag_directive_s {
                     handle: ptr::null_mut::<yaml_char_t>(),
                     prefix: ptr::null_mut::<yaml_char_t>(),
-                };
-                init
+                }
             },
         ];
         let mut tag_directive: *mut yaml_tag_directive_t;

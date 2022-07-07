@@ -1007,12 +1007,11 @@ pub unsafe extern "C" fn yaml_stream_start_event_initialize(
     encoding: yaml_encoding_t,
 ) -> libc::c_int {
     let mark: yaml_mark_t = {
-        let init = yaml_mark_s {
+        yaml_mark_s {
             index: 0 as libc::c_int as size_t,
             line: 0 as libc::c_int as size_t,
             column: 0 as libc::c_int as size_t,
-        };
-        init
+        }
     };
     __assert!(!event.is_null());
     memset(
@@ -1031,12 +1030,11 @@ pub unsafe extern "C" fn yaml_stream_end_event_initialize(
     mut event: *mut yaml_event_t,
 ) -> libc::c_int {
     let mark: yaml_mark_t = {
-        let init = yaml_mark_s {
+        yaml_mark_s {
             index: 0 as libc::c_int as size_t,
             line: 0 as libc::c_int as size_t,
             column: 0 as libc::c_int as size_t,
-        };
-        init
+        }
     };
     __assert!(!event.is_null());
     memset(
@@ -1062,29 +1060,26 @@ pub unsafe extern "C" fn yaml_document_start_event_initialize(
         error: YAML_NO_ERROR,
     };
     let mark: yaml_mark_t = {
-        let init = yaml_mark_s {
+        yaml_mark_s {
             index: 0 as libc::c_int as size_t,
             line: 0 as libc::c_int as size_t,
             column: 0 as libc::c_int as size_t,
-        };
-        init
+        }
     };
     let mut version_directive_copy: *mut yaml_version_directive_t =
         ptr::null_mut::<yaml_version_directive_t>();
     let mut tag_directives_copy: Unnamed_16 = {
-        let init = Unnamed_16 {
+        Unnamed_16 {
             start: ptr::null_mut::<yaml_tag_directive_t>(),
             end: ptr::null_mut::<yaml_tag_directive_t>(),
             top: ptr::null_mut::<yaml_tag_directive_t>(),
-        };
-        init
+        }
     };
     let mut value: yaml_tag_directive_t = {
-        let init = yaml_tag_directive_s {
+        yaml_tag_directive_s {
             handle: ptr::null_mut::<yaml_char_t>(),
             prefix: ptr::null_mut::<yaml_char_t>(),
-        };
-        init
+        }
     };
     __assert!(!event.is_null());
     __assert!(
@@ -1230,12 +1225,11 @@ pub unsafe extern "C" fn yaml_document_end_event_initialize(
     implicit: libc::c_int,
 ) -> libc::c_int {
     let mark: yaml_mark_t = {
-        let init = yaml_mark_s {
+        yaml_mark_s {
             index: 0 as libc::c_int as size_t,
             line: 0 as libc::c_int as size_t,
             column: 0 as libc::c_int as size_t,
-        };
-        init
+        }
     };
     __assert!(!event.is_null());
     memset(
@@ -1255,12 +1249,11 @@ pub unsafe extern "C" fn yaml_alias_event_initialize(
     anchor: *const yaml_char_t,
 ) -> libc::c_int {
     let mark: yaml_mark_t = {
-        let init = yaml_mark_s {
+        yaml_mark_s {
             index: 0 as libc::c_int as size_t,
             line: 0 as libc::c_int as size_t,
             column: 0 as libc::c_int as size_t,
-        };
-        init
+        }
     };
     __assert!(!event.is_null());
     __assert!(!anchor.is_null());
@@ -1296,12 +1289,11 @@ pub unsafe extern "C" fn yaml_scalar_event_initialize(
 ) -> libc::c_int {
     let mut current_block: u64;
     let mark: yaml_mark_t = {
-        let init = yaml_mark_s {
+        yaml_mark_s {
             index: 0 as libc::c_int as size_t,
             line: 0 as libc::c_int as size_t,
             column: 0 as libc::c_int as size_t,
-        };
-        init
+        }
     };
     let mut anchor_copy: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
     let mut tag_copy: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
@@ -1395,12 +1387,11 @@ pub unsafe extern "C" fn yaml_sequence_start_event_initialize(
 ) -> libc::c_int {
     let mut current_block: u64;
     let mark: yaml_mark_t = {
-        let init = yaml_mark_s {
+        yaml_mark_s {
             index: 0 as libc::c_int as size_t,
             line: 0 as libc::c_int as size_t,
             column: 0 as libc::c_int as size_t,
-        };
-        init
+        }
     };
     let mut anchor_copy: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
     let mut tag_copy: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
@@ -1467,12 +1458,11 @@ pub unsafe extern "C" fn yaml_sequence_end_event_initialize(
     mut event: *mut yaml_event_t,
 ) -> libc::c_int {
     let mark: yaml_mark_t = {
-        let init = yaml_mark_s {
+        yaml_mark_s {
             index: 0 as libc::c_int as size_t,
             line: 0 as libc::c_int as size_t,
             column: 0 as libc::c_int as size_t,
-        };
-        init
+        }
     };
     __assert!(!event.is_null());
     memset(
@@ -1495,12 +1485,11 @@ pub unsafe extern "C" fn yaml_mapping_start_event_initialize(
 ) -> libc::c_int {
     let mut current_block: u64;
     let mark: yaml_mark_t = {
-        let init = yaml_mark_s {
+        yaml_mark_s {
             index: 0 as libc::c_int as size_t,
             line: 0 as libc::c_int as size_t,
             column: 0 as libc::c_int as size_t,
-        };
-        init
+        }
     };
     let mut anchor_copy: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
     let mut tag_copy: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
@@ -1567,12 +1556,11 @@ pub unsafe extern "C" fn yaml_mapping_end_event_initialize(
     mut event: *mut yaml_event_t,
 ) -> libc::c_int {
     let mark: yaml_mark_t = {
-        let init = yaml_mark_s {
+        yaml_mark_s {
             index: 0 as libc::c_int as size_t,
             line: 0 as libc::c_int as size_t,
             column: 0 as libc::c_int as size_t,
-        };
-        init
+        }
     };
     __assert!(!event.is_null());
     memset(
@@ -1638,37 +1626,33 @@ pub unsafe extern "C" fn yaml_document_initialize(
         error: YAML_NO_ERROR,
     };
     let mut nodes: Unnamed_27 = {
-        let init = Unnamed_27 {
+        Unnamed_27 {
             start: ptr::null_mut::<yaml_node_t>(),
             end: ptr::null_mut::<yaml_node_t>(),
             top: ptr::null_mut::<yaml_node_t>(),
-        };
-        init
+        }
     };
     let mut version_directive_copy: *mut yaml_version_directive_t =
         ptr::null_mut::<yaml_version_directive_t>();
     let mut tag_directives_copy: Unnamed_26 = {
-        let init = Unnamed_26 {
+        Unnamed_26 {
             start: ptr::null_mut::<yaml_tag_directive_t>(),
             end: ptr::null_mut::<yaml_tag_directive_t>(),
             top: ptr::null_mut::<yaml_tag_directive_t>(),
-        };
-        init
+        }
     };
     let mut value: yaml_tag_directive_t = {
-        let init = yaml_tag_directive_s {
+        yaml_tag_directive_s {
             handle: ptr::null_mut::<yaml_char_t>(),
             prefix: ptr::null_mut::<yaml_char_t>(),
-        };
-        init
+        }
     };
     let mark: yaml_mark_t = {
-        let init = yaml_mark_s {
+        yaml_mark_s {
             index: 0 as libc::c_int as size_t,
             line: 0 as libc::c_int as size_t,
             column: 0 as libc::c_int as size_t,
-        };
-        init
+        }
     };
     __assert!(!document.is_null());
     __assert!(
@@ -1920,12 +1904,11 @@ pub unsafe extern "C" fn yaml_document_add_scalar(
         error: YAML_NO_ERROR,
     };
     let mark: yaml_mark_t = {
-        let init = yaml_mark_s {
+        yaml_mark_s {
             index: 0 as libc::c_int as size_t,
             line: 0 as libc::c_int as size_t,
             column: 0 as libc::c_int as size_t,
-        };
-        init
+        }
     };
     let mut tag_copy: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
     let mut value_copy: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
@@ -2023,21 +2006,19 @@ pub unsafe extern "C" fn yaml_document_add_sequence(
         error: YAML_NO_ERROR,
     };
     let mark: yaml_mark_t = {
-        let init = yaml_mark_s {
+        yaml_mark_s {
             index: 0 as libc::c_int as size_t,
             line: 0 as libc::c_int as size_t,
             column: 0 as libc::c_int as size_t,
-        };
-        init
+        }
     };
     let mut tag_copy: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
     let mut items: Unnamed_30 = {
-        let init = Unnamed_30 {
+        Unnamed_30 {
             start: ptr::null_mut::<yaml_node_item_t>(),
             end: ptr::null_mut::<yaml_node_item_t>(),
             top: ptr::null_mut::<yaml_node_item_t>(),
-        };
-        init
+        }
     };
     let mut node: yaml_node_t = yaml_node_t {
         type_0: YAML_NO_NODE,
@@ -2136,21 +2117,19 @@ pub unsafe extern "C" fn yaml_document_add_mapping(
         error: YAML_NO_ERROR,
     };
     let mark: yaml_mark_t = {
-        let init = yaml_mark_s {
+        yaml_mark_s {
             index: 0 as libc::c_int as size_t,
             line: 0 as libc::c_int as size_t,
             column: 0 as libc::c_int as size_t,
-        };
-        init
+        }
     };
     let mut tag_copy: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
     let mut pairs: Unnamed_32 = {
-        let init = Unnamed_32 {
+        Unnamed_32 {
             start: ptr::null_mut::<yaml_node_pair_t>(),
             end: ptr::null_mut::<yaml_node_pair_t>(),
             top: ptr::null_mut::<yaml_node_pair_t>(),
-        };
-        init
+        }
     };
     let mut node: yaml_node_t = yaml_node_t {
         type_0: YAML_NO_NODE,
