@@ -10,13 +10,11 @@ use crate::{
 };
 use core::mem::{size_of, MaybeUninit};
 use core::ptr::{self, addr_of_mut};
-#[derive(Copy, Clone)]
 #[repr(C)]
-#[non_exhaustive]
-pub struct loader_ctx {
-    pub start: *mut libc::c_int,
-    pub end: *mut libc::c_int,
-    pub top: *mut libc::c_int,
+struct loader_ctx {
+    start: *mut libc::c_int,
+    end: *mut libc::c_int,
+    top: *mut libc::c_int,
 }
 pub unsafe fn yaml_parser_load(
     mut parser: *mut yaml_parser_t,

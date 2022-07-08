@@ -36,7 +36,7 @@ use unsafe_libyaml::{
     YAML_LITERAL_SCALAR_STYLE, YAML_PLAIN_SCALAR_STYLE, YAML_SINGLE_QUOTED_SCALAR_STYLE,
     YAML_UTF8_ENCODING,
 };
-pub unsafe fn unsafe_main(
+pub(crate) unsafe fn unsafe_main(
     stdin: &mut dyn Read,
     mut stdout: &mut dyn Write,
 ) -> Result<(), Box<dyn Error>> {
@@ -226,7 +226,7 @@ impl ReadBuf {
         }
     }
 }
-pub unsafe fn get_anchor(sigil: i8, line: *mut i8, anchor: *mut i8) -> *mut i8 {
+unsafe fn get_anchor(sigil: i8, line: *mut i8, anchor: *mut i8) -> *mut i8 {
     let mut start: *mut i8;
     let mut end: *mut i8;
     start = strchr(line, sigil as i32);
@@ -246,7 +246,7 @@ pub unsafe fn get_anchor(sigil: i8, line: *mut i8, anchor: *mut i8) -> *mut i8 {
     *anchor.offset(end.offset_from(start) as i64 as isize) = '\0' as i32 as i8;
     anchor
 }
-pub unsafe fn get_tag(line: *mut i8, tag: *mut i8) -> *mut i8 {
+unsafe fn get_tag(line: *mut i8, tag: *mut i8) -> *mut i8 {
     let start: *mut i8 = strchr(line, '<' as i32);
     if start.is_null() {
         return ptr::null_mut::<i8>();
@@ -263,7 +263,7 @@ pub unsafe fn get_tag(line: *mut i8, tag: *mut i8) -> *mut i8 {
     *tag.offset((end.offset_from(start) as i64 - 1_i64) as isize) = '\0' as i32 as i8;
     tag
 }
-pub unsafe fn get_value(line: *mut i8, value: *mut i8, style: *mut yaml_scalar_style_t) {
+unsafe fn get_value(line: *mut i8, value: *mut i8, style: *mut yaml_scalar_style_t) {
     let mut i: i32 = 0_i32;
     let mut c: *mut i8;
     let mut start: *mut i8 = ptr::null_mut::<i8>();

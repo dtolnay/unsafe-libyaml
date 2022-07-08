@@ -122,7 +122,10 @@ unsafe fn yaml_parser_update_raw_buffer(mut parser: *mut yaml_parser_t) -> libc:
     }
     1_i32
 }
-pub unsafe fn yaml_parser_update_buffer(parser: *mut yaml_parser_t, length: size_t) -> libc::c_int {
+pub(crate) unsafe fn yaml_parser_update_buffer(
+    parser: *mut yaml_parser_t,
+    length: size_t,
+) -> libc::c_int {
     let mut first: libc::c_int = 1_i32;
     __assert!(((*parser).read_handler).is_some());
     if (*parser).eof != 0 && (*parser).raw_buffer.pointer == (*parser).raw_buffer.last {

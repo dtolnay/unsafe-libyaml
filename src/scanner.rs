@@ -65,7 +65,7 @@ unsafe fn yaml_parser_set_scanner_error(
     (*parser).problem_mark = (*parser).mark;
     0_i32
 }
-pub unsafe fn yaml_parser_fetch_more_tokens(mut parser: *mut yaml_parser_t) -> libc::c_int {
+pub(crate) unsafe fn yaml_parser_fetch_more_tokens(mut parser: *mut yaml_parser_t) -> libc::c_int {
     let mut need_more_tokens: libc::c_int;
     loop {
         need_more_tokens = 0_i32;

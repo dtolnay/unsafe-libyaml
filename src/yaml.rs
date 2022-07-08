@@ -727,7 +727,7 @@ pub struct unnamed_yaml_emitter_t_output_string {
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct yaml_string_t {
+pub(crate) struct yaml_string_t {
     pub start: *mut yaml_char_t,
     pub end: *mut yaml_char_t,
     pub pointer: *mut yaml_char_t,

@@ -28,28 +28,28 @@ pub unsafe fn yaml_get_version(
     *minor = 2_i32;
     *patch = 5_i32;
 }
-pub unsafe fn yaml_malloc(size: size_t) -> *mut libc::c_void {
+pub(crate) unsafe fn yaml_malloc(size: size_t) -> *mut libc::c_void {
     malloc(size)
 }
-pub unsafe fn yaml_realloc(ptr: *mut libc::c_void, size: size_t) -> *mut libc::c_void {
+pub(crate) unsafe fn yaml_realloc(ptr: *mut libc::c_void, size: size_t) -> *mut libc::c_void {
     if !ptr.is_null() {
         realloc(ptr, size)
     } else {
         malloc(size)
     }
 }
-pub unsafe fn yaml_free(ptr: *mut libc::c_void) {
+pub(crate) unsafe fn yaml_free(ptr: *mut libc::c_void) {
     if !ptr.is_null() {
         free(ptr);
     }
 }
-pub unsafe fn yaml_strdup(str: *const yaml_char_t) -> *mut yaml_char_t {
+pub(crate) unsafe fn yaml_strdup(str: *const yaml_char_t) -> *mut yaml_char_t {
     if str.is_null() {
         return ptr::null_mut::<yaml_char_t>();
     }
     strdup(str as *mut libc::c_char) as *mut yaml_char_t
 }
-pub unsafe fn yaml_string_extend(
+pub(crate) unsafe fn yaml_string_extend(
     start: *mut *mut yaml_char_t,
     pointer: *mut *mut yaml_char_t,
     end: *mut *mut yaml_char_t,
@@ -73,7 +73,7 @@ pub unsafe fn yaml_string_extend(
     *start = new_start;
     1_i32
 }
-pub unsafe fn yaml_string_join(
+pub(crate) unsafe fn yaml_string_join(
     a_start: *mut *mut yaml_char_t,
     a_pointer: *mut *mut yaml_char_t,
     a_end: *mut *mut yaml_char_t,
@@ -100,7 +100,7 @@ pub unsafe fn yaml_string_join(
         (*a_pointer).wrapping_offset((*b_pointer).c_offset_from(*b_start) as libc::c_long as isize);
     1_i32
 }
-pub unsafe fn yaml_stack_extend(
+pub(crate) unsafe fn yaml_stack_extend(
     start: *mut *mut libc::c_void,
     top: *mut *mut libc::c_void,
     end: *mut *mut libc::c_void,
@@ -129,7 +129,7 @@ pub unsafe fn yaml_stack_extend(
     *start = new_start;
     1_i32
 }
-pub unsafe fn yaml_queue_extend(
+pub(crate) unsafe fn yaml_queue_extend(
     start: *mut *mut libc::c_void,
     head: *mut *mut libc::c_void,
     tail: *mut *mut libc::c_void,

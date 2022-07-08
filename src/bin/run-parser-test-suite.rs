@@ -28,7 +28,7 @@ use unsafe_libyaml::{
     YAML_MAPPING_START_EVENT, YAML_NO_EVENT, YAML_SCALAR_EVENT, YAML_SEQUENCE_END_EVENT,
     YAML_SEQUENCE_START_EVENT, YAML_STREAM_END_EVENT, YAML_STREAM_START_EVENT,
 };
-pub unsafe fn unsafe_main(
+pub(crate) unsafe fn unsafe_main(
     mut stdin: &mut dyn Read,
     stdout: &mut dyn Write,
 ) -> Result<(), Box<dyn Error>> {
@@ -192,7 +192,7 @@ pub unsafe fn unsafe_main(
     yaml_parser_delete(parser);
     Ok(())
 }
-pub unsafe fn print_escaped(stdout: &mut dyn Write, str: *mut u8, length: u64) {
+unsafe fn print_escaped(stdout: &mut dyn Write, str: *mut u8, length: u64) {
     let mut i: i32;
     let mut c: i8;
     i = 0_i32;
