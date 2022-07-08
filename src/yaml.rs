@@ -513,7 +513,7 @@ pub type yaml_node_item_t = libc::c_int;
 #[non_exhaustive]
 pub struct unnamed_yaml_node_t_data_sequence {
     /// The stack of sequence items.
-    pub items: unnamed_yaml_node_t_data_sequence_items,
+    pub items: yaml_stack_t<yaml_node_item_t>,
     /// The sequence style.
     pub style: yaml_sequence_style_t,
 }
@@ -521,35 +521,11 @@ pub struct unnamed_yaml_node_t_data_sequence {
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct unnamed_yaml_node_t_data_sequence_items {
-    /// The beginning of the stack.
-    pub start: *mut yaml_node_item_t,
-    /// The end of the stack.
-    pub end: *mut yaml_node_item_t,
-    /// The top of the stack.
-    pub top: *mut yaml_node_item_t,
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
-#[non_exhaustive]
 pub struct unnamed_yaml_node_t_data_mapping {
     /// The stack of mapping pairs (key, value).
-    pub pairs: unnamed_yaml_node_t_data_mapping_pairs,
+    pub pairs: yaml_stack_t<yaml_node_pair_t>,
     /// The mapping style.
     pub style: yaml_mapping_style_t,
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
-#[non_exhaustive]
-pub struct unnamed_yaml_node_t_data_mapping_pairs {
-    /// The beginning of the stack.
-    pub start: *mut yaml_node_pair_t,
-    /// The end of the stack.
-    pub end: *mut yaml_node_pair_t,
-    /// The top of the stack.
-    pub top: *mut yaml_node_pair_t,
 }
 
 /// An element of a mapping node.
@@ -569,7 +545,7 @@ pub struct yaml_node_pair_t {
 #[non_exhaustive]
 pub struct yaml_document_t {
     /// The document nodes.
-    pub nodes: unnamed_yaml_document_t_nodes,
+    pub nodes: yaml_stack_t<yaml_node_t>,
     /// The version directive.
     pub version_directive: *mut yaml_version_directive_t,
     /// The list of tag directives.
@@ -582,18 +558,6 @@ pub struct yaml_document_t {
     pub start_mark: yaml_mark_t,
     /// The end of the document.
     pub end_mark: yaml_mark_t,
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
-#[non_exhaustive]
-pub struct unnamed_yaml_document_t_nodes {
-    /// The beginning of the stack.
-    pub start: *mut yaml_node_t,
-    /// The end of the stack.
-    pub end: *mut yaml_node_t,
-    /// The top of the stack.
-    pub top: *mut yaml_node_t,
 }
 
 #[derive(Copy, Clone)]
@@ -781,23 +745,23 @@ pub struct yaml_parser_t {
     /// Does the tokens queue contain a token ready for dequeueing.
     pub(crate) token_available: libc::c_int,
     /// The indentation levels stack.
-    pub(crate) indents: unnamed_yaml_parser_t_indents,
+    pub(crate) indents: yaml_stack_t<libc::c_int>,
     /// The current indentation level.
     pub(crate) indent: libc::c_int,
     /// May a simple key occur at the current position?
     pub(crate) simple_key_allowed: libc::c_int,
     /// The stack of simple keys.
-    pub(crate) simple_keys: unnamed_yaml_parser_t_simple_keys,
+    pub(crate) simple_keys: yaml_stack_t<yaml_simple_key_t>,
     /// The parser states stack.
-    pub(crate) states: unnamed_yaml_parser_t_states,
+    pub(crate) states: yaml_stack_t<yaml_parser_state_t>,
     /// The current parser state.
     pub(crate) state: yaml_parser_state_t,
     /// The stack of marks.
-    pub(crate) marks: unnamed_yaml_parser_t_marks,
+    pub(crate) marks: yaml_stack_t<yaml_mark_t>,
     /// The list of TAG directives.
-    pub(crate) tag_directives: unnamed_yaml_parser_t_tag_directives,
+    pub(crate) tag_directives: yaml_stack_t<yaml_tag_directive_t>,
     /// The alias data.
-    pub(crate) aliases: unnamed_yaml_parser_t_aliases,
+    pub(crate) aliases: yaml_stack_t<yaml_alias_data_t>,
     /// The currently parsed document.
     pub(crate) document: *mut yaml_document_t,
 }
@@ -871,72 +835,6 @@ pub(crate) struct unnamed_yaml_parser_t_raw_buffer {
     pub pointer: *mut libc::c_uchar,
     /// The last filled position of the buffer.
     pub last: *mut libc::c_uchar,
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
-pub(crate) struct unnamed_yaml_parser_t_indents {
-    /// The beginning of the stack.
-    pub start: *mut libc::c_int,
-    /// The end of the stack.
-    pub end: *mut libc::c_int,
-    /// The top of the stack.
-    pub top: *mut libc::c_int,
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
-pub(crate) struct unnamed_yaml_parser_t_simple_keys {
-    /// The beginning of the stack.
-    pub start: *mut yaml_simple_key_t,
-    /// The end of the stack.
-    pub end: *mut yaml_simple_key_t,
-    /// The top of the stack.
-    pub top: *mut yaml_simple_key_t,
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
-pub(crate) struct unnamed_yaml_parser_t_states {
-    /// The beginning of the stack.
-    pub start: *mut yaml_parser_state_t,
-    /// The end of the stack.
-    pub end: *mut yaml_parser_state_t,
-    /// The top of the stack.
-    pub top: *mut yaml_parser_state_t,
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
-pub(crate) struct unnamed_yaml_parser_t_marks {
-    /// The beginning of the stack.
-    pub start: *mut yaml_mark_t,
-    /// The end of the stack.
-    pub end: *mut yaml_mark_t,
-    /// The top of the stack.
-    pub top: *mut yaml_mark_t,
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
-pub(crate) struct unnamed_yaml_parser_t_tag_directives {
-    /// The beginning of the list.
-    pub start: *mut yaml_tag_directive_t,
-    /// The end of the list.
-    pub end: *mut yaml_tag_directive_t,
-    /// The top of the list.
-    pub top: *mut yaml_tag_directive_t,
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
-pub(crate) struct unnamed_yaml_parser_t_aliases {
-    /// The beginning of the list.
-    pub start: *mut yaml_alias_data_t,
-    /// The end of the list.
-    pub end: *mut yaml_alias_data_t,
-    /// The top of the list.
-    pub top: *mut yaml_alias_data_t,
 }
 
 /// The prototype of a write handler.
@@ -1045,15 +943,15 @@ pub struct yaml_emitter_t {
     /// The preferred line break.
     pub(crate) line_break: yaml_break_t,
     /// The stack of states.
-    pub(crate) states: unnamed_yaml_emitter_t_states,
+    pub(crate) states: yaml_stack_t<yaml_emitter_state_t>,
     /// The current emitter state.
     pub(crate) state: yaml_emitter_state_t,
     /// The event queue.
     pub(crate) events: yaml_queue_t<yaml_event_t>,
     /// The stack of indentation levels.
-    pub(crate) indents: unnamed_yaml_emitter_t_indents,
+    pub(crate) indents: yaml_stack_t<libc::c_int>,
     /// The list of tag directives.
-    pub(crate) tag_directives: unnamed_yaml_emitter_t_tag_directives,
+    pub(crate) tag_directives: yaml_stack_t<yaml_tag_directive_t>,
     /// The current indentation level.
     pub(crate) indent: libc::c_int,
     /// The current flow level.
@@ -1157,39 +1055,6 @@ pub(crate) struct unnamed_yaml_emitter_t_raw_buffer {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub(crate) struct unnamed_yaml_emitter_t_states {
-    /// The beginning of the stack.
-    pub start: *mut yaml_emitter_state_t,
-    /// The end of the stack.
-    pub end: *mut yaml_emitter_state_t,
-    /// The top of the stack.
-    pub top: *mut yaml_emitter_state_t,
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
-pub(crate) struct unnamed_yaml_emitter_t_indents {
-    /// The beginning of the stack.
-    pub start: *mut libc::c_int,
-    /// The end of the stack.
-    pub end: *mut libc::c_int,
-    /// The top of the stack.
-    pub top: *mut libc::c_int,
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
-pub(crate) struct unnamed_yaml_emitter_t_tag_directives {
-    /// The beginning of the list.
-    pub start: *mut yaml_tag_directive_t,
-    /// The end of the list.
-    pub end: *mut yaml_tag_directive_t,
-    /// The top of the list.
-    pub top: *mut yaml_tag_directive_t,
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
 pub(crate) struct unnamed_yaml_emitter_t_anchor_data {
     /// The anchor value.
     pub anchor: *mut yaml_char_t,
@@ -1239,6 +1104,17 @@ pub(crate) struct yaml_string_t {
     pub start: *mut yaml_char_t,
     pub end: *mut yaml_char_t,
     pub pointer: *mut yaml_char_t,
+}
+
+#[derive(Copy, Clone)]
+#[repr(C)]
+pub struct yaml_stack_t<T> {
+    /// The beginning of the stack.
+    pub start: *mut T,
+    /// The end of the stack.
+    pub end: *mut T,
+    /// The top of the stack.
+    pub top: *mut T,
 }
 
 #[derive(Copy, Clone)]
