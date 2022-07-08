@@ -30,7 +30,7 @@ pub struct yaml_tag_directive_t {
 }
 
 /// The stream encoding.
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[repr(u32)]
 #[non_exhaustive]
 pub enum yaml_encoding_t {
@@ -45,7 +45,7 @@ pub enum yaml_encoding_t {
 }
 
 /// Line break type.
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[repr(u32)]
 #[non_exhaustive]
 pub enum yaml_break_t {
@@ -60,7 +60,7 @@ pub enum yaml_break_t {
 }
 
 /// Many bad things could happen with the parser and emitter.
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[repr(u32)]
 #[non_exhaustive]
 pub enum yaml_error_type_t {
@@ -96,7 +96,7 @@ pub struct yaml_mark_t {
 }
 
 /// Scalar styles.
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[repr(u32)]
 #[non_exhaustive]
 pub enum yaml_scalar_style_t {
@@ -115,7 +115,7 @@ pub enum yaml_scalar_style_t {
 }
 
 /// Sequence styles.
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[repr(u32)]
 #[non_exhaustive]
 pub enum yaml_sequence_style_t {
@@ -128,7 +128,7 @@ pub enum yaml_sequence_style_t {
 }
 
 /// Mapping styles.
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[repr(u32)]
 #[non_exhaustive]
 pub enum yaml_mapping_style_t {
@@ -141,7 +141,7 @@ pub enum yaml_mapping_style_t {
 }
 
 /// Token types.
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[repr(u32)]
 #[non_exhaustive]
 pub enum yaml_token_type_t {
@@ -292,7 +292,7 @@ pub struct unnamed_yaml_token_t_data_tag_directive {
 }
 
 /// Event types.
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[repr(u32)]
 #[non_exhaustive]
 pub enum yaml_event_type_t {
@@ -449,7 +449,7 @@ pub struct unnamed_yaml_event_t_data_mapping_start {
 }
 
 /// Node types.
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[repr(u32)]
 #[non_exhaustive]
 pub enum yaml_node_type_t {
@@ -636,7 +636,7 @@ pub struct yaml_simple_key_t {
 }
 
 /// The states of the parser.
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[repr(u32)]
 #[non_exhaustive]
 pub enum yaml_parser_state_t {
@@ -926,7 +926,7 @@ pub type yaml_write_handler_t =
     unsafe fn(data: *mut libc::c_void, buffer: *mut libc::c_uchar, size: size_t) -> libc::c_int;
 
 /// The emitter states.
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[repr(u32)]
 #[non_exhaustive]
 pub enum yaml_emitter_state_t {
