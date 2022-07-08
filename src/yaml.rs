@@ -838,7 +838,6 @@ pub(crate) union unnamed_yaml_parser_t_input {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-#[non_exhaustive]
 pub(crate) struct unnamed_yaml_parser_t_input_string {
     /// The string start pointer.
     pub start: *const libc::c_uchar,
@@ -850,7 +849,6 @@ pub(crate) struct unnamed_yaml_parser_t_input_string {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-#[non_exhaustive]
 pub(crate) struct unnamed_yaml_parser_t_buffer {
     /// The beginning of the buffer.
     pub start: *mut yaml_char_t,
@@ -864,7 +862,6 @@ pub(crate) struct unnamed_yaml_parser_t_buffer {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-#[non_exhaustive]
 pub(crate) struct unnamed_yaml_parser_t_raw_buffer {
     /// The beginning of the buffer.
     pub start: *mut libc::c_uchar,
@@ -878,7 +875,6 @@ pub(crate) struct unnamed_yaml_parser_t_raw_buffer {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-#[non_exhaustive]
 pub(crate) struct unnamed_yaml_parser_t_tokens {
     /// The beginning of the tokens queue.
     pub start: *mut yaml_token_t,
@@ -892,7 +888,6 @@ pub(crate) struct unnamed_yaml_parser_t_tokens {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-#[non_exhaustive]
 pub(crate) struct unnamed_yaml_parser_t_indents {
     /// The beginning of the stack.
     pub start: *mut libc::c_int,
@@ -904,7 +899,6 @@ pub(crate) struct unnamed_yaml_parser_t_indents {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-#[non_exhaustive]
 pub(crate) struct unnamed_yaml_parser_t_simple_keys {
     /// The beginning of the stack.
     pub start: *mut yaml_simple_key_t,
@@ -916,7 +910,6 @@ pub(crate) struct unnamed_yaml_parser_t_simple_keys {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-#[non_exhaustive]
 pub(crate) struct unnamed_yaml_parser_t_states {
     /// The beginning of the stack.
     pub start: *mut yaml_parser_state_t,
@@ -928,7 +921,6 @@ pub(crate) struct unnamed_yaml_parser_t_states {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-#[non_exhaustive]
 pub(crate) struct unnamed_yaml_parser_t_marks {
     /// The beginning of the stack.
     pub start: *mut yaml_mark_t,
@@ -940,7 +932,6 @@ pub(crate) struct unnamed_yaml_parser_t_marks {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-#[non_exhaustive]
 pub(crate) struct unnamed_yaml_parser_t_tag_directives {
     /// The beginning of the list.
     pub start: *mut yaml_tag_directive_t,
@@ -952,7 +943,6 @@ pub(crate) struct unnamed_yaml_parser_t_tag_directives {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-#[non_exhaustive]
 pub(crate) struct unnamed_yaml_parser_t_aliases {
     /// The beginning of the list.
     pub start: *mut yaml_alias_data_t,
@@ -1018,7 +1008,6 @@ pub enum yaml_emitter_state_t {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-#[non_exhaustive]
 pub(crate) struct yaml_anchors_t {
     /// The number of references.
     pub references: libc::c_int,
@@ -1144,7 +1133,6 @@ pub(crate) union unnamed_yaml_emitter_t_output {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-#[non_exhaustive]
 pub(crate) struct unnamed_yaml_emitter_t_output_string {
     /// The buffer pointer.
     pub buffer: *mut libc::c_uchar,
@@ -1156,7 +1144,6 @@ pub(crate) struct unnamed_yaml_emitter_t_output_string {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-#[non_exhaustive]
 pub(crate) struct unnamed_yaml_emitter_t_buffer {
     /// The beginning of the buffer.
     pub start: *mut yaml_char_t,
@@ -1170,7 +1157,6 @@ pub(crate) struct unnamed_yaml_emitter_t_buffer {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-#[non_exhaustive]
 pub(crate) struct unnamed_yaml_emitter_t_raw_buffer {
     /// The beginning of the buffer.
     pub start: *mut libc::c_uchar,
@@ -1184,7 +1170,6 @@ pub(crate) struct unnamed_yaml_emitter_t_raw_buffer {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-#[non_exhaustive]
 pub(crate) struct unnamed_yaml_emitter_t_states {
     /// The beginning of the stack.
     pub start: *mut yaml_emitter_state_t,
@@ -1196,7 +1181,6 @@ pub(crate) struct unnamed_yaml_emitter_t_states {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-#[non_exhaustive]
 pub(crate) struct unnamed_yaml_emitter_t_events {
     /// The beginning of the event queue.
     pub start: *mut yaml_event_t,
@@ -1210,7 +1194,6 @@ pub(crate) struct unnamed_yaml_emitter_t_events {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-#[non_exhaustive]
 pub(crate) struct unnamed_yaml_emitter_t_indents {
     /// The beginning of the stack.
     pub start: *mut libc::c_int,
@@ -1222,7 +1205,6 @@ pub(crate) struct unnamed_yaml_emitter_t_indents {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-#[non_exhaustive]
 pub(crate) struct unnamed_yaml_emitter_t_tag_directives {
     /// The beginning of the list.
     pub start: *mut yaml_tag_directive_t,
@@ -1234,7 +1216,6 @@ pub(crate) struct unnamed_yaml_emitter_t_tag_directives {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-#[non_exhaustive]
 pub(crate) struct unnamed_yaml_emitter_t_anchor_data {
     /// The anchor value.
     pub anchor: *mut yaml_char_t,
@@ -1246,7 +1227,6 @@ pub(crate) struct unnamed_yaml_emitter_t_anchor_data {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-#[non_exhaustive]
 pub(crate) struct unnamed_yaml_emitter_t_tag_data {
     /// The tag handle.
     pub handle: *mut yaml_char_t,
@@ -1260,7 +1240,6 @@ pub(crate) struct unnamed_yaml_emitter_t_tag_data {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-#[non_exhaustive]
 pub(crate) struct unnamed_yaml_emitter_t_scalar_data {
     /// The scalar value.
     pub value: *mut yaml_char_t,
@@ -1282,7 +1261,6 @@ pub(crate) struct unnamed_yaml_emitter_t_scalar_data {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-#[non_exhaustive]
 pub(crate) struct yaml_string_t {
     pub start: *mut yaml_char_t,
     pub end: *mut yaml_char_t,
