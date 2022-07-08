@@ -8,6 +8,7 @@
     clippy::cast_ptr_alignment,
     clippy::cast_sign_loss,
     clippy::collapsible_if,
+    clippy::doc_markdown,
     clippy::if_not_else,
     clippy::items_after_statements,
     clippy::let_underscore_drop,

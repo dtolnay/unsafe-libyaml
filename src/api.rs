@@ -16,9 +16,15 @@ use core::ptr::{self, addr_of_mut};
 struct api_context {
     error: yaml_error_type_t,
 }
+/// Get the libyaml version as a string.
+///
+/// Returns the pointer to a static string of the form `"X.Y.Z"`, where `X` is
+/// the major version number, `Y` is a minor version number, and `Z` is the
+/// patch version number.
 pub unsafe fn yaml_get_version_string() -> *const libc::c_char {
     b"0.2.5\0" as *const u8 as *const libc::c_char
 }
+/// Get the libyaml version numbers.
 pub unsafe fn yaml_get_version(
     major: *mut libc::c_int,
     minor: *mut libc::c_int,
@@ -175,7 +181,13 @@ pub(crate) unsafe fn yaml_queue_extend(
     }
     1_i32
 }
-pub unsafe fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) -> libc::c_int {
+/// Initialize a parser.
+///
+/// This function creates a new parser object. An application is responsible
+/// for destroying the object using the yaml_parser_delete() function.
+///
+/// Returns 1 if the function succeeded, 0 on error.
+pub unsafe fn yaml_parser_initialize(parser: *mut yaml_parser_t) -> libc::c_int {
     __assert!(!parser.is_null());
     memset(
         parser as *mut libc::c_void,
@@ -376,6 +388,7 @@ pub unsafe fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) -> libc::c_
     *fresh51 = *fresh50;
     0_i32
 }
+/// Destroy a parser.
 pub unsafe fn yaml_parser_delete(parser: *mut yaml_parser_t) {
     __assert!(!parser.is_null());
     yaml_free((*parser).raw_buffer.start as *mut libc::c_void);
@@ -483,6 +496,11 @@ unsafe fn yaml_string_read_handler(
     *size_read = size;
     1_i32
 }
+/// Set a string input.
+///
+/// Note that the `input` pointer must be valid while the `parser` object
+/// exists. The application is responsible for destroying `input` after
+/// destroying the `parser`.
 pub unsafe fn yaml_parser_set_input_string(
     parser: *mut yaml_parser_t,
     input: *const libc::c_uchar,
@@ -505,6 +523,7 @@ pub unsafe fn yaml_parser_set_input_string(
     let fresh85 = addr_of_mut!((*parser).input.string.end);
     *fresh85 = input.wrapping_offset(size as isize);
 }
+/// Set a generic input handler.
 pub unsafe fn yaml_parser_set_input(
     parser: *mut yaml_parser_t,
     handler: Option<yaml_read_handler_t>,
@@ -518,11 +537,18 @@ pub unsafe fn yaml_parser_set_input(
     let fresh90 = addr_of_mut!((*parser).read_handler_data);
     *fresh90 = data;
 }
+/// Set the source encoding.
 pub unsafe fn yaml_parser_set_encoding(mut parser: *mut yaml_parser_t, encoding: yaml_encoding_t) {
     __assert!(!parser.is_null());
     __assert!((*parser).encoding as u64 == 0);
     (*parser).encoding = encoding;
 }
+/// Initialize an emitter.
+///
+/// This function creates a new emitter object. An application is responsible
+/// for destroying the object using the yaml_emitter_delete() function.
+///
+/// Returns 1 if the function succeeded, 0 on error.
 pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> libc::c_int {
     __assert!(!emitter.is_null());
     memset(
@@ -677,6 +703,7 @@ pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> libc:
     *fresh130 = *fresh129;
     0_i32
 }
+/// Destroy an emitter.
 pub unsafe fn yaml_emitter_delete(emitter: *mut yaml_emitter_t) {
     __assert!(!emitter.is_null());
     yaml_free((*emitter).buffer.start as *mut libc::c_void);
@@ -771,6 +798,12 @@ unsafe fn yaml_string_write_handler(
     *fresh153 = (*fresh153 as libc::c_ulong).wrapping_add(size) as size_t as size_t;
     1_i32
 }
+/// Set a string output.
+///
+/// The emitter will write the output characters to the `output` buffer of the
+/// size `size. The emitter will set `size_written` to the number of written
+/// bytes. If the buffer is smaller than required, the emitter produces the
+/// YAML_WRITE_ERROR error.
 pub unsafe fn yaml_emitter_set_output_string(
     mut emitter: *mut yaml_emitter_t,
     output: *mut libc::c_uchar,
@@ -794,6 +827,7 @@ pub unsafe fn yaml_emitter_set_output_string(
     *fresh157 = size_written;
     *size_written = 0_u64;
 }
+/// Set a generic output handler.
 pub unsafe fn yaml_emitter_set_output(
     emitter: *mut yaml_emitter_t,
     handler: Option<yaml_write_handler_t>,
@@ -807,6 +841,7 @@ pub unsafe fn yaml_emitter_set_output(
     let fresh162 = addr_of_mut!((*emitter).write_handler_data);
     *fresh162 = data;
 }
+/// Set the output encoding.
 pub unsafe fn yaml_emitter_set_encoding(
     mut emitter: *mut yaml_emitter_t,
     encoding: yaml_encoding_t,
@@ -815,10 +850,13 @@ pub unsafe fn yaml_emitter_set_encoding(
     __assert!((*emitter).encoding as u64 == 0);
     (*emitter).encoding = encoding;
 }
+/// Set if the output should be in the "canonical" format as in the YAML
+/// specification.
 pub unsafe fn yaml_emitter_set_canonical(mut emitter: *mut yaml_emitter_t, canonical: libc::c_int) {
     __assert!(!emitter.is_null());
     (*emitter).canonical = (canonical != 0_i32) as libc::c_int;
 }
+/// Set the indentation increment.
 pub unsafe fn yaml_emitter_set_indent(mut emitter: *mut yaml_emitter_t, indent: libc::c_int) {
     __assert!(!emitter.is_null());
     (*emitter).best_indent = if 1_i32 < indent && indent < 10_i32 {
@@ -827,18 +865,22 @@ pub unsafe fn yaml_emitter_set_indent(mut emitter: *mut yaml_emitter_t, indent: 
         2_i32
     };
 }
+/// Set the preferred line width. -1 means unlimited.
 pub unsafe fn yaml_emitter_set_width(mut emitter: *mut yaml_emitter_t, width: libc::c_int) {
     __assert!(!emitter.is_null());
     (*emitter).best_width = if width >= 0_i32 { width } else { -1_i32 };
 }
+/// Set if unescaped non-ASCII characters are allowed.
 pub unsafe fn yaml_emitter_set_unicode(mut emitter: *mut yaml_emitter_t, unicode: libc::c_int) {
     __assert!(!emitter.is_null());
     (*emitter).unicode = (unicode != 0_i32) as libc::c_int;
 }
+/// Set the preferred line break.
 pub unsafe fn yaml_emitter_set_break(mut emitter: *mut yaml_emitter_t, line_break: yaml_break_t) {
     __assert!(!emitter.is_null());
     (*emitter).line_break = line_break;
 }
+/// Free any memory allocated for a token object.
 pub unsafe fn yaml_token_delete(token: *mut yaml_token_t) {
     __assert!(!token.is_null());
     match (*token).type_ as libc::c_uint {
@@ -924,6 +966,9 @@ unsafe fn yaml_check_utf8(start: *const yaml_char_t, length: size_t) -> libc::c_
     }
     1_i32
 }
+/// Create the STREAM-START event.
+///
+/// Returns 1 if the function succeeded, 0 on error.
 pub unsafe fn yaml_stream_start_event_initialize(
     mut event: *mut yaml_event_t,
     encoding: yaml_encoding_t,
@@ -945,6 +990,9 @@ pub unsafe fn yaml_stream_start_event_initialize(
     (*event).data.stream_start.encoding = encoding;
     1_i32
 }
+/// Create the STREAM-END event.
+///
+/// Returns 1 if the function succeeded, 0 on error.
 pub unsafe fn yaml_stream_end_event_initialize(mut event: *mut yaml_event_t) -> libc::c_int {
     let mark = yaml_mark_t {
         index: 0_u64,
@@ -962,6 +1010,12 @@ pub unsafe fn yaml_stream_end_event_initialize(mut event: *mut yaml_event_t) -> 
     (*event).end_mark = mark;
     1_i32
 }
+/// Create the DOCUMENT-START event.
+///
+/// The `implicit` argument is considered as a stylistic parameter and may be
+/// ignored by the emitter.
+///
+/// Returns 1 if the function succeeded, 0 on error.
 pub unsafe fn yaml_document_start_event_initialize(
     mut event: *mut yaml_event_t,
     version_directive: *mut yaml_version_directive_t,
@@ -1126,6 +1180,12 @@ pub unsafe fn yaml_document_start_event_initialize(
     yaml_free(value.prefix as *mut libc::c_void);
     0_i32
 }
+/// Create the DOCUMENT-END event.
+///
+/// The `implicit` argument is considered as a stylistic parameter and may be
+/// ignored by the emitter.
+///
+/// Returns 1 if the function succeeded, 0 on error.
 pub unsafe fn yaml_document_end_event_initialize(
     mut event: *mut yaml_event_t,
     implicit: libc::c_int,
@@ -1147,6 +1207,9 @@ pub unsafe fn yaml_document_end_event_initialize(
     (*event).data.document_end.implicit = implicit;
     1_i32
 }
+/// Create an ALIAS event.
+///
+/// Returns 1 if the function succeeded, 0 on error.
 pub unsafe fn yaml_alias_event_initialize(
     mut event: *mut yaml_event_t,
     anchor: *const yaml_char_t,
@@ -1177,6 +1240,14 @@ pub unsafe fn yaml_alias_event_initialize(
     *fresh167 = anchor_copy;
     1_i32
 }
+/// Create a SCALAR event.
+///
+/// The `style` argument may be ignored by the emitter.
+///
+/// Either the `tag` attribute or one of the `plain_implicit` and
+/// `quoted_implicit` flags must be set.
+///
+/// Returns 1 if the function succeeded, 0 on error.
 pub unsafe fn yaml_scalar_event_initialize(
     mut event: *mut yaml_event_t,
     anchor: *const yaml_char_t,
@@ -1275,6 +1346,13 @@ pub unsafe fn yaml_scalar_event_initialize(
     yaml_free(value_copy as *mut libc::c_void);
     0_i32
 }
+/// Create a SEQUENCE-START event.
+///
+/// The `style` argument may be ignored by the emitter.
+///
+/// Either the `tag` attribute or the `implicit` flag must be set.
+///
+/// Returns 1 if the function succeeded, 0 on error.
 pub unsafe fn yaml_sequence_start_event_initialize(
     mut event: *mut yaml_event_t,
     anchor: *const yaml_char_t,
@@ -1348,6 +1426,9 @@ pub unsafe fn yaml_sequence_start_event_initialize(
     yaml_free(tag_copy as *mut libc::c_void);
     0_i32
 }
+/// Create a SEQUENCE-END event.
+///
+/// Returns 1 if the function succeeded, 0 on error.
 pub unsafe fn yaml_sequence_end_event_initialize(mut event: *mut yaml_event_t) -> libc::c_int {
     let mark = yaml_mark_t {
         index: 0_u64,
@@ -1365,6 +1446,13 @@ pub unsafe fn yaml_sequence_end_event_initialize(mut event: *mut yaml_event_t) -
     (*event).end_mark = mark;
     1_i32
 }
+/// Create a MAPPING-START event.
+///
+/// The `style` argument may be ignored by the emitter.
+///
+/// Either the `tag` attribute or the `implicit` flag must be set.
+///
+/// Returns 1 if the function succeeded, 0 on error.
 pub unsafe fn yaml_mapping_start_event_initialize(
     mut event: *mut yaml_event_t,
     anchor: *const yaml_char_t,
@@ -1438,6 +1526,9 @@ pub unsafe fn yaml_mapping_start_event_initialize(
     yaml_free(tag_copy as *mut libc::c_void);
     0_i32
 }
+/// Create a MAPPING-END event.
+///
+/// Returns 1 if the function succeeded, 0 on error.
 pub unsafe fn yaml_mapping_end_event_initialize(mut event: *mut yaml_event_t) -> libc::c_int {
     let mark = yaml_mark_t {
         index: 0_u64,
@@ -1455,6 +1546,7 @@ pub unsafe fn yaml_mapping_end_event_initialize(mut event: *mut yaml_event_t) ->
     (*event).end_mark = mark;
     1_i32
 }
+/// Free any memory allocated for an event object.
 pub unsafe fn yaml_event_delete(event: *mut yaml_event_t) {
     let mut tag_directive: *mut yaml_tag_directive_t;
     __assert!(!event.is_null());
@@ -1493,6 +1585,9 @@ pub unsafe fn yaml_event_delete(event: *mut yaml_event_t) {
         size_of::<yaml_event_t>() as libc::c_ulong,
     );
 }
+/// Create a YAML document.
+///
+/// Returns 1 if the function succeeded, 0 on error.
 pub unsafe fn yaml_document_initialize(
     mut document: *mut yaml_document_t,
     version_directive: *mut yaml_version_directive_t,
@@ -1696,6 +1791,7 @@ pub unsafe fn yaml_document_initialize(
     yaml_free(value.prefix as *mut libc::c_void);
     0_i32
 }
+/// Delete a YAML document and all its nodes.
 pub unsafe fn yaml_document_delete(document: *mut yaml_document_t) {
     let mut tag_directive: *mut yaml_tag_directive_t;
     __assert!(!document.is_null());
@@ -1746,6 +1842,12 @@ pub unsafe fn yaml_document_delete(document: *mut yaml_document_t) {
         size_of::<yaml_document_t>() as libc::c_ulong,
     );
 }
+/// Get a node of a YAML document.
+///
+/// The pointer returned by this function is valid until any of the functions
+/// modifying the documents are called.
+///
+/// Returns the node objct or NULL if `node_id` is out of range.
 pub unsafe fn yaml_document_get_node(
     document: *mut yaml_document_t,
     index: libc::c_int,
@@ -1760,6 +1862,16 @@ pub unsafe fn yaml_document_get_node(
     }
     ptr::null_mut::<yaml_node_t>()
 }
+/// Get the root of a YAML document node.
+///
+/// The root object is the first object added to the document.
+///
+/// The pointer returned by this function is valid until any of the functions
+/// modifying the documents are called.
+///
+/// An empty document produced by the parser signifies the end of a YAML stream.
+///
+/// Returns the node object or NULL if the document is empty.
 pub unsafe fn yaml_document_get_root_node(document: *mut yaml_document_t) -> *mut yaml_node_t {
     __assert!(!document.is_null());
     if (*document).nodes.top != (*document).nodes.start {
@@ -1767,6 +1879,11 @@ pub unsafe fn yaml_document_get_root_node(document: *mut yaml_document_t) -> *mu
     }
     ptr::null_mut::<yaml_node_t>()
 }
+/// Create a SCALAR node and attach it to the document.
+///
+/// The `style` argument may be ignored by the emitter.
+///
+/// Returns the node id or 0 on error.
 pub unsafe fn yaml_document_add_scalar(
     document: *mut yaml_document_t,
     mut tag: *const yaml_char_t,
@@ -1846,6 +1963,11 @@ pub unsafe fn yaml_document_add_scalar(
     yaml_free(value_copy as *mut libc::c_void);
     0_i32
 }
+/// Create a SEQUENCE node and attach it to the document.
+///
+/// The `style` argument may be ignored by the emitter.
+///
+/// Returns the node id or 0 on error.
 pub unsafe fn yaml_document_add_sequence(
     document: *mut yaml_document_t,
     mut tag: *const yaml_char_t,
@@ -1934,6 +2056,11 @@ pub unsafe fn yaml_document_add_sequence(
     yaml_free(tag_copy as *mut libc::c_void);
     0_i32
 }
+/// Create a MAPPING node and attach it to the document.
+///
+/// The `style` argument may be ignored by the emitter.
+///
+/// Returns the node id or 0 on error.
 pub unsafe fn yaml_document_add_mapping(
     document: *mut yaml_document_t,
     mut tag: *const yaml_char_t,
@@ -2022,6 +2149,9 @@ pub unsafe fn yaml_document_add_mapping(
     yaml_free(tag_copy as *mut libc::c_void);
     0_i32
 }
+/// Add an item to a SEQUENCE node.
+///
+/// Returns 1 if the function succeeded, 0 on error.
 pub unsafe fn yaml_document_append_sequence_item(
     document: *mut yaml_document_t,
     sequence: libc::c_int,
@@ -2099,6 +2229,9 @@ pub unsafe fn yaml_document_append_sequence_item(
     }
     1_i32
 }
+/// Add a pair of a key and a value to a MAPPING node.
+///
+/// Returns 1 if the function succeeded, 0 on error.
 pub unsafe fn yaml_document_append_mapping_pair(
     document: *mut yaml_document_t,
     mapping: libc::c_int,

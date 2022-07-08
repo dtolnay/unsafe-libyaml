@@ -19,6 +19,20 @@ use crate::{
 };
 use core::mem::{size_of, MaybeUninit};
 use core::ptr::{self, addr_of_mut};
+/// Scan the input stream and produce the next token.
+///
+/// Call the function subsequently to produce a sequence of tokens corresponding
+/// to the input stream. The initial token has the type YAML_STREAM_START_TOKEN
+/// while the ending token has the type YAML_STREAM_END_TOKEN.
+///
+/// An application is responsible for freeing any buffers associated with the
+/// produced token object using the yaml_token_delete function.
+///
+/// An application must not alternate the calls of yaml_parser_scan() with the
+/// calls of yaml_parser_parse() or yaml_parser_load(). Doing this will break
+/// the parser.
+///
+/// Returns 1 if the function succeeded, 0 on error.
 pub unsafe fn yaml_parser_scan(
     mut parser: *mut yaml_parser_t,
     token: *mut yaml_token_t,

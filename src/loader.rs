@@ -16,6 +16,22 @@ struct loader_ctx {
     end: *mut libc::c_int,
     top: *mut libc::c_int,
 }
+/// Parse the input stream and produce the next YAML document.
+///
+/// Call this function subsequently to produce a sequence of documents
+/// constituting the input stream.
+///
+/// If the produced document has no root node, it means that the document end
+/// has been reached.
+///
+/// An application is responsible for freeing any data associated with the
+/// produced document object using the yaml_document_delete() function.
+///
+/// An application must not alternate the calls of yaml_parser_load() with the
+/// calls of yaml_parser_scan() or yaml_parser_parse(). Doing this will break
+/// the parser.
+///
+/// Returns 1 if the function succeeded, 0 on error.
 pub unsafe fn yaml_parser_load(
     mut parser: *mut yaml_parser_t,
     document: *mut yaml_document_t,

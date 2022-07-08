@@ -29,6 +29,14 @@ unsafe fn yaml_emitter_set_emitter_error(
     *fresh0 = problem;
     0_i32
 }
+/// Emit an event.
+///
+/// The event object may be generated using the yaml_parser_parse() function.
+/// The emitter takes the responsibility for the event object and destroys its
+/// content after it is emitted. The event object is destroyed even if the
+/// function fails.
+///
+/// Returns 1 if the function succeeded, 0 on error.
 pub unsafe fn yaml_emitter_emit(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,

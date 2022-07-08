@@ -30,6 +30,20 @@ use crate::{
 };
 use core::mem::size_of;
 use core::ptr::{self, addr_of_mut};
+/// Parse the input stream and produce the next parsing event.
+///
+/// Call the function subsequently to produce a sequence of events corresponding
+/// to the input stream. The initial event has the type YAML_STREAM_START_EVENT
+/// while the ending event has the type YAML_STREAM_END_EVENT.
+///
+/// An application is responsible for freeing any buffers associated with the
+/// produced event object using the yaml_event_delete() function.
+///
+/// An application must not alternate the calls of yaml_parser_parse() with the
+/// calls of yaml_parser_scan() or yaml_parser_load(). Doing this will break the
+/// parser.
+///
+/// Returns 1 if the function succeeded, 0 on error.
 pub unsafe fn yaml_parser_parse(
     parser: *mut yaml_parser_t,
     event: *mut yaml_event_t,

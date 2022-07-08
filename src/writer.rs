@@ -12,6 +12,9 @@ unsafe fn yaml_emitter_set_writer_error(
     *fresh0 = problem;
     0_i32
 }
+/// Flush the accumulated characters to the output.
+///
+/// Returns 1 if the function succeeded, 0 on error.
 pub unsafe fn yaml_emitter_flush(emitter: *mut yaml_emitter_t) -> libc::c_int {
     __assert!(!emitter.is_null());
     __assert!(((*emitter).write_handler).is_some());
