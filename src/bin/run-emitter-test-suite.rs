@@ -14,30 +14,33 @@
 )]
 
 use std::env;
+use std::error::Error;
 use std::ffi::CStr;
 use std::fs::File;
-use std::io::{self, Read as _, Write as _};
+use std::io::{self, Read, Write};
 use std::mem::MaybeUninit;
 use std::process::{self, ExitCode};
-use std::ptr;
+use std::ptr::{self, addr_of_mut};
 use std::slice;
 use unsafe_libyaml::externs::{memcpy, strlen, strncmp};
 use unsafe_libyaml::{
-    __assert, libc, size_t, yaml_alias_event_initialize, yaml_char_t,
-    yaml_document_end_event_initialize, yaml_document_start_event_initialize, yaml_emitter_delete,
-    yaml_emitter_emit, yaml_emitter_initialize, yaml_emitter_set_canonical,
-    yaml_emitter_set_output, yaml_emitter_set_unicode, yaml_emitter_t, yaml_event_t,
-    yaml_mapping_end_event_initialize, yaml_mapping_start_event_initialize, yaml_mapping_style_t,
-    yaml_scalar_event_initialize, yaml_scalar_style_t, yaml_sequence_end_event_initialize,
-    yaml_sequence_start_event_initialize, yaml_sequence_style_t, yaml_stream_end_event_initialize,
-    yaml_stream_start_event_initialize, yaml_tag_directive_t, yaml_version_directive_t,
-    YAML_BLOCK_MAPPING_STYLE, YAML_BLOCK_SEQUENCE_STYLE, YAML_DOUBLE_QUOTED_SCALAR_STYLE,
-    YAML_FOLDED_SCALAR_STYLE, YAML_LITERAL_SCALAR_STYLE, YAML_PLAIN_SCALAR_STYLE,
-    YAML_SINGLE_QUOTED_SCALAR_STYLE, YAML_UTF8_ENCODING,
+    libc, size_t, yaml_alias_event_initialize, yaml_char_t, yaml_document_end_event_initialize,
+    yaml_document_start_event_initialize, yaml_emitter_delete, yaml_emitter_emit,
+    yaml_emitter_initialize, yaml_emitter_set_canonical, yaml_emitter_set_output,
+    yaml_emitter_set_unicode, yaml_emitter_t, yaml_event_t, yaml_mapping_end_event_initialize,
+    yaml_mapping_start_event_initialize, yaml_mapping_style_t, yaml_scalar_event_initialize,
+    yaml_scalar_style_t, yaml_sequence_end_event_initialize, yaml_sequence_start_event_initialize,
+    yaml_sequence_style_t, yaml_stream_end_event_initialize, yaml_stream_start_event_initialize,
+    yaml_tag_directive_t, yaml_version_directive_t, YAML_BLOCK_MAPPING_STYLE,
+    YAML_BLOCK_SEQUENCE_STYLE, YAML_DOUBLE_QUOTED_SCALAR_STYLE, YAML_FOLDED_SCALAR_STYLE,
+    YAML_LITERAL_SCALAR_STYLE, YAML_PLAIN_SCALAR_STYLE, YAML_SINGLE_QUOTED_SCALAR_STYLE,
+    YAML_UTF8_ENCODING,
 };
-unsafe fn unsafe_main() -> ExitCode {
+unsafe fn unsafe_main(
+    stdin: &mut dyn Read,
+    mut stdout: &mut dyn Write,
+) -> Result<(), Box<dyn Error>> {
     let current_block: u64;
-    let mut input = None;
     let mut emitter = MaybeUninit::<yaml_emitter_t>::uninit();
     let emitter = emitter.as_mut_ptr();
     let mut event = MaybeUninit::<yaml_event_t>::uninit();
@@ -47,36 +50,26 @@ unsafe fn unsafe_main() -> ExitCode {
     let canonical: libc::c_int = 0_i32;
     let unicode: libc::c_int = 0_i32;
     let mut buf = ReadBuf::new();
-    let mut foundfile: libc::c_int = 0_i32;
-    for arg in env::args().skip(1) {
-        if foundfile == 0 {
-            input = File::open(arg).ok();
-            foundfile = 1_i32;
-        }
-    }
-    let input = input.unwrap_or_else(|| __assert!(false));
     if yaml_emitter_initialize(emitter) == 0 {
-        let _ = writeln!(io::stderr(), "Could not initalize the emitter object");
-        return ExitCode::FAILURE;
+        return Err("Could not initalize the emitter object".into());
     }
     unsafe fn write_to_stdout(
-        _data: *mut libc::c_void,
+        data: *mut libc::c_void,
         buffer: *mut libc::c_uchar,
         size: size_t,
     ) -> libc::c_int {
+        let stdout: *mut &mut dyn Write = data.cast();
         let bytes = slice::from_raw_parts(buffer.cast(), size as usize);
-        let _ = io::stdout().write_all(bytes);
-        size as libc::c_int
+        match (*stdout).write(bytes) {
+            Ok(n) => n as libc::c_int,
+            Err(_) => size as libc::c_int,
+        }
     }
-    yaml_emitter_set_output(
-        emitter,
-        Some(write_to_stdout),
-        ptr::null_mut::<libc::c_void>(),
-    );
+    yaml_emitter_set_output(emitter, Some(write_to_stdout), addr_of_mut!(stdout).cast());
     yaml_emitter_set_canonical(emitter, canonical);
     yaml_emitter_set_unicode(emitter, unicode);
     loop {
-        let line = match buf.get_line(&input) {
+        let line = match buf.get_line(stdin) {
             Some(line) => line,
             None => {
                 current_block = 1934991416718554651;
@@ -162,12 +155,11 @@ unsafe fn unsafe_main() -> ExitCode {
                     as *mut yaml_char_t,
             );
         } else {
-            let _ = writeln!(
-                io::stderr(),
+            return Err(format!(
                 "Unknown event: '{}'",
                 CStr::from_ptr(line).to_string_lossy(),
-            );
-            return ExitCode::FAILURE;
+            )
+            .into());
         }
         if ok == 0 {
             current_block = 13850764817919632987;
@@ -180,42 +172,30 @@ unsafe fn unsafe_main() -> ExitCode {
     }
     match current_block {
         13850764817919632987 => {
-            let _ = writeln!(
-                io::stderr(),
-                "Memory error: Not enough memory for creating an event",
-            );
             yaml_emitter_delete(emitter);
-            ExitCode::FAILURE
+            Err("Memory error: Not enough memory for creating an event".into())
         }
         6684355725484023210 => {
-            match (*emitter).error as libc::c_uint {
-                1 => {
-                    let _ = writeln!(io::stderr(), "Memory error: Not enough memory for emitting");
-                }
-                6 => {
-                    let _ = writeln!(
-                        io::stderr(),
-                        "Writer error: {}",
-                        CStr::from_ptr((*emitter).problem).to_string_lossy(),
-                    );
-                }
-                7 => {
-                    let _ = writeln!(
-                        io::stderr(),
-                        "Emitter error: {}",
-                        CStr::from_ptr((*emitter).problem).to_string_lossy(),
-                    );
-                }
-                _ => {
-                    let _ = writeln!(io::stderr(), "Internal error");
-                }
-            }
+            let error = match (*emitter).error as libc::c_uint {
+                1 => "Memory error: Not enough memory for emitting".into(),
+                6 => format!(
+                    "Writer error: {}",
+                    CStr::from_ptr((*emitter).problem).to_string_lossy(),
+                )
+                .into(),
+                7 => format!(
+                    "Emitter error: {}",
+                    CStr::from_ptr((*emitter).problem).to_string_lossy(),
+                )
+                .into(),
+                _ => "Internal error".into(),
+            };
             yaml_emitter_delete(emitter);
-            ExitCode::FAILURE
+            Err(error)
         }
         _ => {
             yaml_emitter_delete(emitter);
-            ExitCode::SUCCESS
+            Ok(())
         }
     }
 }
@@ -232,7 +212,7 @@ impl ReadBuf {
             filled: 0,
         }
     }
-    fn get_line(&mut self, mut input: &File) -> Option<&mut [u8]> {
+    fn get_line(&mut self, input: &mut dyn Read) -> Option<&mut [u8]> {
         loop {
             for i in self.offset..self.offset + self.filled {
                 if self.buf[i] == b'\n' {
@@ -403,5 +383,22 @@ unsafe fn strchr(mut str: *const libc::c_char, c: libc::c_int) -> *mut libc::c_c
     }
 }
 fn main() -> ExitCode {
-    unsafe { unsafe_main() }
+    let args = env::args_os().skip(1);
+    if args.len() == 0 {
+        let _ = writeln!(
+            io::stderr(),
+            "Usage: run-emitter-test-suite <test.event>...",
+        );
+        return ExitCode::FAILURE;
+    }
+    for arg in args {
+        let mut stdin = File::open(arg).unwrap();
+        let mut stdout = io::stdout();
+        let result = unsafe { unsafe_main(&mut stdin, &mut stdout) };
+        if let Err(err) = result {
+            let _ = writeln!(io::stderr(), "{}", err);
+            return ExitCode::FAILURE;
+        }
+    }
+    ExitCode::SUCCESS
 }

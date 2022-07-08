@@ -12,39 +12,29 @@
 
 use std::cmp;
 use std::env;
+use std::error::Error;
 use std::ffi::CStr;
+use std::fmt::Write as _;
 use std::fs;
-use std::io::{self, Write as _};
+use std::io::{self, Write};
 use std::mem::MaybeUninit;
 use std::process::{self, ExitCode};
 use std::ptr::{self, addr_of_mut};
 use unsafe_libyaml::{
-    __assert, libc, size_t, yaml_char_t, yaml_event_delete, yaml_event_t, yaml_event_type_t,
+    libc, size_t, yaml_char_t, yaml_event_delete, yaml_event_t, yaml_event_type_t,
     yaml_parser_delete, yaml_parser_initialize, yaml_parser_parse, yaml_parser_set_input,
     yaml_parser_t, YAML_ALIAS_EVENT, YAML_DOCUMENT_END_EVENT, YAML_DOCUMENT_START_EVENT,
     YAML_MAPPING_END_EVENT, YAML_MAPPING_START_EVENT, YAML_NO_EVENT, YAML_SCALAR_EVENT,
     YAML_SEQUENCE_END_EVENT, YAML_SEQUENCE_START_EVENT, YAML_STREAM_END_EVENT,
     YAML_STREAM_START_EVENT,
 };
-unsafe fn unsafe_main() -> ExitCode {
-    let mut input = None;
+unsafe fn unsafe_main(mut stdin: &[u8], stdout: &mut dyn Write) -> Result<(), Box<dyn Error>> {
     let mut parser = MaybeUninit::<yaml_parser_t>::uninit();
     let parser = parser.as_mut_ptr();
     let mut event = MaybeUninit::<yaml_event_t>::uninit();
     let event = event.as_mut_ptr();
-    let mut foundfile: libc::c_int = 0_i32;
-    for arg in env::args_os().skip(1) {
-        if foundfile == 0 {
-            input = fs::read(arg).ok();
-            foundfile = 1_i32;
-        } else {
-            return usage(ExitCode::FAILURE);
-        }
-    }
-    let input = input.unwrap_or_else(|| __assert!(false));
     if yaml_parser_initialize(parser) == 0 {
-        let _ = writeln!(io::stderr(), "Could not initialize the parser object");
-        return ExitCode::FAILURE;
+        return Err("Could not initialize the parser object".into());
     }
     unsafe fn read_from_file(
         data: *mut libc::c_void,
@@ -59,51 +49,49 @@ unsafe fn unsafe_main() -> ExitCode {
         *size_read = n as size_t;
         1_i32
     }
-    let mut remaining = input.as_slice();
-    yaml_parser_set_input(parser, Some(read_from_file), addr_of_mut!(remaining).cast());
+    yaml_parser_set_input(parser, Some(read_from_file), addr_of_mut!(stdin).cast());
     loop {
         if yaml_parser_parse(parser, event) == 0 {
-            let _ = writeln!(
-                io::stderr(),
+            let mut error = format!(
                 "Parse error: {}",
                 CStr::from_ptr((*parser).problem).to_string_lossy(),
             );
             if (*parser).problem_mark.line != 0 || (*parser).problem_mark.column != 0 {
-                let _ = writeln!(
-                    io::stderr(),
-                    "Line: {} Column: {}",
+                let _ = write!(
+                    error,
+                    "\nLine: {} Column: {}",
                     ((*parser).problem_mark.line).wrapping_add(1_u64),
                     ((*parser).problem_mark.column).wrapping_add(1_u64),
                 );
             }
-            return ExitCode::FAILURE;
+            return Err(error.into());
         }
         let type_0: yaml_event_type_t = (*event).type_0;
         if type_0 as libc::c_uint == YAML_NO_EVENT as libc::c_int as libc::c_uint {
-            let _ = writeln!(io::stdout(), "???");
+            let _ = writeln!(stdout, "???");
         } else if type_0 as libc::c_uint == YAML_STREAM_START_EVENT as libc::c_int as libc::c_uint {
-            let _ = writeln!(io::stdout(), "+STR");
+            let _ = writeln!(stdout, "+STR");
         } else if type_0 as libc::c_uint == YAML_STREAM_END_EVENT as libc::c_int as libc::c_uint {
-            let _ = writeln!(io::stdout(), "-STR");
+            let _ = writeln!(stdout, "-STR");
         } else if type_0 as libc::c_uint == YAML_DOCUMENT_START_EVENT as libc::c_int as libc::c_uint
         {
-            let _ = write!(io::stdout(), "+DOC");
+            let _ = write!(stdout, "+DOC");
             if (*event).data.document_start.implicit == 0 {
-                let _ = write!(io::stdout(), " ---");
+                let _ = write!(stdout, " ---");
             }
-            let _ = writeln!(io::stdout());
+            let _ = writeln!(stdout);
         } else if type_0 as libc::c_uint == YAML_DOCUMENT_END_EVENT as libc::c_int as libc::c_uint {
-            let _ = write!(io::stdout(), "-DOC");
+            let _ = write!(stdout, "-DOC");
             if (*event).data.document_end.implicit == 0 {
-                let _ = write!(io::stdout(), " ...");
+                let _ = write!(stdout, " ...");
             }
-            let _ = writeln!(io::stdout());
+            let _ = writeln!(stdout);
         } else if type_0 as libc::c_uint == YAML_MAPPING_START_EVENT as libc::c_int as libc::c_uint
         {
-            let _ = write!(io::stdout(), "+MAP");
+            let _ = write!(stdout, "+MAP");
             if !((*event).data.mapping_start.anchor).is_null() {
                 let _ = write!(
-                    io::stdout(),
+                    stdout,
                     " &{}",
                     CStr::from_ptr((*event).data.mapping_start.anchor as *const libc::c_char)
                         .to_string_lossy(),
@@ -111,21 +99,21 @@ unsafe fn unsafe_main() -> ExitCode {
             }
             if !((*event).data.mapping_start.tag).is_null() {
                 let _ = write!(
-                    io::stdout(),
+                    stdout,
                     " <{}>",
                     CStr::from_ptr((*event).data.mapping_start.tag as *const libc::c_char)
                         .to_string_lossy(),
                 );
             }
-            let _ = writeln!(io::stdout());
+            let _ = writeln!(stdout);
         } else if type_0 as libc::c_uint == YAML_MAPPING_END_EVENT as libc::c_int as libc::c_uint {
-            let _ = writeln!(io::stdout(), "-MAP");
+            let _ = writeln!(stdout, "-MAP");
         } else if type_0 as libc::c_uint == YAML_SEQUENCE_START_EVENT as libc::c_int as libc::c_uint
         {
-            let _ = write!(io::stdout(), "+SEQ");
+            let _ = write!(stdout, "+SEQ");
             if !((*event).data.sequence_start.anchor).is_null() {
                 let _ = write!(
-                    io::stdout(),
+                    stdout,
                     " &{}",
                     CStr::from_ptr((*event).data.sequence_start.anchor as *const libc::c_char)
                         .to_string_lossy(),
@@ -133,20 +121,20 @@ unsafe fn unsafe_main() -> ExitCode {
             }
             if !((*event).data.sequence_start.tag).is_null() {
                 let _ = write!(
-                    io::stdout(),
+                    stdout,
                     " <{}>",
                     CStr::from_ptr((*event).data.sequence_start.tag as *const libc::c_char)
                         .to_string_lossy(),
                 );
             }
-            let _ = writeln!(io::stdout());
+            let _ = writeln!(stdout);
         } else if type_0 as libc::c_uint == YAML_SEQUENCE_END_EVENT as libc::c_int as libc::c_uint {
-            let _ = writeln!(io::stdout(), "-SEQ");
+            let _ = writeln!(stdout, "-SEQ");
         } else if type_0 as libc::c_uint == YAML_SCALAR_EVENT as libc::c_int as libc::c_uint {
-            let _ = write!(io::stdout(), "=VAL");
+            let _ = write!(stdout, "=VAL");
             if !((*event).data.scalar.anchor).is_null() {
                 let _ = write!(
-                    io::stdout(),
+                    stdout,
                     " &{}",
                     CStr::from_ptr((*event).data.scalar.anchor as *const libc::c_char)
                         .to_string_lossy(),
@@ -154,7 +142,7 @@ unsafe fn unsafe_main() -> ExitCode {
             }
             if !((*event).data.scalar.tag).is_null() {
                 let _ = write!(
-                    io::stdout(),
+                    stdout,
                     " <{}>",
                     CStr::from_ptr((*event).data.scalar.tag as *const libc::c_char)
                         .to_string_lossy(),
@@ -162,30 +150,34 @@ unsafe fn unsafe_main() -> ExitCode {
             }
             match (*event).data.scalar.style as libc::c_uint {
                 1 => {
-                    let _ = write!(io::stdout(), " :");
+                    let _ = write!(stdout, " :");
                 }
                 2 => {
-                    let _ = write!(io::stdout(), " '");
+                    let _ = write!(stdout, " '");
                 }
                 3 => {
-                    let _ = write!(io::stdout(), " \"");
+                    let _ = write!(stdout, " \"");
                 }
                 4 => {
-                    let _ = write!(io::stdout(), " |");
+                    let _ = write!(stdout, " |");
                 }
                 5 => {
-                    let _ = write!(io::stdout(), " >");
+                    let _ = write!(stdout, " >");
                 }
                 0 => {
                     process::abort();
                 }
                 _ => {}
             }
-            print_escaped((*event).data.scalar.value, (*event).data.scalar.length);
-            let _ = writeln!(io::stdout());
+            print_escaped(
+                stdout,
+                (*event).data.scalar.value,
+                (*event).data.scalar.length,
+            );
+            let _ = writeln!(stdout);
         } else if type_0 as libc::c_uint == YAML_ALIAS_EVENT as libc::c_int as libc::c_uint {
             let _ = writeln!(
-                io::stdout(),
+                stdout,
                 "=ALI *{}",
                 CStr::from_ptr((*event).data.alias.anchor as *const libc::c_char).to_string_lossy(),
             );
@@ -198,36 +190,46 @@ unsafe fn unsafe_main() -> ExitCode {
         }
     }
     yaml_parser_delete(parser);
-    ExitCode::SUCCESS
+    Ok(())
 }
-pub unsafe fn print_escaped(str: *mut yaml_char_t, length: size_t) {
+pub unsafe fn print_escaped(stdout: &mut dyn Write, str: *mut yaml_char_t, length: size_t) {
     let mut i: libc::c_int;
     let mut c: libc::c_char;
     i = 0_i32;
     while (i as libc::c_ulong) < length {
         c = *str.offset(i as isize) as libc::c_char;
         if c as libc::c_int == '\\' as i32 {
-            let _ = write!(io::stdout(), "\\\\");
+            let _ = write!(stdout, "\\\\");
         } else if c as libc::c_int == '\0' as i32 {
-            let _ = write!(io::stdout(), "\\0");
+            let _ = write!(stdout, "\\0");
         } else if c as libc::c_int == '\u{8}' as i32 {
-            let _ = write!(io::stdout(), "\\b");
+            let _ = write!(stdout, "\\b");
         } else if c as libc::c_int == '\n' as i32 {
-            let _ = write!(io::stdout(), "\\n");
+            let _ = write!(stdout, "\\n");
         } else if c as libc::c_int == '\r' as i32 {
-            let _ = write!(io::stdout(), "\\r");
+            let _ = write!(stdout, "\\r");
         } else if c as libc::c_int == '\t' as i32 {
-            let _ = write!(io::stdout(), "\\t");
+            let _ = write!(stdout, "\\t");
         } else {
-            let _ = io::stdout().write_all(&[c as u8]);
+            let _ = stdout.write_all(&[c as u8]);
         }
         i += 1;
     }
 }
-unsafe fn usage(ret: ExitCode) -> ExitCode {
-    let _ = writeln!(io::stderr(), "Usage: libyaml-parser [<input-file>]");
-    ret
-}
 fn main() -> ExitCode {
-    unsafe { unsafe_main() }
+    let args = env::args_os().skip(1);
+    if args.len() == 0 {
+        let _ = writeln!(io::stderr(), "Usage: run-parser-test-suite <in.yaml>...");
+        return ExitCode::FAILURE;
+    }
+    for arg in args {
+        let stdin = fs::read(arg).unwrap();
+        let mut stdout = io::stdout();
+        let result = unsafe { unsafe_main(&stdin, &mut stdout) };
+        if let Err(err) = result {
+            let _ = writeln!(io::stderr(), "{}", err);
+            return ExitCode::FAILURE;
+        }
+    }
+    ExitCode::SUCCESS
 }
