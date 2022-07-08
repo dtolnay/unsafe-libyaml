@@ -45,6 +45,7 @@ use core::ptr::{self, addr_of_mut};
 /// parser.
 ///
 /// Returns 1 if the function succeeded, 0 on error.
+#[must_use]
 pub unsafe fn yaml_parser_parse(
     parser: *mut yaml_parser_t,
     event: *mut yaml_event_t,

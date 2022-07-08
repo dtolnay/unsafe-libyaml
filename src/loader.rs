@@ -34,6 +34,7 @@ struct loader_ctx {
 /// the parser.
 ///
 /// Returns 1 if the function succeeded, 0 on error.
+#[must_use]
 pub unsafe fn yaml_parser_load(
     mut parser: *mut yaml_parser_t,
     document: *mut yaml_document_t,

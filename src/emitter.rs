@@ -39,6 +39,7 @@ unsafe fn yaml_emitter_set_emitter_error(
 /// function fails.
 ///
 /// Returns 1 if the function succeeded, 0 on error.
+#[must_use]
 pub unsafe fn yaml_emitter_emit(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
