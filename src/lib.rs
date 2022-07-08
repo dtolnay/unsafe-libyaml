@@ -182,6 +182,36 @@ pub mod externs {
     }
 }
 
+mod fmt {
+    use crate::yaml_char_t;
+    use core::fmt::{self, Write};
+    use core::ptr;
+
+    pub struct WriteToPtr {
+        ptr: *mut yaml_char_t,
+    }
+
+    impl WriteToPtr {
+        pub unsafe fn new(ptr: *mut yaml_char_t) -> Self {
+            WriteToPtr { ptr }
+        }
+
+        pub fn write_fmt(&mut self, args: fmt::Arguments) {
+            let _ = Write::write_fmt(self, args);
+        }
+    }
+
+    impl Write for WriteToPtr {
+        fn write_str(&mut self, s: &str) -> fmt::Result {
+            unsafe {
+                ptr::copy_nonoverlapping(s.as_ptr(), self.ptr, s.len());
+                self.ptr = self.ptr.add(s.len());
+            }
+            Ok(())
+        }
+    }
+}
+
 trait PointerExt: Sized {
     fn c_offset_from(self, origin: Self) -> isize;
 }

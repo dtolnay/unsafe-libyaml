@@ -1,4 +1,5 @@
 use crate::externs::{memset, strcmp};
+use crate::fmt::WriteToPtr;
 use crate::yaml::{
     yaml_anchors_t, yaml_char_t, yaml_document_t, yaml_emitter_t, yaml_event_t, yaml_mark_t,
     yaml_node_item_t, yaml_node_pair_t, yaml_node_t, YAML_ALIAS_EVENT, YAML_ANY_ENCODING,
@@ -9,7 +10,6 @@ use crate::yaml::{
 use crate::{libc, yaml_document_delete, yaml_emitter_emit, yaml_free, yaml_malloc, PointerExt};
 use core::mem::{size_of, MaybeUninit};
 use core::ptr::{self, addr_of_mut};
-use core::slice;
 pub unsafe fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> libc::c_int {
     let mut event = MaybeUninit::<yaml_event_t>::uninit();
     let event = event.as_mut_ptr();
@@ -241,8 +241,7 @@ unsafe fn yaml_emitter_generate_anchor(
     if anchor.is_null() {
         return ptr::null_mut::<yaml_char_t>();
     }
-    let mut buffer = slice::from_raw_parts_mut(anchor.cast(), 16);
-    let _ = write!(buffer, "id{:03}\0", anchor_id);
+    write!(WriteToPtr::new(anchor), "id{:03}\0", anchor_id);
     anchor
 }
 unsafe fn yaml_emitter_dump_node(emitter: *mut yaml_emitter_t, index: libc::c_int) -> libc::c_int {
