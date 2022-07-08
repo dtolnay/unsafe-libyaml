@@ -663,82 +663,84 @@ pub struct yaml_alias_data_t {
 #[non_exhaustive]
 pub struct yaml_parser_t {
     /// Error type.
-    pub error: yaml_error_type_t,
+    pub(crate) error: yaml_error_type_t,
     /// Error description.
+    #[doc(hidden)]
     pub problem: *const libc::c_char,
     /// The byte about which the problem occured.
-    pub problem_offset: size_t,
+    pub(crate) problem_offset: size_t,
     /// The problematic value (-1 is none).
-    pub problem_value: libc::c_int,
+    pub(crate) problem_value: libc::c_int,
     /// The problem position.
+    #[doc(hidden)]
     pub problem_mark: yaml_mark_t,
     /// The error context.
-    pub context: *const libc::c_char,
+    pub(crate) context: *const libc::c_char,
     /// The context position.
-    pub context_mark: yaml_mark_t,
+    pub(crate) context_mark: yaml_mark_t,
     /// Read handler.
-    pub read_handler: Option<yaml_read_handler_t>,
+    pub(crate) read_handler: Option<yaml_read_handler_t>,
     /// A pointer for passing to the read handler.
-    pub read_handler_data: *mut libc::c_void,
+    pub(crate) read_handler_data: *mut libc::c_void,
     /// Standard (string or file) input data.
-    pub input: unnamed_yaml_parser_t_input,
+    pub(crate) input: unnamed_yaml_parser_t_input,
     /// EOF flag
-    pub eof: libc::c_int,
+    pub(crate) eof: libc::c_int,
     /// The working buffer.
-    pub buffer: unnamed_yaml_parser_t_buffer,
+    pub(crate) buffer: unnamed_yaml_parser_t_buffer,
     /// The number of unread characters in the buffer.
-    pub unread: size_t,
+    pub(crate) unread: size_t,
     /// The raw buffer.
-    pub raw_buffer: unnamed_yaml_parser_t_raw_buffer,
+    pub(crate) raw_buffer: unnamed_yaml_parser_t_raw_buffer,
     /// The input encoding.
-    pub encoding: yaml_encoding_t,
+    pub(crate) encoding: yaml_encoding_t,
     /// The offset of the current position (in bytes).
-    pub offset: size_t,
+    pub(crate) offset: size_t,
     /// The mark of the current position.
-    pub mark: yaml_mark_t,
+    pub(crate) mark: yaml_mark_t,
     /// Have we started to scan the input stream?
-    pub stream_start_produced: libc::c_int,
+    pub(crate) stream_start_produced: libc::c_int,
     /// Have we reached the end of the input stream?
-    pub stream_end_produced: libc::c_int,
+    pub(crate) stream_end_produced: libc::c_int,
     /// The number of unclosed '[' and '{' indicators.
-    pub flow_level: libc::c_int,
+    pub(crate) flow_level: libc::c_int,
     /// The tokens queue.
-    pub tokens: unnamed_yaml_parser_t_tokens,
+    pub(crate) tokens: unnamed_yaml_parser_t_tokens,
     /// The number of tokens fetched from the queue.
-    pub tokens_parsed: size_t,
+    pub(crate) tokens_parsed: size_t,
     /// Does the tokens queue contain a token ready for dequeueing.
-    pub token_available: libc::c_int,
+    pub(crate) token_available: libc::c_int,
     /// The indentation levels stack.
-    pub indents: unnamed_yaml_parser_t_indents,
+    pub(crate) indents: unnamed_yaml_parser_t_indents,
     /// The current indentation level.
-    pub indent: libc::c_int,
+    pub(crate) indent: libc::c_int,
     /// May a simple key occur at the current position?
-    pub simple_key_allowed: libc::c_int,
+    pub(crate) simple_key_allowed: libc::c_int,
     /// The stack of simple keys.
-    pub simple_keys: unnamed_yaml_parser_t_simple_keys,
+    pub(crate) simple_keys: unnamed_yaml_parser_t_simple_keys,
     /// The parser states stack.
-    pub states: unnamed_yaml_parser_t_states,
+    pub(crate) states: unnamed_yaml_parser_t_states,
     /// The current parser state.
-    pub state: yaml_parser_state_t,
+    pub(crate) state: yaml_parser_state_t,
     /// The stack of marks.
-    pub marks: unnamed_yaml_parser_t_marks,
+    pub(crate) marks: unnamed_yaml_parser_t_marks,
     /// The list of TAG directives.
-    pub tag_directives: unnamed_yaml_parser_t_tag_directives,
+    pub(crate) tag_directives: unnamed_yaml_parser_t_tag_directives,
     /// The alias data.
-    pub aliases: unnamed_yaml_parser_t_aliases,
+    pub(crate) aliases: unnamed_yaml_parser_t_aliases,
     /// The currently parsed document.
-    pub document: *mut yaml_document_t,
+    pub(crate) document: *mut yaml_document_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub union unnamed_yaml_parser_t_input {
+pub(crate) union unnamed_yaml_parser_t_input {
     /// String input data.
     pub string: unnamed_yaml_parser_t_input_string,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct unnamed_yaml_parser_t_input_string {
+pub(crate) struct unnamed_yaml_parser_t_input_string {
     /// The string start pointer.
     pub start: *const libc::c_uchar,
     /// The string end pointer.
@@ -749,7 +751,7 @@ pub struct unnamed_yaml_parser_t_input_string {
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct unnamed_yaml_parser_t_buffer {
+pub(crate) struct unnamed_yaml_parser_t_buffer {
     /// The beginning of the buffer.
     pub start: *mut yaml_char_t,
     /// The end of the buffer.
@@ -762,7 +764,7 @@ pub struct unnamed_yaml_parser_t_buffer {
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct unnamed_yaml_parser_t_raw_buffer {
+pub(crate) struct unnamed_yaml_parser_t_raw_buffer {
     /// The beginning of the buffer.
     pub start: *mut libc::c_uchar,
     /// The end of the buffer.
@@ -775,7 +777,7 @@ pub struct unnamed_yaml_parser_t_raw_buffer {
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct unnamed_yaml_parser_t_tokens {
+pub(crate) struct unnamed_yaml_parser_t_tokens {
     /// The beginning of the tokens queue.
     pub start: *mut yaml_token_t,
     /// The end of the tokens queue.
@@ -788,7 +790,7 @@ pub struct unnamed_yaml_parser_t_tokens {
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct unnamed_yaml_parser_t_indents {
+pub(crate) struct unnamed_yaml_parser_t_indents {
     /// The beginning of the stack.
     pub start: *mut libc::c_int,
     /// The end of the stack.
@@ -799,7 +801,7 @@ pub struct unnamed_yaml_parser_t_indents {
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct unnamed_yaml_parser_t_simple_keys {
+pub(crate) struct unnamed_yaml_parser_t_simple_keys {
     /// The beginning of the stack.
     pub start: *mut yaml_simple_key_t,
     /// The end of the stack.
@@ -810,7 +812,7 @@ pub struct unnamed_yaml_parser_t_simple_keys {
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct unnamed_yaml_parser_t_states {
+pub(crate) struct unnamed_yaml_parser_t_states {
     /// The beginning of the stack.
     pub start: *mut yaml_parser_state_t,
     /// The end of the stack.
@@ -821,7 +823,7 @@ pub struct unnamed_yaml_parser_t_states {
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct unnamed_yaml_parser_t_marks {
+pub(crate) struct unnamed_yaml_parser_t_marks {
     /// The beginning of the stack.
     pub start: *mut yaml_mark_t,
     /// The end of the stack.
@@ -832,7 +834,7 @@ pub struct unnamed_yaml_parser_t_marks {
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct unnamed_yaml_parser_t_tag_directives {
+pub(crate) struct unnamed_yaml_parser_t_tag_directives {
     /// The beginning of the list.
     pub start: *mut yaml_tag_directive_t,
     /// The end of the list.
@@ -843,7 +845,7 @@ pub struct unnamed_yaml_parser_t_tag_directives {
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct unnamed_yaml_parser_t_aliases {
+pub(crate) struct unnamed_yaml_parser_t_aliases {
     /// The beginning of the list.
     pub start: *mut yaml_alias_data_t,
     /// The end of the list.
@@ -906,7 +908,7 @@ pub enum yaml_emitter_state_t {
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct yaml_anchors_t {
+pub(crate) struct yaml_anchors_t {
     /// The number of references.
     pub references: libc::c_int,
     /// The anchor id.
@@ -923,90 +925,92 @@ pub struct yaml_anchors_t {
 #[non_exhaustive]
 pub struct yaml_emitter_t {
     /// Error type.
+    #[doc(hidden)]
     pub error: yaml_error_type_t,
     /// Error description.
+    #[doc(hidden)]
     pub problem: *const libc::c_char,
     /// Write handler.
-    pub write_handler: Option<yaml_write_handler_t>,
+    pub(crate) write_handler: Option<yaml_write_handler_t>,
     /// A pointer for passing to the write handler.
-    pub write_handler_data: *mut libc::c_void,
+    pub(crate) write_handler_data: *mut libc::c_void,
     /// Standard (string or file) output data.
-    pub output: unnamed_yaml_emitter_t_output,
+    pub(crate) output: unnamed_yaml_emitter_t_output,
     /// The working buffer.
-    pub buffer: unnamed_yaml_emitter_t_buffer,
+    pub(crate) buffer: unnamed_yaml_emitter_t_buffer,
     /// The raw buffer.
-    pub raw_buffer: unnamed_yaml_emitter_t_raw_buffer,
+    pub(crate) raw_buffer: unnamed_yaml_emitter_t_raw_buffer,
     /// The stream encoding.
-    pub encoding: yaml_encoding_t,
+    pub(crate) encoding: yaml_encoding_t,
     /// If the output is in the canonical style?
-    pub canonical: libc::c_int,
+    pub(crate) canonical: libc::c_int,
     /// The number of indentation spaces.
-    pub best_indent: libc::c_int,
+    pub(crate) best_indent: libc::c_int,
     /// The preferred width of the output lines.
-    pub best_width: libc::c_int,
+    pub(crate) best_width: libc::c_int,
     /// Allow unescaped non-ASCII characters?
-    pub unicode: libc::c_int,
+    pub(crate) unicode: libc::c_int,
     /// The preferred line break.
-    pub line_break: yaml_break_t,
+    pub(crate) line_break: yaml_break_t,
     /// The stack of states.
-    pub states: unnamed_yaml_emitter_t_states,
+    pub(crate) states: unnamed_yaml_emitter_t_states,
     /// The current emitter state.
-    pub state: yaml_emitter_state_t,
+    pub(crate) state: yaml_emitter_state_t,
     /// The event queue.
-    pub events: unnamed_yaml_emitter_t_events,
+    pub(crate) events: unnamed_yaml_emitter_t_events,
     /// The stack of indentation levels.
-    pub indents: unnamed_yaml_emitter_t_indents,
+    pub(crate) indents: unnamed_yaml_emitter_t_indents,
     /// The list of tag directives.
-    pub tag_directives: unnamed_yaml_emitter_t_tag_directives,
+    pub(crate) tag_directives: unnamed_yaml_emitter_t_tag_directives,
     /// The current indentation level.
-    pub indent: libc::c_int,
+    pub(crate) indent: libc::c_int,
     /// The current flow level.
-    pub flow_level: libc::c_int,
+    pub(crate) flow_level: libc::c_int,
     /// Is it the document root context?
-    pub root_context: libc::c_int,
+    pub(crate) root_context: libc::c_int,
     /// Is it a sequence context?
-    pub sequence_context: libc::c_int,
+    pub(crate) sequence_context: libc::c_int,
     /// Is it a mapping context?
-    pub mapping_context: libc::c_int,
+    pub(crate) mapping_context: libc::c_int,
     /// Is it a simple mapping key context?
-    pub simple_key_context: libc::c_int,
+    pub(crate) simple_key_context: libc::c_int,
     /// The current line.
-    pub line: libc::c_int,
+    pub(crate) line: libc::c_int,
     /// The current column.
-    pub column: libc::c_int,
+    pub(crate) column: libc::c_int,
     /// If the last character was a whitespace?
-    pub whitespace: libc::c_int,
+    pub(crate) whitespace: libc::c_int,
     /// If the last character was an indentation character (' ', '-', '?', ':')?
-    pub indention: libc::c_int,
+    pub(crate) indention: libc::c_int,
     /// If an explicit document end is required?
-    pub open_ended: libc::c_int,
+    pub(crate) open_ended: libc::c_int,
     /// Anchor analysis.
-    pub anchor_data: unnamed_yaml_emitter_t_anchor_data,
+    pub(crate) anchor_data: unnamed_yaml_emitter_t_anchor_data,
     /// Tag analysis.
-    pub tag_data: unnamed_yaml_emitter_t_tag_data,
+    pub(crate) tag_data: unnamed_yaml_emitter_t_tag_data,
     /// Scalar analysis.
-    pub scalar_data: unnamed_yaml_emitter_t_scalar_data,
+    pub(crate) scalar_data: unnamed_yaml_emitter_t_scalar_data,
     /// If the stream was already opened?
-    pub opened: libc::c_int,
+    pub(crate) opened: libc::c_int,
     /// If the stream was already closed?
-    pub closed: libc::c_int,
+    pub(crate) closed: libc::c_int,
     /// The information associated with the document nodes.
-    pub anchors: *mut yaml_anchors_t,
+    pub(crate) anchors: *mut yaml_anchors_t,
     /// The last assigned anchor id.
-    pub last_anchor_id: libc::c_int,
+    pub(crate) last_anchor_id: libc::c_int,
     /// The currently emitted document.
-    pub document: *mut yaml_document_t,
+    pub(crate) document: *mut yaml_document_t,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub union unnamed_yaml_emitter_t_output {
+pub(crate) union unnamed_yaml_emitter_t_output {
     /// String output data.
     pub string: unnamed_yaml_emitter_t_output_string,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct unnamed_yaml_emitter_t_output_string {
+pub(crate) struct unnamed_yaml_emitter_t_output_string {
     /// The buffer pointer.
     pub buffer: *mut libc::c_uchar,
     /// The buffer size.
@@ -1017,7 +1021,7 @@ pub struct unnamed_yaml_emitter_t_output_string {
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct unnamed_yaml_emitter_t_buffer {
+pub(crate) struct unnamed_yaml_emitter_t_buffer {
     /// The beginning of the buffer.
     pub start: *mut yaml_char_t,
     /// The end of the buffer.
@@ -1030,7 +1034,7 @@ pub struct unnamed_yaml_emitter_t_buffer {
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct unnamed_yaml_emitter_t_raw_buffer {
+pub(crate) struct unnamed_yaml_emitter_t_raw_buffer {
     /// The beginning of the buffer.
     pub start: *mut libc::c_uchar,
     /// The end of the buffer.
@@ -1043,7 +1047,7 @@ pub struct unnamed_yaml_emitter_t_raw_buffer {
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct unnamed_yaml_emitter_t_states {
+pub(crate) struct unnamed_yaml_emitter_t_states {
     /// The beginning of the stack.
     pub start: *mut yaml_emitter_state_t,
     /// The end of the stack.
@@ -1054,7 +1058,7 @@ pub struct unnamed_yaml_emitter_t_states {
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct unnamed_yaml_emitter_t_events {
+pub(crate) struct unnamed_yaml_emitter_t_events {
     /// The beginning of the event queue.
     pub start: *mut yaml_event_t,
     /// The end of the event queue.
@@ -1067,7 +1071,7 @@ pub struct unnamed_yaml_emitter_t_events {
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct unnamed_yaml_emitter_t_indents {
+pub(crate) struct unnamed_yaml_emitter_t_indents {
     /// The beginning of the stack.
     pub start: *mut libc::c_int,
     /// The end of the stack.
@@ -1078,7 +1082,7 @@ pub struct unnamed_yaml_emitter_t_indents {
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct unnamed_yaml_emitter_t_tag_directives {
+pub(crate) struct unnamed_yaml_emitter_t_tag_directives {
     /// The beginning of the list.
     pub start: *mut yaml_tag_directive_t,
     /// The end of the list.
@@ -1089,7 +1093,7 @@ pub struct unnamed_yaml_emitter_t_tag_directives {
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct unnamed_yaml_emitter_t_anchor_data {
+pub(crate) struct unnamed_yaml_emitter_t_anchor_data {
     /// The anchor value.
     pub anchor: *mut yaml_char_t,
     /// The anchor length.
@@ -1100,7 +1104,7 @@ pub struct unnamed_yaml_emitter_t_anchor_data {
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct unnamed_yaml_emitter_t_tag_data {
+pub(crate) struct unnamed_yaml_emitter_t_tag_data {
     /// The tag handle.
     pub handle: *mut yaml_char_t,
     /// The tag handle length.
@@ -1113,7 +1117,7 @@ pub struct unnamed_yaml_emitter_t_tag_data {
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
-pub struct unnamed_yaml_emitter_t_scalar_data {
+pub(crate) struct unnamed_yaml_emitter_t_scalar_data {
     /// The scalar value.
     pub value: *mut yaml_char_t,
     /// The scalar length.
