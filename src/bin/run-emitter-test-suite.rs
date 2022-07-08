@@ -236,7 +236,7 @@ unsafe fn get_value(line: &[u8], value: *mut i8, style: *mut yaml_scalar_style_t
     let line_len = line.len();
     let line = line as *const [u8] as *mut i8;
     let mut start = ptr::null_mut::<i8>();
-    let end = line.offset(line_len as isize);
+    let end = line.add(line_len);
     let mut c = line.offset(4);
     while c < end {
         if *c as u8 == b' ' {
