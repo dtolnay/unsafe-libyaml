@@ -23,7 +23,6 @@ use std::mem::MaybeUninit;
 use std::process::{self, ExitCode};
 use std::ptr::{self, addr_of_mut};
 use std::slice;
-use unsafe_libyaml::externs::{memcpy, strlen, strncmp};
 use unsafe_libyaml::{
     yaml_alias_event_initialize, yaml_document_end_event_initialize,
     yaml_document_start_event_initialize, yaml_emitter_delete, yaml_emitter_emit,
@@ -349,6 +348,14 @@ pub unsafe fn get_value(line: *mut i8, value: *mut i8, style: *mut i32) {
     }
     *value.offset(i as isize) = '\0' as i32 as i8;
 }
+unsafe fn memcpy(dest: *mut c_void, src: *const c_void, count: u64) -> *mut c_void {
+    ptr::copy_nonoverlapping(
+        src.cast::<MaybeUninit<u8>>(),
+        dest.cast::<MaybeUninit<u8>>(),
+        count as usize,
+    );
+    dest
+}
 unsafe fn strchr(mut str: *const i8, c: i32) -> *mut i8 {
     loop {
         match *str {
@@ -356,6 +363,27 @@ unsafe fn strchr(mut str: *const i8, c: i32) -> *mut i8 {
             curr if curr == c as i8 => return str as *mut i8,
             _ => str = str.offset(1),
         }
+    }
+}
+unsafe fn strlen(str: *const i8) -> u64 {
+    let mut end = str;
+    while *end != 0 {
+        end = end.add(1);
+    }
+    end.offset_from(str) as u64
+}
+unsafe fn strncmp(lhs: *const i8, rhs: *const i8, mut count: u64) -> i32 {
+    let mut lhs = lhs.cast::<u8>();
+    let mut rhs = rhs.cast::<u8>();
+    while count > 0 && *lhs != 0 && *lhs == *rhs {
+        lhs = lhs.add(1);
+        rhs = rhs.add(1);
+        count -= 1;
+    }
+    if count == 0 {
+        0
+    } else {
+        (*lhs).cmp(&*rhs) as i32
     }
 }
 fn main() -> ExitCode {

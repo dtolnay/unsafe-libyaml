@@ -40,7 +40,7 @@ mod libc {
 }
 
 #[macro_use]
-pub mod externs {
+mod externs {
     use crate::libc;
     use alloc::alloc::{self as rust, Layout};
     use core::mem::{self, MaybeUninit};
