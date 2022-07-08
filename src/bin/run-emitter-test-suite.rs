@@ -14,9 +14,12 @@
     clippy::unreadable_literal
 )]
 
+mod cstr;
+
+use self::cstr::CStr;
 use std::env;
 use std::error::Error;
-use std::ffi::{c_void, CStr};
+use std::ffi::c_void;
 use std::fs::File;
 use std::io::{self, Read, Write};
 use std::mem::MaybeUninit;
@@ -145,11 +148,7 @@ pub(crate) unsafe fn unsafe_main(
             );
         } else {
             yaml_emitter_delete(emitter);
-            return Err(format!(
-                "Unknown event: '{}'",
-                CStr::from_ptr(line).to_string_lossy(),
-            )
-            .into());
+            return Err(format!("Unknown event: '{}'", CStr::from_ptr(line)).into());
         }
         if ok == 0 {
             current_block = 13850764817919632987;
@@ -164,16 +163,8 @@ pub(crate) unsafe fn unsafe_main(
         13850764817919632987 => Err("Memory error: Not enough memory for creating an event".into()),
         6684355725484023210 => Err(match (*emitter).error as u32 {
             1 => "Memory error: Not enough memory for emitting".into(),
-            6 => format!(
-                "Writer error: {}",
-                CStr::from_ptr((*emitter).problem).to_string_lossy(),
-            )
-            .into(),
-            7 => format!(
-                "Emitter error: {}",
-                CStr::from_ptr((*emitter).problem).to_string_lossy(),
-            )
-            .into(),
+            6 => format!("Writer error: {}", CStr::from_ptr((*emitter).problem)).into(),
+            7 => format!("Emitter error: {}", CStr::from_ptr((*emitter).problem)).into(),
             _ => "Internal error".into(),
         }),
         _ => Ok(()),

@@ -11,9 +11,12 @@
     clippy::too_many_lines
 )]
 
+mod cstr;
+
+use self::cstr::CStr;
 use std::env;
 use std::error::Error;
-use std::ffi::{c_void, CStr};
+use std::ffi::c_void;
 use std::fmt::Write as _;
 use std::fs::File;
 use std::io::{self, Read, Write};
@@ -59,10 +62,7 @@ pub(crate) unsafe fn unsafe_main(
     yaml_parser_set_input(parser, Some(read_from_stdio), addr_of_mut!(stdin).cast());
     loop {
         if yaml_parser_parse(parser, event) == 0 {
-            let mut error = format!(
-                "Parse error: {}",
-                CStr::from_ptr((*parser).problem).to_string_lossy(),
-            );
+            let mut error = format!("Parse error: {}", CStr::from_ptr((*parser).problem));
             if (*parser).problem_mark.line != 0 || (*parser).problem_mark.column != 0 {
                 let _ = write!(
                     error,
@@ -99,15 +99,14 @@ pub(crate) unsafe fn unsafe_main(
                 let _ = write!(
                     stdout,
                     " &{}",
-                    CStr::from_ptr((*event).data.mapping_start.anchor as *const i8)
-                        .to_string_lossy(),
+                    CStr::from_ptr((*event).data.mapping_start.anchor as *const i8),
                 );
             }
             if !((*event).data.mapping_start.tag).is_null() {
                 let _ = write!(
                     stdout,
                     " <{}>",
-                    CStr::from_ptr((*event).data.mapping_start.tag as *const i8).to_string_lossy(),
+                    CStr::from_ptr((*event).data.mapping_start.tag as *const i8),
                 );
             }
             let _ = writeln!(stdout);
@@ -119,15 +118,14 @@ pub(crate) unsafe fn unsafe_main(
                 let _ = write!(
                     stdout,
                     " &{}",
-                    CStr::from_ptr((*event).data.sequence_start.anchor as *const i8)
-                        .to_string_lossy(),
+                    CStr::from_ptr((*event).data.sequence_start.anchor as *const i8),
                 );
             }
             if !((*event).data.sequence_start.tag).is_null() {
                 let _ = write!(
                     stdout,
                     " <{}>",
-                    CStr::from_ptr((*event).data.sequence_start.tag as *const i8).to_string_lossy(),
+                    CStr::from_ptr((*event).data.sequence_start.tag as *const i8),
                 );
             }
             let _ = writeln!(stdout);
@@ -139,14 +137,14 @@ pub(crate) unsafe fn unsafe_main(
                 let _ = write!(
                     stdout,
                     " &{}",
-                    CStr::from_ptr((*event).data.scalar.anchor as *const i8).to_string_lossy(),
+                    CStr::from_ptr((*event).data.scalar.anchor as *const i8),
                 );
             }
             if !((*event).data.scalar.tag).is_null() {
                 let _ = write!(
                     stdout,
                     " <{}>",
-                    CStr::from_ptr((*event).data.scalar.tag as *const i8).to_string_lossy(),
+                    CStr::from_ptr((*event).data.scalar.tag as *const i8),
                 );
             }
             match (*event).data.scalar.style as u32 {
@@ -180,7 +178,7 @@ pub(crate) unsafe fn unsafe_main(
             let _ = writeln!(
                 stdout,
                 "=ALI *{}",
-                CStr::from_ptr((*event).data.alias.anchor as *const i8).to_string_lossy(),
+                CStr::from_ptr((*event).data.alias.anchor as *const i8),
             );
         } else {
             process::abort();
