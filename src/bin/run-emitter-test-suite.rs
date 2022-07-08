@@ -53,7 +53,7 @@ unsafe fn unsafe_main(
     if yaml_emitter_initialize(emitter) == 0 {
         return Err("Could not initalize the emitter object".into());
     }
-    unsafe fn write_to_stdout(
+    unsafe fn write_to_stdio(
         data: *mut libc::c_void,
         buffer: *mut libc::c_uchar,
         size: size_t,
@@ -62,10 +62,10 @@ unsafe fn unsafe_main(
         let bytes = slice::from_raw_parts(buffer.cast(), size as usize);
         match (*stdout).write(bytes) {
             Ok(n) => n as libc::c_int,
-            Err(_) => size as libc::c_int,
+            Err(_) => 0,
         }
     }
-    yaml_emitter_set_output(emitter, Some(write_to_stdout), addr_of_mut!(stdout).cast());
+    yaml_emitter_set_output(emitter, Some(write_to_stdio), addr_of_mut!(stdout).cast());
     yaml_emitter_set_canonical(emitter, canonical);
     yaml_emitter_set_unicode(emitter, unicode);
     loop {

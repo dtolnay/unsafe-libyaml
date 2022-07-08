@@ -10,16 +10,16 @@
     clippy::too_many_lines
 )]
 
-use std::cmp;
 use std::env;
 use std::error::Error;
 use std::ffi::CStr;
 use std::fmt::Write as _;
-use std::fs;
-use std::io::{self, Write};
+use std::fs::File;
+use std::io::{self, Read, Write};
 use std::mem::MaybeUninit;
 use std::process::{self, ExitCode};
-use std::ptr::{self, addr_of_mut};
+use std::ptr::addr_of_mut;
+use std::slice;
 use unsafe_libyaml::{
     libc, size_t, yaml_char_t, yaml_event_delete, yaml_event_t, yaml_event_type_t,
     yaml_parser_delete, yaml_parser_initialize, yaml_parser_parse, yaml_parser_set_input,
@@ -28,7 +28,10 @@ use unsafe_libyaml::{
     YAML_SEQUENCE_END_EVENT, YAML_SEQUENCE_START_EVENT, YAML_STREAM_END_EVENT,
     YAML_STREAM_START_EVENT,
 };
-unsafe fn unsafe_main(mut stdin: &[u8], stdout: &mut dyn Write) -> Result<(), Box<dyn Error>> {
+unsafe fn unsafe_main(
+    mut stdin: &mut dyn Read,
+    stdout: &mut dyn Write,
+) -> Result<(), Box<dyn Error>> {
     let mut parser = MaybeUninit::<yaml_parser_t>::uninit();
     let parser = parser.as_mut_ptr();
     let mut event = MaybeUninit::<yaml_event_t>::uninit();
@@ -36,20 +39,23 @@ unsafe fn unsafe_main(mut stdin: &[u8], stdout: &mut dyn Write) -> Result<(), Bo
     if yaml_parser_initialize(parser) == 0 {
         return Err("Could not initialize the parser object".into());
     }
-    unsafe fn read_from_file(
+    unsafe fn read_from_stdio(
         data: *mut libc::c_void,
         buffer: *mut libc::c_uchar,
         size: size_t,
         size_read: *mut size_t,
     ) -> libc::c_int {
-        let remaining: *mut &[u8] = data.cast();
-        let n = cmp::min(size as usize, (*remaining).len());
-        ptr::copy_nonoverlapping((*remaining).as_ptr().cast(), buffer, n);
-        *remaining = &(*remaining)[n..];
-        *size_read = n as size_t;
-        1_i32
+        let stdin: *mut &mut dyn Read = data.cast();
+        let slice = slice::from_raw_parts_mut(buffer.cast(), size as usize);
+        match (*stdin).read(slice) {
+            Ok(n) => {
+                *size_read = n as size_t;
+                1
+            }
+            Err(_) => 0,
+        }
     }
-    yaml_parser_set_input(parser, Some(read_from_file), addr_of_mut!(stdin).cast());
+    yaml_parser_set_input(parser, Some(read_from_stdio), addr_of_mut!(stdin).cast());
     loop {
         if yaml_parser_parse(parser, event) == 0 {
             let mut error = format!(
@@ -223,9 +229,9 @@ fn main() -> ExitCode {
         return ExitCode::FAILURE;
     }
     for arg in args {
-        let stdin = fs::read(arg).unwrap();
+        let mut stdin = File::open(arg).unwrap();
         let mut stdout = io::stdout();
-        let result = unsafe { unsafe_main(&stdin, &mut stdout) };
+        let result = unsafe { unsafe_main(&mut stdin, &mut stdout) };
         if let Err(err) = result {
             let _ = writeln!(io::stderr(), "{}", err);
             return ExitCode::FAILURE;
