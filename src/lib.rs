@@ -44,7 +44,6 @@ pub mod externs {
     use core::mem::{self, MaybeUninit};
     use core::ptr;
     use core::slice;
-    use std::ffi::CStr;
 
     const HEADER: usize = mem::size_of::<usize>();
 
@@ -123,8 +122,8 @@ pub mod externs {
     }
 
     pub unsafe fn strcmp(lhs: *const libc::c_char, rhs: *const libc::c_char) -> libc::c_int {
-        let lhs = CStr::from_ptr(lhs);
-        let rhs = CStr::from_ptr(rhs);
+        let lhs = slice::from_raw_parts(lhs.cast::<u8>(), strlen(lhs) as usize);
+        let rhs = slice::from_raw_parts(rhs.cast::<u8>(), strlen(rhs) as usize);
         lhs.cmp(rhs) as libc::c_int
     }
 
@@ -136,7 +135,11 @@ pub mod externs {
     }
 
     pub unsafe fn strlen(str: *const libc::c_char) -> libc::c_ulong {
-        CStr::from_ptr(str).to_bytes().len() as libc::c_ulong
+        let mut end = str;
+        while *end != 0 {
+            end = end.add(1);
+        }
+        end.offset_from(str) as libc::c_ulong
     }
 
     pub unsafe fn strncmp(
