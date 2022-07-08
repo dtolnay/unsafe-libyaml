@@ -28,7 +28,7 @@ use unsafe_libyaml::{
     YAML_SEQUENCE_END_EVENT, YAML_SEQUENCE_START_EVENT, YAML_STREAM_END_EVENT,
     YAML_STREAM_START_EVENT,
 };
-unsafe fn unsafe_main(
+pub unsafe fn unsafe_main(
     mut stdin: &mut dyn Read,
     stdout: &mut dyn Write,
 ) -> Result<(), Box<dyn Error>> {

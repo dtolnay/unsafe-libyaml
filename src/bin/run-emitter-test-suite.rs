@@ -36,7 +36,7 @@ use unsafe_libyaml::{
     YAML_LITERAL_SCALAR_STYLE, YAML_PLAIN_SCALAR_STYLE, YAML_SINGLE_QUOTED_SCALAR_STYLE,
     YAML_UTF8_ENCODING,
 };
-unsafe fn unsafe_main(
+pub unsafe fn unsafe_main(
     stdin: &mut dyn Read,
     mut stdout: &mut dyn Write,
 ) -> Result<(), Box<dyn Error>> {

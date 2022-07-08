@@ -1,6 +1,10 @@
+mod bin;
+#[path = "../src/bin/run-emitter-test-suite.rs"]
+#[allow(dead_code)]
+mod run_emitter_test_suite;
+
 use std::fs;
 use std::path::Path;
-use std::process::{Command, Stdio};
 
 fn test(id: &str) {
     let dir = Path::new("tests")
@@ -8,11 +12,11 @@ fn test(id: &str) {
         .join("yaml-test-suite")
         .join(id);
 
-    let output = Command::new(env!("CARGO_BIN_EXE_run-emitter-test-suite"))
-        .arg(dir.join("test.event"))
-        .stdin(Stdio::null())
-        .output()
-        .unwrap();
+    let output = bin::run(
+        env!("CARGO_BIN_EXE_run-emitter-test-suite"),
+        run_emitter_test_suite::unsafe_main,
+        &dir.join("test.event"),
+    );
 
     let stdout = String::from_utf8_lossy(&output.stdout);
     let stderr = String::from_utf8_lossy(&output.stderr);
@@ -25,7 +29,7 @@ fn test(id: &str) {
     };
     let expected = fs::read_to_string(out).unwrap();
     pretty_assertions::assert_str_eq!(expected, stdout);
-    assert!(output.status.success());
+    assert!(output.success);
 }
 
 unsafe_libyaml_test_suite::test_emitter!();
