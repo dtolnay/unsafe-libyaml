@@ -32,11 +32,11 @@ unsafe fn unsafe_main() -> ExitCode {
     let parser = parser.as_mut_ptr();
     let mut event = MaybeUninit::<yaml_event_t>::uninit();
     let event = event.as_mut_ptr();
-    let mut foundfile: libc::c_int = 0 as libc::c_int;
+    let mut foundfile: libc::c_int = 0_i32;
     for arg in env::args_os().skip(1) {
         if foundfile == 0 {
             input = fs::read(arg).ok();
-            foundfile = 1 as libc::c_int;
+            foundfile = 1_i32;
         } else {
             return usage(ExitCode::FAILURE);
         }
@@ -57,7 +57,7 @@ unsafe fn unsafe_main() -> ExitCode {
         ptr::copy_nonoverlapping((*remaining).as_ptr().cast(), buffer, n);
         *remaining = &(*remaining)[n..];
         *size_read = n as size_t;
-        1 as libc::c_int
+        1_i32
     }
     let mut remaining = input.as_slice();
     yaml_parser_set_input(parser, Some(read_from_file), addr_of_mut!(remaining).cast());
@@ -72,8 +72,8 @@ unsafe fn unsafe_main() -> ExitCode {
                 let _ = writeln!(
                     io::stderr(),
                     "Line: {} Column: {}",
-                    ((*parser).problem_mark.line).wrapping_add(1 as libc::c_int as libc::c_ulong),
-                    ((*parser).problem_mark.column).wrapping_add(1 as libc::c_int as libc::c_ulong),
+                    ((*parser).problem_mark.line).wrapping_add(1_i32 as libc::c_ulong),
+                    ((*parser).problem_mark.column).wrapping_add(1_i32 as libc::c_ulong),
                 );
             }
             return ExitCode::FAILURE;
@@ -203,7 +203,7 @@ unsafe fn unsafe_main() -> ExitCode {
 pub unsafe fn print_escaped(str: *mut yaml_char_t, length: size_t) {
     let mut i: libc::c_int;
     let mut c: libc::c_char;
-    i = 0 as libc::c_int;
+    i = 0_i32;
     while (i as libc::c_ulong) < length {
         c = *str.offset(i as isize) as libc::c_char;
         if c as libc::c_int == '\\' as i32 {

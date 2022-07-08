@@ -44,14 +44,14 @@ unsafe fn unsafe_main() -> ExitCode {
     let event = event.as_mut_ptr();
     let version_directive: *mut yaml_version_directive_t =
         ptr::null_mut::<yaml_version_directive_t>();
-    let canonical: libc::c_int = 0 as libc::c_int;
-    let unicode: libc::c_int = 0 as libc::c_int;
+    let canonical: libc::c_int = 0_i32;
+    let unicode: libc::c_int = 0_i32;
     let mut buf = ReadBuf::new();
-    let mut foundfile: libc::c_int = 0 as libc::c_int;
+    let mut foundfile: libc::c_int = 0_i32;
     for arg in env::args().skip(1) {
         if foundfile == 0 {
             input = File::open(arg).ok();
-            foundfile = 1 as libc::c_int;
+            foundfile = 1_i32;
         }
     }
     let input = input.unwrap_or_else(|| __assert!(false));
@@ -92,28 +92,28 @@ unsafe fn unsafe_main() -> ExitCode {
         if strncmp(
             line,
             b"+STR\0" as *const u8 as *const libc::c_char,
-            4 as libc::c_int as libc::c_ulong,
-        ) == 0 as libc::c_int
+            4_i32 as libc::c_ulong,
+        ) == 0_i32
         {
             ok = yaml_stream_start_event_initialize(event, YAML_UTF8_ENCODING);
         } else if strncmp(
             line,
             b"-STR\0" as *const u8 as *const libc::c_char,
-            4 as libc::c_int as libc::c_ulong,
-        ) == 0 as libc::c_int
+            4_i32 as libc::c_ulong,
+        ) == 0_i32
         {
             ok = yaml_stream_end_event_initialize(event);
         } else if strncmp(
             line,
             b"+DOC\0" as *const u8 as *const libc::c_char,
-            4 as libc::c_int as libc::c_ulong,
-        ) == 0 as libc::c_int
+            4_i32 as libc::c_ulong,
+        ) == 0_i32
         {
             implicit = (strncmp(
-                line.offset(4 as libc::c_int as isize),
+                line.offset(4_i32 as isize),
                 b" ---\0" as *const u8 as *const libc::c_char,
-                4 as libc::c_int as libc::c_ulong,
-            ) != 0 as libc::c_int) as libc::c_int;
+                4_i32 as libc::c_ulong,
+            ) != 0_i32) as libc::c_int;
             ok = yaml_document_start_event_initialize(
                 event,
                 version_directive,
@@ -124,20 +124,20 @@ unsafe fn unsafe_main() -> ExitCode {
         } else if strncmp(
             line,
             b"-DOC\0" as *const u8 as *const libc::c_char,
-            4 as libc::c_int as libc::c_ulong,
-        ) == 0 as libc::c_int
+            4_i32 as libc::c_ulong,
+        ) == 0_i32
         {
             implicit = (strncmp(
-                line.offset(4 as libc::c_int as isize),
+                line.offset(4_i32 as isize),
                 b" ...\0" as *const u8 as *const libc::c_char,
-                4 as libc::c_int as libc::c_ulong,
-            ) != 0 as libc::c_int) as libc::c_int;
+                4_i32 as libc::c_ulong,
+            ) != 0_i32) as libc::c_int;
             ok = yaml_document_end_event_initialize(event, implicit);
         } else if strncmp(
             line,
             b"+MAP\0" as *const u8 as *const libc::c_char,
-            4 as libc::c_int as libc::c_ulong,
-        ) == 0 as libc::c_int
+            4_i32 as libc::c_ulong,
+        ) == 0_i32
         {
             style = YAML_BLOCK_MAPPING_STYLE as libc::c_int;
             ok = yaml_mapping_start_event_initialize(
@@ -145,21 +145,21 @@ unsafe fn unsafe_main() -> ExitCode {
                 get_anchor('&' as i32 as libc::c_char, line, anchor.as_mut_ptr())
                     as *mut yaml_char_t,
                 get_tag(line, tag.as_mut_ptr()) as *mut yaml_char_t,
-                0 as libc::c_int,
+                0_i32,
                 style as yaml_mapping_style_t,
             );
         } else if strncmp(
             line,
             b"-MAP\0" as *const u8 as *const libc::c_char,
-            4 as libc::c_int as libc::c_ulong,
-        ) == 0 as libc::c_int
+            4_i32 as libc::c_ulong,
+        ) == 0_i32
         {
             ok = yaml_mapping_end_event_initialize(event);
         } else if strncmp(
             line,
             b"+SEQ\0" as *const u8 as *const libc::c_char,
-            4 as libc::c_int as libc::c_ulong,
-        ) == 0 as libc::c_int
+            4_i32 as libc::c_ulong,
+        ) == 0_i32
         {
             style = YAML_BLOCK_SEQUENCE_STYLE as libc::c_int;
             ok = yaml_sequence_start_event_initialize(
@@ -167,21 +167,21 @@ unsafe fn unsafe_main() -> ExitCode {
                 get_anchor('&' as i32 as libc::c_char, line, anchor.as_mut_ptr())
                     as *mut yaml_char_t,
                 get_tag(line, tag.as_mut_ptr()) as *mut yaml_char_t,
-                0 as libc::c_int,
+                0_i32,
                 style as yaml_sequence_style_t,
             );
         } else if strncmp(
             line,
             b"-SEQ\0" as *const u8 as *const libc::c_char,
-            4 as libc::c_int as libc::c_ulong,
-        ) == 0 as libc::c_int
+            4_i32 as libc::c_ulong,
+        ) == 0_i32
         {
             ok = yaml_sequence_end_event_initialize(event);
         } else if strncmp(
             line,
             b"=VAL\0" as *const u8 as *const libc::c_char,
-            4 as libc::c_int as libc::c_ulong,
-        ) == 0 as libc::c_int
+            4_i32 as libc::c_ulong,
+        ) == 0_i32
         {
             let mut value: [libc::c_char; 1024] = [0; 1024];
             let mut style_0: libc::c_int = 0;
@@ -195,7 +195,7 @@ unsafe fn unsafe_main() -> ExitCode {
                     as *mut yaml_char_t,
                 get_tag(line, tag.as_mut_ptr()) as *mut yaml_char_t,
                 value.as_mut_ptr() as *mut yaml_char_t,
-                -(1 as libc::c_int),
+                -1_i32,
                 implicit,
                 implicit,
                 style_0 as yaml_scalar_style_t,
@@ -203,8 +203,8 @@ unsafe fn unsafe_main() -> ExitCode {
         } else if strncmp(
             line,
             b"=ALI\0" as *const u8 as *const libc::c_char,
-            4 as libc::c_int as libc::c_ulong,
-        ) == 0 as libc::c_int
+            4_i32 as libc::c_ulong,
+        ) == 0_i32
         {
             ok = yaml_alias_event_initialize(
                 event,
@@ -350,13 +350,11 @@ pub unsafe fn get_tag(line: *mut libc::c_char, tag: *mut libc::c_char) -> *mut l
     }
     memcpy(
         tag as *mut libc::c_void,
-        start.offset(1 as libc::c_int as isize) as *const libc::c_void,
-        (end.offset_from(start) as libc::c_long - 1 as libc::c_int as libc::c_long)
-            as libc::c_ulong,
+        start.offset(1_i32 as isize) as *const libc::c_void,
+        (end.offset_from(start) as libc::c_long - 1_i32 as libc::c_long) as libc::c_ulong,
     );
-    *tag.offset(
-        (end.offset_from(start) as libc::c_long - 1 as libc::c_int as libc::c_long) as isize,
-    ) = '\0' as i32 as libc::c_char;
+    *tag.offset((end.offset_from(start) as libc::c_long - 1_i32 as libc::c_long) as isize) =
+        '\0' as i32 as libc::c_char;
     tag
 }
 pub unsafe fn get_value(
@@ -364,15 +362,15 @@ pub unsafe fn get_value(
     value: *mut libc::c_char,
     style: *mut libc::c_int,
 ) {
-    let mut i: libc::c_int = 0 as libc::c_int;
+    let mut i: libc::c_int = 0_i32;
     let mut c: *mut libc::c_char;
     let mut start: *mut libc::c_char = ptr::null_mut::<libc::c_char>();
     let end: *mut libc::c_char = line.offset(strlen(line) as isize);
     let mut current_block_8: u64;
-    c = line.offset(4 as libc::c_int as isize);
+    c = line.offset(4_i32 as isize);
     while c < end {
         if *c as libc::c_int == ' ' as i32 {
-            start = c.offset(1 as libc::c_int as isize);
+            start = c.offset(1_i32 as isize);
             if *start as libc::c_int == ':' as i32 {
                 *style = YAML_PLAIN_SCALAR_STYLE as libc::c_int;
                 current_block_8 = 17407779659766490442;

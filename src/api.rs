@@ -25,15 +25,15 @@ pub unsafe fn yaml_get_version(
     minor: *mut libc::c_int,
     patch: *mut libc::c_int,
 ) {
-    *major = 0 as libc::c_int;
-    *minor = 2 as libc::c_int;
-    *patch = 5 as libc::c_int;
+    *major = 0_i32;
+    *minor = 2_i32;
+    *patch = 5_i32;
 }
 pub unsafe fn yaml_malloc(size: size_t) -> *mut libc::c_void {
     malloc(if size != 0 {
         size
     } else {
-        1 as libc::c_int as libc::c_ulong
+        1_i32 as libc::c_ulong
     })
 }
 pub unsafe fn yaml_realloc(ptr: *mut libc::c_void, size: size_t) -> *mut libc::c_void {
@@ -43,14 +43,14 @@ pub unsafe fn yaml_realloc(ptr: *mut libc::c_void, size: size_t) -> *mut libc::c
             if size != 0 {
                 size
             } else {
-                1 as libc::c_int as libc::c_ulong
+                1_i32 as libc::c_ulong
             },
         )
     } else {
         malloc(if size != 0 {
             size
         } else {
-            1 as libc::c_int as libc::c_ulong
+            1_i32 as libc::c_ulong
         })
     }
 }
@@ -72,23 +72,23 @@ pub unsafe fn yaml_string_extend(
 ) -> libc::c_int {
     let new_start: *mut yaml_char_t = yaml_realloc(
         *start as *mut libc::c_void,
-        ((*end).c_offset_from(*start) as libc::c_long * 2 as libc::c_int as libc::c_long) as size_t,
+        ((*end).c_offset_from(*start) as libc::c_long * 2_i32 as libc::c_long) as size_t,
     ) as *mut yaml_char_t;
     if new_start.is_null() {
-        return 0 as libc::c_int;
+        return 0_i32;
     }
     memset(
         new_start.wrapping_offset((*end).c_offset_from(*start) as libc::c_long as isize)
             as *mut libc::c_void,
-        0 as libc::c_int,
+        0_i32,
         (*end).c_offset_from(*start) as libc::c_long as libc::c_ulong,
     );
     *pointer = new_start.wrapping_offset((*pointer).c_offset_from(*start) as libc::c_long as isize);
     *end = new_start.wrapping_offset(
-        ((*end).c_offset_from(*start) as libc::c_long * 2 as libc::c_int as libc::c_long) as isize,
+        ((*end).c_offset_from(*start) as libc::c_long * 2_i32 as libc::c_long) as isize,
     );
     *start = new_start;
-    1 as libc::c_int
+    1_i32
 }
 pub unsafe fn yaml_string_join(
     a_start: *mut *mut yaml_char_t,
@@ -99,13 +99,13 @@ pub unsafe fn yaml_string_join(
     _b_end: *mut *mut yaml_char_t,
 ) -> libc::c_int {
     if *b_start == *b_pointer {
-        return 1 as libc::c_int;
+        return 1_i32;
     }
     while (*a_end).c_offset_from(*a_pointer) as libc::c_long
         <= (*b_pointer).c_offset_from(*b_start) as libc::c_long
     {
         if yaml_string_extend(a_start, a_pointer, a_end) == 0 {
-            return 0 as libc::c_int;
+            return 0_i32;
         }
     }
     memcpy(
@@ -115,7 +115,7 @@ pub unsafe fn yaml_string_join(
     );
     *a_pointer =
         (*a_pointer).wrapping_offset((*b_pointer).c_offset_from(*b_start) as libc::c_long as isize);
-    1 as libc::c_int
+    1_i32
 }
 pub unsafe fn yaml_stack_extend(
     start: *mut *mut libc::c_void,
@@ -123,17 +123,17 @@ pub unsafe fn yaml_stack_extend(
     end: *mut *mut libc::c_void,
 ) -> libc::c_int {
     if (*end as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
-        >= (2147483647 as libc::c_int / 2 as libc::c_int) as libc::c_long
+        >= (2147483647_i32 / 2_i32) as libc::c_long
     {
-        return 0 as libc::c_int;
+        return 0_i32;
     }
     let new_start: *mut libc::c_void = yaml_realloc(
         *start,
         ((*end as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
-            * 2 as libc::c_int as libc::c_long) as size_t,
+            * 2_i32 as libc::c_long) as size_t,
     );
     if new_start.is_null() {
-        return 0 as libc::c_int;
+        return 0_i32;
     }
     *top = (new_start as *mut libc::c_char).wrapping_offset(
         (*top as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
@@ -141,10 +141,10 @@ pub unsafe fn yaml_stack_extend(
     ) as *mut libc::c_void;
     *end = (new_start as *mut libc::c_char).wrapping_offset(
         ((*end as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
-            * 2 as libc::c_int as libc::c_long) as isize,
+            * 2_i32 as libc::c_long) as isize,
     ) as *mut libc::c_void;
     *start = new_start;
-    1 as libc::c_int
+    1_i32
 }
 pub unsafe fn yaml_queue_extend(
     start: *mut *mut libc::c_void,
@@ -156,10 +156,10 @@ pub unsafe fn yaml_queue_extend(
         let new_start: *mut libc::c_void = yaml_realloc(
             *start,
             ((*end as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
-                * 2 as libc::c_int as libc::c_long) as size_t,
+                * 2_i32 as libc::c_long) as size_t,
         );
         if new_start.is_null() {
-            return 0 as libc::c_int;
+            return 0_i32;
         }
         *head = (new_start as *mut libc::c_char).wrapping_offset(
             (*head as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
@@ -171,7 +171,7 @@ pub unsafe fn yaml_queue_extend(
         ) as *mut libc::c_void;
         *end = (new_start as *mut libc::c_char).wrapping_offset(
             ((*end as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
-                * 2 as libc::c_int as libc::c_long) as isize,
+                * 2_i32 as libc::c_long) as isize,
         ) as *mut libc::c_void;
         *start = new_start;
     }
@@ -190,51 +190,48 @@ pub unsafe fn yaml_queue_extend(
         ) as *mut libc::c_void;
         *head = *start;
     }
-    1 as libc::c_int
+    1_i32
 }
 pub unsafe fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) -> libc::c_int {
     __assert!(!parser.is_null());
     memset(
         parser as *mut libc::c_void,
-        0 as libc::c_int,
+        0_i32,
         size_of::<yaml_parser_t>() as libc::c_ulong,
     );
     let fresh0 = addr_of_mut!((*parser).raw_buffer.start);
-    *fresh0 = yaml_malloc(16384 as libc::c_int as size_t) as *mut yaml_char_t;
+    *fresh0 = yaml_malloc(16384_i32 as size_t) as *mut yaml_char_t;
     if !(if !(*fresh0).is_null() {
         let fresh1 = addr_of_mut!((*parser).raw_buffer.pointer);
         *fresh1 = (*parser).raw_buffer.start;
         let fresh2 = addr_of_mut!((*parser).raw_buffer.last);
         *fresh2 = *fresh1;
         let fresh3 = addr_of_mut!((*parser).raw_buffer.end);
-        *fresh3 = ((*parser).raw_buffer.start).wrapping_offset(16384 as libc::c_int as isize);
-        1 as libc::c_int
+        *fresh3 = ((*parser).raw_buffer.start).wrapping_offset(16384_i32 as isize);
+        1_i32
     } else {
         (*parser).error = YAML_MEMORY_ERROR;
-        0 as libc::c_int
+        0_i32
     } == 0)
     {
         let fresh4 = addr_of_mut!((*parser).buffer.start);
-        *fresh4 =
-            yaml_malloc((16384 as libc::c_int * 3 as libc::c_int) as size_t) as *mut yaml_char_t;
+        *fresh4 = yaml_malloc((16384_i32 * 3_i32) as size_t) as *mut yaml_char_t;
         if !(if !(*fresh4).is_null() {
             let fresh5 = addr_of_mut!((*parser).buffer.pointer);
             *fresh5 = (*parser).buffer.start;
             let fresh6 = addr_of_mut!((*parser).buffer.last);
             *fresh6 = *fresh5;
             let fresh7 = addr_of_mut!((*parser).buffer.end);
-            *fresh7 = ((*parser).buffer.start)
-                .wrapping_offset((16384 as libc::c_int * 3 as libc::c_int) as isize);
-            1 as libc::c_int
+            *fresh7 = ((*parser).buffer.start).wrapping_offset((16384_i32 * 3_i32) as isize);
+            1_i32
         } else {
             (*parser).error = YAML_MEMORY_ERROR;
-            0 as libc::c_int
+            0_i32
         } == 0)
         {
             let fresh8 = addr_of_mut!((*parser).tokens.start);
             *fresh8 = yaml_malloc(
-                (16 as libc::c_int as libc::c_ulong)
-                    .wrapping_mul(size_of::<yaml_token_t>() as libc::c_ulong),
+                (16_i32 as libc::c_ulong).wrapping_mul(size_of::<yaml_token_t>() as libc::c_ulong),
             ) as *mut yaml_token_t;
             if !(if !(*fresh8).is_null() {
                 let fresh9 = addr_of_mut!((*parser).tokens.tail);
@@ -242,110 +239,104 @@ pub unsafe fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) -> libc::c_
                 let fresh10 = addr_of_mut!((*parser).tokens.head);
                 *fresh10 = *fresh9;
                 let fresh11 = addr_of_mut!((*parser).tokens.end);
-                *fresh11 = ((*parser).tokens.start).wrapping_offset(16 as libc::c_int as isize);
-                1 as libc::c_int
+                *fresh11 = ((*parser).tokens.start).wrapping_offset(16_i32 as isize);
+                1_i32
             } else {
                 (*parser).error = YAML_MEMORY_ERROR;
-                0 as libc::c_int
+                0_i32
             } == 0)
             {
                 let fresh12 = addr_of_mut!((*parser).indents.start);
-                *fresh12 =
-                    yaml_malloc((16 as libc::c_int as libc::c_ulong).wrapping_mul(size_of::<
-                        libc::c_int,
-                    >(
-                    )
-                        as libc::c_ulong)) as *mut libc::c_int;
+                *fresh12 = yaml_malloc(
+                    (16_i32 as libc::c_ulong)
+                        .wrapping_mul(size_of::<libc::c_int>() as libc::c_ulong),
+                ) as *mut libc::c_int;
                 if !(if !(*fresh12).is_null() {
                     let fresh13 = addr_of_mut!((*parser).indents.top);
                     *fresh13 = (*parser).indents.start;
                     let fresh14 = addr_of_mut!((*parser).indents.end);
-                    *fresh14 =
-                        ((*parser).indents.start).wrapping_offset(16 as libc::c_int as isize);
-                    1 as libc::c_int
+                    *fresh14 = ((*parser).indents.start).wrapping_offset(16_i32 as isize);
+                    1_i32
                 } else {
                     (*parser).error = YAML_MEMORY_ERROR;
-                    0 as libc::c_int
+                    0_i32
                 } == 0)
                 {
                     let fresh15 = addr_of_mut!((*parser).simple_keys.start);
-                    *fresh15 =
-                        yaml_malloc((16 as libc::c_int as libc::c_ulong).wrapping_mul(size_of::<
-                            yaml_simple_key_t,
-                        >(
-                        )
-                            as libc::c_ulong)) as *mut yaml_simple_key_t;
+                    *fresh15 = yaml_malloc((16_i32 as libc::c_ulong).wrapping_mul(size_of::<
+                        yaml_simple_key_t,
+                    >(
+                    )
+                        as libc::c_ulong)) as *mut yaml_simple_key_t;
                     if !(if !(*fresh15).is_null() {
                         let fresh16 = addr_of_mut!((*parser).simple_keys.top);
                         *fresh16 = (*parser).simple_keys.start;
                         let fresh17 = addr_of_mut!((*parser).simple_keys.end);
-                        *fresh17 = ((*parser).simple_keys.start)
-                            .wrapping_offset(16 as libc::c_int as isize);
-                        1 as libc::c_int
+                        *fresh17 = ((*parser).simple_keys.start).wrapping_offset(16_i32 as isize);
+                        1_i32
                     } else {
                         (*parser).error = YAML_MEMORY_ERROR;
-                        0 as libc::c_int
+                        0_i32
                     } == 0)
                     {
                         let fresh18 = addr_of_mut!((*parser).states.start);
-                        *fresh18 = yaml_malloc(
-                            (16 as libc::c_int as libc::c_ulong).wrapping_mul(size_of::<
-                                yaml_parser_state_t,
-                            >(
-                            )
-                                as libc::c_ulong),
-                        ) as *mut yaml_parser_state_t;
+                        *fresh18 = yaml_malloc((16_i32 as libc::c_ulong).wrapping_mul(size_of::<
+                            yaml_parser_state_t,
+                        >(
+                        )
+                            as libc::c_ulong))
+                            as *mut yaml_parser_state_t;
                         if !(if !(*fresh18).is_null() {
                             let fresh19 = addr_of_mut!((*parser).states.top);
                             *fresh19 = (*parser).states.start;
                             let fresh20 = addr_of_mut!((*parser).states.end);
-                            *fresh20 = ((*parser).states.start)
-                                .wrapping_offset(16 as libc::c_int as isize);
-                            1 as libc::c_int
+                            *fresh20 = ((*parser).states.start).wrapping_offset(16_i32 as isize);
+                            1_i32
                         } else {
                             (*parser).error = YAML_MEMORY_ERROR;
-                            0 as libc::c_int
+                            0_i32
                         } == 0)
                         {
                             let fresh21 = addr_of_mut!((*parser).marks.start);
-                            *fresh21 = yaml_malloc(
-                                (16 as libc::c_int as libc::c_ulong).wrapping_mul(size_of::<
+                            *fresh21 =
+                                yaml_malloc((16_i32 as libc::c_ulong).wrapping_mul(size_of::<
                                     yaml_mark_t,
                                 >(
                                 )
-                                    as libc::c_ulong),
-                            ) as *mut yaml_mark_t;
+                                    as libc::c_ulong))
+                                    as *mut yaml_mark_t;
                             if !(if !(*fresh21).is_null() {
                                 let fresh22 = addr_of_mut!((*parser).marks.top);
                                 *fresh22 = (*parser).marks.start;
                                 let fresh23 = addr_of_mut!((*parser).marks.end);
-                                *fresh23 = ((*parser).marks.start)
-                                    .wrapping_offset(16 as libc::c_int as isize);
-                                1 as libc::c_int
+                                *fresh23 = ((*parser).marks.start).wrapping_offset(16_i32 as isize);
+                                1_i32
                             } else {
                                 (*parser).error = YAML_MEMORY_ERROR;
-                                0 as libc::c_int
+                                0_i32
                             } == 0)
                             {
                                 let fresh24 = addr_of_mut!((*parser).tag_directives.start);
                                 *fresh24 =
-                                    yaml_malloc((16 as libc::c_int as libc::c_ulong).wrapping_mul(
-                                        size_of::<yaml_tag_directive_t>() as libc::c_ulong,
-                                    ))
+                                    yaml_malloc((16_i32 as libc::c_ulong).wrapping_mul(size_of::<
+                                        yaml_tag_directive_t,
+                                    >(
+                                    )
+                                        as libc::c_ulong))
                                         as *mut yaml_tag_directive_t;
                                 if !(if !(*fresh24).is_null() {
                                     let fresh25 = addr_of_mut!((*parser).tag_directives.top);
                                     *fresh25 = (*parser).tag_directives.start;
                                     let fresh26 = addr_of_mut!((*parser).tag_directives.end);
                                     *fresh26 = ((*parser).tag_directives.start)
-                                        .wrapping_offset(16 as libc::c_int as isize);
-                                    1 as libc::c_int
+                                        .wrapping_offset(16_i32 as isize);
+                                    1_i32
                                 } else {
                                     (*parser).error = YAML_MEMORY_ERROR;
-                                    0 as libc::c_int
+                                    0_i32
                                 } == 0)
                                 {
-                                    return 1 as libc::c_int;
+                                    return 1_i32;
                                 }
                             }
                         }
@@ -412,7 +403,7 @@ pub unsafe fn yaml_parser_initialize(mut parser: *mut yaml_parser_t) -> libc::c_
     *fresh50 = *fresh49;
     let fresh51 = addr_of_mut!((*parser).tag_directives.start);
     *fresh51 = *fresh50;
-    0 as libc::c_int
+    0_i32
 }
 pub unsafe fn yaml_parser_delete(parser: *mut yaml_parser_t) {
     __assert!(!parser.is_null());
@@ -489,7 +480,7 @@ pub unsafe fn yaml_parser_delete(parser: *mut yaml_parser_t) {
     *fresh79 = *fresh78;
     memset(
         parser as *mut libc::c_void,
-        0 as libc::c_int,
+        0_i32,
         size_of::<yaml_parser_t>() as libc::c_ulong,
     );
 }
@@ -501,8 +492,8 @@ unsafe fn yaml_string_read_handler(
 ) -> libc::c_int {
     let parser: *mut yaml_parser_t = data as *mut yaml_parser_t;
     if (*parser).input.string.current == (*parser).input.string.end {
-        *size_read = 0 as libc::c_int as size_t;
-        return 1 as libc::c_int;
+        *size_read = 0_i32 as size_t;
+        return 1_i32;
     }
     if size
         > ((*parser).input.string.end).c_offset_from((*parser).input.string.current) as libc::c_long
@@ -519,7 +510,7 @@ unsafe fn yaml_string_read_handler(
     let fresh80 = addr_of_mut!((*parser).input.string.current);
     *fresh80 = (*fresh80).wrapping_offset(size as isize);
     *size_read = size;
-    1 as libc::c_int
+    1_i32
 }
 pub unsafe fn yaml_parser_set_input_string(
     parser: *mut yaml_parser_t,
@@ -565,120 +556,111 @@ pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> libc:
     __assert!(!emitter.is_null());
     memset(
         emitter as *mut libc::c_void,
-        0 as libc::c_int,
+        0_i32,
         size_of::<yaml_emitter_t>() as libc::c_ulong,
     );
     let fresh91 = addr_of_mut!((*emitter).buffer.start);
-    *fresh91 = yaml_malloc(16384 as libc::c_int as size_t) as *mut yaml_char_t;
+    *fresh91 = yaml_malloc(16384_i32 as size_t) as *mut yaml_char_t;
     if !(if !(*fresh91).is_null() {
         let fresh92 = addr_of_mut!((*emitter).buffer.pointer);
         *fresh92 = (*emitter).buffer.start;
         let fresh93 = addr_of_mut!((*emitter).buffer.last);
         *fresh93 = *fresh92;
         let fresh94 = addr_of_mut!((*emitter).buffer.end);
-        *fresh94 = ((*emitter).buffer.start).wrapping_offset(16384 as libc::c_int as isize);
-        1 as libc::c_int
+        *fresh94 = ((*emitter).buffer.start).wrapping_offset(16384_i32 as isize);
+        1_i32
     } else {
         (*emitter).error = YAML_MEMORY_ERROR;
-        0 as libc::c_int
+        0_i32
     } == 0)
     {
         let fresh95 = addr_of_mut!((*emitter).raw_buffer.start);
-        *fresh95 =
-            yaml_malloc((16384 as libc::c_int * 2 as libc::c_int + 2 as libc::c_int) as size_t)
-                as *mut yaml_char_t;
+        *fresh95 = yaml_malloc((16384_i32 * 2_i32 + 2_i32) as size_t) as *mut yaml_char_t;
         if !(if !(*fresh95).is_null() {
             let fresh96 = addr_of_mut!((*emitter).raw_buffer.pointer);
             *fresh96 = (*emitter).raw_buffer.start;
             let fresh97 = addr_of_mut!((*emitter).raw_buffer.last);
             *fresh97 = *fresh96;
             let fresh98 = addr_of_mut!((*emitter).raw_buffer.end);
-            *fresh98 = ((*emitter).raw_buffer.start).wrapping_offset(
-                (16384 as libc::c_int * 2 as libc::c_int + 2 as libc::c_int) as isize,
-            );
-            1 as libc::c_int
+            *fresh98 =
+                ((*emitter).raw_buffer.start).wrapping_offset((16384_i32 * 2_i32 + 2_i32) as isize);
+            1_i32
         } else {
             (*emitter).error = YAML_MEMORY_ERROR;
-            0 as libc::c_int
+            0_i32
         } == 0)
         {
             let fresh99 = addr_of_mut!((*emitter).states.start);
             *fresh99 = yaml_malloc(
-                (16 as libc::c_int as libc::c_ulong)
+                (16_i32 as libc::c_ulong)
                     .wrapping_mul(size_of::<yaml_emitter_state_t>() as libc::c_ulong),
             ) as *mut yaml_emitter_state_t;
             if !(if !(*fresh99).is_null() {
                 let fresh100 = addr_of_mut!((*emitter).states.top);
                 *fresh100 = (*emitter).states.start;
                 let fresh101 = addr_of_mut!((*emitter).states.end);
-                *fresh101 = ((*emitter).states.start).wrapping_offset(16 as libc::c_int as isize);
-                1 as libc::c_int
+                *fresh101 = ((*emitter).states.start).wrapping_offset(16_i32 as isize);
+                1_i32
             } else {
                 (*emitter).error = YAML_MEMORY_ERROR;
-                0 as libc::c_int
+                0_i32
             } == 0)
             {
                 let fresh102 = addr_of_mut!((*emitter).events.start);
-                *fresh102 =
-                    yaml_malloc((16 as libc::c_int as libc::c_ulong).wrapping_mul(size_of::<
-                        yaml_event_t,
-                    >(
-                    )
-                        as libc::c_ulong)) as *mut yaml_event_t;
+                *fresh102 = yaml_malloc(
+                    (16_i32 as libc::c_ulong)
+                        .wrapping_mul(size_of::<yaml_event_t>() as libc::c_ulong),
+                ) as *mut yaml_event_t;
                 if !(if !(*fresh102).is_null() {
                     let fresh103 = addr_of_mut!((*emitter).events.tail);
                     *fresh103 = (*emitter).events.start;
                     let fresh104 = addr_of_mut!((*emitter).events.head);
                     *fresh104 = *fresh103;
                     let fresh105 = addr_of_mut!((*emitter).events.end);
-                    *fresh105 =
-                        ((*emitter).events.start).wrapping_offset(16 as libc::c_int as isize);
-                    1 as libc::c_int
+                    *fresh105 = ((*emitter).events.start).wrapping_offset(16_i32 as isize);
+                    1_i32
                 } else {
                     (*emitter).error = YAML_MEMORY_ERROR;
-                    0 as libc::c_int
+                    0_i32
                 } == 0)
                 {
                     let fresh106 = addr_of_mut!((*emitter).indents.start);
-                    *fresh106 =
-                        yaml_malloc((16 as libc::c_int as libc::c_ulong).wrapping_mul(size_of::<
-                            libc::c_int,
-                        >(
-                        )
-                            as libc::c_ulong)) as *mut libc::c_int;
+                    *fresh106 = yaml_malloc((16_i32 as libc::c_ulong).wrapping_mul(size_of::<
+                        libc::c_int,
+                    >(
+                    )
+                        as libc::c_ulong)) as *mut libc::c_int;
                     if !(if !(*fresh106).is_null() {
                         let fresh107 = addr_of_mut!((*emitter).indents.top);
                         *fresh107 = (*emitter).indents.start;
                         let fresh108 = addr_of_mut!((*emitter).indents.end);
-                        *fresh108 =
-                            ((*emitter).indents.start).wrapping_offset(16 as libc::c_int as isize);
-                        1 as libc::c_int
+                        *fresh108 = ((*emitter).indents.start).wrapping_offset(16_i32 as isize);
+                        1_i32
                     } else {
                         (*emitter).error = YAML_MEMORY_ERROR;
-                        0 as libc::c_int
+                        0_i32
                     } == 0)
                     {
                         let fresh109 = addr_of_mut!((*emitter).tag_directives.start);
-                        *fresh109 = yaml_malloc(
-                            (16 as libc::c_int as libc::c_ulong).wrapping_mul(size_of::<
-                                yaml_tag_directive_t,
-                            >(
-                            )
-                                as libc::c_ulong),
-                        ) as *mut yaml_tag_directive_t;
+                        *fresh109 = yaml_malloc((16_i32 as libc::c_ulong).wrapping_mul(size_of::<
+                            yaml_tag_directive_t,
+                        >(
+                        )
+                            as libc::c_ulong))
+                            as *mut yaml_tag_directive_t;
                         if !(if !(*fresh109).is_null() {
                             let fresh110 = addr_of_mut!((*emitter).tag_directives.top);
                             *fresh110 = (*emitter).tag_directives.start;
                             let fresh111 = addr_of_mut!((*emitter).tag_directives.end);
-                            *fresh111 = ((*emitter).tag_directives.start)
-                                .wrapping_offset(16 as libc::c_int as isize);
-                            1 as libc::c_int
+                            *fresh111 =
+                                ((*emitter).tag_directives.start).wrapping_offset(16_i32 as isize);
+                            1_i32
                         } else {
                             (*emitter).error = YAML_MEMORY_ERROR;
-                            0 as libc::c_int
+                            0_i32
                         } == 0)
                         {
-                            return 1 as libc::c_int;
+                            return 1_i32;
                         }
                     }
                 }
@@ -729,7 +711,7 @@ pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> libc:
     *fresh129 = *fresh128;
     let fresh130 = addr_of_mut!((*emitter).tag_directives.start);
     *fresh130 = *fresh129;
-    0 as libc::c_int
+    0_i32
 }
 pub unsafe fn yaml_emitter_delete(emitter: *mut yaml_emitter_t) {
     __assert!(!emitter.is_null());
@@ -793,7 +775,7 @@ pub unsafe fn yaml_emitter_delete(emitter: *mut yaml_emitter_t) {
     yaml_free((*emitter).anchors as *mut libc::c_void);
     memset(
         emitter as *mut libc::c_void,
-        0 as libc::c_int,
+        0_i32,
         size_of::<yaml_emitter_t>() as libc::c_ulong,
     );
 }
@@ -812,7 +794,7 @@ unsafe fn yaml_string_write_handler(
             ((*emitter).output.string.size).wrapping_sub(*(*emitter).output.string.size_written),
         );
         *(*emitter).output.string.size_written = (*emitter).output.string.size;
-        return 0 as libc::c_int;
+        return 0_i32;
     }
     memcpy(
         ((*emitter).output.string.buffer)
@@ -823,7 +805,7 @@ unsafe fn yaml_string_write_handler(
     );
     let fresh153 = addr_of_mut!((*(*emitter).output.string.size_written));
     *fresh153 = (*fresh153 as libc::c_ulong).wrapping_add(size) as size_t as size_t;
-    1 as libc::c_int
+    1_i32
 }
 pub unsafe fn yaml_emitter_set_output_string(
     mut emitter: *mut yaml_emitter_t,
@@ -846,7 +828,7 @@ pub unsafe fn yaml_emitter_set_output_string(
     (*emitter).output.string.size = size;
     let fresh157 = addr_of_mut!((*emitter).output.string.size_written);
     *fresh157 = size_written;
-    *size_written = 0 as libc::c_int as size_t;
+    *size_written = 0_i32 as size_t;
 }
 pub unsafe fn yaml_emitter_set_output(
     emitter: *mut yaml_emitter_t,
@@ -871,27 +853,23 @@ pub unsafe fn yaml_emitter_set_encoding(
 }
 pub unsafe fn yaml_emitter_set_canonical(mut emitter: *mut yaml_emitter_t, canonical: libc::c_int) {
     __assert!(!emitter.is_null());
-    (*emitter).canonical = (canonical != 0 as libc::c_int) as libc::c_int;
+    (*emitter).canonical = (canonical != 0_i32) as libc::c_int;
 }
 pub unsafe fn yaml_emitter_set_indent(mut emitter: *mut yaml_emitter_t, indent: libc::c_int) {
     __assert!(!emitter.is_null());
-    (*emitter).best_indent = if (1 as libc::c_int) < indent && indent < 10 as libc::c_int {
+    (*emitter).best_indent = if 1_i32 < indent && indent < 10_i32 {
         indent
     } else {
-        2 as libc::c_int
+        2_i32
     };
 }
 pub unsafe fn yaml_emitter_set_width(mut emitter: *mut yaml_emitter_t, width: libc::c_int) {
     __assert!(!emitter.is_null());
-    (*emitter).best_width = if width >= 0 as libc::c_int {
-        width
-    } else {
-        -(1 as libc::c_int)
-    };
+    (*emitter).best_width = if width >= 0_i32 { width } else { -1_i32 };
 }
 pub unsafe fn yaml_emitter_set_unicode(mut emitter: *mut yaml_emitter_t, unicode: libc::c_int) {
     __assert!(!emitter.is_null());
-    (*emitter).unicode = (unicode != 0 as libc::c_int) as libc::c_int;
+    (*emitter).unicode = (unicode != 0_i32) as libc::c_int;
 }
 pub unsafe fn yaml_emitter_set_break(mut emitter: *mut yaml_emitter_t, line_break: yaml_break_t) {
     __assert!(!emitter.is_null());
@@ -921,7 +899,7 @@ pub unsafe fn yaml_token_delete(token: *mut yaml_token_t) {
     }
     memset(
         token as *mut libc::c_void,
-        0 as libc::c_int,
+        0_i32,
         size_of::<yaml_token_t>() as libc::c_ulong,
     );
 }
@@ -932,97 +910,93 @@ unsafe fn yaml_check_utf8(start: *const yaml_char_t, length: size_t) -> libc::c_
         let mut octet: libc::c_uchar;
         let mut value: libc::c_uint;
         let mut k: size_t;
-        octet = *pointer.wrapping_offset(0 as libc::c_int as isize);
-        let width: libc::c_uint = (if octet as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int
-        {
-            1 as libc::c_int
-        } else if octet as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int {
-            2 as libc::c_int
-        } else if octet as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int {
-            3 as libc::c_int
-        } else if octet as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int {
-            4 as libc::c_int
+        octet = *pointer.wrapping_offset(0_i32 as isize);
+        let width: libc::c_uint = (if octet as libc::c_int & 0x80_i32 == 0_i32 {
+            1_i32
+        } else if octet as libc::c_int & 0xe0_i32 == 0xc0_i32 {
+            2_i32
+        } else if octet as libc::c_int & 0xf0_i32 == 0xe0_i32 {
+            3_i32
+        } else if octet as libc::c_int & 0xf8_i32 == 0xf0_i32 {
+            4_i32
         } else {
-            0 as libc::c_int
+            0_i32
         }) as libc::c_uint;
-        value = (if octet as libc::c_int & 0x80 as libc::c_int == 0 as libc::c_int {
-            octet as libc::c_int & 0x7f as libc::c_int
-        } else if octet as libc::c_int & 0xe0 as libc::c_int == 0xc0 as libc::c_int {
-            octet as libc::c_int & 0x1f as libc::c_int
-        } else if octet as libc::c_int & 0xf0 as libc::c_int == 0xe0 as libc::c_int {
-            octet as libc::c_int & 0xf as libc::c_int
-        } else if octet as libc::c_int & 0xf8 as libc::c_int == 0xf0 as libc::c_int {
-            octet as libc::c_int & 0x7 as libc::c_int
+        value = (if octet as libc::c_int & 0x80_i32 == 0_i32 {
+            octet as libc::c_int & 0x7f_i32
+        } else if octet as libc::c_int & 0xe0_i32 == 0xc0_i32 {
+            octet as libc::c_int & 0x1f_i32
+        } else if octet as libc::c_int & 0xf0_i32 == 0xe0_i32 {
+            octet as libc::c_int & 0xf_i32
+        } else if octet as libc::c_int & 0xf8_i32 == 0xf0_i32 {
+            octet as libc::c_int & 0x7_i32
         } else {
-            0 as libc::c_int
+            0_i32
         }) as libc::c_uint;
         if width == 0 {
-            return 0 as libc::c_int;
+            return 0_i32;
         }
         if pointer.wrapping_offset(width as isize) > end {
-            return 0 as libc::c_int;
+            return 0_i32;
         }
-        k = 1 as libc::c_int as size_t;
+        k = 1_i32 as size_t;
         while k < width as libc::c_ulong {
             octet = *pointer.wrapping_offset(k as isize);
-            if octet as libc::c_int & 0xc0 as libc::c_int != 0x80 as libc::c_int {
-                return 0 as libc::c_int;
+            if octet as libc::c_int & 0xc0_i32 != 0x80_i32 {
+                return 0_i32;
             }
-            value = (value << 6 as libc::c_int)
-                .wrapping_add((octet as libc::c_int & 0x3f as libc::c_int) as libc::c_uint);
+            value =
+                (value << 6_i32).wrapping_add((octet as libc::c_int & 0x3f_i32) as libc::c_uint);
             k = k.wrapping_add(1);
         }
-        if !(width == 1 as libc::c_int as libc::c_uint
-            || width == 2 as libc::c_int as libc::c_uint
-                && value >= 0x80 as libc::c_int as libc::c_uint
-            || width == 3 as libc::c_int as libc::c_uint
-                && value >= 0x800 as libc::c_int as libc::c_uint
-            || width == 4 as libc::c_int as libc::c_uint
-                && value >= 0x10000 as libc::c_int as libc::c_uint)
+        if !(width == 1_i32 as libc::c_uint
+            || width == 2_i32 as libc::c_uint && value >= 0x80_i32 as libc::c_uint
+            || width == 3_i32 as libc::c_uint && value >= 0x800_i32 as libc::c_uint
+            || width == 4_i32 as libc::c_uint && value >= 0x10000_i32 as libc::c_uint)
         {
-            return 0 as libc::c_int;
+            return 0_i32;
         }
         pointer = pointer.wrapping_offset(width as isize);
     }
-    1 as libc::c_int
+    1_i32
 }
 pub unsafe fn yaml_stream_start_event_initialize(
     mut event: *mut yaml_event_t,
     encoding: yaml_encoding_t,
 ) -> libc::c_int {
     let mark = yaml_mark_t {
-        index: 0 as libc::c_int as size_t,
-        line: 0 as libc::c_int as size_t,
-        column: 0 as libc::c_int as size_t,
+        index: 0_i32 as size_t,
+        line: 0_i32 as size_t,
+        column: 0_i32 as size_t,
     };
     __assert!(!event.is_null());
     memset(
         event as *mut libc::c_void,
-        0 as libc::c_int,
+        0_i32,
         size_of::<yaml_event_t>() as libc::c_ulong,
     );
     (*event).type_0 = YAML_STREAM_START_EVENT;
     (*event).start_mark = mark;
     (*event).end_mark = mark;
     (*event).data.stream_start.encoding = encoding;
-    1 as libc::c_int
+    1_i32
 }
 pub unsafe fn yaml_stream_end_event_initialize(mut event: *mut yaml_event_t) -> libc::c_int {
     let mark = yaml_mark_t {
-        index: 0 as libc::c_int as size_t,
-        line: 0 as libc::c_int as size_t,
-        column: 0 as libc::c_int as size_t,
+        index: 0_i32 as size_t,
+        line: 0_i32 as size_t,
+        column: 0_i32 as size_t,
     };
     __assert!(!event.is_null());
     memset(
         event as *mut libc::c_void,
-        0 as libc::c_int,
+        0_i32,
         size_of::<yaml_event_t>() as libc::c_ulong,
     );
     (*event).type_0 = YAML_STREAM_END_EVENT;
     (*event).start_mark = mark;
     (*event).end_mark = mark;
-    1 as libc::c_int
+    1_i32
 }
 pub unsafe fn yaml_document_start_event_initialize(
     mut event: *mut yaml_event_t,
@@ -1036,9 +1010,9 @@ pub unsafe fn yaml_document_start_event_initialize(
         error: YAML_NO_ERROR,
     };
     let mark = yaml_mark_t {
-        index: 0 as libc::c_int as size_t,
-        line: 0 as libc::c_int as size_t,
-        column: 0 as libc::c_int as size_t,
+        index: 0_i32 as size_t,
+        line: 0_i32 as size_t,
+        column: 0_i32 as size_t,
     };
     let mut version_directive_copy: *mut yaml_version_directive_t =
         ptr::null_mut::<yaml_version_directive_t>();
@@ -1073,20 +1047,18 @@ pub unsafe fn yaml_document_start_event_initialize(
         1394248824506584008 => {
             if tag_directives_start != tag_directives_end {
                 let mut tag_directive: *mut yaml_tag_directive_t;
-                tag_directives_copy.start =
-                    yaml_malloc((16 as libc::c_int as libc::c_ulong).wrapping_mul(size_of::<
-                        yaml_tag_directive_t,
-                    >(
-                    )
-                        as libc::c_ulong)) as *mut yaml_tag_directive_t;
+                tag_directives_copy.start = yaml_malloc(
+                    (16_i32 as libc::c_ulong)
+                        .wrapping_mul(size_of::<yaml_tag_directive_t>() as libc::c_ulong),
+                ) as *mut yaml_tag_directive_t;
                 if if !(tag_directives_copy.start).is_null() {
                     tag_directives_copy.top = tag_directives_copy.start;
                     tag_directives_copy.end =
-                        (tag_directives_copy.start).wrapping_offset(16 as libc::c_int as isize);
-                    1 as libc::c_int
+                        (tag_directives_copy.start).wrapping_offset(16_i32 as isize);
+                    1_i32
                 } else {
                     context.error = YAML_MEMORY_ERROR;
-                    0 as libc::c_int
+                    0_i32
                 } == 0
                 {
                     current_block = 14964981520188694172;
@@ -1131,10 +1103,10 @@ pub unsafe fn yaml_document_start_event_initialize(
                             let fresh163 = tag_directives_copy.top;
                             tag_directives_copy.top = (tag_directives_copy.top).wrapping_offset(1);
                             *fresh163 = value;
-                            1 as libc::c_int
+                            1_i32
                         } else {
                             context.error = YAML_MEMORY_ERROR;
-                            0 as libc::c_int
+                            0_i32
                         } == 0
                         {
                             current_block = 14964981520188694172;
@@ -1153,7 +1125,7 @@ pub unsafe fn yaml_document_start_event_initialize(
                 _ => {
                     memset(
                         event as *mut libc::c_void,
-                        0 as libc::c_int,
+                        0_i32,
                         size_of::<yaml_event_t>() as libc::c_ulong,
                     );
                     (*event).type_0 = YAML_DOCUMENT_START_EVENT;
@@ -1166,7 +1138,7 @@ pub unsafe fn yaml_document_start_event_initialize(
                     let fresh166 = addr_of_mut!((*event).data.document_start.tag_directives.end);
                     *fresh166 = tag_directives_copy.top;
                     (*event).data.document_start.implicit = implicit;
-                    return 1 as libc::c_int;
+                    return 1_i32;
                 }
             }
         }
@@ -1185,50 +1157,50 @@ pub unsafe fn yaml_document_start_event_initialize(
     tag_directives_copy.start = tag_directives_copy.top;
     yaml_free(value.handle as *mut libc::c_void);
     yaml_free(value.prefix as *mut libc::c_void);
-    0 as libc::c_int
+    0_i32
 }
 pub unsafe fn yaml_document_end_event_initialize(
     mut event: *mut yaml_event_t,
     implicit: libc::c_int,
 ) -> libc::c_int {
     let mark = yaml_mark_t {
-        index: 0 as libc::c_int as size_t,
-        line: 0 as libc::c_int as size_t,
-        column: 0 as libc::c_int as size_t,
+        index: 0_i32 as size_t,
+        line: 0_i32 as size_t,
+        column: 0_i32 as size_t,
     };
     __assert!(!event.is_null());
     memset(
         event as *mut libc::c_void,
-        0 as libc::c_int,
+        0_i32,
         size_of::<yaml_event_t>() as libc::c_ulong,
     );
     (*event).type_0 = YAML_DOCUMENT_END_EVENT;
     (*event).start_mark = mark;
     (*event).end_mark = mark;
     (*event).data.document_end.implicit = implicit;
-    1 as libc::c_int
+    1_i32
 }
 pub unsafe fn yaml_alias_event_initialize(
     mut event: *mut yaml_event_t,
     anchor: *const yaml_char_t,
 ) -> libc::c_int {
     let mark = yaml_mark_t {
-        index: 0 as libc::c_int as size_t,
-        line: 0 as libc::c_int as size_t,
-        column: 0 as libc::c_int as size_t,
+        index: 0_i32 as size_t,
+        line: 0_i32 as size_t,
+        column: 0_i32 as size_t,
     };
     __assert!(!event.is_null());
     __assert!(!anchor.is_null());
     if yaml_check_utf8(anchor, strlen(anchor as *mut libc::c_char)) == 0 {
-        return 0 as libc::c_int;
+        return 0_i32;
     }
     let anchor_copy: *mut yaml_char_t = yaml_strdup(anchor);
     if anchor_copy.is_null() {
-        return 0 as libc::c_int;
+        return 0_i32;
     }
     memset(
         event as *mut libc::c_void,
-        0 as libc::c_int,
+        0_i32,
         size_of::<yaml_event_t>() as libc::c_ulong,
     );
     (*event).type_0 = YAML_ALIAS_EVENT;
@@ -1236,7 +1208,7 @@ pub unsafe fn yaml_alias_event_initialize(
     (*event).end_mark = mark;
     let fresh167 = addr_of_mut!((*event).data.alias.anchor);
     *fresh167 = anchor_copy;
-    1 as libc::c_int
+    1_i32
 }
 pub unsafe fn yaml_scalar_event_initialize(
     mut event: *mut yaml_event_t,
@@ -1250,9 +1222,9 @@ pub unsafe fn yaml_scalar_event_initialize(
 ) -> libc::c_int {
     let mut current_block: u64;
     let mark = yaml_mark_t {
-        index: 0 as libc::c_int as size_t,
-        line: 0 as libc::c_int as size_t,
-        column: 0 as libc::c_int as size_t,
+        index: 0_i32 as size_t,
+        line: 0_i32 as size_t,
+        column: 0_i32 as size_t,
     };
     let mut anchor_copy: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
     let mut tag_copy: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
@@ -1292,12 +1264,11 @@ pub unsafe fn yaml_scalar_event_initialize(
             match current_block {
                 16285396129609901221 => {}
                 _ => {
-                    if length < 0 as libc::c_int {
+                    if length < 0_i32 {
                         length = strlen(value as *mut libc::c_char) as libc::c_int;
                     }
                     if !(yaml_check_utf8(value, length as size_t) == 0) {
-                        value_copy =
-                            yaml_malloc((length + 1 as libc::c_int) as size_t) as *mut yaml_char_t;
+                        value_copy = yaml_malloc((length + 1_i32) as size_t) as *mut yaml_char_t;
                         if !value_copy.is_null() {
                             memcpy(
                                 value_copy as *mut libc::c_void,
@@ -1308,7 +1279,7 @@ pub unsafe fn yaml_scalar_event_initialize(
                                 '\0' as i32 as yaml_char_t;
                             memset(
                                 event as *mut libc::c_void,
-                                0 as libc::c_int,
+                                0_i32,
                                 size_of::<yaml_event_t>() as libc::c_ulong,
                             );
                             (*event).type_0 = YAML_SCALAR_EVENT;
@@ -1324,7 +1295,7 @@ pub unsafe fn yaml_scalar_event_initialize(
                             (*event).data.scalar.plain_implicit = plain_implicit;
                             (*event).data.scalar.quoted_implicit = quoted_implicit;
                             (*event).data.scalar.style = style;
-                            return 1 as libc::c_int;
+                            return 1_i32;
                         }
                     }
                 }
@@ -1335,7 +1306,7 @@ pub unsafe fn yaml_scalar_event_initialize(
     yaml_free(anchor_copy as *mut libc::c_void);
     yaml_free(tag_copy as *mut libc::c_void);
     yaml_free(value_copy as *mut libc::c_void);
-    0 as libc::c_int
+    0_i32
 }
 pub unsafe fn yaml_sequence_start_event_initialize(
     mut event: *mut yaml_event_t,
@@ -1346,9 +1317,9 @@ pub unsafe fn yaml_sequence_start_event_initialize(
 ) -> libc::c_int {
     let mut current_block: u64;
     let mark = yaml_mark_t {
-        index: 0 as libc::c_int as size_t,
-        line: 0 as libc::c_int as size_t,
-        column: 0 as libc::c_int as size_t,
+        index: 0_i32 as size_t,
+        line: 0_i32 as size_t,
+        column: 0_i32 as size_t,
     };
     let mut anchor_copy: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
     let mut tag_copy: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
@@ -1388,7 +1359,7 @@ pub unsafe fn yaml_sequence_start_event_initialize(
                 _ => {
                     memset(
                         event as *mut libc::c_void,
-                        0 as libc::c_int,
+                        0_i32,
                         size_of::<yaml_event_t>() as libc::c_ulong,
                     );
                     (*event).type_0 = YAML_SEQUENCE_START_EVENT;
@@ -1400,7 +1371,7 @@ pub unsafe fn yaml_sequence_start_event_initialize(
                     *fresh172 = tag_copy;
                     (*event).data.sequence_start.implicit = implicit;
                     (*event).data.sequence_start.style = style;
-                    return 1 as libc::c_int;
+                    return 1_i32;
                 }
             }
         }
@@ -1408,24 +1379,24 @@ pub unsafe fn yaml_sequence_start_event_initialize(
     }
     yaml_free(anchor_copy as *mut libc::c_void);
     yaml_free(tag_copy as *mut libc::c_void);
-    0 as libc::c_int
+    0_i32
 }
 pub unsafe fn yaml_sequence_end_event_initialize(mut event: *mut yaml_event_t) -> libc::c_int {
     let mark = yaml_mark_t {
-        index: 0 as libc::c_int as size_t,
-        line: 0 as libc::c_int as size_t,
-        column: 0 as libc::c_int as size_t,
+        index: 0_i32 as size_t,
+        line: 0_i32 as size_t,
+        column: 0_i32 as size_t,
     };
     __assert!(!event.is_null());
     memset(
         event as *mut libc::c_void,
-        0 as libc::c_int,
+        0_i32,
         size_of::<yaml_event_t>() as libc::c_ulong,
     );
     (*event).type_0 = YAML_SEQUENCE_END_EVENT;
     (*event).start_mark = mark;
     (*event).end_mark = mark;
-    1 as libc::c_int
+    1_i32
 }
 pub unsafe fn yaml_mapping_start_event_initialize(
     mut event: *mut yaml_event_t,
@@ -1436,9 +1407,9 @@ pub unsafe fn yaml_mapping_start_event_initialize(
 ) -> libc::c_int {
     let mut current_block: u64;
     let mark = yaml_mark_t {
-        index: 0 as libc::c_int as size_t,
-        line: 0 as libc::c_int as size_t,
-        column: 0 as libc::c_int as size_t,
+        index: 0_i32 as size_t,
+        line: 0_i32 as size_t,
+        column: 0_i32 as size_t,
     };
     let mut anchor_copy: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
     let mut tag_copy: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
@@ -1478,7 +1449,7 @@ pub unsafe fn yaml_mapping_start_event_initialize(
                 _ => {
                     memset(
                         event as *mut libc::c_void,
-                        0 as libc::c_int,
+                        0_i32,
                         size_of::<yaml_event_t>() as libc::c_ulong,
                     );
                     (*event).type_0 = YAML_MAPPING_START_EVENT;
@@ -1490,7 +1461,7 @@ pub unsafe fn yaml_mapping_start_event_initialize(
                     *fresh174 = tag_copy;
                     (*event).data.mapping_start.implicit = implicit;
                     (*event).data.mapping_start.style = style;
-                    return 1 as libc::c_int;
+                    return 1_i32;
                 }
             }
         }
@@ -1498,24 +1469,24 @@ pub unsafe fn yaml_mapping_start_event_initialize(
     }
     yaml_free(anchor_copy as *mut libc::c_void);
     yaml_free(tag_copy as *mut libc::c_void);
-    0 as libc::c_int
+    0_i32
 }
 pub unsafe fn yaml_mapping_end_event_initialize(mut event: *mut yaml_event_t) -> libc::c_int {
     let mark = yaml_mark_t {
-        index: 0 as libc::c_int as size_t,
-        line: 0 as libc::c_int as size_t,
-        column: 0 as libc::c_int as size_t,
+        index: 0_i32 as size_t,
+        line: 0_i32 as size_t,
+        column: 0_i32 as size_t,
     };
     __assert!(!event.is_null());
     memset(
         event as *mut libc::c_void,
-        0 as libc::c_int,
+        0_i32,
         size_of::<yaml_event_t>() as libc::c_ulong,
     );
     (*event).type_0 = YAML_MAPPING_END_EVENT;
     (*event).start_mark = mark;
     (*event).end_mark = mark;
-    1 as libc::c_int
+    1_i32
 }
 pub unsafe fn yaml_event_delete(event: *mut yaml_event_t) {
     let mut tag_directive: *mut yaml_tag_directive_t;
@@ -1551,7 +1522,7 @@ pub unsafe fn yaml_event_delete(event: *mut yaml_event_t) {
     }
     memset(
         event as *mut libc::c_void,
-        0 as libc::c_int,
+        0_i32,
         size_of::<yaml_event_t>() as libc::c_ulong,
     );
 }
@@ -1584,9 +1555,9 @@ pub unsafe fn yaml_document_initialize(
         prefix: ptr::null_mut::<yaml_char_t>(),
     };
     let mark = yaml_mark_t {
-        index: 0 as libc::c_int as size_t,
-        line: 0 as libc::c_int as size_t,
-        column: 0 as libc::c_int as size_t,
+        index: 0_i32 as size_t,
+        line: 0_i32 as size_t,
+        column: 0_i32 as size_t,
     };
     __assert!(!document.is_null());
     __assert!(
@@ -1594,16 +1565,15 @@ pub unsafe fn yaml_document_initialize(
             || tag_directives_start == tag_directives_end
     );
     nodes.start = yaml_malloc(
-        (16 as libc::c_int as libc::c_ulong)
-            .wrapping_mul(size_of::<yaml_node_t>() as libc::c_ulong),
+        (16_i32 as libc::c_ulong).wrapping_mul(size_of::<yaml_node_t>() as libc::c_ulong),
     ) as *mut yaml_node_t;
     if !(if !(nodes.start).is_null() {
         nodes.top = nodes.start;
-        nodes.end = (nodes.start).wrapping_offset(16 as libc::c_int as isize);
-        1 as libc::c_int
+        nodes.end = (nodes.start).wrapping_offset(16_i32 as isize);
+        1_i32
     } else {
         context.error = YAML_MEMORY_ERROR;
-        0 as libc::c_int
+        0_i32
     } == 0)
     {
         if !version_directive.is_null() {
@@ -1626,7 +1596,7 @@ pub unsafe fn yaml_document_initialize(
                 if tag_directives_start != tag_directives_end {
                     let mut tag_directive: *mut yaml_tag_directive_t;
                     tag_directives_copy.start =
-                        yaml_malloc((16 as libc::c_int as libc::c_ulong).wrapping_mul(size_of::<
+                        yaml_malloc((16_i32 as libc::c_ulong).wrapping_mul(size_of::<
                             yaml_tag_directive_t,
                         >(
                         )
@@ -1634,11 +1604,11 @@ pub unsafe fn yaml_document_initialize(
                     if if !(tag_directives_copy.start).is_null() {
                         tag_directives_copy.top = tag_directives_copy.start;
                         tag_directives_copy.end =
-                            (tag_directives_copy.start).wrapping_offset(16 as libc::c_int as isize);
-                        1 as libc::c_int
+                            (tag_directives_copy.start).wrapping_offset(16_i32 as isize);
+                        1_i32
                     } else {
                         context.error = YAML_MEMORY_ERROR;
-                        0 as libc::c_int
+                        0_i32
                     } == 0
                     {
                         current_block = 8142820162064489797;
@@ -1685,10 +1655,10 @@ pub unsafe fn yaml_document_initialize(
                                 tag_directives_copy.top =
                                     (tag_directives_copy.top).wrapping_offset(1);
                                 *fresh175 = value;
-                                1 as libc::c_int
+                                1_i32
                             } else {
                                 context.error = YAML_MEMORY_ERROR;
-                                0 as libc::c_int
+                                0_i32
                             } == 0
                             {
                                 current_block = 8142820162064489797;
@@ -1707,7 +1677,7 @@ pub unsafe fn yaml_document_initialize(
                     _ => {
                         memset(
                             document as *mut libc::c_void,
-                            0 as libc::c_int,
+                            0_i32,
                             size_of::<yaml_document_t>() as libc::c_ulong,
                         );
                         let fresh176 = addr_of_mut!((*document).nodes.start);
@@ -1726,7 +1696,7 @@ pub unsafe fn yaml_document_initialize(
                         (*document).end_implicit = end_implicit;
                         (*document).start_mark = mark;
                         (*document).end_mark = mark;
-                        return 1 as libc::c_int;
+                        return 1_i32;
                     }
                 }
             }
@@ -1749,7 +1719,7 @@ pub unsafe fn yaml_document_initialize(
     tag_directives_copy.start = tag_directives_copy.top;
     yaml_free(value.handle as *mut libc::c_void);
     yaml_free(value.prefix as *mut libc::c_void);
-    0 as libc::c_int
+    0_i32
 }
 pub unsafe fn yaml_document_delete(document: *mut yaml_document_t) {
     let mut tag_directive: *mut yaml_tag_directive_t;
@@ -1797,7 +1767,7 @@ pub unsafe fn yaml_document_delete(document: *mut yaml_document_t) {
     yaml_free((*document).tag_directives.start as *mut libc::c_void);
     memset(
         document as *mut libc::c_void,
-        0 as libc::c_int,
+        0_i32,
         size_of::<yaml_document_t>() as libc::c_ulong,
     );
 }
@@ -1806,12 +1776,12 @@ pub unsafe fn yaml_document_get_node(
     index: libc::c_int,
 ) -> *mut yaml_node_t {
     __assert!(!document.is_null());
-    if index > 0 as libc::c_int
+    if index > 0_i32
         && ((*document).nodes.start).wrapping_offset(index as isize) <= (*document).nodes.top
     {
         return ((*document).nodes.start)
             .wrapping_offset(index as isize)
-            .wrapping_offset(-(1 as libc::c_int as isize));
+            .wrapping_offset(-(1_i32 as isize));
     }
     ptr::null_mut::<yaml_node_t>()
 }
@@ -1833,9 +1803,9 @@ pub unsafe fn yaml_document_add_scalar(
         error: YAML_NO_ERROR,
     };
     let mark = yaml_mark_t {
-        index: 0 as libc::c_int as size_t,
-        line: 0 as libc::c_int as size_t,
-        column: 0 as libc::c_int as size_t,
+        index: 0_i32 as size_t,
+        line: 0_i32 as size_t,
+        column: 0_i32 as size_t,
     };
     let mut tag_copy: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
     let mut value_copy: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
@@ -1868,11 +1838,11 @@ pub unsafe fn yaml_document_add_scalar(
     if !(yaml_check_utf8(tag, strlen(tag as *mut libc::c_char)) == 0) {
         tag_copy = yaml_strdup(tag);
         if !tag_copy.is_null() {
-            if length < 0 as libc::c_int {
+            if length < 0_i32 {
                 length = strlen(value as *mut libc::c_char) as libc::c_int;
             }
             if !(yaml_check_utf8(value, length as size_t) == 0) {
-                value_copy = yaml_malloc((length + 1 as libc::c_int) as size_t) as *mut yaml_char_t;
+                value_copy = yaml_malloc((length + 1_i32) as size_t) as *mut yaml_char_t;
                 if !value_copy.is_null() {
                     memcpy(
                         value_copy as *mut libc::c_void,
@@ -1882,7 +1852,7 @@ pub unsafe fn yaml_document_add_scalar(
                     *value_copy.wrapping_offset(length as isize) = '\0' as i32 as yaml_char_t;
                     memset(
                         addr_of_mut!(node) as *mut libc::c_void,
-                        0 as libc::c_int,
+                        0_i32,
                         size_of::<yaml_node_t>() as libc::c_ulong,
                     );
                     node.type_0 = YAML_SCALAR_NODE;
@@ -1903,10 +1873,10 @@ pub unsafe fn yaml_document_add_scalar(
                         let fresh187 = *fresh186;
                         *fresh186 = (*fresh186).wrapping_offset(1);
                         *fresh187 = node;
-                        1 as libc::c_int
+                        1_i32
                     } else {
                         context.error = YAML_MEMORY_ERROR;
-                        0 as libc::c_int
+                        0_i32
                     } == 0)
                     {
                         return ((*document).nodes.top).c_offset_from((*document).nodes.start)
@@ -1918,7 +1888,7 @@ pub unsafe fn yaml_document_add_scalar(
     }
     yaml_free(tag_copy as *mut libc::c_void);
     yaml_free(value_copy as *mut libc::c_void);
-    0 as libc::c_int
+    0_i32
 }
 pub unsafe fn yaml_document_add_sequence(
     document: *mut yaml_document_t,
@@ -1929,9 +1899,9 @@ pub unsafe fn yaml_document_add_sequence(
         error: YAML_NO_ERROR,
     };
     let mark = yaml_mark_t {
-        index: 0 as libc::c_int as size_t,
-        line: 0 as libc::c_int as size_t,
-        column: 0 as libc::c_int as size_t,
+        index: 0_i32 as size_t,
+        line: 0_i32 as size_t,
+        column: 0_i32 as size_t,
     };
     let mut tag_copy: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
     let mut items: Unnamed_30 = Unnamed_30 {
@@ -1967,23 +1937,22 @@ pub unsafe fn yaml_document_add_sequence(
     if !(yaml_check_utf8(tag, strlen(tag as *mut libc::c_char)) == 0) {
         tag_copy = yaml_strdup(tag);
         if !tag_copy.is_null() {
-            items.start = yaml_malloc((16 as libc::c_int as libc::c_ulong).wrapping_mul(size_of::<
-                yaml_node_item_t,
-            >(
-            )
-                as libc::c_ulong)) as *mut yaml_node_item_t;
+            items.start = yaml_malloc(
+                (16_i32 as libc::c_ulong)
+                    .wrapping_mul(size_of::<yaml_node_item_t>() as libc::c_ulong),
+            ) as *mut yaml_node_item_t;
             if !(if !(items.start).is_null() {
                 items.top = items.start;
-                items.end = (items.start).wrapping_offset(16 as libc::c_int as isize);
-                1 as libc::c_int
+                items.end = (items.start).wrapping_offset(16_i32 as isize);
+                1_i32
             } else {
                 context.error = YAML_MEMORY_ERROR;
-                0 as libc::c_int
+                0_i32
             } == 0)
             {
                 memset(
                     addr_of_mut!(node) as *mut libc::c_void,
-                    0 as libc::c_int,
+                    0_i32,
                     size_of::<yaml_node_t>() as libc::c_ulong,
                 );
                 node.type_0 = YAML_SEQUENCE_NODE;
@@ -2005,10 +1974,10 @@ pub unsafe fn yaml_document_add_sequence(
                     let fresh189 = *fresh188;
                     *fresh188 = (*fresh188).wrapping_offset(1);
                     *fresh189 = node;
-                    1 as libc::c_int
+                    1_i32
                 } else {
                     context.error = YAML_MEMORY_ERROR;
-                    0 as libc::c_int
+                    0_i32
                 } == 0)
                 {
                     return ((*document).nodes.top).c_offset_from((*document).nodes.start)
@@ -2022,7 +1991,7 @@ pub unsafe fn yaml_document_add_sequence(
     items.top = items.end;
     items.start = items.top;
     yaml_free(tag_copy as *mut libc::c_void);
-    0 as libc::c_int
+    0_i32
 }
 pub unsafe fn yaml_document_add_mapping(
     document: *mut yaml_document_t,
@@ -2033,9 +2002,9 @@ pub unsafe fn yaml_document_add_mapping(
         error: YAML_NO_ERROR,
     };
     let mark = yaml_mark_t {
-        index: 0 as libc::c_int as size_t,
-        line: 0 as libc::c_int as size_t,
-        column: 0 as libc::c_int as size_t,
+        index: 0_i32 as size_t,
+        line: 0_i32 as size_t,
+        column: 0_i32 as size_t,
     };
     let mut tag_copy: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
     let mut pairs: Unnamed_32 = Unnamed_32 {
@@ -2071,23 +2040,22 @@ pub unsafe fn yaml_document_add_mapping(
     if !(yaml_check_utf8(tag, strlen(tag as *mut libc::c_char)) == 0) {
         tag_copy = yaml_strdup(tag);
         if !tag_copy.is_null() {
-            pairs.start = yaml_malloc((16 as libc::c_int as libc::c_ulong).wrapping_mul(size_of::<
-                yaml_node_pair_t,
-            >(
-            )
-                as libc::c_ulong)) as *mut yaml_node_pair_t;
+            pairs.start = yaml_malloc(
+                (16_i32 as libc::c_ulong)
+                    .wrapping_mul(size_of::<yaml_node_pair_t>() as libc::c_ulong),
+            ) as *mut yaml_node_pair_t;
             if !(if !(pairs.start).is_null() {
                 pairs.top = pairs.start;
-                pairs.end = (pairs.start).wrapping_offset(16 as libc::c_int as isize);
-                1 as libc::c_int
+                pairs.end = (pairs.start).wrapping_offset(16_i32 as isize);
+                1_i32
             } else {
                 context.error = YAML_MEMORY_ERROR;
-                0 as libc::c_int
+                0_i32
             } == 0)
             {
                 memset(
                     addr_of_mut!(node) as *mut libc::c_void,
-                    0 as libc::c_int,
+                    0_i32,
                     size_of::<yaml_node_t>() as libc::c_ulong,
                 );
                 node.type_0 = YAML_MAPPING_NODE;
@@ -2109,10 +2077,10 @@ pub unsafe fn yaml_document_add_mapping(
                     let fresh191 = *fresh190;
                     *fresh190 = (*fresh190).wrapping_offset(1);
                     *fresh191 = node;
-                    1 as libc::c_int
+                    1_i32
                 } else {
                     context.error = YAML_MEMORY_ERROR;
-                    0 as libc::c_int
+                    0_i32
                 } == 0)
                 {
                     return ((*document).nodes.top).c_offset_from((*document).nodes.start)
@@ -2126,7 +2094,7 @@ pub unsafe fn yaml_document_add_mapping(
     pairs.top = pairs.end;
     pairs.start = pairs.top;
     yaml_free(tag_copy as *mut libc::c_void);
-    0 as libc::c_int
+    0_i32
 }
 pub unsafe fn yaml_document_append_sequence_item(
     document: *mut yaml_document_t,
@@ -2138,58 +2106,55 @@ pub unsafe fn yaml_document_append_sequence_item(
     };
     __assert!(!document.is_null());
     __assert!(
-        sequence > 0 as libc::c_int
+        sequence > 0_i32
             && ((*document).nodes.start).wrapping_offset(sequence as isize)
                 <= (*document).nodes.top
     );
     __assert!(
-        (*((*document).nodes.start).wrapping_offset((sequence - 1 as libc::c_int) as isize)).type_0
+        (*((*document).nodes.start).wrapping_offset((sequence - 1_i32) as isize)).type_0
             as libc::c_uint
             == YAML_SEQUENCE_NODE as libc::c_int as libc::c_uint
     );
     __assert!(
-        item > 0 as libc::c_int
+        item > 0_i32
             && ((*document).nodes.start).wrapping_offset(item as isize) <= (*document).nodes.top
     );
-    if if (*((*document).nodes.start).wrapping_offset((sequence - 1 as libc::c_int) as isize))
+    if if (*((*document).nodes.start).wrapping_offset((sequence - 1_i32) as isize))
         .data
         .sequence
         .items
         .top
-        != (*((*document).nodes.start).wrapping_offset((sequence - 1 as libc::c_int) as isize))
+        != (*((*document).nodes.start).wrapping_offset((sequence - 1_i32) as isize))
             .data
             .sequence
             .items
             .end
         || yaml_stack_extend(
             addr_of_mut!(
-                (*((*document).nodes.start)
-                    .wrapping_offset((sequence - 1 as libc::c_int) as isize))
-                .data
-                .sequence
-                .items
-                .start
+                (*((*document).nodes.start).wrapping_offset((sequence - 1_i32) as isize))
+                    .data
+                    .sequence
+                    .items
+                    .start
             ) as *mut *mut libc::c_void,
             addr_of_mut!(
-                (*((*document).nodes.start)
-                    .wrapping_offset((sequence - 1 as libc::c_int) as isize))
-                .data
-                .sequence
-                .items
-                .top
+                (*((*document).nodes.start).wrapping_offset((sequence - 1_i32) as isize))
+                    .data
+                    .sequence
+                    .items
+                    .top
             ) as *mut *mut libc::c_void,
             addr_of_mut!(
-                (*((*document).nodes.start)
-                    .wrapping_offset((sequence - 1 as libc::c_int) as isize))
-                .data
-                .sequence
-                .items
-                .end
+                (*((*document).nodes.start).wrapping_offset((sequence - 1_i32) as isize))
+                    .data
+                    .sequence
+                    .items
+                    .end
             ) as *mut *mut libc::c_void,
         ) != 0
     {
         let fresh192 = addr_of_mut!(
-            (*((*document).nodes.start).wrapping_offset((sequence - 1 as libc::c_int) as isize))
+            (*((*document).nodes.start).wrapping_offset((sequence - 1_i32) as isize))
                 .data
                 .sequence
                 .items
@@ -2198,15 +2163,15 @@ pub unsafe fn yaml_document_append_sequence_item(
         let fresh193 = *fresh192;
         *fresh192 = (*fresh192).wrapping_offset(1);
         *fresh193 = item;
-        1 as libc::c_int
+        1_i32
     } else {
         context.error = YAML_MEMORY_ERROR;
-        0 as libc::c_int
+        0_i32
     } == 0
     {
-        return 0 as libc::c_int;
+        return 0_i32;
     }
-    1 as libc::c_int
+    1_i32
 }
 pub unsafe fn yaml_document_append_mapping_pair(
     document: *mut yaml_document_t,
@@ -2220,51 +2185,51 @@ pub unsafe fn yaml_document_append_mapping_pair(
     let mut pair = yaml_node_pair_t { key: 0, value: 0 };
     __assert!(!document.is_null());
     __assert!(
-        mapping > 0 as libc::c_int
+        mapping > 0_i32
             && ((*document).nodes.start).wrapping_offset(mapping as isize) <= (*document).nodes.top
     );
     __assert!(
-        (*((*document).nodes.start).wrapping_offset((mapping - 1 as libc::c_int) as isize)).type_0
+        (*((*document).nodes.start).wrapping_offset((mapping - 1_i32) as isize)).type_0
             as libc::c_uint
             == YAML_MAPPING_NODE as libc::c_int as libc::c_uint
     );
     __assert!(
-        key > 0 as libc::c_int
+        key > 0_i32
             && ((*document).nodes.start).wrapping_offset(key as isize) <= (*document).nodes.top
     );
     __assert!(
-        value > 0 as libc::c_int
+        value > 0_i32
             && ((*document).nodes.start).wrapping_offset(value as isize) <= (*document).nodes.top
     );
     pair.key = key;
     pair.value = value;
-    if if (*((*document).nodes.start).wrapping_offset((mapping - 1 as libc::c_int) as isize))
+    if if (*((*document).nodes.start).wrapping_offset((mapping - 1_i32) as isize))
         .data
         .mapping
         .pairs
         .top
-        != (*((*document).nodes.start).wrapping_offset((mapping - 1 as libc::c_int) as isize))
+        != (*((*document).nodes.start).wrapping_offset((mapping - 1_i32) as isize))
             .data
             .mapping
             .pairs
             .end
         || yaml_stack_extend(
             addr_of_mut!(
-                (*((*document).nodes.start).wrapping_offset((mapping - 1 as libc::c_int) as isize))
+                (*((*document).nodes.start).wrapping_offset((mapping - 1_i32) as isize))
                     .data
                     .mapping
                     .pairs
                     .start
             ) as *mut *mut libc::c_void,
             addr_of_mut!(
-                (*((*document).nodes.start).wrapping_offset((mapping - 1 as libc::c_int) as isize))
+                (*((*document).nodes.start).wrapping_offset((mapping - 1_i32) as isize))
                     .data
                     .mapping
                     .pairs
                     .top
             ) as *mut *mut libc::c_void,
             addr_of_mut!(
-                (*((*document).nodes.start).wrapping_offset((mapping - 1 as libc::c_int) as isize))
+                (*((*document).nodes.start).wrapping_offset((mapping - 1_i32) as isize))
                     .data
                     .mapping
                     .pairs
@@ -2273,7 +2238,7 @@ pub unsafe fn yaml_document_append_mapping_pair(
         ) != 0
     {
         let fresh194 = addr_of_mut!(
-            (*((*document).nodes.start).wrapping_offset((mapping - 1 as libc::c_int) as isize))
+            (*((*document).nodes.start).wrapping_offset((mapping - 1_i32) as isize))
                 .data
                 .mapping
                 .pairs
@@ -2282,13 +2247,13 @@ pub unsafe fn yaml_document_append_mapping_pair(
         let fresh195 = *fresh194;
         *fresh194 = (*fresh194).wrapping_offset(1);
         *fresh195 = pair;
-        1 as libc::c_int
+        1_i32
     } else {
         context.error = YAML_MEMORY_ERROR;
-        0 as libc::c_int
+        0_i32
     } == 0
     {
-        return 0 as libc::c_int;
+        return 0_i32;
     }
-    1 as libc::c_int
+    1_i32
 }
