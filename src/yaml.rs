@@ -1054,7 +1054,6 @@ pub(crate) struct yaml_string_t {
     pub pointer: *mut yaml_char_t,
 }
 
-#[derive(Copy, Clone)]
 #[repr(C)]
 pub(crate) struct yaml_buffer_t<T> {
     /// The beginning of the buffer.
@@ -1067,7 +1066,13 @@ pub(crate) struct yaml_buffer_t<T> {
     pub last: *mut T,
 }
 
-#[derive(Copy, Clone)]
+impl<T> Copy for yaml_buffer_t<T> {}
+impl<T> Clone for yaml_buffer_t<T> {
+    fn clone(&self) -> Self {
+        *self
+    }
+}
+
 #[repr(C)]
 pub struct yaml_stack_t<T> {
     /// The beginning of the stack.
@@ -1078,7 +1083,13 @@ pub struct yaml_stack_t<T> {
     pub top: *mut T,
 }
 
-#[derive(Copy, Clone)]
+impl<T> Copy for yaml_stack_t<T> {}
+impl<T> Clone for yaml_stack_t<T> {
+    fn clone(&self) -> Self {
+        *self
+    }
+}
+
 #[repr(C)]
 pub(crate) struct yaml_queue_t<T> {
     /// The beginning of the queue.
@@ -1089,4 +1100,11 @@ pub(crate) struct yaml_queue_t<T> {
     pub head: *mut T,
     /// The tail of the queue.
     pub tail: *mut T,
+}
+
+impl<T> Copy for yaml_queue_t<T> {}
+impl<T> Clone for yaml_queue_t<T> {
+    fn clone(&self) -> Self {
+        *self
+    }
 }
