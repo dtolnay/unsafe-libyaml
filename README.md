@@ -14,7 +14,7 @@ of [c2rust].
 
 ```toml
 [dependencies]
-unsafe-libyaml = "0.0"
+unsafe-libyaml = "0.1"
 ```
 
 *Compiler support: requires rustc 1.56+*
