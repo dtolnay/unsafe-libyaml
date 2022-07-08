@@ -1981,12 +1981,10 @@ unsafe fn yaml_parser_process_directives(
                 } else if (*token).type_0 as libc::c_uint
                     == YAML_TAG_DIRECTIVE_TOKEN as libc::c_int as libc::c_uint
                 {
-                    let mut value = yaml_tag_directive_t {
-                        handle: ptr::null_mut::<yaml_char_t>(),
-                        prefix: ptr::null_mut::<yaml_char_t>(),
+                    let value = yaml_tag_directive_t {
+                        handle: (*token).data.tag_directive.handle,
+                        prefix: (*token).data.tag_directive.prefix,
                     };
-                    value.handle = (*token).data.tag_directive.handle;
-                    value.prefix = (*token).data.tag_directive.prefix;
                     if yaml_parser_append_tag_directive(parser, value, 0_i32, (*token).start_mark)
                         == 0
                     {

@@ -1,8 +1,7 @@
 use crate::externs::{free, malloc, memcpy, memmove, memset, realloc, strdup, strlen};
 use crate::yaml::{
-    unnamed_yaml_node_t_data, unnamed_yaml_node_t_data_scalar, Unnamed_16, Unnamed_17, Unnamed_26,
-    Unnamed_27, Unnamed_28, Unnamed_29, Unnamed_30, Unnamed_31, Unnamed_32, Unnamed_33, Unnamed_34,
-    Unnamed_35,
+    Unnamed_16, Unnamed_17, Unnamed_26, Unnamed_27, Unnamed_28, Unnamed_29, Unnamed_30, Unnamed_31,
+    Unnamed_32, Unnamed_33, Unnamed_34, Unnamed_35,
 };
 use crate::{
     libc, size_t, yaml_break_t, yaml_char_t, yaml_document_t, yaml_emitter_state_t, yaml_emitter_t,
@@ -10,12 +9,12 @@ use crate::{
     yaml_node_pair_t, yaml_node_t, yaml_parser_state_t, yaml_parser_t, yaml_read_handler_t,
     yaml_scalar_style_t, yaml_sequence_style_t, yaml_simple_key_t, yaml_tag_directive_t,
     yaml_token_t, yaml_version_directive_t, yaml_write_handler_t, PointerExt, YAML_ALIAS_EVENT,
-    YAML_ANY_SCALAR_STYLE, YAML_DOCUMENT_END_EVENT, YAML_DOCUMENT_START_EVENT,
-    YAML_MAPPING_END_EVENT, YAML_MAPPING_NODE, YAML_MAPPING_START_EVENT, YAML_MEMORY_ERROR,
-    YAML_NO_ERROR, YAML_NO_NODE, YAML_SCALAR_EVENT, YAML_SCALAR_NODE, YAML_SEQUENCE_END_EVENT,
-    YAML_SEQUENCE_NODE, YAML_SEQUENCE_START_EVENT, YAML_STREAM_END_EVENT, YAML_STREAM_START_EVENT,
+    YAML_DOCUMENT_END_EVENT, YAML_DOCUMENT_START_EVENT, YAML_MAPPING_END_EVENT, YAML_MAPPING_NODE,
+    YAML_MAPPING_START_EVENT, YAML_MEMORY_ERROR, YAML_NO_ERROR, YAML_SCALAR_EVENT,
+    YAML_SCALAR_NODE, YAML_SEQUENCE_END_EVENT, YAML_SEQUENCE_NODE, YAML_SEQUENCE_START_EVENT,
+    YAML_STREAM_END_EVENT, YAML_STREAM_START_EVENT,
 };
-use core::mem::size_of;
+use core::mem::{size_of, MaybeUninit};
 use core::ptr::{self, addr_of_mut};
 pub unsafe fn yaml_get_version_string() -> *const libc::c_char {
     b"0.2.5\0" as *const u8 as *const libc::c_char
@@ -1770,27 +1769,8 @@ pub unsafe fn yaml_document_add_scalar(
     };
     let mut tag_copy: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
     let mut value_copy: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
-    let mut node = yaml_node_t {
-        type_0: YAML_NO_NODE,
-        tag: ptr::null_mut::<yaml_char_t>(),
-        data: unnamed_yaml_node_t_data {
-            scalar: unnamed_yaml_node_t_data_scalar {
-                value: ptr::null_mut::<yaml_char_t>(),
-                length: 0,
-                style: YAML_ANY_SCALAR_STYLE,
-            },
-        },
-        start_mark: yaml_mark_t {
-            index: 0,
-            line: 0,
-            column: 0,
-        },
-        end_mark: yaml_mark_t {
-            index: 0,
-            line: 0,
-            column: 0,
-        },
-    };
+    let mut node = MaybeUninit::<yaml_node_t>::uninit();
+    let node = node.as_mut_ptr();
     __assert!(!document.is_null());
     __assert!(!value.is_null());
     if tag.is_null() {
@@ -1812,17 +1792,17 @@ pub unsafe fn yaml_document_add_scalar(
                     );
                     *value_copy.wrapping_offset(length as isize) = '\0' as i32 as yaml_char_t;
                     memset(
-                        addr_of_mut!(node) as *mut libc::c_void,
+                        node as *mut libc::c_void,
                         0_i32,
                         size_of::<yaml_node_t>() as libc::c_ulong,
                     );
-                    node.type_0 = YAML_SCALAR_NODE;
-                    node.tag = tag_copy;
-                    node.start_mark = mark;
-                    node.end_mark = mark;
-                    node.data.scalar.value = value_copy;
-                    node.data.scalar.length = length as size_t;
-                    node.data.scalar.style = style;
+                    (*node).type_0 = YAML_SCALAR_NODE;
+                    (*node).tag = tag_copy;
+                    (*node).start_mark = mark;
+                    (*node).end_mark = mark;
+                    (*node).data.scalar.value = value_copy;
+                    (*node).data.scalar.length = length as size_t;
+                    (*node).data.scalar.style = style;
                     if !(if (*document).nodes.top != (*document).nodes.end
                         || yaml_stack_extend(
                             addr_of_mut!((*document).nodes.start) as *mut *mut libc::c_void,
@@ -1833,7 +1813,7 @@ pub unsafe fn yaml_document_add_scalar(
                         let fresh186 = addr_of_mut!((*document).nodes.top);
                         let fresh187 = *fresh186;
                         *fresh186 = (*fresh186).wrapping_offset(1);
-                        *fresh187 = node;
+                        ptr::copy_nonoverlapping(node, fresh187, 1);
                         1_i32
                     } else {
                         context.error = YAML_MEMORY_ERROR;
@@ -1870,27 +1850,8 @@ pub unsafe fn yaml_document_add_sequence(
         end: ptr::null_mut::<yaml_node_item_t>(),
         top: ptr::null_mut::<yaml_node_item_t>(),
     };
-    let mut node = yaml_node_t {
-        type_0: YAML_NO_NODE,
-        tag: ptr::null_mut::<yaml_char_t>(),
-        data: unnamed_yaml_node_t_data {
-            scalar: unnamed_yaml_node_t_data_scalar {
-                value: ptr::null_mut::<yaml_char_t>(),
-                length: 0,
-                style: YAML_ANY_SCALAR_STYLE,
-            },
-        },
-        start_mark: yaml_mark_t {
-            index: 0,
-            line: 0,
-            column: 0,
-        },
-        end_mark: yaml_mark_t {
-            index: 0,
-            line: 0,
-            column: 0,
-        },
-    };
+    let mut node = MaybeUninit::<yaml_node_t>::uninit();
+    let node = node.as_mut_ptr();
     __assert!(!document.is_null());
     if tag.is_null() {
         tag = b"tag:yaml.org,2002:seq\0" as *const u8 as *const libc::c_char as *mut yaml_char_t;
@@ -1911,18 +1872,18 @@ pub unsafe fn yaml_document_add_sequence(
             } == 0)
             {
                 memset(
-                    addr_of_mut!(node) as *mut libc::c_void,
+                    node as *mut libc::c_void,
                     0_i32,
                     size_of::<yaml_node_t>() as libc::c_ulong,
                 );
-                node.type_0 = YAML_SEQUENCE_NODE;
-                node.tag = tag_copy;
-                node.start_mark = mark;
-                node.end_mark = mark;
-                node.data.sequence.items.start = items.start;
-                node.data.sequence.items.end = items.end;
-                node.data.sequence.items.top = items.start;
-                node.data.sequence.style = style;
+                (*node).type_0 = YAML_SEQUENCE_NODE;
+                (*node).tag = tag_copy;
+                (*node).start_mark = mark;
+                (*node).end_mark = mark;
+                (*node).data.sequence.items.start = items.start;
+                (*node).data.sequence.items.end = items.end;
+                (*node).data.sequence.items.top = items.start;
+                (*node).data.sequence.style = style;
                 if !(if (*document).nodes.top != (*document).nodes.end
                     || yaml_stack_extend(
                         addr_of_mut!((*document).nodes.start) as *mut *mut libc::c_void,
@@ -1933,7 +1894,7 @@ pub unsafe fn yaml_document_add_sequence(
                     let fresh188 = addr_of_mut!((*document).nodes.top);
                     let fresh189 = *fresh188;
                     *fresh188 = (*fresh188).wrapping_offset(1);
-                    *fresh189 = node;
+                    ptr::copy_nonoverlapping(node, fresh189, 1);
                     1_i32
                 } else {
                     context.error = YAML_MEMORY_ERROR;
@@ -1972,27 +1933,8 @@ pub unsafe fn yaml_document_add_mapping(
         end: ptr::null_mut::<yaml_node_pair_t>(),
         top: ptr::null_mut::<yaml_node_pair_t>(),
     };
-    let mut node = yaml_node_t {
-        type_0: YAML_NO_NODE,
-        tag: ptr::null_mut::<yaml_char_t>(),
-        data: unnamed_yaml_node_t_data {
-            scalar: unnamed_yaml_node_t_data_scalar {
-                value: ptr::null_mut::<yaml_char_t>(),
-                length: 0,
-                style: YAML_ANY_SCALAR_STYLE,
-            },
-        },
-        start_mark: yaml_mark_t {
-            index: 0,
-            line: 0,
-            column: 0,
-        },
-        end_mark: yaml_mark_t {
-            index: 0,
-            line: 0,
-            column: 0,
-        },
-    };
+    let mut node = MaybeUninit::<yaml_node_t>::uninit();
+    let node = node.as_mut_ptr();
     __assert!(!document.is_null());
     if tag.is_null() {
         tag = b"tag:yaml.org,2002:map\0" as *const u8 as *const libc::c_char as *mut yaml_char_t;
@@ -2013,18 +1955,18 @@ pub unsafe fn yaml_document_add_mapping(
             } == 0)
             {
                 memset(
-                    addr_of_mut!(node) as *mut libc::c_void,
+                    node as *mut libc::c_void,
                     0_i32,
                     size_of::<yaml_node_t>() as libc::c_ulong,
                 );
-                node.type_0 = YAML_MAPPING_NODE;
-                node.tag = tag_copy;
-                node.start_mark = mark;
-                node.end_mark = mark;
-                node.data.mapping.pairs.start = pairs.start;
-                node.data.mapping.pairs.end = pairs.end;
-                node.data.mapping.pairs.top = pairs.start;
-                node.data.mapping.style = style;
+                (*node).type_0 = YAML_MAPPING_NODE;
+                (*node).tag = tag_copy;
+                (*node).start_mark = mark;
+                (*node).end_mark = mark;
+                (*node).data.mapping.pairs.start = pairs.start;
+                (*node).data.mapping.pairs.end = pairs.end;
+                (*node).data.mapping.pairs.top = pairs.start;
+                (*node).data.mapping.style = style;
                 if !(if (*document).nodes.top != (*document).nodes.end
                     || yaml_stack_extend(
                         addr_of_mut!((*document).nodes.start) as *mut *mut libc::c_void,
@@ -2035,7 +1977,7 @@ pub unsafe fn yaml_document_add_mapping(
                     let fresh190 = addr_of_mut!((*document).nodes.top);
                     let fresh191 = *fresh190;
                     *fresh190 = (*fresh190).wrapping_offset(1);
-                    *fresh191 = node;
+                    ptr::copy_nonoverlapping(node, fresh191, 1);
                     1_i32
                 } else {
                     context.error = YAML_MEMORY_ERROR;
@@ -2141,7 +2083,6 @@ pub unsafe fn yaml_document_append_mapping_pair(
     let mut context: Unnamed_35 = Unnamed_35 {
         error: YAML_NO_ERROR,
     };
-    let mut pair = yaml_node_pair_t { key: 0, value: 0 };
     __assert!(!document.is_null());
     __assert!(
         mapping > 0_i32
@@ -2160,8 +2101,7 @@ pub unsafe fn yaml_document_append_mapping_pair(
         value > 0_i32
             && ((*document).nodes.start).wrapping_offset(value as isize) <= (*document).nodes.top
     );
-    pair.key = key;
-    pair.value = value;
+    let pair = yaml_node_pair_t { key, value };
     if if (*((*document).nodes.start).wrapping_offset((mapping - 1_i32) as isize))
         .data
         .mapping
