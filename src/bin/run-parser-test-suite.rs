@@ -72,8 +72,8 @@ unsafe fn unsafe_main() -> ExitCode {
                 let _ = writeln!(
                     io::stderr(),
                     "Line: {} Column: {}",
-                    ((*parser).problem_mark.line).wrapping_add(1_i32 as libc::c_ulong),
-                    ((*parser).problem_mark.column).wrapping_add(1_i32 as libc::c_ulong),
+                    ((*parser).problem_mark.line).wrapping_add(1_u64),
+                    ((*parser).problem_mark.column).wrapping_add(1_u64),
                 );
             }
             return ExitCode::FAILURE;

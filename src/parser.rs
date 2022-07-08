@@ -354,12 +354,10 @@ unsafe fn yaml_parser_parse_document_start(
         yaml_free(version_directive as *mut libc::c_void);
         while tag_directives.start != tag_directives.end {
             yaml_free(
-                (*(tag_directives.end).wrapping_offset(-1_i32 as isize)).handle
-                    as *mut libc::c_void,
+                (*(tag_directives.end).wrapping_offset(-1_isize)).handle as *mut libc::c_void,
             );
             yaml_free(
-                (*(tag_directives.end).wrapping_offset(-1_i32 as isize)).prefix
-                    as *mut libc::c_void,
+                (*(tag_directives.end).wrapping_offset(-1_isize)).prefix as *mut libc::c_void,
             );
             tag_directives.end = (tag_directives.end).wrapping_offset(-1);
         }
@@ -647,9 +645,7 @@ unsafe fn yaml_parser_parse_node(
                                     strlen((*tag_directive).prefix as *mut libc::c_char);
                                 let suffix_len: size_t = strlen(tag_suffix as *mut libc::c_char);
                                 tag = yaml_malloc(
-                                    prefix_len
-                                        .wrapping_add(suffix_len)
-                                        .wrapping_add(1_i32 as libc::c_ulong),
+                                    prefix_len.wrapping_add(suffix_len).wrapping_add(1_u64),
                                 ) as *mut yaml_char_t;
                                 if tag.is_null() {
                                     (*parser).error = YAML_MEMORY_ERROR;
@@ -862,12 +858,11 @@ unsafe fn yaml_parser_parse_node(
                             (*event).data.mapping_start.style = YAML_BLOCK_MAPPING_STYLE;
                             return 1_i32;
                         } else if !anchor.is_null() || !tag.is_null() {
-                            let value: *mut yaml_char_t =
-                                yaml_malloc(1_i32 as size_t) as *mut yaml_char_t;
+                            let value: *mut yaml_char_t = yaml_malloc(1_u64) as *mut yaml_char_t;
                             if value.is_null() {
                                 (*parser).error = YAML_MEMORY_ERROR;
                             } else {
-                                *value.wrapping_offset(0_i32 as isize) = '\0' as i32 as yaml_char_t;
+                                *value.wrapping_offset(0_isize) = '\0' as i32 as yaml_char_t;
                                 let fresh53 = addr_of_mut!((*parser).states.top);
                                 *fresh53 = (*fresh53).wrapping_offset(-1);
                                 (*parser).state = **fresh53;
@@ -885,7 +880,7 @@ unsafe fn yaml_parser_parse_node(
                                 *fresh55 = tag;
                                 let fresh56 = addr_of_mut!((*event).data.scalar.value);
                                 *fresh56 = value;
-                                (*event).data.scalar.length = 0_i32 as size_t;
+                                (*event).data.scalar.length = 0_u64;
                                 (*event).data.scalar.plain_implicit = implicit;
                                 (*event).data.scalar.quoted_implicit = 0_i32;
                                 (*event).data.scalar.style = YAML_PLAIN_SCALAR_STYLE;
@@ -1863,12 +1858,12 @@ unsafe fn yaml_parser_process_empty_scalar(
     mut event: *mut yaml_event_t,
     mark: yaml_mark_t,
 ) -> libc::c_int {
-    let value: *mut yaml_char_t = yaml_malloc(1_i32 as size_t) as *mut yaml_char_t;
+    let value: *mut yaml_char_t = yaml_malloc(1_u64) as *mut yaml_char_t;
     if value.is_null() {
         (*parser).error = YAML_MEMORY_ERROR;
         return 0_i32;
     }
-    *value.wrapping_offset(0_i32 as isize) = '\0' as i32 as yaml_char_t;
+    *value.wrapping_offset(0_isize) = '\0' as i32 as yaml_char_t;
     memset(
         event as *mut libc::c_void,
         0_i32,
@@ -1883,7 +1878,7 @@ unsafe fn yaml_parser_process_empty_scalar(
     *fresh139 = ptr::null_mut::<yaml_char_t>();
     let fresh140 = addr_of_mut!((*event).data.scalar.value);
     *fresh140 = value;
-    (*event).data.scalar.length = 0_i32 as size_t;
+    (*event).data.scalar.length = 0_u64;
     (*event).data.scalar.plain_implicit = 1_i32;
     (*event).data.scalar.quoted_implicit = 0_i32;
     (*event).data.scalar.style = YAML_PLAIN_SCALAR_STYLE;
@@ -1919,12 +1914,12 @@ unsafe fn yaml_parser_process_directives(
         top: ptr::null_mut::<yaml_tag_directive_t>(),
     };
     let mut token: *mut yaml_token_t;
-    tag_directives.start = yaml_malloc(
-        (16_i32 as libc::c_ulong).wrapping_mul(size_of::<yaml_tag_directive_t>() as libc::c_ulong),
-    ) as *mut yaml_tag_directive_t;
+    tag_directives.start =
+        yaml_malloc((16_u64).wrapping_mul(size_of::<yaml_tag_directive_t>() as libc::c_ulong))
+            as *mut yaml_tag_directive_t;
     if !(if !(tag_directives.start).is_null() {
         tag_directives.top = tag_directives.start;
-        tag_directives.end = (tag_directives.start).wrapping_offset(16_i32 as isize);
+        tag_directives.end = (tag_directives.start).wrapping_offset(16_isize);
         1_i32
     } else {
         (*parser).error = YAML_MEMORY_ERROR;

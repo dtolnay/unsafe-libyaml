@@ -1,11 +1,10 @@
 use crate::externs::{memset, strcmp};
 use crate::yaml::{
-    size_t, yaml_anchors_t, yaml_char_t, yaml_document_t, yaml_emitter_t, yaml_event_t,
-    yaml_mark_t, yaml_node_item_t, yaml_node_pair_t, yaml_node_t, YAML_ALIAS_EVENT,
-    YAML_ANY_ENCODING, YAML_DOCUMENT_END_EVENT, YAML_DOCUMENT_START_EVENT, YAML_MAPPING_END_EVENT,
-    YAML_MAPPING_NODE, YAML_MAPPING_START_EVENT, YAML_SCALAR_EVENT, YAML_SCALAR_NODE,
-    YAML_SEQUENCE_END_EVENT, YAML_SEQUENCE_NODE, YAML_SEQUENCE_START_EVENT, YAML_STREAM_END_EVENT,
-    YAML_STREAM_START_EVENT,
+    yaml_anchors_t, yaml_char_t, yaml_document_t, yaml_emitter_t, yaml_event_t, yaml_mark_t,
+    yaml_node_item_t, yaml_node_pair_t, yaml_node_t, YAML_ALIAS_EVENT, YAML_ANY_ENCODING,
+    YAML_DOCUMENT_END_EVENT, YAML_DOCUMENT_START_EVENT, YAML_MAPPING_END_EVENT, YAML_MAPPING_NODE,
+    YAML_MAPPING_START_EVENT, YAML_SCALAR_EVENT, YAML_SCALAR_NODE, YAML_SEQUENCE_END_EVENT,
+    YAML_SEQUENCE_NODE, YAML_SEQUENCE_START_EVENT, YAML_STREAM_END_EVENT, YAML_STREAM_START_EVENT,
 };
 use crate::{libc, yaml_document_delete, yaml_emitter_emit, yaml_free, yaml_malloc, PointerExt};
 use core::mem::{size_of, MaybeUninit};
@@ -15,9 +14,9 @@ pub unsafe fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> libc::c_int
     let mut event = MaybeUninit::<yaml_event_t>::uninit();
     let event = event.as_mut_ptr();
     let mark = yaml_mark_t {
-        index: 0_i32 as size_t,
-        line: 0_i32 as size_t,
-        column: 0_i32 as size_t,
+        index: 0_u64,
+        line: 0_u64,
+        column: 0_u64,
     };
     __assert!(!emitter.is_null());
     __assert!((*emitter).opened == 0);
@@ -40,9 +39,9 @@ pub unsafe fn yaml_emitter_close(mut emitter: *mut yaml_emitter_t) -> libc::c_in
     let mut event = MaybeUninit::<yaml_event_t>::uninit();
     let event = event.as_mut_ptr();
     let mark = yaml_mark_t {
-        index: 0_i32 as size_t,
-        line: 0_i32 as size_t,
-        column: 0_i32 as size_t,
+        index: 0_u64,
+        line: 0_u64,
+        column: 0_u64,
     };
     __assert!(!emitter.is_null());
     __assert!((*emitter).opened != 0);
@@ -71,9 +70,9 @@ pub unsafe fn yaml_emitter_dump(
     let mut event = MaybeUninit::<yaml_event_t>::uninit();
     let event = event.as_mut_ptr();
     let mark = yaml_mark_t {
-        index: 0_i32 as size_t,
-        line: 0_i32 as size_t,
-        column: 0_i32 as size_t,
+        index: 0_u64,
+        line: 0_u64,
+        column: 0_u64,
     };
     __assert!(!emitter.is_null());
     __assert!(!document.is_null());
@@ -202,7 +201,7 @@ unsafe fn yaml_emitter_delete_document_and_anchors(mut emitter: *mut yaml_emitte
 unsafe fn yaml_emitter_anchor_node(emitter: *mut yaml_emitter_t, index: libc::c_int) {
     let node: *mut yaml_node_t = ((*(*emitter).document).nodes.start)
         .wrapping_offset(index as isize)
-        .wrapping_offset(-(1_i32 as isize));
+        .wrapping_offset(-(1_isize));
     let mut item: *mut yaml_node_item_t;
     let mut pair: *mut yaml_node_pair_t;
     let fresh8 =
@@ -238,7 +237,7 @@ unsafe fn yaml_emitter_generate_anchor(
     _emitter: *mut yaml_emitter_t,
     anchor_id: libc::c_int,
 ) -> *mut yaml_char_t {
-    let anchor: *mut yaml_char_t = yaml_malloc(16_i32 as size_t) as *mut yaml_char_t;
+    let anchor: *mut yaml_char_t = yaml_malloc(16_u64) as *mut yaml_char_t;
     if anchor.is_null() {
         return ptr::null_mut::<yaml_char_t>();
     }
@@ -249,7 +248,7 @@ unsafe fn yaml_emitter_generate_anchor(
 unsafe fn yaml_emitter_dump_node(emitter: *mut yaml_emitter_t, index: libc::c_int) -> libc::c_int {
     let node: *mut yaml_node_t = ((*(*emitter).document).nodes.start)
         .wrapping_offset(index as isize)
-        .wrapping_offset(-(1_i32 as isize));
+        .wrapping_offset(-(1_isize));
     let anchor_id: libc::c_int =
         (*((*emitter).anchors).wrapping_offset((index - 1_i32) as isize)).anchor;
     let mut anchor: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
@@ -277,9 +276,9 @@ unsafe fn yaml_emitter_dump_alias(
     let mut event = MaybeUninit::<yaml_event_t>::uninit();
     let event = event.as_mut_ptr();
     let mark = yaml_mark_t {
-        index: 0_i32 as size_t,
-        line: 0_i32 as size_t,
-        column: 0_i32 as size_t,
+        index: 0_u64,
+        line: 0_u64,
+        column: 0_u64,
     };
     memset(
         event as *mut libc::c_void,
@@ -300,9 +299,9 @@ unsafe fn yaml_emitter_dump_scalar(
     let mut event = MaybeUninit::<yaml_event_t>::uninit();
     let event = event.as_mut_ptr();
     let mark = yaml_mark_t {
-        index: 0_i32 as size_t,
-        line: 0_i32 as size_t,
-        column: 0_i32 as size_t,
+        index: 0_u64,
+        line: 0_u64,
+        column: 0_u64,
     };
     let plain_implicit: libc::c_int = (strcmp(
         (*node).tag as *mut libc::c_char,
@@ -337,9 +336,9 @@ unsafe fn yaml_emitter_dump_sequence(
     let mut event = MaybeUninit::<yaml_event_t>::uninit();
     let event = event.as_mut_ptr();
     let mark = yaml_mark_t {
-        index: 0_i32 as size_t,
-        line: 0_i32 as size_t,
-        column: 0_i32 as size_t,
+        index: 0_u64,
+        line: 0_u64,
+        column: 0_u64,
     };
     let implicit: libc::c_int = (strcmp(
         (*node).tag as *mut libc::c_char,
@@ -389,9 +388,9 @@ unsafe fn yaml_emitter_dump_mapping(
     let mut event = MaybeUninit::<yaml_event_t>::uninit();
     let event = event.as_mut_ptr();
     let mark = yaml_mark_t {
-        index: 0_i32 as size_t,
-        line: 0_i32 as size_t,
-        column: 0_i32 as size_t,
+        index: 0_u64,
+        line: 0_u64,
+        column: 0_u64,
     };
     let implicit: libc::c_int = (strcmp(
         (*node).tag as *mut libc::c_char,
