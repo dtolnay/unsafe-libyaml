@@ -1,6 +1,7 @@
 use crate::externs::{memcmp, memmove};
+use crate::yaml::{size_t, yaml_char_t};
 use crate::{
-    libc, size_t, yaml_char_t, yaml_parser_t, PointerExt, YAML_READER_ERROR, YAML_UTF16BE_ENCODING,
+    libc, yaml_parser_t, PointerExt, YAML_READER_ERROR, YAML_UTF16BE_ENCODING,
     YAML_UTF16LE_ENCODING, YAML_UTF8_ENCODING,
 };
 use core::ptr::addr_of_mut;

@@ -21,12 +21,11 @@ use std::process::{self, ExitCode};
 use std::ptr::addr_of_mut;
 use std::slice;
 use unsafe_libyaml::{
-    libc, size_t, yaml_char_t, yaml_event_delete, yaml_event_t, yaml_event_type_t,
-    yaml_parser_delete, yaml_parser_initialize, yaml_parser_parse, yaml_parser_set_input,
-    yaml_parser_t, YAML_ALIAS_EVENT, YAML_DOCUMENT_END_EVENT, YAML_DOCUMENT_START_EVENT,
-    YAML_MAPPING_END_EVENT, YAML_MAPPING_START_EVENT, YAML_NO_EVENT, YAML_SCALAR_EVENT,
-    YAML_SEQUENCE_END_EVENT, YAML_SEQUENCE_START_EVENT, YAML_STREAM_END_EVENT,
-    YAML_STREAM_START_EVENT,
+    libc, yaml_event_delete, yaml_event_t, yaml_event_type_t, yaml_parser_delete,
+    yaml_parser_initialize, yaml_parser_parse, yaml_parser_set_input, yaml_parser_t,
+    YAML_ALIAS_EVENT, YAML_DOCUMENT_END_EVENT, YAML_DOCUMENT_START_EVENT, YAML_MAPPING_END_EVENT,
+    YAML_MAPPING_START_EVENT, YAML_NO_EVENT, YAML_SCALAR_EVENT, YAML_SEQUENCE_END_EVENT,
+    YAML_SEQUENCE_START_EVENT, YAML_STREAM_END_EVENT, YAML_STREAM_START_EVENT,
 };
 pub unsafe fn unsafe_main(
     mut stdin: &mut dyn Read,
@@ -42,14 +41,14 @@ pub unsafe fn unsafe_main(
     unsafe fn read_from_stdio(
         data: *mut libc::c_void,
         buffer: *mut libc::c_uchar,
-        size: size_t,
-        size_read: *mut size_t,
+        size: u64,
+        size_read: *mut u64,
     ) -> libc::c_int {
         let stdin: *mut &mut dyn Read = data.cast();
         let slice = slice::from_raw_parts_mut(buffer.cast(), size as usize);
         match (*stdin).read(slice) {
             Ok(n) => {
-                *size_read = n as size_t;
+                *size_read = n as u64;
                 1
             }
             Err(_) => 0,
@@ -199,7 +198,7 @@ pub unsafe fn unsafe_main(
     yaml_parser_delete(parser);
     Ok(())
 }
-pub unsafe fn print_escaped(stdout: &mut dyn Write, str: *mut yaml_char_t, length: size_t) {
+pub unsafe fn print_escaped(stdout: &mut dyn Write, str: *mut u8, length: u64) {
     let mut i: libc::c_int;
     let mut c: libc::c_char;
     i = 0_i32;

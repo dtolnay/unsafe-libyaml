@@ -24,7 +24,7 @@ use std::ptr::{self, addr_of_mut};
 use std::slice;
 use unsafe_libyaml::externs::{memcpy, strlen, strncmp};
 use unsafe_libyaml::{
-    libc, size_t, yaml_alias_event_initialize, yaml_char_t, yaml_document_end_event_initialize,
+    libc, yaml_alias_event_initialize, yaml_document_end_event_initialize,
     yaml_document_start_event_initialize, yaml_emitter_delete, yaml_emitter_emit,
     yaml_emitter_initialize, yaml_emitter_set_canonical, yaml_emitter_set_output,
     yaml_emitter_set_unicode, yaml_emitter_t, yaml_event_t, yaml_mapping_end_event_initialize,
@@ -56,7 +56,7 @@ pub unsafe fn unsafe_main(
     unsafe fn write_to_stdio(
         data: *mut libc::c_void,
         buffer: *mut libc::c_uchar,
-        size: size_t,
+        size: u64,
     ) -> libc::c_int {
         let stdout: *mut &mut dyn Write = data.cast();
         let bytes = slice::from_raw_parts(buffer.cast(), size as usize);
@@ -110,9 +110,8 @@ pub unsafe fn unsafe_main(
             style = YAML_BLOCK_MAPPING_STYLE as libc::c_int;
             ok = yaml_mapping_start_event_initialize(
                 event,
-                get_anchor('&' as i32 as libc::c_char, line, anchor.as_mut_ptr())
-                    as *mut yaml_char_t,
-                get_tag(line, tag.as_mut_ptr()) as *mut yaml_char_t,
+                get_anchor('&' as i32 as libc::c_char, line, anchor.as_mut_ptr()) as *mut u8,
+                get_tag(line, tag.as_mut_ptr()) as *mut u8,
                 0_i32,
                 style as yaml_mapping_style_t,
             );
@@ -122,9 +121,8 @@ pub unsafe fn unsafe_main(
             style = YAML_BLOCK_SEQUENCE_STYLE as libc::c_int;
             ok = yaml_sequence_start_event_initialize(
                 event,
-                get_anchor('&' as i32 as libc::c_char, line, anchor.as_mut_ptr())
-                    as *mut yaml_char_t,
-                get_tag(line, tag.as_mut_ptr()) as *mut yaml_char_t,
+                get_anchor('&' as i32 as libc::c_char, line, anchor.as_mut_ptr()) as *mut u8,
+                get_tag(line, tag.as_mut_ptr()) as *mut u8,
                 0_i32,
                 style as yaml_sequence_style_t,
             );
@@ -139,10 +137,9 @@ pub unsafe fn unsafe_main(
                 as libc::c_int;
             ok = yaml_scalar_event_initialize(
                 event,
-                get_anchor('&' as i32 as libc::c_char, line, anchor.as_mut_ptr())
-                    as *mut yaml_char_t,
-                get_tag(line, tag.as_mut_ptr()) as *mut yaml_char_t,
-                value.as_mut_ptr() as *mut yaml_char_t,
+                get_anchor('&' as i32 as libc::c_char, line, anchor.as_mut_ptr()) as *mut u8,
+                get_tag(line, tag.as_mut_ptr()) as *mut u8,
+                value.as_mut_ptr() as *mut u8,
                 -1_i32,
                 implicit,
                 implicit,
@@ -151,8 +148,7 @@ pub unsafe fn unsafe_main(
         } else if strncmp(line, b"=ALI\0" as *const u8 as *const libc::c_char, 4_u64) == 0_i32 {
             ok = yaml_alias_event_initialize(
                 event,
-                get_anchor('*' as i32 as libc::c_char, line, anchor.as_mut_ptr())
-                    as *mut yaml_char_t,
+                get_anchor('*' as i32 as libc::c_char, line, anchor.as_mut_ptr()) as *mut u8,
             );
         } else {
             yaml_emitter_delete(emitter);
