@@ -31,7 +31,7 @@ extern crate alloc;
 
 use core::mem::size_of;
 
-pub mod libc {
+mod libc {
     pub use core::ffi::c_void;
     pub use core::primitive::{
         i32 as c_int, i64 as c_long, i8 as c_char, i8 as c_schar, u16 as c_ushort, u32 as c_uint,
