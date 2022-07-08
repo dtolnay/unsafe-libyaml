@@ -377,8 +377,12 @@ pub struct unnamed_yaml_document_t_nodes {
     pub end: *mut yaml_node_t,
     pub top: *mut yaml_node_t,
 }
-pub type yaml_read_handler_t =
-    unsafe fn(*mut libc::c_void, *mut libc::c_uchar, size_t, *mut size_t) -> libc::c_int;
+pub type yaml_read_handler_t = unsafe fn(
+    data: *mut libc::c_void,
+    buffer: *mut libc::c_uchar,
+    size: size_t,
+    size_read: *mut size_t,
+) -> libc::c_int;
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -552,7 +556,7 @@ pub struct unnamed_yaml_parser_t_input_string {
     pub current: *const libc::c_uchar,
 }
 pub type yaml_write_handler_t =
-    unsafe fn(*mut libc::c_void, *mut libc::c_uchar, size_t) -> libc::c_int;
+    unsafe fn(data: *mut libc::c_void, buffer: *mut libc::c_uchar, size: size_t) -> libc::c_int;
 #[derive(Copy, Clone)]
 #[repr(u32)]
 #[non_exhaustive]
