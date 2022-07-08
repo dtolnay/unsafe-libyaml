@@ -712,12 +712,14 @@ pub struct yaml_alias_data_t {
 #[non_exhaustive]
 pub struct yaml_parser_t {
     /// Error type.
-    pub(crate) error: yaml_error_type_t,
+    #[doc(hidden)]
+    pub error: yaml_error_type_t,
     /// Error description.
     #[doc(hidden)]
     pub problem: *const libc::c_char,
     /// The byte about which the problem occured.
-    pub(crate) problem_offset: size_t,
+    #[doc(hidden)]
+    pub problem_offset: size_t,
     /// The problematic value (-1 is none).
     pub(crate) problem_value: libc::c_int,
     /// The problem position.

@@ -23,7 +23,7 @@ struct api_context {
 /// Returns the pointer to a static string of the form `"X.Y.Z"`, where `X` is
 /// the major version number, `Y` is a minor version number, and `Z` is the
 /// patch version number.
-pub unsafe fn yaml_get_version_string() -> *const libc::c_char {
+pub fn yaml_get_version_string() -> *const libc::c_char {
     b"0.2.5\0" as *const u8 as *const libc::c_char
 }
 
