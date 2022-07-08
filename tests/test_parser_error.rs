@@ -1,3 +1,5 @@
+#![allow(clippy::type_complexity)]
+
 mod bin;
 #[path = "../src/bin/run-parser-test-suite.rs"]
 #[allow(dead_code)]

@@ -534,7 +534,7 @@ unsafe fn yaml_parser_save_simple_key(parser: *mut yaml_parser_t) -> libc::c_int
     if (*parser).simple_key_allowed != 0 {
         let simple_key = yaml_simple_key_t {
             possible: 1_i32,
-            required: required,
+            required,
             token_number: ((*parser).tokens_parsed)
                 .wrapping_add(((*parser).tokens.tail).c_offset_from((*parser).tokens.head)
                     as libc::c_long as libc::c_ulong),

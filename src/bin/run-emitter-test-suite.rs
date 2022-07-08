@@ -6,6 +6,7 @@
     clippy::cast_sign_loss,
     clippy::items_after_statements,
     clippy::let_underscore_drop,
+    clippy::missing_errors_doc,
     clippy::missing_safety_doc,
     clippy::ptr_as_ptr,
     clippy::single_match_else,
