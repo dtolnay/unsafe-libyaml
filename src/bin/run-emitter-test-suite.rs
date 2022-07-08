@@ -28,10 +28,10 @@ use unsafe_libyaml::{
     yaml_document_start_event_initialize, yaml_emitter_delete, yaml_emitter_emit,
     yaml_emitter_initialize, yaml_emitter_set_canonical, yaml_emitter_set_output,
     yaml_emitter_set_unicode, yaml_emitter_t, yaml_event_t, yaml_mapping_end_event_initialize,
-    yaml_mapping_start_event_initialize, yaml_mapping_style_t, yaml_scalar_event_initialize,
-    yaml_scalar_style_t, yaml_sequence_end_event_initialize, yaml_sequence_start_event_initialize,
-    yaml_sequence_style_t, yaml_stream_end_event_initialize, yaml_stream_start_event_initialize,
-    yaml_tag_directive_t, yaml_version_directive_t, YAML_BLOCK_MAPPING_STYLE,
+    yaml_mapping_start_event_initialize, yaml_scalar_event_initialize, yaml_scalar_style_t,
+    yaml_sequence_end_event_initialize, yaml_sequence_start_event_initialize,
+    yaml_stream_end_event_initialize, yaml_stream_start_event_initialize, yaml_tag_directive_t,
+    yaml_version_directive_t, YAML_ANY_SCALAR_STYLE, YAML_BLOCK_MAPPING_STYLE,
     YAML_BLOCK_SEQUENCE_STYLE, YAML_DOUBLE_QUOTED_SCALAR_STYLE, YAML_FOLDED_SCALAR_STYLE,
     YAML_LITERAL_SCALAR_STYLE, YAML_PLAIN_SCALAR_STYLE, YAML_SINGLE_QUOTED_SCALAR_STYLE,
     YAML_UTF8_ENCODING,
@@ -77,7 +77,6 @@ pub unsafe fn unsafe_main(
         let mut anchor: [i8; 256] = [0; 256];
         let mut tag: [i8; 256] = [0; 256];
         let implicit: i32;
-        let style: i32;
         if strncmp(line, b"+STR\0" as *const u8 as *const i8, 4_u64) == 0_i32 {
             ok = yaml_stream_start_event_initialize(event, YAML_UTF8_ENCODING);
         } else if strncmp(line, b"-STR\0" as *const u8 as *const i8, 4_u64) == 0_i32 {
@@ -103,31 +102,29 @@ pub unsafe fn unsafe_main(
             ) != 0_i32) as i32;
             ok = yaml_document_end_event_initialize(event, implicit);
         } else if strncmp(line, b"+MAP\0" as *const u8 as *const i8, 4_u64) == 0_i32 {
-            style = YAML_BLOCK_MAPPING_STYLE as i32;
             ok = yaml_mapping_start_event_initialize(
                 event,
                 get_anchor('&' as i32 as i8, line, anchor.as_mut_ptr()) as *mut u8,
                 get_tag(line, tag.as_mut_ptr()) as *mut u8,
                 0_i32,
-                style as yaml_mapping_style_t,
+                YAML_BLOCK_MAPPING_STYLE,
             );
         } else if strncmp(line, b"-MAP\0" as *const u8 as *const i8, 4_u64) == 0_i32 {
             ok = yaml_mapping_end_event_initialize(event);
         } else if strncmp(line, b"+SEQ\0" as *const u8 as *const i8, 4_u64) == 0_i32 {
-            style = YAML_BLOCK_SEQUENCE_STYLE as i32;
             ok = yaml_sequence_start_event_initialize(
                 event,
                 get_anchor('&' as i32 as i8, line, anchor.as_mut_ptr()) as *mut u8,
                 get_tag(line, tag.as_mut_ptr()) as *mut u8,
                 0_i32,
-                style as yaml_sequence_style_t,
+                YAML_BLOCK_SEQUENCE_STYLE,
             );
         } else if strncmp(line, b"-SEQ\0" as *const u8 as *const i8, 4_u64) == 0_i32 {
             ok = yaml_sequence_end_event_initialize(event);
         } else if strncmp(line, b"=VAL\0" as *const u8 as *const i8, 4_u64) == 0_i32 {
             let mut value: [i8; 1024] = [0; 1024];
-            let mut style_0: i32 = 0;
-            get_value(line, value.as_mut_ptr(), &mut style_0);
+            let mut style = YAML_ANY_SCALAR_STYLE;
+            get_value(line, value.as_mut_ptr(), &mut style);
             implicit =
                 (get_tag(line, tag.as_mut_ptr()) == ptr::null_mut::<c_void>() as *mut i8) as i32;
             ok = yaml_scalar_event_initialize(
@@ -138,7 +135,7 @@ pub unsafe fn unsafe_main(
                 -1_i32,
                 implicit,
                 implicit,
-                style_0 as yaml_scalar_style_t,
+                style,
             );
         } else if strncmp(line, b"=ALI\0" as *const u8 as *const i8, 4_u64) == 0_i32 {
             ok = yaml_alias_event_initialize(
@@ -266,7 +263,7 @@ pub unsafe fn get_tag(line: *mut i8, tag: *mut i8) -> *mut i8 {
     *tag.offset((end.offset_from(start) as i64 - 1_i64) as isize) = '\0' as i32 as i8;
     tag
 }
-pub unsafe fn get_value(line: *mut i8, value: *mut i8, style: *mut i32) {
+pub unsafe fn get_value(line: *mut i8, value: *mut i8, style: *mut yaml_scalar_style_t) {
     let mut i: i32 = 0_i32;
     let mut c: *mut i8;
     let mut start: *mut i8 = ptr::null_mut::<i8>();
@@ -277,19 +274,19 @@ pub unsafe fn get_value(line: *mut i8, value: *mut i8, style: *mut i32) {
         if *c as i32 == ' ' as i32 {
             start = c.offset(1_isize);
             if *start as i32 == ':' as i32 {
-                *style = YAML_PLAIN_SCALAR_STYLE as i32;
+                *style = YAML_PLAIN_SCALAR_STYLE;
                 current_block_8 = 17407779659766490442;
             } else if *start as i32 == '\'' as i32 {
-                *style = YAML_SINGLE_QUOTED_SCALAR_STYLE as i32;
+                *style = YAML_SINGLE_QUOTED_SCALAR_STYLE;
                 current_block_8 = 17407779659766490442;
             } else if *start as i32 == '"' as i32 {
-                *style = YAML_DOUBLE_QUOTED_SCALAR_STYLE as i32;
+                *style = YAML_DOUBLE_QUOTED_SCALAR_STYLE;
                 current_block_8 = 17407779659766490442;
             } else if *start as i32 == '|' as i32 {
-                *style = YAML_LITERAL_SCALAR_STYLE as i32;
+                *style = YAML_LITERAL_SCALAR_STYLE;
                 current_block_8 = 17407779659766490442;
             } else if *start as i32 == '>' as i32 {
-                *style = YAML_FOLDED_SCALAR_STYLE as i32;
+                *style = YAML_FOLDED_SCALAR_STYLE;
                 current_block_8 = 17407779659766490442;
             } else {
                 start = ptr::null_mut::<i8>();

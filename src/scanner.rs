@@ -6,16 +6,16 @@ use crate::externs::{memcpy, memmove, memset, strcmp, strlen};
 use crate::reader::yaml_parser_update_buffer;
 use crate::yaml::{ptrdiff_t, size_t, yaml_char_t, yaml_string_t};
 use crate::{
-    libc, yaml_mark_t, yaml_parser_t, yaml_scalar_style_t, yaml_simple_key_t, yaml_token_delete,
-    yaml_token_t, yaml_token_type_t, PointerExt, YAML_ALIAS_TOKEN, YAML_ANCHOR_TOKEN,
-    YAML_BLOCK_END_TOKEN, YAML_BLOCK_ENTRY_TOKEN, YAML_BLOCK_MAPPING_START_TOKEN,
-    YAML_BLOCK_SEQUENCE_START_TOKEN, YAML_DOCUMENT_END_TOKEN, YAML_DOCUMENT_START_TOKEN,
-    YAML_DOUBLE_QUOTED_SCALAR_STYLE, YAML_FLOW_ENTRY_TOKEN, YAML_FLOW_MAPPING_END_TOKEN,
-    YAML_FLOW_MAPPING_START_TOKEN, YAML_FLOW_SEQUENCE_END_TOKEN, YAML_FLOW_SEQUENCE_START_TOKEN,
-    YAML_FOLDED_SCALAR_STYLE, YAML_KEY_TOKEN, YAML_LITERAL_SCALAR_STYLE, YAML_MEMORY_ERROR,
-    YAML_PLAIN_SCALAR_STYLE, YAML_SCALAR_TOKEN, YAML_SCANNER_ERROR,
-    YAML_SINGLE_QUOTED_SCALAR_STYLE, YAML_STREAM_END_TOKEN, YAML_STREAM_START_TOKEN,
-    YAML_TAG_DIRECTIVE_TOKEN, YAML_TAG_TOKEN, YAML_VALUE_TOKEN, YAML_VERSION_DIRECTIVE_TOKEN,
+    libc, yaml_mark_t, yaml_parser_t, yaml_simple_key_t, yaml_token_delete, yaml_token_t,
+    yaml_token_type_t, PointerExt, YAML_ALIAS_TOKEN, YAML_ANCHOR_TOKEN, YAML_BLOCK_END_TOKEN,
+    YAML_BLOCK_ENTRY_TOKEN, YAML_BLOCK_MAPPING_START_TOKEN, YAML_BLOCK_SEQUENCE_START_TOKEN,
+    YAML_DOCUMENT_END_TOKEN, YAML_DOCUMENT_START_TOKEN, YAML_DOUBLE_QUOTED_SCALAR_STYLE,
+    YAML_FLOW_ENTRY_TOKEN, YAML_FLOW_MAPPING_END_TOKEN, YAML_FLOW_MAPPING_START_TOKEN,
+    YAML_FLOW_SEQUENCE_END_TOKEN, YAML_FLOW_SEQUENCE_START_TOKEN, YAML_FOLDED_SCALAR_STYLE,
+    YAML_KEY_TOKEN, YAML_LITERAL_SCALAR_STYLE, YAML_MEMORY_ERROR, YAML_PLAIN_SCALAR_STYLE,
+    YAML_SCALAR_TOKEN, YAML_SCANNER_ERROR, YAML_SINGLE_QUOTED_SCALAR_STYLE, YAML_STREAM_END_TOKEN,
+    YAML_STREAM_START_TOKEN, YAML_TAG_DIRECTIVE_TOKEN, YAML_TAG_TOKEN, YAML_VALUE_TOKEN,
+    YAML_VERSION_DIRECTIVE_TOKEN,
 };
 use core::mem::{size_of, MaybeUninit};
 use core::ptr::{self, addr_of_mut};
@@ -5990,11 +5990,11 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                                             (*token)
                                                                                                 .data
                                                                                                 .scalar
-                                                                                                .style = (if literal != 0 {
-                                                                                                YAML_LITERAL_SCALAR_STYLE as libc::c_int
+                                                                                                .style = if literal != 0 {
+                                                                                                YAML_LITERAL_SCALAR_STYLE
                                                                                             } else {
-                                                                                                YAML_FOLDED_SCALAR_STYLE as libc::c_int
-                                                                                            }) as yaml_scalar_style_t;
+                                                                                                YAML_FOLDED_SCALAR_STYLE
+                                                                                            };
                                                                                             yaml_free(leading_break.start as *mut libc::c_void);
                                                                                             leading_break.end = ptr::null_mut::<yaml_char_t>();
                                                                                             leading_break.pointer = leading_break.end;
@@ -8173,12 +8173,11 @@ unsafe fn yaml_parser_scan_flow_scalar(
                             (*token).data.scalar.length = string.pointer.c_offset_from(string.start)
                                 as libc::c_long
                                 as size_t;
-                            (*token).data.scalar.style = (if single != 0 {
-                                YAML_SINGLE_QUOTED_SCALAR_STYLE as libc::c_int
+                            (*token).data.scalar.style = if single != 0 {
+                                YAML_SINGLE_QUOTED_SCALAR_STYLE
                             } else {
-                                YAML_DOUBLE_QUOTED_SCALAR_STYLE as libc::c_int
-                            })
-                                as yaml_scalar_style_t;
+                                YAML_DOUBLE_QUOTED_SCALAR_STYLE
+                            };
                             yaml_free(leading_break.start as *mut libc::c_void);
                             leading_break.end = ptr::null_mut::<yaml_char_t>();
                             leading_break.pointer = leading_break.end;
