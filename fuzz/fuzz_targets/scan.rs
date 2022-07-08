@@ -7,8 +7,8 @@ use std::mem::MaybeUninit;
 use std::ptr;
 use std::ptr::addr_of_mut;
 use unsafe_libyaml::{
-    yaml_event_delete, yaml_event_t, yaml_parser_delete, yaml_parser_initialize, yaml_parser_parse,
-    yaml_parser_set_input, yaml_parser_t, YAML_STREAM_END_EVENT,
+    yaml_parser_delete, yaml_parser_initialize, yaml_parser_scan, yaml_parser_set_input,
+    yaml_parser_t, yaml_token_delete, yaml_token_t, YAML_STREAM_END_TOKEN,
 };
 
 fuzz_target!(|data: &[u8]| { unsafe { fuzz_target(data) } });
@@ -16,14 +16,15 @@ fuzz_target!(|data: &[u8]| { unsafe { fuzz_target(data) } });
 unsafe fn fuzz_target(mut data: &[u8]) {
     let mut parser = MaybeUninit::<yaml_parser_t>::uninit();
     let parser = parser.as_mut_ptr();
-    let mut event = MaybeUninit::<yaml_event_t>::uninit();
-    let event = event.as_mut_ptr();
     assert_ne!(yaml_parser_initialize(parser), 0);
     yaml_parser_set_input(parser, Some(read_from_slice), addr_of_mut!(data).cast());
-    while yaml_parser_parse(parser, event) != 0 {
-        let type_ = (*event).type_;
-        yaml_event_delete(event);
-        if type_ == YAML_STREAM_END_EVENT {
+
+    let mut token = MaybeUninit::<yaml_token_t>::uninit();
+    let token = token.as_mut_ptr();
+    while yaml_parser_scan(parser, token) != 0 {
+        let type_ = (*token).type_;
+        yaml_token_delete(token);
+        if type_ == YAML_STREAM_END_TOKEN {
             break;
         }
     }

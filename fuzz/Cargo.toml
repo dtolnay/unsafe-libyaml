@@ -12,8 +12,20 @@ libfuzzer-sys = "0.4"
 unsafe-libyaml = { path = ".." }
 
 [[bin]]
-name = "parser"
-path = "fuzz_targets/parser.rs"
+name = "scan"
+path = "fuzz_targets/scan.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "parse"
+path = "fuzz_targets/parse.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "load"
+path = "fuzz_targets/load.rs"
 test = false
 doc = false
 
