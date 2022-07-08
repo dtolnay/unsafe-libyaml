@@ -183,9 +183,9 @@ unsafe fn yaml_parser_load_document(
     (*(*parser).document).start_mark = (*event).start_mark;
     ctx.start = yaml_malloc((16_u64).wrapping_mul(size_of::<libc::c_int>() as libc::c_ulong))
         as *mut libc::c_int;
-    if if !(ctx.start).is_null() {
+    if if !ctx.start.is_null() {
         ctx.top = ctx.start;
-        ctx.end = (ctx.start).wrapping_offset(16_isize);
+        ctx.end = ctx.start.wrapping_offset(16_isize);
         1_i32
     } else {
         (*parser).error = YAML_MEMORY_ERROR;
@@ -592,9 +592,9 @@ unsafe fn yaml_parser_load_sequence(
                 items.start = yaml_malloc(
                     (16_u64).wrapping_mul(size_of::<yaml_node_item_t>() as libc::c_ulong),
                 ) as *mut yaml_node_item_t;
-                if !(if !(items.start).is_null() {
+                if !(if !items.start.is_null() {
                     items.top = items.start;
-                    items.end = (items.start).wrapping_offset(16_isize);
+                    items.end = items.start.wrapping_offset(16_isize);
                     1_i32
                 } else {
                     (*parser).error = YAML_MEMORY_ERROR;
@@ -753,9 +753,9 @@ unsafe fn yaml_parser_load_mapping(
                 pairs.start = yaml_malloc(
                     (16_u64).wrapping_mul(size_of::<yaml_node_pair_t>() as libc::c_ulong),
                 ) as *mut yaml_node_pair_t;
-                if !(if !(pairs.start).is_null() {
+                if !(if !pairs.start.is_null() {
                     pairs.top = pairs.start;
-                    pairs.end = (pairs.start).wrapping_offset(16_isize);
+                    pairs.end = pairs.start.wrapping_offset(16_isize);
                     1_i32
                 } else {
                     (*parser).error = YAML_MEMORY_ERROR;

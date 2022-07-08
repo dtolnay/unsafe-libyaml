@@ -2520,9 +2520,9 @@ unsafe fn yaml_parser_scan_directive_name(
         pointer: ptr::null_mut::<yaml_char_t>(),
     };
     string.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-    if !(if !(string.start).is_null() {
+    if !(if !string.start.is_null() {
         string.pointer = string.start;
-        string.end = (string.start).wrapping_offset(16_isize);
+        string.end = string.start.wrapping_offset(16_isize);
         memset(string.start as *mut libc::c_void, 0_i32, 16_u64);
         1_i32
     } else {
@@ -2557,7 +2557,7 @@ unsafe fn yaml_parser_scan_directive_name(
                     current_block = 10879442775620481940;
                     break;
                 }
-                if if if (string.pointer).wrapping_offset(5_isize) < string.end
+                if if if string.pointer.wrapping_offset(5_isize) < string.end
                     || yaml_string_extend(
                         addr_of_mut!(string.start),
                         addr_of_mut!(string.pointer),
@@ -2575,64 +2575,64 @@ unsafe fn yaml_parser_scan_directive_name(
                         let fresh131 = *fresh130;
                         *fresh130 = (*fresh130).wrapping_offset(1);
                         let fresh132 = string.pointer;
-                        string.pointer = (string.pointer).wrapping_offset(1);
+                        string.pointer = string.pointer.wrapping_offset(1);
                         *fresh132 = *fresh131;
                     } else if *(*parser).buffer.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
                         let fresh133 = addr_of_mut!((*parser).buffer.pointer);
                         let fresh134 = *fresh133;
                         *fresh133 = (*fresh133).wrapping_offset(1);
                         let fresh135 = string.pointer;
-                        string.pointer = (string.pointer).wrapping_offset(1);
+                        string.pointer = string.pointer.wrapping_offset(1);
                         *fresh135 = *fresh134;
                         let fresh136 = addr_of_mut!((*parser).buffer.pointer);
                         let fresh137 = *fresh136;
                         *fresh136 = (*fresh136).wrapping_offset(1);
                         let fresh138 = string.pointer;
-                        string.pointer = (string.pointer).wrapping_offset(1);
+                        string.pointer = string.pointer.wrapping_offset(1);
                         *fresh138 = *fresh137;
                     } else if *(*parser).buffer.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
                         let fresh139 = addr_of_mut!((*parser).buffer.pointer);
                         let fresh140 = *fresh139;
                         *fresh139 = (*fresh139).wrapping_offset(1);
                         let fresh141 = string.pointer;
-                        string.pointer = (string.pointer).wrapping_offset(1);
+                        string.pointer = string.pointer.wrapping_offset(1);
                         *fresh141 = *fresh140;
                         let fresh142 = addr_of_mut!((*parser).buffer.pointer);
                         let fresh143 = *fresh142;
                         *fresh142 = (*fresh142).wrapping_offset(1);
                         let fresh144 = string.pointer;
-                        string.pointer = (string.pointer).wrapping_offset(1);
+                        string.pointer = string.pointer.wrapping_offset(1);
                         *fresh144 = *fresh143;
                         let fresh145 = addr_of_mut!((*parser).buffer.pointer);
                         let fresh146 = *fresh145;
                         *fresh145 = (*fresh145).wrapping_offset(1);
                         let fresh147 = string.pointer;
-                        string.pointer = (string.pointer).wrapping_offset(1);
+                        string.pointer = string.pointer.wrapping_offset(1);
                         *fresh147 = *fresh146;
                     } else if *(*parser).buffer.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
                         let fresh148 = addr_of_mut!((*parser).buffer.pointer);
                         let fresh149 = *fresh148;
                         *fresh148 = (*fresh148).wrapping_offset(1);
                         let fresh150 = string.pointer;
-                        string.pointer = (string.pointer).wrapping_offset(1);
+                        string.pointer = string.pointer.wrapping_offset(1);
                         *fresh150 = *fresh149;
                         let fresh151 = addr_of_mut!((*parser).buffer.pointer);
                         let fresh152 = *fresh151;
                         *fresh151 = (*fresh151).wrapping_offset(1);
                         let fresh153 = string.pointer;
-                        string.pointer = (string.pointer).wrapping_offset(1);
+                        string.pointer = string.pointer.wrapping_offset(1);
                         *fresh153 = *fresh152;
                         let fresh154 = addr_of_mut!((*parser).buffer.pointer);
                         let fresh155 = *fresh154;
                         *fresh154 = (*fresh154).wrapping_offset(1);
                         let fresh156 = string.pointer;
-                        string.pointer = (string.pointer).wrapping_offset(1);
+                        string.pointer = string.pointer.wrapping_offset(1);
                         *fresh156 = *fresh155;
                         let fresh157 = addr_of_mut!((*parser).buffer.pointer);
                         let fresh158 = *fresh157;
                         *fresh157 = (*fresh157).wrapping_offset(1);
                         let fresh159 = string.pointer;
-                        string.pointer = (string.pointer).wrapping_offset(1);
+                        string.pointer = string.pointer.wrapping_offset(1);
                         *fresh159 = *fresh158;
                     };
                     let fresh160 = addr_of_mut!((*parser).mark.index);
@@ -3161,9 +3161,9 @@ unsafe fn yaml_parser_scan_anchor(
         pointer: ptr::null_mut::<yaml_char_t>(),
     };
     string.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-    if !(if !(string.start).is_null() {
+    if !(if !string.start.is_null() {
         string.pointer = string.start;
-        string.end = (string.start).wrapping_offset(16_isize);
+        string.end = string.start.wrapping_offset(16_isize);
         memset(string.start as *mut libc::c_void, 0_i32, 16_u64);
         1_i32
     } else {
@@ -3227,7 +3227,7 @@ unsafe fn yaml_parser_scan_anchor(
                     current_block = 2868539653012386629;
                     break;
                 }
-                if if if (string.pointer).wrapping_offset(5_isize) < string.end
+                if if if string.pointer.wrapping_offset(5_isize) < string.end
                     || yaml_string_extend(
                         addr_of_mut!(string.start),
                         addr_of_mut!(string.pointer),
@@ -3245,64 +3245,64 @@ unsafe fn yaml_parser_scan_anchor(
                         let fresh188 = *fresh187;
                         *fresh187 = (*fresh187).wrapping_offset(1);
                         let fresh189 = string.pointer;
-                        string.pointer = (string.pointer).wrapping_offset(1);
+                        string.pointer = string.pointer.wrapping_offset(1);
                         *fresh189 = *fresh188;
                     } else if *(*parser).buffer.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
                         let fresh190 = addr_of_mut!((*parser).buffer.pointer);
                         let fresh191 = *fresh190;
                         *fresh190 = (*fresh190).wrapping_offset(1);
                         let fresh192 = string.pointer;
-                        string.pointer = (string.pointer).wrapping_offset(1);
+                        string.pointer = string.pointer.wrapping_offset(1);
                         *fresh192 = *fresh191;
                         let fresh193 = addr_of_mut!((*parser).buffer.pointer);
                         let fresh194 = *fresh193;
                         *fresh193 = (*fresh193).wrapping_offset(1);
                         let fresh195 = string.pointer;
-                        string.pointer = (string.pointer).wrapping_offset(1);
+                        string.pointer = string.pointer.wrapping_offset(1);
                         *fresh195 = *fresh194;
                     } else if *(*parser).buffer.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
                         let fresh196 = addr_of_mut!((*parser).buffer.pointer);
                         let fresh197 = *fresh196;
                         *fresh196 = (*fresh196).wrapping_offset(1);
                         let fresh198 = string.pointer;
-                        string.pointer = (string.pointer).wrapping_offset(1);
+                        string.pointer = string.pointer.wrapping_offset(1);
                         *fresh198 = *fresh197;
                         let fresh199 = addr_of_mut!((*parser).buffer.pointer);
                         let fresh200 = *fresh199;
                         *fresh199 = (*fresh199).wrapping_offset(1);
                         let fresh201 = string.pointer;
-                        string.pointer = (string.pointer).wrapping_offset(1);
+                        string.pointer = string.pointer.wrapping_offset(1);
                         *fresh201 = *fresh200;
                         let fresh202 = addr_of_mut!((*parser).buffer.pointer);
                         let fresh203 = *fresh202;
                         *fresh202 = (*fresh202).wrapping_offset(1);
                         let fresh204 = string.pointer;
-                        string.pointer = (string.pointer).wrapping_offset(1);
+                        string.pointer = string.pointer.wrapping_offset(1);
                         *fresh204 = *fresh203;
                     } else if *(*parser).buffer.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
                         let fresh205 = addr_of_mut!((*parser).buffer.pointer);
                         let fresh206 = *fresh205;
                         *fresh205 = (*fresh205).wrapping_offset(1);
                         let fresh207 = string.pointer;
-                        string.pointer = (string.pointer).wrapping_offset(1);
+                        string.pointer = string.pointer.wrapping_offset(1);
                         *fresh207 = *fresh206;
                         let fresh208 = addr_of_mut!((*parser).buffer.pointer);
                         let fresh209 = *fresh208;
                         *fresh208 = (*fresh208).wrapping_offset(1);
                         let fresh210 = string.pointer;
-                        string.pointer = (string.pointer).wrapping_offset(1);
+                        string.pointer = string.pointer.wrapping_offset(1);
                         *fresh210 = *fresh209;
                         let fresh211 = addr_of_mut!((*parser).buffer.pointer);
                         let fresh212 = *fresh211;
                         *fresh211 = (*fresh211).wrapping_offset(1);
                         let fresh213 = string.pointer;
-                        string.pointer = (string.pointer).wrapping_offset(1);
+                        string.pointer = string.pointer.wrapping_offset(1);
                         *fresh213 = *fresh212;
                         let fresh214 = addr_of_mut!((*parser).buffer.pointer);
                         let fresh215 = *fresh214;
                         *fresh214 = (*fresh214).wrapping_offset(1);
                         let fresh216 = string.pointer;
-                        string.pointer = (string.pointer).wrapping_offset(1);
+                        string.pointer = string.pointer.wrapping_offset(1);
                         *fresh216 = *fresh215;
                     };
                     let fresh217 = addr_of_mut!((*parser).mark.index);
@@ -3735,9 +3735,9 @@ unsafe fn yaml_parser_scan_tag_handle(
         pointer: ptr::null_mut::<yaml_char_t>(),
     };
     string.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-    if !(if !(string.start).is_null() {
+    if !(if !string.start.is_null() {
         string.pointer = string.start;
-        string.end = (string.start).wrapping_offset(16_isize);
+        string.end = string.start.wrapping_offset(16_isize);
         memset(string.start as *mut libc::c_void, 0_i32, 16_u64);
         1_i32
     } else {
@@ -3764,7 +3764,7 @@ unsafe fn yaml_parser_scan_tag_handle(
                     start_mark,
                     b"did not find expected '!'\0" as *const u8 as *const libc::c_char,
                 );
-            } else if !(if if (string.pointer).wrapping_offset(5_isize) < string.end
+            } else if !(if if string.pointer.wrapping_offset(5_isize) < string.end
                 || yaml_string_extend(
                     addr_of_mut!(string.start),
                     addr_of_mut!(string.pointer),
@@ -3782,64 +3782,64 @@ unsafe fn yaml_parser_scan_tag_handle(
                     let fresh237 = *fresh236;
                     *fresh236 = (*fresh236).wrapping_offset(1);
                     let fresh238 = string.pointer;
-                    string.pointer = (string.pointer).wrapping_offset(1);
+                    string.pointer = string.pointer.wrapping_offset(1);
                     *fresh238 = *fresh237;
                 } else if *(*parser).buffer.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
                     let fresh239 = addr_of_mut!((*parser).buffer.pointer);
                     let fresh240 = *fresh239;
                     *fresh239 = (*fresh239).wrapping_offset(1);
                     let fresh241 = string.pointer;
-                    string.pointer = (string.pointer).wrapping_offset(1);
+                    string.pointer = string.pointer.wrapping_offset(1);
                     *fresh241 = *fresh240;
                     let fresh242 = addr_of_mut!((*parser).buffer.pointer);
                     let fresh243 = *fresh242;
                     *fresh242 = (*fresh242).wrapping_offset(1);
                     let fresh244 = string.pointer;
-                    string.pointer = (string.pointer).wrapping_offset(1);
+                    string.pointer = string.pointer.wrapping_offset(1);
                     *fresh244 = *fresh243;
                 } else if *(*parser).buffer.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
                     let fresh245 = addr_of_mut!((*parser).buffer.pointer);
                     let fresh246 = *fresh245;
                     *fresh245 = (*fresh245).wrapping_offset(1);
                     let fresh247 = string.pointer;
-                    string.pointer = (string.pointer).wrapping_offset(1);
+                    string.pointer = string.pointer.wrapping_offset(1);
                     *fresh247 = *fresh246;
                     let fresh248 = addr_of_mut!((*parser).buffer.pointer);
                     let fresh249 = *fresh248;
                     *fresh248 = (*fresh248).wrapping_offset(1);
                     let fresh250 = string.pointer;
-                    string.pointer = (string.pointer).wrapping_offset(1);
+                    string.pointer = string.pointer.wrapping_offset(1);
                     *fresh250 = *fresh249;
                     let fresh251 = addr_of_mut!((*parser).buffer.pointer);
                     let fresh252 = *fresh251;
                     *fresh251 = (*fresh251).wrapping_offset(1);
                     let fresh253 = string.pointer;
-                    string.pointer = (string.pointer).wrapping_offset(1);
+                    string.pointer = string.pointer.wrapping_offset(1);
                     *fresh253 = *fresh252;
                 } else if *(*parser).buffer.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
                     let fresh254 = addr_of_mut!((*parser).buffer.pointer);
                     let fresh255 = *fresh254;
                     *fresh254 = (*fresh254).wrapping_offset(1);
                     let fresh256 = string.pointer;
-                    string.pointer = (string.pointer).wrapping_offset(1);
+                    string.pointer = string.pointer.wrapping_offset(1);
                     *fresh256 = *fresh255;
                     let fresh257 = addr_of_mut!((*parser).buffer.pointer);
                     let fresh258 = *fresh257;
                     *fresh257 = (*fresh257).wrapping_offset(1);
                     let fresh259 = string.pointer;
-                    string.pointer = (string.pointer).wrapping_offset(1);
+                    string.pointer = string.pointer.wrapping_offset(1);
                     *fresh259 = *fresh258;
                     let fresh260 = addr_of_mut!((*parser).buffer.pointer);
                     let fresh261 = *fresh260;
                     *fresh260 = (*fresh260).wrapping_offset(1);
                     let fresh262 = string.pointer;
-                    string.pointer = (string.pointer).wrapping_offset(1);
+                    string.pointer = string.pointer.wrapping_offset(1);
                     *fresh262 = *fresh261;
                     let fresh263 = addr_of_mut!((*parser).buffer.pointer);
                     let fresh264 = *fresh263;
                     *fresh263 = (*fresh263).wrapping_offset(1);
                     let fresh265 = string.pointer;
-                    string.pointer = (string.pointer).wrapping_offset(1);
+                    string.pointer = string.pointer.wrapping_offset(1);
                     *fresh265 = *fresh264;
                 };
                 let fresh266 = addr_of_mut!((*parser).mark.index);
@@ -3882,7 +3882,7 @@ unsafe fn yaml_parser_scan_tag_handle(
                             current_block = 7651349459974463963;
                             break;
                         }
-                        if if if (string.pointer).wrapping_offset(5_isize) < string.end
+                        if if if string.pointer.wrapping_offset(5_isize) < string.end
                             || yaml_string_extend(
                                 addr_of_mut!(string.start),
                                 addr_of_mut!(string.pointer),
@@ -3900,7 +3900,7 @@ unsafe fn yaml_parser_scan_tag_handle(
                                 let fresh270 = *fresh269;
                                 *fresh269 = (*fresh269).wrapping_offset(1);
                                 let fresh271 = string.pointer;
-                                string.pointer = (string.pointer).wrapping_offset(1);
+                                string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh271 = *fresh270;
                             } else if *(*parser).buffer.pointer as libc::c_int & 0xe0_i32
                                 == 0xc0_i32
@@ -3909,13 +3909,13 @@ unsafe fn yaml_parser_scan_tag_handle(
                                 let fresh273 = *fresh272;
                                 *fresh272 = (*fresh272).wrapping_offset(1);
                                 let fresh274 = string.pointer;
-                                string.pointer = (string.pointer).wrapping_offset(1);
+                                string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh274 = *fresh273;
                                 let fresh275 = addr_of_mut!((*parser).buffer.pointer);
                                 let fresh276 = *fresh275;
                                 *fresh275 = (*fresh275).wrapping_offset(1);
                                 let fresh277 = string.pointer;
-                                string.pointer = (string.pointer).wrapping_offset(1);
+                                string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh277 = *fresh276;
                             } else if *(*parser).buffer.pointer as libc::c_int & 0xf0_i32
                                 == 0xe0_i32
@@ -3924,19 +3924,19 @@ unsafe fn yaml_parser_scan_tag_handle(
                                 let fresh279 = *fresh278;
                                 *fresh278 = (*fresh278).wrapping_offset(1);
                                 let fresh280 = string.pointer;
-                                string.pointer = (string.pointer).wrapping_offset(1);
+                                string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh280 = *fresh279;
                                 let fresh281 = addr_of_mut!((*parser).buffer.pointer);
                                 let fresh282 = *fresh281;
                                 *fresh281 = (*fresh281).wrapping_offset(1);
                                 let fresh283 = string.pointer;
-                                string.pointer = (string.pointer).wrapping_offset(1);
+                                string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh283 = *fresh282;
                                 let fresh284 = addr_of_mut!((*parser).buffer.pointer);
                                 let fresh285 = *fresh284;
                                 *fresh284 = (*fresh284).wrapping_offset(1);
                                 let fresh286 = string.pointer;
-                                string.pointer = (string.pointer).wrapping_offset(1);
+                                string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh286 = *fresh285;
                             } else if *(*parser).buffer.pointer as libc::c_int & 0xf8_i32
                                 == 0xf0_i32
@@ -3945,25 +3945,25 @@ unsafe fn yaml_parser_scan_tag_handle(
                                 let fresh288 = *fresh287;
                                 *fresh287 = (*fresh287).wrapping_offset(1);
                                 let fresh289 = string.pointer;
-                                string.pointer = (string.pointer).wrapping_offset(1);
+                                string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh289 = *fresh288;
                                 let fresh290 = addr_of_mut!((*parser).buffer.pointer);
                                 let fresh291 = *fresh290;
                                 *fresh290 = (*fresh290).wrapping_offset(1);
                                 let fresh292 = string.pointer;
-                                string.pointer = (string.pointer).wrapping_offset(1);
+                                string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh292 = *fresh291;
                                 let fresh293 = addr_of_mut!((*parser).buffer.pointer);
                                 let fresh294 = *fresh293;
                                 *fresh293 = (*fresh293).wrapping_offset(1);
                                 let fresh295 = string.pointer;
-                                string.pointer = (string.pointer).wrapping_offset(1);
+                                string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh295 = *fresh294;
                                 let fresh296 = addr_of_mut!((*parser).buffer.pointer);
                                 let fresh297 = *fresh296;
                                 *fresh296 = (*fresh296).wrapping_offset(1);
                                 let fresh298 = string.pointer;
-                                string.pointer = (string.pointer).wrapping_offset(1);
+                                string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh298 = *fresh297;
                             };
                             let fresh299 = addr_of_mut!((*parser).mark.index);
@@ -3996,7 +3996,7 @@ unsafe fn yaml_parser_scan_tag_handle(
                             if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
                                 == '!' as i32 as yaml_char_t as libc::c_int
                             {
-                                if if if (string.pointer).wrapping_offset(5_isize) < string.end
+                                if if if string.pointer.wrapping_offset(5_isize) < string.end
                                     || yaml_string_extend(
                                         addr_of_mut!(string.start),
                                         addr_of_mut!(string.pointer),
@@ -4015,7 +4015,7 @@ unsafe fn yaml_parser_scan_tag_handle(
                                         let fresh303 = *fresh302;
                                         *fresh302 = (*fresh302).wrapping_offset(1);
                                         let fresh304 = string.pointer;
-                                        string.pointer = (string.pointer).wrapping_offset(1);
+                                        string.pointer = string.pointer.wrapping_offset(1);
                                         *fresh304 = *fresh303;
                                     } else if *(*parser).buffer.pointer as libc::c_int & 0xe0_i32
                                         == 0xc0_i32
@@ -4024,13 +4024,13 @@ unsafe fn yaml_parser_scan_tag_handle(
                                         let fresh306 = *fresh305;
                                         *fresh305 = (*fresh305).wrapping_offset(1);
                                         let fresh307 = string.pointer;
-                                        string.pointer = (string.pointer).wrapping_offset(1);
+                                        string.pointer = string.pointer.wrapping_offset(1);
                                         *fresh307 = *fresh306;
                                         let fresh308 = addr_of_mut!((*parser).buffer.pointer);
                                         let fresh309 = *fresh308;
                                         *fresh308 = (*fresh308).wrapping_offset(1);
                                         let fresh310 = string.pointer;
-                                        string.pointer = (string.pointer).wrapping_offset(1);
+                                        string.pointer = string.pointer.wrapping_offset(1);
                                         *fresh310 = *fresh309;
                                     } else if *(*parser).buffer.pointer as libc::c_int & 0xf0_i32
                                         == 0xe0_i32
@@ -4039,19 +4039,19 @@ unsafe fn yaml_parser_scan_tag_handle(
                                         let fresh312 = *fresh311;
                                         *fresh311 = (*fresh311).wrapping_offset(1);
                                         let fresh313 = string.pointer;
-                                        string.pointer = (string.pointer).wrapping_offset(1);
+                                        string.pointer = string.pointer.wrapping_offset(1);
                                         *fresh313 = *fresh312;
                                         let fresh314 = addr_of_mut!((*parser).buffer.pointer);
                                         let fresh315 = *fresh314;
                                         *fresh314 = (*fresh314).wrapping_offset(1);
                                         let fresh316 = string.pointer;
-                                        string.pointer = (string.pointer).wrapping_offset(1);
+                                        string.pointer = string.pointer.wrapping_offset(1);
                                         *fresh316 = *fresh315;
                                         let fresh317 = addr_of_mut!((*parser).buffer.pointer);
                                         let fresh318 = *fresh317;
                                         *fresh317 = (*fresh317).wrapping_offset(1);
                                         let fresh319 = string.pointer;
-                                        string.pointer = (string.pointer).wrapping_offset(1);
+                                        string.pointer = string.pointer.wrapping_offset(1);
                                         *fresh319 = *fresh318;
                                     } else if *(*parser).buffer.pointer as libc::c_int & 0xf8_i32
                                         == 0xf0_i32
@@ -4060,25 +4060,25 @@ unsafe fn yaml_parser_scan_tag_handle(
                                         let fresh321 = *fresh320;
                                         *fresh320 = (*fresh320).wrapping_offset(1);
                                         let fresh322 = string.pointer;
-                                        string.pointer = (string.pointer).wrapping_offset(1);
+                                        string.pointer = string.pointer.wrapping_offset(1);
                                         *fresh322 = *fresh321;
                                         let fresh323 = addr_of_mut!((*parser).buffer.pointer);
                                         let fresh324 = *fresh323;
                                         *fresh323 = (*fresh323).wrapping_offset(1);
                                         let fresh325 = string.pointer;
-                                        string.pointer = (string.pointer).wrapping_offset(1);
+                                        string.pointer = string.pointer.wrapping_offset(1);
                                         *fresh325 = *fresh324;
                                         let fresh326 = addr_of_mut!((*parser).buffer.pointer);
                                         let fresh327 = *fresh326;
                                         *fresh326 = (*fresh326).wrapping_offset(1);
                                         let fresh328 = string.pointer;
-                                        string.pointer = (string.pointer).wrapping_offset(1);
+                                        string.pointer = string.pointer.wrapping_offset(1);
                                         *fresh328 = *fresh327;
                                         let fresh329 = addr_of_mut!((*parser).buffer.pointer);
                                         let fresh330 = *fresh329;
                                         *fresh329 = (*fresh329).wrapping_offset(1);
                                         let fresh331 = string.pointer;
-                                        string.pointer = (string.pointer).wrapping_offset(1);
+                                        string.pointer = string.pointer.wrapping_offset(1);
                                         *fresh331 = *fresh330;
                                     };
                                     let fresh332 = addr_of_mut!((*parser).mark.index);
@@ -4097,9 +4097,9 @@ unsafe fn yaml_parser_scan_tag_handle(
                                     current_block = 5689001924483802034;
                                 }
                             } else if directive != 0
-                                && !(*(string.start).wrapping_offset(0_isize) as libc::c_int
+                                && !(*string.start.wrapping_offset(0_isize) as libc::c_int
                                     == '!' as i32
-                                    && *(string.start).wrapping_offset(1_isize) as libc::c_int
+                                    && *string.start.wrapping_offset(1_isize) as libc::c_int
                                         == '\0' as i32)
                             {
                                 yaml_parser_set_scanner_error(
@@ -4153,9 +4153,9 @@ unsafe fn yaml_parser_scan_tag_uri(
         pointer: ptr::null_mut::<yaml_char_t>(),
     };
     string.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-    if if !(string.start).is_null() {
+    if if !string.start.is_null() {
         string.pointer = string.start;
-        string.end = (string.start).wrapping_offset(16_isize);
+        string.end = string.start.wrapping_offset(16_isize);
         memset(string.start as *mut libc::c_void, 0_i32, 16_u64);
         1_i32
     } else {
@@ -4177,7 +4177,7 @@ unsafe fn yaml_parser_scan_tag_uri(
                 return 0_i32;
             }
             _ => {
-                if (string.end).c_offset_from(string.start) as libc::c_long as size_t <= length {
+                if string.end.c_offset_from(string.start) as libc::c_long as size_t <= length {
                     if !(yaml_string_extend(
                         addr_of_mut!(string.start),
                         addr_of_mut!(string.pointer),
@@ -4196,8 +4196,9 @@ unsafe fn yaml_parser_scan_tag_uri(
                             head.wrapping_offset(1_isize) as *const libc::c_void,
                             length.wrapping_sub(1_u64),
                         );
-                        string.pointer =
-                            (string.pointer).wrapping_offset(length.wrapping_sub(1_u64) as isize);
+                        string.pointer = string
+                            .pointer
+                            .wrapping_offset(length.wrapping_sub(1_u64) as isize);
                     }
                     if if (*parser).unread >= 1_u64 {
                         1_i32
@@ -4271,7 +4272,7 @@ unsafe fn yaml_parser_scan_tag_uri(
                         if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
                             == '%' as i32 as yaml_char_t as libc::c_int
                         {
-                            if if (string.pointer).wrapping_offset(5_isize) < string.end
+                            if if string.pointer.wrapping_offset(5_isize) < string.end
                                 || yaml_string_extend(
                                     addr_of_mut!(string.start),
                                     addr_of_mut!(string.pointer),
@@ -4297,7 +4298,7 @@ unsafe fn yaml_parser_scan_tag_uri(
                                 current_block = 15265153392498847348;
                                 continue 'c_21953;
                             }
-                        } else if if if (string.pointer).wrapping_offset(5_isize) < string.end
+                        } else if if if string.pointer.wrapping_offset(5_isize) < string.end
                             || yaml_string_extend(
                                 addr_of_mut!(string.start),
                                 addr_of_mut!(string.pointer),
@@ -4315,7 +4316,7 @@ unsafe fn yaml_parser_scan_tag_uri(
                                 let fresh336 = *fresh335;
                                 *fresh335 = (*fresh335).wrapping_offset(1);
                                 let fresh337 = string.pointer;
-                                string.pointer = (string.pointer).wrapping_offset(1);
+                                string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh337 = *fresh336;
                             } else if *(*parser).buffer.pointer as libc::c_int & 0xe0_i32
                                 == 0xc0_i32
@@ -4324,13 +4325,13 @@ unsafe fn yaml_parser_scan_tag_uri(
                                 let fresh339 = *fresh338;
                                 *fresh338 = (*fresh338).wrapping_offset(1);
                                 let fresh340 = string.pointer;
-                                string.pointer = (string.pointer).wrapping_offset(1);
+                                string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh340 = *fresh339;
                                 let fresh341 = addr_of_mut!((*parser).buffer.pointer);
                                 let fresh342 = *fresh341;
                                 *fresh341 = (*fresh341).wrapping_offset(1);
                                 let fresh343 = string.pointer;
-                                string.pointer = (string.pointer).wrapping_offset(1);
+                                string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh343 = *fresh342;
                             } else if *(*parser).buffer.pointer as libc::c_int & 0xf0_i32
                                 == 0xe0_i32
@@ -4339,19 +4340,19 @@ unsafe fn yaml_parser_scan_tag_uri(
                                 let fresh345 = *fresh344;
                                 *fresh344 = (*fresh344).wrapping_offset(1);
                                 let fresh346 = string.pointer;
-                                string.pointer = (string.pointer).wrapping_offset(1);
+                                string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh346 = *fresh345;
                                 let fresh347 = addr_of_mut!((*parser).buffer.pointer);
                                 let fresh348 = *fresh347;
                                 *fresh347 = (*fresh347).wrapping_offset(1);
                                 let fresh349 = string.pointer;
-                                string.pointer = (string.pointer).wrapping_offset(1);
+                                string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh349 = *fresh348;
                                 let fresh350 = addr_of_mut!((*parser).buffer.pointer);
                                 let fresh351 = *fresh350;
                                 *fresh350 = (*fresh350).wrapping_offset(1);
                                 let fresh352 = string.pointer;
-                                string.pointer = (string.pointer).wrapping_offset(1);
+                                string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh352 = *fresh351;
                             } else if *(*parser).buffer.pointer as libc::c_int & 0xf8_i32
                                 == 0xf0_i32
@@ -4360,25 +4361,25 @@ unsafe fn yaml_parser_scan_tag_uri(
                                 let fresh354 = *fresh353;
                                 *fresh353 = (*fresh353).wrapping_offset(1);
                                 let fresh355 = string.pointer;
-                                string.pointer = (string.pointer).wrapping_offset(1);
+                                string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh355 = *fresh354;
                                 let fresh356 = addr_of_mut!((*parser).buffer.pointer);
                                 let fresh357 = *fresh356;
                                 *fresh356 = (*fresh356).wrapping_offset(1);
                                 let fresh358 = string.pointer;
-                                string.pointer = (string.pointer).wrapping_offset(1);
+                                string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh358 = *fresh357;
                                 let fresh359 = addr_of_mut!((*parser).buffer.pointer);
                                 let fresh360 = *fresh359;
                                 *fresh359 = (*fresh359).wrapping_offset(1);
                                 let fresh361 = string.pointer;
-                                string.pointer = (string.pointer).wrapping_offset(1);
+                                string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh361 = *fresh360;
                                 let fresh362 = addr_of_mut!((*parser).buffer.pointer);
                                 let fresh363 = *fresh362;
                                 *fresh362 = (*fresh362).wrapping_offset(1);
                                 let fresh364 = string.pointer;
-                                string.pointer = (string.pointer).wrapping_offset(1);
+                                string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh364 = *fresh363;
                             };
                             let fresh365 = addr_of_mut!((*parser).mark.index);
@@ -4407,7 +4408,7 @@ unsafe fn yaml_parser_scan_tag_uri(
                         }
                     }
                     if length == 0 {
-                        if if (string.pointer).wrapping_offset(5_isize) < string.end
+                        if if string.pointer.wrapping_offset(5_isize) < string.end
                             || yaml_string_extend(
                                 addr_of_mut!(string.start),
                                 addr_of_mut!(string.pointer),
@@ -4699,9 +4700,9 @@ unsafe fn yaml_parser_scan_block_scalar(
     let mut leading_blank: libc::c_int = 0_i32;
     let mut trailing_blank: libc::c_int;
     string.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-    if !(if !(string.start).is_null() {
+    if !(if !string.start.is_null() {
         string.pointer = string.start;
-        string.end = (string.start).wrapping_offset(16_isize);
+        string.end = string.start.wrapping_offset(16_isize);
         memset(string.start as *mut libc::c_void, 0_i32, 16_u64);
         1_i32
     } else {
@@ -4710,9 +4711,9 @@ unsafe fn yaml_parser_scan_block_scalar(
     } == 0)
     {
         leading_break.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-        if !(if !(leading_break.start).is_null() {
+        if !(if !leading_break.start.is_null() {
             leading_break.pointer = leading_break.start;
-            leading_break.end = (leading_break.start).wrapping_offset(16_isize);
+            leading_break.end = leading_break.start.wrapping_offset(16_isize);
             memset(leading_break.start as *mut libc::c_void, 0_i32, 16_u64);
             1_i32
         } else {
@@ -4721,9 +4722,9 @@ unsafe fn yaml_parser_scan_block_scalar(
         } == 0)
         {
             trailing_breaks.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-            if !(if !(trailing_breaks.start).is_null() {
+            if !(if !trailing_breaks.start.is_null() {
                 trailing_breaks.pointer = trailing_breaks.start;
-                trailing_breaks.end = (trailing_breaks.start).wrapping_offset(16_isize);
+                trailing_breaks.end = trailing_breaks.start.wrapping_offset(16_isize);
                 memset(trailing_breaks.start as *mut libc::c_void, 0_i32, 16_u64);
                 1_i32
             } else {
@@ -5527,7 +5528,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                             && leading_blank == 0 && trailing_blank == 0
                                                                         {
                                                                             if *trailing_breaks.start as libc::c_int == '\0' as i32 {
-                                                                                if if (string.pointer).wrapping_offset(5_isize)
+                                                                                if if string.pointer.wrapping_offset(5_isize)
                                                                                     < string.end
                                                                                     || yaml_string_extend(
                                                                                         addr_of_mut!(string.start),
@@ -5545,14 +5546,14 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                                     break;
                                                                                 }
                                                                                 let fresh418 = string.pointer;
-                                                                                string.pointer = (string.pointer).wrapping_offset(1);
+                                                                                string.pointer = string.pointer.wrapping_offset(1);
                                                                                 *fresh418 = ' ' as i32 as yaml_char_t;
                                                                             }
                                                                             leading_break.pointer = leading_break.start;
                                                                             memset(
                                                                                 leading_break.start as *mut libc::c_void,
                                                                                 0_i32,
-                                                                                (leading_break.end).c_offset_from(leading_break.start)
+                                                                                leading_break.end.c_offset_from(leading_break.start)
                                                                                     as libc::c_long as libc::c_ulong,
                                                                             );
                                                                         } else {
@@ -5579,7 +5580,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                             memset(
                                                                                 leading_break.start as *mut libc::c_void,
                                                                                 0_i32,
-                                                                                (leading_break.end).c_offset_from(leading_break.start)
+                                                                                leading_break.end.c_offset_from(leading_break.start)
                                                                                     as libc::c_long as libc::c_ulong,
                                                                             );
                                                                         }
@@ -5606,7 +5607,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                         memset(
                                                                             trailing_breaks.start as *mut libc::c_void,
                                                                             0_i32,
-                                                                            (trailing_breaks.end).c_offset_from(trailing_breaks.start)
+                                                                            trailing_breaks.end.c_offset_from(trailing_breaks.start)
                                                                                 as libc::c_long as libc::c_ulong,
                                                                         );
                                                                         leading_blank = (*((*parser).buffer.pointer)
@@ -5650,7 +5651,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                                 .wrapping_offset(0_isize) as libc::c_int
                                                                                 == '\0' as i32 as yaml_char_t as libc::c_int)
                                                                         {
-                                                                            if if if (string.pointer).wrapping_offset(5_isize)
+                                                                            if if if string.pointer.wrapping_offset(5_isize)
                                                                                 < string.end
                                                                                 || yaml_string_extend(
                                                                                     addr_of_mut!(string.start),
@@ -5671,7 +5672,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                                     let fresh420 = *fresh419;
                                                                                     *fresh419 = (*fresh419).wrapping_offset(1);
                                                                                     let fresh421 = string.pointer;
-                                                                                    string.pointer = (string.pointer).wrapping_offset(1);
+                                                                                    string.pointer = string.pointer.wrapping_offset(1);
                                                                                     *fresh421 = *fresh420;
                                                                                 } else if *(*parser).buffer.pointer as libc::c_int
                                                                                     & 0xe0_i32 == 0xc0_i32
@@ -5680,13 +5681,13 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                                     let fresh423 = *fresh422;
                                                                                     *fresh422 = (*fresh422).wrapping_offset(1);
                                                                                     let fresh424 = string.pointer;
-                                                                                    string.pointer = (string.pointer).wrapping_offset(1);
+                                                                                    string.pointer = string.pointer.wrapping_offset(1);
                                                                                     *fresh424 = *fresh423;
                                                                                     let fresh425 = addr_of_mut!((*parser).buffer.pointer);
                                                                                     let fresh426 = *fresh425;
                                                                                     *fresh425 = (*fresh425).wrapping_offset(1);
                                                                                     let fresh427 = string.pointer;
-                                                                                    string.pointer = (string.pointer).wrapping_offset(1);
+                                                                                    string.pointer = string.pointer.wrapping_offset(1);
                                                                                     *fresh427 = *fresh426;
                                                                                 } else if *(*parser).buffer.pointer as libc::c_int
                                                                                     & 0xf0_i32 == 0xe0_i32
@@ -5695,19 +5696,19 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                                     let fresh429 = *fresh428;
                                                                                     *fresh428 = (*fresh428).wrapping_offset(1);
                                                                                     let fresh430 = string.pointer;
-                                                                                    string.pointer = (string.pointer).wrapping_offset(1);
+                                                                                    string.pointer = string.pointer.wrapping_offset(1);
                                                                                     *fresh430 = *fresh429;
                                                                                     let fresh431 = addr_of_mut!((*parser).buffer.pointer);
                                                                                     let fresh432 = *fresh431;
                                                                                     *fresh431 = (*fresh431).wrapping_offset(1);
                                                                                     let fresh433 = string.pointer;
-                                                                                    string.pointer = (string.pointer).wrapping_offset(1);
+                                                                                    string.pointer = string.pointer.wrapping_offset(1);
                                                                                     *fresh433 = *fresh432;
                                                                                     let fresh434 = addr_of_mut!((*parser).buffer.pointer);
                                                                                     let fresh435 = *fresh434;
                                                                                     *fresh434 = (*fresh434).wrapping_offset(1);
                                                                                     let fresh436 = string.pointer;
-                                                                                    string.pointer = (string.pointer).wrapping_offset(1);
+                                                                                    string.pointer = string.pointer.wrapping_offset(1);
                                                                                     *fresh436 = *fresh435;
                                                                                 } else if *(*parser).buffer.pointer as libc::c_int
                                                                                     & 0xf8_i32 == 0xf0_i32
@@ -5716,25 +5717,25 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                                     let fresh438 = *fresh437;
                                                                                     *fresh437 = (*fresh437).wrapping_offset(1);
                                                                                     let fresh439 = string.pointer;
-                                                                                    string.pointer = (string.pointer).wrapping_offset(1);
+                                                                                    string.pointer = string.pointer.wrapping_offset(1);
                                                                                     *fresh439 = *fresh438;
                                                                                     let fresh440 = addr_of_mut!((*parser).buffer.pointer);
                                                                                     let fresh441 = *fresh440;
                                                                                     *fresh440 = (*fresh440).wrapping_offset(1);
                                                                                     let fresh442 = string.pointer;
-                                                                                    string.pointer = (string.pointer).wrapping_offset(1);
+                                                                                    string.pointer = string.pointer.wrapping_offset(1);
                                                                                     *fresh442 = *fresh441;
                                                                                     let fresh443 = addr_of_mut!((*parser).buffer.pointer);
                                                                                     let fresh444 = *fresh443;
                                                                                     *fresh443 = (*fresh443).wrapping_offset(1);
                                                                                     let fresh445 = string.pointer;
-                                                                                    string.pointer = (string.pointer).wrapping_offset(1);
+                                                                                    string.pointer = string.pointer.wrapping_offset(1);
                                                                                     *fresh445 = *fresh444;
                                                                                     let fresh446 = addr_of_mut!((*parser).buffer.pointer);
                                                                                     let fresh447 = *fresh446;
                                                                                     *fresh446 = (*fresh446).wrapping_offset(1);
                                                                                     let fresh448 = string.pointer;
-                                                                                    string.pointer = (string.pointer).wrapping_offset(1);
+                                                                                    string.pointer = string.pointer.wrapping_offset(1);
                                                                                     *fresh448 = *fresh447;
                                                                                 } else {};
                                                                                 let fresh449 = addr_of_mut!((*parser).mark.index);
@@ -5800,7 +5801,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                                     == '\n' as i32 as yaml_char_t as libc::c_int
                                                                             {
                                                                                 let fresh452 = leading_break.pointer;
-                                                                                leading_break.pointer = (leading_break.pointer).wrapping_offset(1);
+                                                                                leading_break.pointer = leading_break.pointer.wrapping_offset(1);
                                                                                 *fresh452 = '\n' as i32 as yaml_char_t;
                                                                                 let fresh453 = addr_of_mut!((*parser).buffer.pointer);
                                                                                 *fresh453 = (*fresh453).wrapping_offset(2_isize);
@@ -5823,7 +5824,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                                     == '\n' as i32 as yaml_char_t as libc::c_int
                                                                             {
                                                                                 let fresh457 = leading_break.pointer;
-                                                                                leading_break.pointer = (leading_break.pointer).wrapping_offset(1);
+                                                                                leading_break.pointer = leading_break.pointer.wrapping_offset(1);
                                                                                 *fresh457 = '\n' as i32 as yaml_char_t;
                                                                                 let fresh458 = addr_of_mut!((*parser).buffer.pointer);
                                                                                 *fresh458 = (*fresh458).wrapping_offset(1);
@@ -5842,7 +5843,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                                     == -123i32 as yaml_char_t as libc::c_int
                                                                             {
                                                                                 let fresh462 = leading_break.pointer;
-                                                                                leading_break.pointer = (leading_break.pointer).wrapping_offset(1);
+                                                                                leading_break.pointer = leading_break.pointer.wrapping_offset(1);
                                                                                 *fresh462 = '\n' as i32 as yaml_char_t;
                                                                                 let fresh463 = addr_of_mut!((*parser).buffer.pointer);
                                                                                 *fresh463 = (*fresh463).wrapping_offset(2_isize);
@@ -5870,19 +5871,19 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                                 let fresh468 = *fresh467;
                                                                                 *fresh467 = (*fresh467).wrapping_offset(1);
                                                                                 let fresh469 = leading_break.pointer;
-                                                                                leading_break.pointer = (leading_break.pointer).wrapping_offset(1);
+                                                                                leading_break.pointer = leading_break.pointer.wrapping_offset(1);
                                                                                 *fresh469 = *fresh468;
                                                                                 let fresh470 = addr_of_mut!((*parser).buffer.pointer);
                                                                                 let fresh471 = *fresh470;
                                                                                 *fresh470 = (*fresh470).wrapping_offset(1);
                                                                                 let fresh472 = leading_break.pointer;
-                                                                                leading_break.pointer = (leading_break.pointer).wrapping_offset(1);
+                                                                                leading_break.pointer = leading_break.pointer.wrapping_offset(1);
                                                                                 *fresh472 = *fresh471;
                                                                                 let fresh473 = addr_of_mut!((*parser).buffer.pointer);
                                                                                 let fresh474 = *fresh473;
                                                                                 *fresh473 = (*fresh473).wrapping_offset(1);
                                                                                 let fresh475 = leading_break.pointer;
-                                                                                leading_break.pointer = (leading_break.pointer).wrapping_offset(1);
+                                                                                leading_break.pointer = leading_break.pointer.wrapping_offset(1);
                                                                                 *fresh475 = *fresh474;
                                                                                 let fresh476 = addr_of_mut!((*parser).mark.index);
                                                                                 *fresh476 = (*fresh476).wrapping_add(1);
@@ -5982,7 +5983,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                                             (*token)
                                                                                                 .data
                                                                                                 .scalar
-                                                                                                .length = (string.pointer).c_offset_from(string.start)
+                                                                                                .length = string.pointer.c_offset_from(string.start)
                                                                                                 as libc::c_long as size_t;
                                                                                             (*token)
                                                                                                 .data
@@ -6300,9 +6301,9 @@ unsafe fn yaml_parser_scan_flow_scalar(
     };
     let mut leading_blanks: libc::c_int;
     string.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-    if !(if !(string.start).is_null() {
+    if !(if !string.start.is_null() {
         string.pointer = string.start;
-        string.end = (string.start).wrapping_offset(16_isize);
+        string.end = string.start.wrapping_offset(16_isize);
         memset(string.start as *mut libc::c_void, 0_i32, 16_u64);
         1_i32
     } else {
@@ -6311,9 +6312,9 @@ unsafe fn yaml_parser_scan_flow_scalar(
     } == 0)
     {
         leading_break.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-        if !(if !(leading_break.start).is_null() {
+        if !(if !leading_break.start.is_null() {
             leading_break.pointer = leading_break.start;
-            leading_break.end = (leading_break.start).wrapping_offset(16_isize);
+            leading_break.end = leading_break.start.wrapping_offset(16_isize);
             memset(leading_break.start as *mut libc::c_void, 0_i32, 16_u64);
             1_i32
         } else {
@@ -6322,9 +6323,9 @@ unsafe fn yaml_parser_scan_flow_scalar(
         } == 0)
         {
             trailing_breaks.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-            if !(if !(trailing_breaks.start).is_null() {
+            if !(if !trailing_breaks.start.is_null() {
                 trailing_breaks.pointer = trailing_breaks.start;
-                trailing_breaks.end = (trailing_breaks.start).wrapping_offset(16_isize);
+                trailing_breaks.end = trailing_breaks.start.wrapping_offset(16_isize);
                 memset(trailing_breaks.start as *mut libc::c_void, 0_i32, 16_u64);
                 1_i32
             } else {
@@ -6333,9 +6334,9 @@ unsafe fn yaml_parser_scan_flow_scalar(
             } == 0)
             {
                 whitespaces.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-                if !(if !(whitespaces.start).is_null() {
+                if !(if !whitespaces.start.is_null() {
                     whitespaces.pointer = whitespaces.start;
-                    whitespaces.end = (whitespaces.start).wrapping_offset(16_isize);
+                    whitespaces.end = whitespaces.start.wrapping_offset(16_isize);
                     memset(whitespaces.start as *mut libc::c_void, 0_i32, 16_u64);
                     1_i32
                 } else {
@@ -6534,7 +6535,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                         as libc::c_int
                                         == '\'' as i32 as yaml_char_t as libc::c_int
                                 {
-                                    if if (string.pointer).wrapping_offset(5_isize) < string.end
+                                    if if string.pointer.wrapping_offset(5_isize) < string.end
                                         || yaml_string_extend(
                                             addr_of_mut!(string.start),
                                             addr_of_mut!(string.pointer),
@@ -6551,7 +6552,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                         break 's_58;
                                     }
                                     let fresh521 = string.pointer;
-                                    string.pointer = (string.pointer).wrapping_offset(1);
+                                    string.pointer = string.pointer.wrapping_offset(1);
                                     *fresh521 = '\'' as i32 as yaml_char_t;
                                     let fresh522 = addr_of_mut!((*parser).mark.index);
                                     *fresh522 = (*fresh522).wrapping_add(1);
@@ -6838,7 +6839,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                             == '\\' as i32 as yaml_char_t as libc::c_int
                                     {
                                         let mut code_length: size_t = 0_u64;
-                                        if if (string.pointer).wrapping_offset(5_isize) < string.end
+                                        if if string.pointer.wrapping_offset(5_isize) < string.end
                                             || yaml_string_extend(
                                                 addr_of_mut!(string.start),
                                                 addr_of_mut!(string.pointer),
@@ -6859,128 +6860,105 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                         {
                                             48 => {
                                                 let fresh542 = string.pointer;
-                                                string.pointer =
-                                                    (string.pointer).wrapping_offset(1);
+                                                string.pointer = string.pointer.wrapping_offset(1);
                                                 *fresh542 = '\0' as i32 as yaml_char_t;
                                             }
                                             97 => {
                                                 let fresh543 = string.pointer;
-                                                string.pointer =
-                                                    (string.pointer).wrapping_offset(1);
+                                                string.pointer = string.pointer.wrapping_offset(1);
                                                 *fresh543 = '\u{7}' as i32 as yaml_char_t;
                                             }
                                             98 => {
                                                 let fresh544 = string.pointer;
-                                                string.pointer =
-                                                    (string.pointer).wrapping_offset(1);
+                                                string.pointer = string.pointer.wrapping_offset(1);
                                                 *fresh544 = '\u{8}' as i32 as yaml_char_t;
                                             }
                                             116 | 9 => {
                                                 let fresh545 = string.pointer;
-                                                string.pointer =
-                                                    (string.pointer).wrapping_offset(1);
+                                                string.pointer = string.pointer.wrapping_offset(1);
                                                 *fresh545 = '\t' as i32 as yaml_char_t;
                                             }
                                             110 => {
                                                 let fresh546 = string.pointer;
-                                                string.pointer =
-                                                    (string.pointer).wrapping_offset(1);
+                                                string.pointer = string.pointer.wrapping_offset(1);
                                                 *fresh546 = '\n' as i32 as yaml_char_t;
                                             }
                                             118 => {
                                                 let fresh547 = string.pointer;
-                                                string.pointer =
-                                                    (string.pointer).wrapping_offset(1);
+                                                string.pointer = string.pointer.wrapping_offset(1);
                                                 *fresh547 = '\u{b}' as i32 as yaml_char_t;
                                             }
                                             102 => {
                                                 let fresh548 = string.pointer;
-                                                string.pointer =
-                                                    (string.pointer).wrapping_offset(1);
+                                                string.pointer = string.pointer.wrapping_offset(1);
                                                 *fresh548 = '\u{c}' as i32 as yaml_char_t;
                                             }
                                             114 => {
                                                 let fresh549 = string.pointer;
-                                                string.pointer =
-                                                    (string.pointer).wrapping_offset(1);
+                                                string.pointer = string.pointer.wrapping_offset(1);
                                                 *fresh549 = '\r' as i32 as yaml_char_t;
                                             }
                                             101 => {
                                                 let fresh550 = string.pointer;
-                                                string.pointer =
-                                                    (string.pointer).wrapping_offset(1);
+                                                string.pointer = string.pointer.wrapping_offset(1);
                                                 *fresh550 = '\u{1b}' as i32 as yaml_char_t;
                                             }
                                             32 => {
                                                 let fresh551 = string.pointer;
-                                                string.pointer =
-                                                    (string.pointer).wrapping_offset(1);
+                                                string.pointer = string.pointer.wrapping_offset(1);
                                                 *fresh551 = ' ' as i32 as yaml_char_t;
                                             }
                                             34 => {
                                                 let fresh552 = string.pointer;
-                                                string.pointer =
-                                                    (string.pointer).wrapping_offset(1);
+                                                string.pointer = string.pointer.wrapping_offset(1);
                                                 *fresh552 = '"' as i32 as yaml_char_t;
                                             }
                                             47 => {
                                                 let fresh553 = string.pointer;
-                                                string.pointer =
-                                                    (string.pointer).wrapping_offset(1);
+                                                string.pointer = string.pointer.wrapping_offset(1);
                                                 *fresh553 = '/' as i32 as yaml_char_t;
                                             }
                                             92 => {
                                                 let fresh554 = string.pointer;
-                                                string.pointer =
-                                                    (string.pointer).wrapping_offset(1);
+                                                string.pointer = string.pointer.wrapping_offset(1);
                                                 *fresh554 = '\\' as i32 as yaml_char_t;
                                             }
                                             78 => {
                                                 let fresh555 = string.pointer;
-                                                string.pointer =
-                                                    (string.pointer).wrapping_offset(1);
+                                                string.pointer = string.pointer.wrapping_offset(1);
                                                 *fresh555 = -62i32 as yaml_char_t;
                                                 let fresh556 = string.pointer;
-                                                string.pointer =
-                                                    (string.pointer).wrapping_offset(1);
+                                                string.pointer = string.pointer.wrapping_offset(1);
                                                 *fresh556 = -123i32 as yaml_char_t;
                                             }
                                             95 => {
                                                 let fresh557 = string.pointer;
-                                                string.pointer =
-                                                    (string.pointer).wrapping_offset(1);
+                                                string.pointer = string.pointer.wrapping_offset(1);
                                                 *fresh557 = -62i32 as yaml_char_t;
                                                 let fresh558 = string.pointer;
-                                                string.pointer =
-                                                    (string.pointer).wrapping_offset(1);
+                                                string.pointer = string.pointer.wrapping_offset(1);
                                                 *fresh558 = -96i32 as yaml_char_t;
                                             }
                                             76 => {
                                                 let fresh559 = string.pointer;
-                                                string.pointer =
-                                                    (string.pointer).wrapping_offset(1);
+                                                string.pointer = string.pointer.wrapping_offset(1);
                                                 *fresh559 = -30i32 as yaml_char_t;
                                                 let fresh560 = string.pointer;
-                                                string.pointer =
-                                                    (string.pointer).wrapping_offset(1);
+                                                string.pointer = string.pointer.wrapping_offset(1);
                                                 *fresh560 = -128i32 as yaml_char_t;
                                                 let fresh561 = string.pointer;
-                                                string.pointer =
-                                                    (string.pointer).wrapping_offset(1);
+                                                string.pointer = string.pointer.wrapping_offset(1);
                                                 *fresh561 = -88i32 as yaml_char_t;
                                             }
                                             80 => {
                                                 let fresh562 = string.pointer;
-                                                string.pointer =
-                                                    (string.pointer).wrapping_offset(1);
+                                                string.pointer = string.pointer.wrapping_offset(1);
                                                 *fresh562 = -30i32 as yaml_char_t;
                                                 let fresh563 = string.pointer;
-                                                string.pointer =
-                                                    (string.pointer).wrapping_offset(1);
+                                                string.pointer = string.pointer.wrapping_offset(1);
                                                 *fresh563 = -128i32 as yaml_char_t;
                                                 let fresh564 = string.pointer;
-                                                string.pointer =
-                                                    (string.pointer).wrapping_offset(1);
+                                                string.pointer = string.pointer.wrapping_offset(1);
                                                 *fresh564 = -87i32 as yaml_char_t;
                                             }
                                             120 => {
@@ -7203,18 +7181,18 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                 if value <= 0x7f_i32 as libc::c_uint {
                                                     let fresh573 = string.pointer;
                                                     string.pointer =
-                                                        (string.pointer).wrapping_offset(1);
+                                                        string.pointer.wrapping_offset(1);
                                                     *fresh573 = value as yaml_char_t;
                                                 } else if value <= 0x7ff_i32 as libc::c_uint {
                                                     let fresh574 = string.pointer;
                                                     string.pointer =
-                                                        (string.pointer).wrapping_offset(1);
+                                                        string.pointer.wrapping_offset(1);
                                                     *fresh574 = (0xc0_i32 as libc::c_uint)
                                                         .wrapping_add(value >> 6_i32)
                                                         as yaml_char_t;
                                                     let fresh575 = string.pointer;
                                                     string.pointer =
-                                                        (string.pointer).wrapping_offset(1);
+                                                        string.pointer.wrapping_offset(1);
                                                     *fresh575 = (0x80_i32 as libc::c_uint)
                                                         .wrapping_add(
                                                             value & 0x3f_i32 as libc::c_uint,
@@ -7223,13 +7201,13 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                 } else if value <= 0xffff_i32 as libc::c_uint {
                                                     let fresh576 = string.pointer;
                                                     string.pointer =
-                                                        (string.pointer).wrapping_offset(1);
+                                                        string.pointer.wrapping_offset(1);
                                                     *fresh576 = (0xe0_i32 as libc::c_uint)
                                                         .wrapping_add(value >> 12_i32)
                                                         as yaml_char_t;
                                                     let fresh577 = string.pointer;
                                                     string.pointer =
-                                                        (string.pointer).wrapping_offset(1);
+                                                        string.pointer.wrapping_offset(1);
                                                     *fresh577 = (0x80_i32 as libc::c_uint)
                                                         .wrapping_add(
                                                             value >> 6_i32
@@ -7238,7 +7216,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                         as yaml_char_t;
                                                     let fresh578 = string.pointer;
                                                     string.pointer =
-                                                        (string.pointer).wrapping_offset(1);
+                                                        string.pointer.wrapping_offset(1);
                                                     *fresh578 = (0x80_i32 as libc::c_uint)
                                                         .wrapping_add(
                                                             value & 0x3f_i32 as libc::c_uint,
@@ -7247,13 +7225,13 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                 } else {
                                                     let fresh579 = string.pointer;
                                                     string.pointer =
-                                                        (string.pointer).wrapping_offset(1);
+                                                        string.pointer.wrapping_offset(1);
                                                     *fresh579 = (0xf0_i32 as libc::c_uint)
                                                         .wrapping_add(value >> 18_i32)
                                                         as yaml_char_t;
                                                     let fresh580 = string.pointer;
                                                     string.pointer =
-                                                        (string.pointer).wrapping_offset(1);
+                                                        string.pointer.wrapping_offset(1);
                                                     *fresh580 = (0x80_i32 as libc::c_uint)
                                                         .wrapping_add(
                                                             value >> 12_i32
@@ -7262,7 +7240,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                         as yaml_char_t;
                                                     let fresh581 = string.pointer;
                                                     string.pointer =
-                                                        (string.pointer).wrapping_offset(1);
+                                                        string.pointer.wrapping_offset(1);
                                                     *fresh581 = (0x80_i32 as libc::c_uint)
                                                         .wrapping_add(
                                                             value >> 6_i32
@@ -7271,7 +7249,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                         as yaml_char_t;
                                                     let fresh582 = string.pointer;
                                                     string.pointer =
-                                                        (string.pointer).wrapping_offset(1);
+                                                        string.pointer.wrapping_offset(1);
                                                     *fresh582 = (0x80_i32 as libc::c_uint)
                                                         .wrapping_add(
                                                             value & 0x3f_i32 as libc::c_uint,
@@ -7328,7 +7306,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                 }
                                             }
                                         }
-                                    } else if if if (string.pointer).wrapping_offset(5_isize)
+                                    } else if if if string.pointer.wrapping_offset(5_isize)
                                         < string.end
                                         || yaml_string_extend(
                                             addr_of_mut!(string.start),
@@ -7349,7 +7327,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                             let fresh588 = *fresh587;
                                             *fresh587 = (*fresh587).wrapping_offset(1);
                                             let fresh589 = string.pointer;
-                                            string.pointer = (string.pointer).wrapping_offset(1);
+                                            string.pointer = string.pointer.wrapping_offset(1);
                                             *fresh589 = *fresh588;
                                         } else if *(*parser).buffer.pointer as libc::c_int
                                             & 0xe0_i32
@@ -7359,13 +7337,13 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                             let fresh591 = *fresh590;
                                             *fresh590 = (*fresh590).wrapping_offset(1);
                                             let fresh592 = string.pointer;
-                                            string.pointer = (string.pointer).wrapping_offset(1);
+                                            string.pointer = string.pointer.wrapping_offset(1);
                                             *fresh592 = *fresh591;
                                             let fresh593 = addr_of_mut!((*parser).buffer.pointer);
                                             let fresh594 = *fresh593;
                                             *fresh593 = (*fresh593).wrapping_offset(1);
                                             let fresh595 = string.pointer;
-                                            string.pointer = (string.pointer).wrapping_offset(1);
+                                            string.pointer = string.pointer.wrapping_offset(1);
                                             *fresh595 = *fresh594;
                                         } else if *(*parser).buffer.pointer as libc::c_int
                                             & 0xf0_i32
@@ -7375,19 +7353,19 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                             let fresh597 = *fresh596;
                                             *fresh596 = (*fresh596).wrapping_offset(1);
                                             let fresh598 = string.pointer;
-                                            string.pointer = (string.pointer).wrapping_offset(1);
+                                            string.pointer = string.pointer.wrapping_offset(1);
                                             *fresh598 = *fresh597;
                                             let fresh599 = addr_of_mut!((*parser).buffer.pointer);
                                             let fresh600 = *fresh599;
                                             *fresh599 = (*fresh599).wrapping_offset(1);
                                             let fresh601 = string.pointer;
-                                            string.pointer = (string.pointer).wrapping_offset(1);
+                                            string.pointer = string.pointer.wrapping_offset(1);
                                             *fresh601 = *fresh600;
                                             let fresh602 = addr_of_mut!((*parser).buffer.pointer);
                                             let fresh603 = *fresh602;
                                             *fresh602 = (*fresh602).wrapping_offset(1);
                                             let fresh604 = string.pointer;
-                                            string.pointer = (string.pointer).wrapping_offset(1);
+                                            string.pointer = string.pointer.wrapping_offset(1);
                                             *fresh604 = *fresh603;
                                         } else if *(*parser).buffer.pointer as libc::c_int
                                             & 0xf8_i32
@@ -7397,25 +7375,25 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                             let fresh606 = *fresh605;
                                             *fresh605 = (*fresh605).wrapping_offset(1);
                                             let fresh607 = string.pointer;
-                                            string.pointer = (string.pointer).wrapping_offset(1);
+                                            string.pointer = string.pointer.wrapping_offset(1);
                                             *fresh607 = *fresh606;
                                             let fresh608 = addr_of_mut!((*parser).buffer.pointer);
                                             let fresh609 = *fresh608;
                                             *fresh608 = (*fresh608).wrapping_offset(1);
                                             let fresh610 = string.pointer;
-                                            string.pointer = (string.pointer).wrapping_offset(1);
+                                            string.pointer = string.pointer.wrapping_offset(1);
                                             *fresh610 = *fresh609;
                                             let fresh611 = addr_of_mut!((*parser).buffer.pointer);
                                             let fresh612 = *fresh611;
                                             *fresh611 = (*fresh611).wrapping_offset(1);
                                             let fresh613 = string.pointer;
-                                            string.pointer = (string.pointer).wrapping_offset(1);
+                                            string.pointer = string.pointer.wrapping_offset(1);
                                             *fresh613 = *fresh612;
                                             let fresh614 = addr_of_mut!((*parser).buffer.pointer);
                                             let fresh615 = *fresh614;
                                             *fresh614 = (*fresh614).wrapping_offset(1);
                                             let fresh616 = string.pointer;
-                                            string.pointer = (string.pointer).wrapping_offset(1);
+                                            string.pointer = string.pointer.wrapping_offset(1);
                                             *fresh616 = *fresh615;
                                         };
                                         let fresh617 = addr_of_mut!((*parser).mark.index);
@@ -7513,7 +7491,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                         == '\t' as i32 as yaml_char_t as libc::c_int
                                 {
                                     if leading_blanks == 0 {
-                                        if if if (whitespaces.pointer).wrapping_offset(5_isize)
+                                        if if if whitespaces.pointer.wrapping_offset(5_isize)
                                             < whitespaces.end
                                             || yaml_string_extend(
                                                 addr_of_mut!(whitespaces.start),
@@ -7536,7 +7514,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                 *fresh620 = (*fresh620).wrapping_offset(1);
                                                 let fresh622 = whitespaces.pointer;
                                                 whitespaces.pointer =
-                                                    (whitespaces.pointer).wrapping_offset(1);
+                                                    whitespaces.pointer.wrapping_offset(1);
                                                 *fresh622 = *fresh621;
                                             } else if *(*parser).buffer.pointer as libc::c_int
                                                 & 0xe0_i32
@@ -7548,7 +7526,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                 *fresh623 = (*fresh623).wrapping_offset(1);
                                                 let fresh625 = whitespaces.pointer;
                                                 whitespaces.pointer =
-                                                    (whitespaces.pointer).wrapping_offset(1);
+                                                    whitespaces.pointer.wrapping_offset(1);
                                                 *fresh625 = *fresh624;
                                                 let fresh626 =
                                                     addr_of_mut!((*parser).buffer.pointer);
@@ -7556,7 +7534,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                 *fresh626 = (*fresh626).wrapping_offset(1);
                                                 let fresh628 = whitespaces.pointer;
                                                 whitespaces.pointer =
-                                                    (whitespaces.pointer).wrapping_offset(1);
+                                                    whitespaces.pointer.wrapping_offset(1);
                                                 *fresh628 = *fresh627;
                                             } else if *(*parser).buffer.pointer as libc::c_int
                                                 & 0xf0_i32
@@ -7568,7 +7546,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                 *fresh629 = (*fresh629).wrapping_offset(1);
                                                 let fresh631 = whitespaces.pointer;
                                                 whitespaces.pointer =
-                                                    (whitespaces.pointer).wrapping_offset(1);
+                                                    whitespaces.pointer.wrapping_offset(1);
                                                 *fresh631 = *fresh630;
                                                 let fresh632 =
                                                     addr_of_mut!((*parser).buffer.pointer);
@@ -7576,7 +7554,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                 *fresh632 = (*fresh632).wrapping_offset(1);
                                                 let fresh634 = whitespaces.pointer;
                                                 whitespaces.pointer =
-                                                    (whitespaces.pointer).wrapping_offset(1);
+                                                    whitespaces.pointer.wrapping_offset(1);
                                                 *fresh634 = *fresh633;
                                                 let fresh635 =
                                                     addr_of_mut!((*parser).buffer.pointer);
@@ -7584,7 +7562,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                 *fresh635 = (*fresh635).wrapping_offset(1);
                                                 let fresh637 = whitespaces.pointer;
                                                 whitespaces.pointer =
-                                                    (whitespaces.pointer).wrapping_offset(1);
+                                                    whitespaces.pointer.wrapping_offset(1);
                                                 *fresh637 = *fresh636;
                                             } else if *(*parser).buffer.pointer as libc::c_int
                                                 & 0xf8_i32
@@ -7596,7 +7574,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                 *fresh638 = (*fresh638).wrapping_offset(1);
                                                 let fresh640 = whitespaces.pointer;
                                                 whitespaces.pointer =
-                                                    (whitespaces.pointer).wrapping_offset(1);
+                                                    whitespaces.pointer.wrapping_offset(1);
                                                 *fresh640 = *fresh639;
                                                 let fresh641 =
                                                     addr_of_mut!((*parser).buffer.pointer);
@@ -7604,7 +7582,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                 *fresh641 = (*fresh641).wrapping_offset(1);
                                                 let fresh643 = whitespaces.pointer;
                                                 whitespaces.pointer =
-                                                    (whitespaces.pointer).wrapping_offset(1);
+                                                    whitespaces.pointer.wrapping_offset(1);
                                                 *fresh643 = *fresh642;
                                                 let fresh644 =
                                                     addr_of_mut!((*parser).buffer.pointer);
@@ -7612,7 +7590,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                 *fresh644 = (*fresh644).wrapping_offset(1);
                                                 let fresh646 = whitespaces.pointer;
                                                 whitespaces.pointer =
-                                                    (whitespaces.pointer).wrapping_offset(1);
+                                                    whitespaces.pointer.wrapping_offset(1);
                                                 *fresh646 = *fresh645;
                                                 let fresh647 =
                                                     addr_of_mut!((*parser).buffer.pointer);
@@ -7620,7 +7598,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                 *fresh647 = (*fresh647).wrapping_offset(1);
                                                 let fresh649 = whitespaces.pointer;
                                                 whitespaces.pointer =
-                                                    (whitespaces.pointer).wrapping_offset(1);
+                                                    whitespaces.pointer.wrapping_offset(1);
                                                 *fresh649 = *fresh648;
                                             };
                                             let fresh650 = addr_of_mut!((*parser).mark.index);
@@ -7693,11 +7671,11 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                         memset(
                                             whitespaces.start as *mut libc::c_void,
                                             0_i32,
-                                            (whitespaces.end).c_offset_from(whitespaces.start)
+                                            whitespaces.end.c_offset_from(whitespaces.start)
                                                 as libc::c_long
                                                 as libc::c_ulong,
                                         );
-                                        if if if (leading_break.pointer).wrapping_offset(5_isize)
+                                        if if if leading_break.pointer.wrapping_offset(5_isize)
                                             < leading_break.end
                                             || yaml_string_extend(
                                                 addr_of_mut!(leading_break.start),
@@ -7721,7 +7699,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                             {
                                                 let fresh657 = leading_break.pointer;
                                                 leading_break.pointer =
-                                                    (leading_break.pointer).wrapping_offset(1);
+                                                    leading_break.pointer.wrapping_offset(1);
                                                 *fresh657 = '\n' as i32 as yaml_char_t;
                                                 let fresh658 =
                                                     addr_of_mut!((*parser).buffer.pointer);
@@ -7750,7 +7728,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                             {
                                                 let fresh662 = leading_break.pointer;
                                                 leading_break.pointer =
-                                                    (leading_break.pointer).wrapping_offset(1);
+                                                    leading_break.pointer.wrapping_offset(1);
                                                 *fresh662 = '\n' as i32 as yaml_char_t;
                                                 let fresh663 =
                                                     addr_of_mut!((*parser).buffer.pointer);
@@ -7773,7 +7751,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                             {
                                                 let fresh667 = leading_break.pointer;
                                                 leading_break.pointer =
-                                                    (leading_break.pointer).wrapping_offset(1);
+                                                    leading_break.pointer.wrapping_offset(1);
                                                 *fresh667 = '\n' as i32 as yaml_char_t;
                                                 let fresh668 =
                                                     addr_of_mut!((*parser).buffer.pointer);
@@ -7808,7 +7786,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                 *fresh672 = (*fresh672).wrapping_offset(1);
                                                 let fresh674 = leading_break.pointer;
                                                 leading_break.pointer =
-                                                    (leading_break.pointer).wrapping_offset(1);
+                                                    leading_break.pointer.wrapping_offset(1);
                                                 *fresh674 = *fresh673;
                                                 let fresh675 =
                                                     addr_of_mut!((*parser).buffer.pointer);
@@ -7816,7 +7794,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                 *fresh675 = (*fresh675).wrapping_offset(1);
                                                 let fresh677 = leading_break.pointer;
                                                 leading_break.pointer =
-                                                    (leading_break.pointer).wrapping_offset(1);
+                                                    leading_break.pointer.wrapping_offset(1);
                                                 *fresh677 = *fresh676;
                                                 let fresh678 =
                                                     addr_of_mut!((*parser).buffer.pointer);
@@ -7824,7 +7802,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                 *fresh678 = (*fresh678).wrapping_offset(1);
                                                 let fresh680 = leading_break.pointer;
                                                 leading_break.pointer =
-                                                    (leading_break.pointer).wrapping_offset(1);
+                                                    leading_break.pointer.wrapping_offset(1);
                                                 *fresh680 = *fresh679;
                                                 let fresh681 = addr_of_mut!((*parser).mark.index);
                                                 *fresh681 = (*fresh681).wrapping_add(1);
@@ -7867,7 +7845,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                         {
                                             let fresh684 = trailing_breaks.pointer;
                                             trailing_breaks.pointer =
-                                                (trailing_breaks.pointer).wrapping_offset(1);
+                                                trailing_breaks.pointer.wrapping_offset(1);
                                             *fresh684 = '\n' as i32 as yaml_char_t;
                                             let fresh685 = addr_of_mut!((*parser).buffer.pointer);
                                             *fresh685 = (*fresh685).wrapping_offset(2_isize);
@@ -7894,7 +7872,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                         {
                                             let fresh689 = trailing_breaks.pointer;
                                             trailing_breaks.pointer =
-                                                (trailing_breaks.pointer).wrapping_offset(1);
+                                                trailing_breaks.pointer.wrapping_offset(1);
                                             *fresh689 = '\n' as i32 as yaml_char_t;
                                             let fresh690 = addr_of_mut!((*parser).buffer.pointer);
                                             *fresh690 = (*fresh690).wrapping_offset(1);
@@ -7915,7 +7893,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                         {
                                             let fresh694 = trailing_breaks.pointer;
                                             trailing_breaks.pointer =
-                                                (trailing_breaks.pointer).wrapping_offset(1);
+                                                trailing_breaks.pointer.wrapping_offset(1);
                                             *fresh694 = '\n' as i32 as yaml_char_t;
                                             let fresh695 = addr_of_mut!((*parser).buffer.pointer);
                                             *fresh695 = (*fresh695).wrapping_offset(2_isize);
@@ -7946,21 +7924,21 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                             *fresh699 = (*fresh699).wrapping_offset(1);
                                             let fresh701 = trailing_breaks.pointer;
                                             trailing_breaks.pointer =
-                                                (trailing_breaks.pointer).wrapping_offset(1);
+                                                trailing_breaks.pointer.wrapping_offset(1);
                                             *fresh701 = *fresh700;
                                             let fresh702 = addr_of_mut!((*parser).buffer.pointer);
                                             let fresh703 = *fresh702;
                                             *fresh702 = (*fresh702).wrapping_offset(1);
                                             let fresh704 = trailing_breaks.pointer;
                                             trailing_breaks.pointer =
-                                                (trailing_breaks.pointer).wrapping_offset(1);
+                                                trailing_breaks.pointer.wrapping_offset(1);
                                             *fresh704 = *fresh703;
                                             let fresh705 = addr_of_mut!((*parser).buffer.pointer);
                                             let fresh706 = *fresh705;
                                             *fresh705 = (*fresh705).wrapping_offset(1);
                                             let fresh707 = trailing_breaks.pointer;
                                             trailing_breaks.pointer =
-                                                (trailing_breaks.pointer).wrapping_offset(1);
+                                                trailing_breaks.pointer.wrapping_offset(1);
                                             *fresh707 = *fresh706;
                                             let fresh708 = addr_of_mut!((*parser).mark.index);
                                             *fresh708 = (*fresh708).wrapping_add(1);
@@ -7990,14 +7968,14 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                 }
                             }
                             if leading_blanks != 0 {
-                                if *(leading_break.start).wrapping_offset(0_isize) as libc::c_int
+                                if *leading_break.start.wrapping_offset(0_isize) as libc::c_int
                                     == '\n' as i32
                                 {
-                                    if *(trailing_breaks.start).wrapping_offset(0_isize)
+                                    if *trailing_breaks.start.wrapping_offset(0_isize)
                                         as libc::c_int
                                         == '\0' as i32
                                     {
-                                        if if (string.pointer).wrapping_offset(5_isize) < string.end
+                                        if if string.pointer.wrapping_offset(5_isize) < string.end
                                             || yaml_string_extend(
                                                 addr_of_mut!(string.start),
                                                 addr_of_mut!(string.pointer),
@@ -8014,7 +7992,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                             break;
                                         }
                                         let fresh711 = string.pointer;
-                                        string.pointer = (string.pointer).wrapping_offset(1);
+                                        string.pointer = string.pointer.wrapping_offset(1);
                                         *fresh711 = ' ' as i32 as yaml_char_t;
                                     } else {
                                         if if yaml_string_join(
@@ -8050,7 +8028,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                     memset(
                                         leading_break.start as *mut libc::c_void,
                                         0_i32,
-                                        (leading_break.end).c_offset_from(leading_break.start)
+                                        leading_break.end.c_offset_from(leading_break.start)
                                             as libc::c_long
                                             as libc::c_ulong,
                                     );
@@ -8097,7 +8075,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                     memset(
                                         leading_break.start as *mut libc::c_void,
                                         0_i32,
-                                        (leading_break.end).c_offset_from(leading_break.start)
+                                        leading_break.end.c_offset_from(leading_break.start)
                                             as libc::c_long
                                             as libc::c_ulong,
                                     );
@@ -8105,7 +8083,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                     memset(
                                         trailing_breaks.start as *mut libc::c_void,
                                         0_i32,
-                                        (trailing_breaks.end).c_offset_from(trailing_breaks.start)
+                                        trailing_breaks.end.c_offset_from(trailing_breaks.start)
                                             as libc::c_long
                                             as libc::c_ulong,
                                     );
@@ -8134,8 +8112,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                 memset(
                                     whitespaces.start as *mut libc::c_void,
                                     0_i32,
-                                    (whitespaces.end).c_offset_from(whitespaces.start)
-                                        as libc::c_long
+                                    whitespaces.end.c_offset_from(whitespaces.start) as libc::c_long
                                         as libc::c_ulong,
                                 );
                             }
@@ -8191,9 +8168,9 @@ unsafe fn yaml_parser_scan_flow_scalar(
                             (*token).end_mark = end_mark;
                             let fresh716 = addr_of_mut!((*token).data.scalar.value);
                             *fresh716 = string.start;
-                            (*token).data.scalar.length =
-                                (string.pointer).c_offset_from(string.start) as libc::c_long
-                                    as size_t;
+                            (*token).data.scalar.length = string.pointer.c_offset_from(string.start)
+                                as libc::c_long
+                                as size_t;
                             (*token).data.scalar.style = (if single != 0 {
                                 YAML_SINGLE_QUOTED_SCALAR_STYLE as libc::c_int
                             } else {
@@ -8267,9 +8244,9 @@ unsafe fn yaml_parser_scan_plain_scalar(
     let mut leading_blanks: libc::c_int = 0_i32;
     let indent: libc::c_int = (*parser).indent + 1_i32;
     string.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-    if !(if !(string.start).is_null() {
+    if !(if !string.start.is_null() {
         string.pointer = string.start;
-        string.end = (string.start).wrapping_offset(16_isize);
+        string.end = string.start.wrapping_offset(16_isize);
         memset(string.start as *mut libc::c_void, 0_i32, 16_u64);
         1_i32
     } else {
@@ -8278,9 +8255,9 @@ unsafe fn yaml_parser_scan_plain_scalar(
     } == 0)
     {
         leading_break.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-        if !(if !(leading_break.start).is_null() {
+        if !(if !leading_break.start.is_null() {
             leading_break.pointer = leading_break.start;
-            leading_break.end = (leading_break.start).wrapping_offset(16_isize);
+            leading_break.end = leading_break.start.wrapping_offset(16_isize);
             memset(leading_break.start as *mut libc::c_void, 0_i32, 16_u64);
             1_i32
         } else {
@@ -8289,9 +8266,9 @@ unsafe fn yaml_parser_scan_plain_scalar(
         } == 0)
         {
             trailing_breaks.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-            if !(if !(trailing_breaks.start).is_null() {
+            if !(if !trailing_breaks.start.is_null() {
                 trailing_breaks.pointer = trailing_breaks.start;
-                trailing_breaks.end = (trailing_breaks.start).wrapping_offset(16_isize);
+                trailing_breaks.end = trailing_breaks.start.wrapping_offset(16_isize);
                 memset(trailing_breaks.start as *mut libc::c_void, 0_i32, 16_u64);
                 1_i32
             } else {
@@ -8300,9 +8277,9 @@ unsafe fn yaml_parser_scan_plain_scalar(
             } == 0)
             {
                 whitespaces.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-                if !(if !(whitespaces.start).is_null() {
+                if !(if !whitespaces.start.is_null() {
                     whitespaces.pointer = whitespaces.start;
-                    whitespaces.end = (whitespaces.start).wrapping_offset(16_isize);
+                    whitespaces.end = whitespaces.start.wrapping_offset(16_isize);
                     memset(whitespaces.start as *mut libc::c_void, 0_i32, 16_u64);
                     1_i32
                 } else {
@@ -8532,15 +8509,15 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                 }
                                 if leading_blanks != 0 || whitespaces.start != whitespaces.pointer {
                                     if leading_blanks != 0 {
-                                        if *(leading_break.start).wrapping_offset(0_isize)
+                                        if *leading_break.start.wrapping_offset(0_isize)
                                             as libc::c_int
                                             == '\n' as i32
                                         {
-                                            if *(trailing_breaks.start).wrapping_offset(0_isize)
+                                            if *trailing_breaks.start.wrapping_offset(0_isize)
                                                 as libc::c_int
                                                 == '\0' as i32
                                             {
-                                                if if (string.pointer).wrapping_offset(5_isize)
+                                                if if string.pointer.wrapping_offset(5_isize)
                                                     < string.end
                                                     || yaml_string_extend(
                                                         addr_of_mut!(string.start),
@@ -8558,8 +8535,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                                     break 's_57;
                                                 }
                                                 let fresh717 = string.pointer;
-                                                string.pointer =
-                                                    (string.pointer).wrapping_offset(1);
+                                                string.pointer = string.pointer.wrapping_offset(1);
                                                 *fresh717 = ' ' as i32 as yaml_char_t;
                                             } else {
                                                 if if yaml_string_join(
@@ -8683,13 +8659,13 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                         memset(
                                             whitespaces.start as *mut libc::c_void,
                                             0_i32,
-                                            (whitespaces.end).c_offset_from(whitespaces.start)
+                                            whitespaces.end.c_offset_from(whitespaces.start)
                                                 as libc::c_long
                                                 as libc::c_ulong,
                                         );
                                     }
                                 }
-                                if if if (string.pointer).wrapping_offset(5_isize) < string.end
+                                if if if string.pointer.wrapping_offset(5_isize) < string.end
                                     || yaml_string_extend(
                                         addr_of_mut!(string.start),
                                         addr_of_mut!(string.pointer),
@@ -8708,7 +8684,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                         let fresh719 = *fresh718;
                                         *fresh718 = (*fresh718).wrapping_offset(1);
                                         let fresh720 = string.pointer;
-                                        string.pointer = (string.pointer).wrapping_offset(1);
+                                        string.pointer = string.pointer.wrapping_offset(1);
                                         *fresh720 = *fresh719;
                                     } else if *(*parser).buffer.pointer as libc::c_int & 0xe0_i32
                                         == 0xc0_i32
@@ -8717,13 +8693,13 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                         let fresh722 = *fresh721;
                                         *fresh721 = (*fresh721).wrapping_offset(1);
                                         let fresh723 = string.pointer;
-                                        string.pointer = (string.pointer).wrapping_offset(1);
+                                        string.pointer = string.pointer.wrapping_offset(1);
                                         *fresh723 = *fresh722;
                                         let fresh724 = addr_of_mut!((*parser).buffer.pointer);
                                         let fresh725 = *fresh724;
                                         *fresh724 = (*fresh724).wrapping_offset(1);
                                         let fresh726 = string.pointer;
-                                        string.pointer = (string.pointer).wrapping_offset(1);
+                                        string.pointer = string.pointer.wrapping_offset(1);
                                         *fresh726 = *fresh725;
                                     } else if *(*parser).buffer.pointer as libc::c_int & 0xf0_i32
                                         == 0xe0_i32
@@ -8732,19 +8708,19 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                         let fresh728 = *fresh727;
                                         *fresh727 = (*fresh727).wrapping_offset(1);
                                         let fresh729 = string.pointer;
-                                        string.pointer = (string.pointer).wrapping_offset(1);
+                                        string.pointer = string.pointer.wrapping_offset(1);
                                         *fresh729 = *fresh728;
                                         let fresh730 = addr_of_mut!((*parser).buffer.pointer);
                                         let fresh731 = *fresh730;
                                         *fresh730 = (*fresh730).wrapping_offset(1);
                                         let fresh732 = string.pointer;
-                                        string.pointer = (string.pointer).wrapping_offset(1);
+                                        string.pointer = string.pointer.wrapping_offset(1);
                                         *fresh732 = *fresh731;
                                         let fresh733 = addr_of_mut!((*parser).buffer.pointer);
                                         let fresh734 = *fresh733;
                                         *fresh733 = (*fresh733).wrapping_offset(1);
                                         let fresh735 = string.pointer;
-                                        string.pointer = (string.pointer).wrapping_offset(1);
+                                        string.pointer = string.pointer.wrapping_offset(1);
                                         *fresh735 = *fresh734;
                                     } else if *(*parser).buffer.pointer as libc::c_int & 0xf8_i32
                                         == 0xf0_i32
@@ -8753,25 +8729,25 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                         let fresh737 = *fresh736;
                                         *fresh736 = (*fresh736).wrapping_offset(1);
                                         let fresh738 = string.pointer;
-                                        string.pointer = (string.pointer).wrapping_offset(1);
+                                        string.pointer = string.pointer.wrapping_offset(1);
                                         *fresh738 = *fresh737;
                                         let fresh739 = addr_of_mut!((*parser).buffer.pointer);
                                         let fresh740 = *fresh739;
                                         *fresh739 = (*fresh739).wrapping_offset(1);
                                         let fresh741 = string.pointer;
-                                        string.pointer = (string.pointer).wrapping_offset(1);
+                                        string.pointer = string.pointer.wrapping_offset(1);
                                         *fresh741 = *fresh740;
                                         let fresh742 = addr_of_mut!((*parser).buffer.pointer);
                                         let fresh743 = *fresh742;
                                         *fresh742 = (*fresh742).wrapping_offset(1);
                                         let fresh744 = string.pointer;
-                                        string.pointer = (string.pointer).wrapping_offset(1);
+                                        string.pointer = string.pointer.wrapping_offset(1);
                                         *fresh744 = *fresh743;
                                         let fresh745 = addr_of_mut!((*parser).buffer.pointer);
                                         let fresh746 = *fresh745;
                                         *fresh745 = (*fresh745).wrapping_offset(1);
                                         let fresh747 = string.pointer;
-                                        string.pointer = (string.pointer).wrapping_offset(1);
+                                        string.pointer = string.pointer.wrapping_offset(1);
                                         *fresh747 = *fresh746;
                                     };
                                     let fresh748 = addr_of_mut!((*parser).mark.index);
@@ -8905,7 +8881,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                     current_block = 16642808987012640029;
                                     break 's_57;
                                 } else if leading_blanks == 0 {
-                                    if if if (whitespaces.pointer).wrapping_offset(5_isize)
+                                    if if if whitespaces.pointer.wrapping_offset(5_isize)
                                         < whitespaces.end
                                         || yaml_string_extend(
                                             addr_of_mut!(whitespaces.start),
@@ -8927,7 +8903,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                             *fresh751 = (*fresh751).wrapping_offset(1);
                                             let fresh753 = whitespaces.pointer;
                                             whitespaces.pointer =
-                                                (whitespaces.pointer).wrapping_offset(1);
+                                                whitespaces.pointer.wrapping_offset(1);
                                             *fresh753 = *fresh752;
                                         } else if *(*parser).buffer.pointer as libc::c_int
                                             & 0xe0_i32
@@ -8938,14 +8914,14 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                             *fresh754 = (*fresh754).wrapping_offset(1);
                                             let fresh756 = whitespaces.pointer;
                                             whitespaces.pointer =
-                                                (whitespaces.pointer).wrapping_offset(1);
+                                                whitespaces.pointer.wrapping_offset(1);
                                             *fresh756 = *fresh755;
                                             let fresh757 = addr_of_mut!((*parser).buffer.pointer);
                                             let fresh758 = *fresh757;
                                             *fresh757 = (*fresh757).wrapping_offset(1);
                                             let fresh759 = whitespaces.pointer;
                                             whitespaces.pointer =
-                                                (whitespaces.pointer).wrapping_offset(1);
+                                                whitespaces.pointer.wrapping_offset(1);
                                             *fresh759 = *fresh758;
                                         } else if *(*parser).buffer.pointer as libc::c_int
                                             & 0xf0_i32
@@ -8956,21 +8932,21 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                             *fresh760 = (*fresh760).wrapping_offset(1);
                                             let fresh762 = whitespaces.pointer;
                                             whitespaces.pointer =
-                                                (whitespaces.pointer).wrapping_offset(1);
+                                                whitespaces.pointer.wrapping_offset(1);
                                             *fresh762 = *fresh761;
                                             let fresh763 = addr_of_mut!((*parser).buffer.pointer);
                                             let fresh764 = *fresh763;
                                             *fresh763 = (*fresh763).wrapping_offset(1);
                                             let fresh765 = whitespaces.pointer;
                                             whitespaces.pointer =
-                                                (whitespaces.pointer).wrapping_offset(1);
+                                                whitespaces.pointer.wrapping_offset(1);
                                             *fresh765 = *fresh764;
                                             let fresh766 = addr_of_mut!((*parser).buffer.pointer);
                                             let fresh767 = *fresh766;
                                             *fresh766 = (*fresh766).wrapping_offset(1);
                                             let fresh768 = whitespaces.pointer;
                                             whitespaces.pointer =
-                                                (whitespaces.pointer).wrapping_offset(1);
+                                                whitespaces.pointer.wrapping_offset(1);
                                             *fresh768 = *fresh767;
                                         } else if *(*parser).buffer.pointer as libc::c_int
                                             & 0xf8_i32
@@ -8981,28 +8957,28 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                             *fresh769 = (*fresh769).wrapping_offset(1);
                                             let fresh771 = whitespaces.pointer;
                                             whitespaces.pointer =
-                                                (whitespaces.pointer).wrapping_offset(1);
+                                                whitespaces.pointer.wrapping_offset(1);
                                             *fresh771 = *fresh770;
                                             let fresh772 = addr_of_mut!((*parser).buffer.pointer);
                                             let fresh773 = *fresh772;
                                             *fresh772 = (*fresh772).wrapping_offset(1);
                                             let fresh774 = whitespaces.pointer;
                                             whitespaces.pointer =
-                                                (whitespaces.pointer).wrapping_offset(1);
+                                                whitespaces.pointer.wrapping_offset(1);
                                             *fresh774 = *fresh773;
                                             let fresh775 = addr_of_mut!((*parser).buffer.pointer);
                                             let fresh776 = *fresh775;
                                             *fresh775 = (*fresh775).wrapping_offset(1);
                                             let fresh777 = whitespaces.pointer;
                                             whitespaces.pointer =
-                                                (whitespaces.pointer).wrapping_offset(1);
+                                                whitespaces.pointer.wrapping_offset(1);
                                             *fresh777 = *fresh776;
                                             let fresh778 = addr_of_mut!((*parser).buffer.pointer);
                                             let fresh779 = *fresh778;
                                             *fresh778 = (*fresh778).wrapping_offset(1);
                                             let fresh780 = whitespaces.pointer;
                                             whitespaces.pointer =
-                                                (whitespaces.pointer).wrapping_offset(1);
+                                                whitespaces.pointer.wrapping_offset(1);
                                             *fresh780 = *fresh779;
                                         };
                                         let fresh781 = addr_of_mut!((*parser).mark.index);
@@ -9075,11 +9051,11 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                     memset(
                                         whitespaces.start as *mut libc::c_void,
                                         0_i32,
-                                        (whitespaces.end).c_offset_from(whitespaces.start)
+                                        whitespaces.end.c_offset_from(whitespaces.start)
                                             as libc::c_long
                                             as libc::c_ulong,
                                     );
-                                    if if if (leading_break.pointer).wrapping_offset(5_isize)
+                                    if if if leading_break.pointer.wrapping_offset(5_isize)
                                         < leading_break.end
                                         || yaml_string_extend(
                                             addr_of_mut!(leading_break.start),
@@ -9102,7 +9078,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                         {
                                             let fresh788 = leading_break.pointer;
                                             leading_break.pointer =
-                                                (leading_break.pointer).wrapping_offset(1);
+                                                leading_break.pointer.wrapping_offset(1);
                                             *fresh788 = '\n' as i32 as yaml_char_t;
                                             let fresh789 = addr_of_mut!((*parser).buffer.pointer);
                                             *fresh789 = (*fresh789).wrapping_offset(2_isize);
@@ -9129,7 +9105,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                         {
                                             let fresh793 = leading_break.pointer;
                                             leading_break.pointer =
-                                                (leading_break.pointer).wrapping_offset(1);
+                                                leading_break.pointer.wrapping_offset(1);
                                             *fresh793 = '\n' as i32 as yaml_char_t;
                                             let fresh794 = addr_of_mut!((*parser).buffer.pointer);
                                             *fresh794 = (*fresh794).wrapping_offset(1);
@@ -9150,7 +9126,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                         {
                                             let fresh798 = leading_break.pointer;
                                             leading_break.pointer =
-                                                (leading_break.pointer).wrapping_offset(1);
+                                                leading_break.pointer.wrapping_offset(1);
                                             *fresh798 = '\n' as i32 as yaml_char_t;
                                             let fresh799 = addr_of_mut!((*parser).buffer.pointer);
                                             *fresh799 = (*fresh799).wrapping_offset(2_isize);
@@ -9181,21 +9157,21 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                             *fresh803 = (*fresh803).wrapping_offset(1);
                                             let fresh805 = leading_break.pointer;
                                             leading_break.pointer =
-                                                (leading_break.pointer).wrapping_offset(1);
+                                                leading_break.pointer.wrapping_offset(1);
                                             *fresh805 = *fresh804;
                                             let fresh806 = addr_of_mut!((*parser).buffer.pointer);
                                             let fresh807 = *fresh806;
                                             *fresh806 = (*fresh806).wrapping_offset(1);
                                             let fresh808 = leading_break.pointer;
                                             leading_break.pointer =
-                                                (leading_break.pointer).wrapping_offset(1);
+                                                leading_break.pointer.wrapping_offset(1);
                                             *fresh808 = *fresh807;
                                             let fresh809 = addr_of_mut!((*parser).buffer.pointer);
                                             let fresh810 = *fresh809;
                                             *fresh809 = (*fresh809).wrapping_offset(1);
                                             let fresh811 = leading_break.pointer;
                                             leading_break.pointer =
-                                                (leading_break.pointer).wrapping_offset(1);
+                                                leading_break.pointer.wrapping_offset(1);
                                             *fresh811 = *fresh810;
                                             let fresh812 = addr_of_mut!((*parser).mark.index);
                                             *fresh812 = (*fresh812).wrapping_add(1);
@@ -9214,7 +9190,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                         break 's_57;
                                     }
                                     leading_blanks = 1_i32;
-                                } else if if if (trailing_breaks.pointer).wrapping_offset(5_isize)
+                                } else if if if trailing_breaks.pointer.wrapping_offset(5_isize)
                                     < trailing_breaks.end
                                     || yaml_string_extend(
                                         addr_of_mut!(trailing_breaks.start),
@@ -9237,7 +9213,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                     {
                                         let fresh815 = trailing_breaks.pointer;
                                         trailing_breaks.pointer =
-                                            (trailing_breaks.pointer).wrapping_offset(1);
+                                            trailing_breaks.pointer.wrapping_offset(1);
                                         *fresh815 = '\n' as i32 as yaml_char_t;
                                         let fresh816 = addr_of_mut!((*parser).buffer.pointer);
                                         *fresh816 = (*fresh816).wrapping_offset(2_isize);
@@ -9261,7 +9237,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                     {
                                         let fresh820 = trailing_breaks.pointer;
                                         trailing_breaks.pointer =
-                                            (trailing_breaks.pointer).wrapping_offset(1);
+                                            trailing_breaks.pointer.wrapping_offset(1);
                                         *fresh820 = '\n' as i32 as yaml_char_t;
                                         let fresh821 = addr_of_mut!((*parser).buffer.pointer);
                                         *fresh821 = (*fresh821).wrapping_offset(1);
@@ -9281,7 +9257,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                     {
                                         let fresh825 = trailing_breaks.pointer;
                                         trailing_breaks.pointer =
-                                            (trailing_breaks.pointer).wrapping_offset(1);
+                                            trailing_breaks.pointer.wrapping_offset(1);
                                         *fresh825 = '\n' as i32 as yaml_char_t;
                                         let fresh826 = addr_of_mut!((*parser).buffer.pointer);
                                         *fresh826 = (*fresh826).wrapping_offset(2_isize);
@@ -9310,21 +9286,21 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                         *fresh830 = (*fresh830).wrapping_offset(1);
                                         let fresh832 = trailing_breaks.pointer;
                                         trailing_breaks.pointer =
-                                            (trailing_breaks.pointer).wrapping_offset(1);
+                                            trailing_breaks.pointer.wrapping_offset(1);
                                         *fresh832 = *fresh831;
                                         let fresh833 = addr_of_mut!((*parser).buffer.pointer);
                                         let fresh834 = *fresh833;
                                         *fresh833 = (*fresh833).wrapping_offset(1);
                                         let fresh835 = trailing_breaks.pointer;
                                         trailing_breaks.pointer =
-                                            (trailing_breaks.pointer).wrapping_offset(1);
+                                            trailing_breaks.pointer.wrapping_offset(1);
                                         *fresh835 = *fresh834;
                                         let fresh836 = addr_of_mut!((*parser).buffer.pointer);
                                         let fresh837 = *fresh836;
                                         *fresh836 = (*fresh836).wrapping_offset(1);
                                         let fresh838 = trailing_breaks.pointer;
                                         trailing_breaks.pointer =
-                                            (trailing_breaks.pointer).wrapping_offset(1);
+                                            trailing_breaks.pointer.wrapping_offset(1);
                                         *fresh838 = *fresh837;
                                         let fresh839 = addr_of_mut!((*parser).mark.index);
                                         *fresh839 = (*fresh839).wrapping_add(1);
@@ -9373,9 +9349,9 @@ unsafe fn yaml_parser_scan_plain_scalar(
                             (*token).end_mark = end_mark;
                             let fresh842 = addr_of_mut!((*token).data.scalar.value);
                             *fresh842 = string.start;
-                            (*token).data.scalar.length =
-                                (string.pointer).c_offset_from(string.start) as libc::c_long
-                                    as size_t;
+                            (*token).data.scalar.length = string.pointer.c_offset_from(string.start)
+                                as libc::c_long
+                                as size_t;
                             (*token).data.scalar.style = YAML_PLAIN_SCALAR_STYLE;
                             if leading_blanks != 0 {
                                 (*parser).simple_key_allowed = 1_i32;
