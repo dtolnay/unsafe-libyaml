@@ -8,3 +8,6 @@ publish = false
 [dev-dependencies]
 pretty_assertions = "1.0"
 unsafe-libyaml-test-suite = { path = "tests/data" }
+
+[package.metadata.docs.rs]
+targets = ["x86_64-unknown-linux-gnu"]
