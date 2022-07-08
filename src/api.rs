@@ -30,13 +30,13 @@ pub unsafe fn yaml_get_version(
     *patch = 5_i32;
 }
 pub unsafe fn yaml_malloc(size: size_t) -> *mut libc::c_void {
-    malloc(if size != 0 { size } else { 1_u64 })
+    malloc(size)
 }
 pub unsafe fn yaml_realloc(ptr: *mut libc::c_void, size: size_t) -> *mut libc::c_void {
     if !ptr.is_null() {
-        realloc(ptr, if size != 0 { size } else { 1_u64 })
+        realloc(ptr, size)
     } else {
-        malloc(if size != 0 { size } else { 1_u64 })
+        malloc(size)
     }
 }
 pub unsafe fn yaml_free(ptr: *mut libc::c_void) {
