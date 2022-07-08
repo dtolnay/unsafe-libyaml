@@ -83,7 +83,7 @@ pub const YAML_NO_TOKEN: yaml_token_type_t = 0;
 #[repr(C)]
 #[non_exhaustive]
 pub struct yaml_token_t {
-    pub type_0: yaml_token_type_t,
+    pub type_: yaml_token_type_t,
     pub data: unnamed_yaml_token_t_data,
     pub start_mark: yaml_mark_t,
     pub end_mark: yaml_mark_t,
@@ -162,7 +162,7 @@ pub const YAML_NO_EVENT: yaml_event_type_t = 0;
 #[repr(C)]
 #[non_exhaustive]
 pub struct yaml_event_t {
-    pub type_0: yaml_event_type_t,
+    pub type_: yaml_event_type_t,
     pub data: unnamed_yaml_event_t_data,
     pub start_mark: yaml_mark_t,
     pub end_mark: yaml_mark_t,
@@ -250,7 +250,7 @@ pub const YAML_NO_NODE: yaml_node_type_t = 0;
 #[repr(C)]
 #[non_exhaustive]
 pub struct yaml_node_t {
-    pub type_0: yaml_node_type_t,
+    pub type_: yaml_node_type_t,
     pub tag: *mut yaml_char_t,
     pub data: unnamed_yaml_node_t_data,
     pub start_mark: yaml_mark_t,

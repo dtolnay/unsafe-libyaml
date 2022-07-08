@@ -73,28 +73,27 @@ pub unsafe fn unsafe_main(
             yaml_parser_delete(parser);
             return Err(error.into());
         }
-        let type_0: yaml_event_type_t = (*event).type_0;
-        if type_0 as libc::c_uint == YAML_NO_EVENT as libc::c_int as libc::c_uint {
+        let type_: yaml_event_type_t = (*event).type_;
+        if type_ as libc::c_uint == YAML_NO_EVENT as libc::c_int as libc::c_uint {
             let _ = writeln!(stdout, "???");
-        } else if type_0 as libc::c_uint == YAML_STREAM_START_EVENT as libc::c_int as libc::c_uint {
+        } else if type_ as libc::c_uint == YAML_STREAM_START_EVENT as libc::c_int as libc::c_uint {
             let _ = writeln!(stdout, "+STR");
-        } else if type_0 as libc::c_uint == YAML_STREAM_END_EVENT as libc::c_int as libc::c_uint {
+        } else if type_ as libc::c_uint == YAML_STREAM_END_EVENT as libc::c_int as libc::c_uint {
             let _ = writeln!(stdout, "-STR");
-        } else if type_0 as libc::c_uint == YAML_DOCUMENT_START_EVENT as libc::c_int as libc::c_uint
+        } else if type_ as libc::c_uint == YAML_DOCUMENT_START_EVENT as libc::c_int as libc::c_uint
         {
             let _ = write!(stdout, "+DOC");
             if (*event).data.document_start.implicit == 0 {
                 let _ = write!(stdout, " ---");
             }
             let _ = writeln!(stdout);
-        } else if type_0 as libc::c_uint == YAML_DOCUMENT_END_EVENT as libc::c_int as libc::c_uint {
+        } else if type_ as libc::c_uint == YAML_DOCUMENT_END_EVENT as libc::c_int as libc::c_uint {
             let _ = write!(stdout, "-DOC");
             if (*event).data.document_end.implicit == 0 {
                 let _ = write!(stdout, " ...");
             }
             let _ = writeln!(stdout);
-        } else if type_0 as libc::c_uint == YAML_MAPPING_START_EVENT as libc::c_int as libc::c_uint
-        {
+        } else if type_ as libc::c_uint == YAML_MAPPING_START_EVENT as libc::c_int as libc::c_uint {
             let _ = write!(stdout, "+MAP");
             if !((*event).data.mapping_start.anchor).is_null() {
                 let _ = write!(
@@ -113,9 +112,9 @@ pub unsafe fn unsafe_main(
                 );
             }
             let _ = writeln!(stdout);
-        } else if type_0 as libc::c_uint == YAML_MAPPING_END_EVENT as libc::c_int as libc::c_uint {
+        } else if type_ as libc::c_uint == YAML_MAPPING_END_EVENT as libc::c_int as libc::c_uint {
             let _ = writeln!(stdout, "-MAP");
-        } else if type_0 as libc::c_uint == YAML_SEQUENCE_START_EVENT as libc::c_int as libc::c_uint
+        } else if type_ as libc::c_uint == YAML_SEQUENCE_START_EVENT as libc::c_int as libc::c_uint
         {
             let _ = write!(stdout, "+SEQ");
             if !((*event).data.sequence_start.anchor).is_null() {
@@ -135,9 +134,9 @@ pub unsafe fn unsafe_main(
                 );
             }
             let _ = writeln!(stdout);
-        } else if type_0 as libc::c_uint == YAML_SEQUENCE_END_EVENT as libc::c_int as libc::c_uint {
+        } else if type_ as libc::c_uint == YAML_SEQUENCE_END_EVENT as libc::c_int as libc::c_uint {
             let _ = writeln!(stdout, "-SEQ");
-        } else if type_0 as libc::c_uint == YAML_SCALAR_EVENT as libc::c_int as libc::c_uint {
+        } else if type_ as libc::c_uint == YAML_SCALAR_EVENT as libc::c_int as libc::c_uint {
             let _ = write!(stdout, "=VAL");
             if !((*event).data.scalar.anchor).is_null() {
                 let _ = write!(
@@ -182,7 +181,7 @@ pub unsafe fn unsafe_main(
                 (*event).data.scalar.length,
             );
             let _ = writeln!(stdout);
-        } else if type_0 as libc::c_uint == YAML_ALIAS_EVENT as libc::c_int as libc::c_uint {
+        } else if type_ as libc::c_uint == YAML_ALIAS_EVENT as libc::c_int as libc::c_uint {
             let _ = writeln!(
                 stdout,
                 "=ALI *{}",
@@ -192,7 +191,7 @@ pub unsafe fn unsafe_main(
             process::abort();
         }
         yaml_event_delete(event);
-        if type_0 as libc::c_uint == YAML_STREAM_END_EVENT as libc::c_int as libc::c_uint {
+        if type_ as libc::c_uint == YAML_STREAM_END_EVENT as libc::c_int as libc::c_uint {
             break;
         }
     }

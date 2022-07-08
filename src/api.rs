@@ -841,7 +841,7 @@ pub unsafe fn yaml_emitter_set_break(mut emitter: *mut yaml_emitter_t, line_brea
 }
 pub unsafe fn yaml_token_delete(token: *mut yaml_token_t) {
     __assert!(!token.is_null());
-    match (*token).type_0 as libc::c_uint {
+    match (*token).type_ as libc::c_uint {
         4 => {
             yaml_free((*token).data.tag_directive.handle as *mut libc::c_void);
             yaml_free((*token).data.tag_directive.prefix as *mut libc::c_void);
@@ -939,7 +939,7 @@ pub unsafe fn yaml_stream_start_event_initialize(
         0_i32,
         size_of::<yaml_event_t>() as libc::c_ulong,
     );
-    (*event).type_0 = YAML_STREAM_START_EVENT;
+    (*event).type_ = YAML_STREAM_START_EVENT;
     (*event).start_mark = mark;
     (*event).end_mark = mark;
     (*event).data.stream_start.encoding = encoding;
@@ -957,7 +957,7 @@ pub unsafe fn yaml_stream_end_event_initialize(mut event: *mut yaml_event_t) -> 
         0_i32,
         size_of::<yaml_event_t>() as libc::c_ulong,
     );
-    (*event).type_0 = YAML_STREAM_END_EVENT;
+    (*event).type_ = YAML_STREAM_END_EVENT;
     (*event).start_mark = mark;
     (*event).end_mark = mark;
     1_i32
@@ -1095,7 +1095,7 @@ pub unsafe fn yaml_document_start_event_initialize(
                         0_i32,
                         size_of::<yaml_event_t>() as libc::c_ulong,
                     );
-                    (*event).type_0 = YAML_DOCUMENT_START_EVENT;
+                    (*event).type_ = YAML_DOCUMENT_START_EVENT;
                     (*event).start_mark = mark;
                     (*event).end_mark = mark;
                     let fresh164 = addr_of_mut!((*event).data.document_start.version_directive);
@@ -1141,7 +1141,7 @@ pub unsafe fn yaml_document_end_event_initialize(
         0_i32,
         size_of::<yaml_event_t>() as libc::c_ulong,
     );
-    (*event).type_0 = YAML_DOCUMENT_END_EVENT;
+    (*event).type_ = YAML_DOCUMENT_END_EVENT;
     (*event).start_mark = mark;
     (*event).end_mark = mark;
     (*event).data.document_end.implicit = implicit;
@@ -1170,7 +1170,7 @@ pub unsafe fn yaml_alias_event_initialize(
         0_i32,
         size_of::<yaml_event_t>() as libc::c_ulong,
     );
-    (*event).type_0 = YAML_ALIAS_EVENT;
+    (*event).type_ = YAML_ALIAS_EVENT;
     (*event).start_mark = mark;
     (*event).end_mark = mark;
     let fresh167 = addr_of_mut!((*event).data.alias.anchor);
@@ -1249,7 +1249,7 @@ pub unsafe fn yaml_scalar_event_initialize(
                                 0_i32,
                                 size_of::<yaml_event_t>() as libc::c_ulong,
                             );
-                            (*event).type_0 = YAML_SCALAR_EVENT;
+                            (*event).type_ = YAML_SCALAR_EVENT;
                             (*event).start_mark = mark;
                             (*event).end_mark = mark;
                             let fresh168 = addr_of_mut!((*event).data.scalar.anchor);
@@ -1329,7 +1329,7 @@ pub unsafe fn yaml_sequence_start_event_initialize(
                         0_i32,
                         size_of::<yaml_event_t>() as libc::c_ulong,
                     );
-                    (*event).type_0 = YAML_SEQUENCE_START_EVENT;
+                    (*event).type_ = YAML_SEQUENCE_START_EVENT;
                     (*event).start_mark = mark;
                     (*event).end_mark = mark;
                     let fresh171 = addr_of_mut!((*event).data.sequence_start.anchor);
@@ -1360,7 +1360,7 @@ pub unsafe fn yaml_sequence_end_event_initialize(mut event: *mut yaml_event_t) -
         0_i32,
         size_of::<yaml_event_t>() as libc::c_ulong,
     );
-    (*event).type_0 = YAML_SEQUENCE_END_EVENT;
+    (*event).type_ = YAML_SEQUENCE_END_EVENT;
     (*event).start_mark = mark;
     (*event).end_mark = mark;
     1_i32
@@ -1419,7 +1419,7 @@ pub unsafe fn yaml_mapping_start_event_initialize(
                         0_i32,
                         size_of::<yaml_event_t>() as libc::c_ulong,
                     );
-                    (*event).type_0 = YAML_MAPPING_START_EVENT;
+                    (*event).type_ = YAML_MAPPING_START_EVENT;
                     (*event).start_mark = mark;
                     (*event).end_mark = mark;
                     let fresh173 = addr_of_mut!((*event).data.mapping_start.anchor);
@@ -1450,7 +1450,7 @@ pub unsafe fn yaml_mapping_end_event_initialize(mut event: *mut yaml_event_t) ->
         0_i32,
         size_of::<yaml_event_t>() as libc::c_ulong,
     );
-    (*event).type_0 = YAML_MAPPING_END_EVENT;
+    (*event).type_ = YAML_MAPPING_END_EVENT;
     (*event).start_mark = mark;
     (*event).end_mark = mark;
     1_i32
@@ -1458,7 +1458,7 @@ pub unsafe fn yaml_mapping_end_event_initialize(mut event: *mut yaml_event_t) ->
 pub unsafe fn yaml_event_delete(event: *mut yaml_event_t) {
     let mut tag_directive: *mut yaml_tag_directive_t;
     __assert!(!event.is_null());
-    match (*event).type_0 as libc::c_uint {
+    match (*event).type_ as libc::c_uint {
         3 => {
             yaml_free((*event).data.document_start.version_directive as *mut libc::c_void);
             tag_directive = (*event).data.document_start.tag_directives.start;
@@ -1704,7 +1704,7 @@ pub unsafe fn yaml_document_delete(document: *mut yaml_document_t) {
         *fresh182 = (*fresh182).wrapping_offset(-1);
         let mut node: yaml_node_t = **fresh182;
         yaml_free(node.tag as *mut libc::c_void);
-        match node.type_0 as libc::c_uint {
+        match node.type_ as libc::c_uint {
             1 => {
                 yaml_free(node.data.scalar.value as *mut libc::c_void);
             }
@@ -1811,7 +1811,7 @@ pub unsafe fn yaml_document_add_scalar(
                         0_i32,
                         size_of::<yaml_node_t>() as libc::c_ulong,
                     );
-                    (*node).type_0 = YAML_SCALAR_NODE;
+                    (*node).type_ = YAML_SCALAR_NODE;
                     (*node).tag = tag_copy;
                     (*node).start_mark = mark;
                     (*node).end_mark = mark;
@@ -1896,7 +1896,7 @@ pub unsafe fn yaml_document_add_sequence(
                     0_i32,
                     size_of::<yaml_node_t>() as libc::c_ulong,
                 );
-                (*node).type_0 = YAML_SEQUENCE_NODE;
+                (*node).type_ = YAML_SEQUENCE_NODE;
                 (*node).tag = tag_copy;
                 (*node).start_mark = mark;
                 (*node).end_mark = mark;
@@ -1984,7 +1984,7 @@ pub unsafe fn yaml_document_add_mapping(
                     0_i32,
                     size_of::<yaml_node_t>() as libc::c_ulong,
                 );
-                (*node).type_0 = YAML_MAPPING_NODE;
+                (*node).type_ = YAML_MAPPING_NODE;
                 (*node).tag = tag_copy;
                 (*node).start_mark = mark;
                 (*node).end_mark = mark;
@@ -2037,7 +2037,7 @@ pub unsafe fn yaml_document_append_sequence_item(
                 <= (*document).nodes.top
     );
     __assert!(
-        (*((*document).nodes.start).wrapping_offset((sequence - 1_i32) as isize)).type_0
+        (*((*document).nodes.start).wrapping_offset((sequence - 1_i32) as isize)).type_
             as libc::c_uint
             == YAML_SEQUENCE_NODE as libc::c_int as libc::c_uint
     );
@@ -2114,7 +2114,7 @@ pub unsafe fn yaml_document_append_mapping_pair(
             && ((*document).nodes.start).wrapping_offset(mapping as isize) <= (*document).nodes.top
     );
     __assert!(
-        (*((*document).nodes.start).wrapping_offset((mapping - 1_i32) as isize)).type_0
+        (*((*document).nodes.start).wrapping_offset((mapping - 1_i32) as isize)).type_
             as libc::c_uint
             == YAML_MAPPING_NODE as libc::c_int as libc::c_uint
     );

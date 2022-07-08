@@ -42,7 +42,7 @@ pub unsafe fn yaml_parser_scan(
     (*parser).token_available = 0_i32;
     let fresh2 = addr_of_mut!((*parser).tokens_parsed);
     *fresh2 = (*fresh2).wrapping_add(1);
-    if (*token).type_0 as libc::c_uint == YAML_STREAM_END_TOKEN as libc::c_int as libc::c_uint {
+    if (*token).type_ as libc::c_uint == YAML_STREAM_END_TOKEN as libc::c_int as libc::c_uint {
         (*parser).stream_end_produced = 1_i32;
     }
     1_i32
@@ -614,7 +614,7 @@ unsafe fn yaml_parser_roll_indent(
     mut parser: *mut yaml_parser_t,
     column: ptrdiff_t,
     number: ptrdiff_t,
-    type_0: yaml_token_type_t,
+    type_: yaml_token_type_t,
     mark: yaml_mark_t,
 ) -> libc::c_int {
     let mut token = MaybeUninit::<yaml_token_t>::uninit();
@@ -652,7 +652,7 @@ unsafe fn yaml_parser_roll_indent(
             0_i32,
             size_of::<yaml_token_t>() as libc::c_ulong,
         );
-        (*token).type_0 = type_0;
+        (*token).type_ = type_;
         (*token).start_mark = mark;
         (*token).end_mark = mark;
         if number == -1_i64 {
@@ -729,7 +729,7 @@ unsafe fn yaml_parser_unroll_indent(
             0_i32,
             size_of::<yaml_token_t>() as libc::c_ulong,
         );
-        (*token).type_0 = YAML_BLOCK_END_TOKEN;
+        (*token).type_ = YAML_BLOCK_END_TOKEN;
         (*token).start_mark = (*parser).mark;
         (*token).end_mark = (*parser).mark;
         if if (*parser).tokens.tail != (*parser).tokens.end
@@ -798,7 +798,7 @@ unsafe fn yaml_parser_fetch_stream_start(mut parser: *mut yaml_parser_t) -> libc
         0_i32,
         size_of::<yaml_token_t>() as libc::c_ulong,
     );
-    (*token).type_0 = YAML_STREAM_START_TOKEN;
+    (*token).type_ = YAML_STREAM_START_TOKEN;
     (*token).start_mark = (*parser).mark;
     (*token).end_mark = (*parser).mark;
     (*token).data.stream_start.encoding = (*parser).encoding;
@@ -844,7 +844,7 @@ unsafe fn yaml_parser_fetch_stream_end(mut parser: *mut yaml_parser_t) -> libc::
         0_i32,
         size_of::<yaml_token_t>() as libc::c_ulong,
     );
-    (*token).type_0 = YAML_STREAM_END_TOKEN;
+    (*token).type_ = YAML_STREAM_END_TOKEN;
     (*token).start_mark = (*parser).mark;
     (*token).end_mark = (*parser).mark;
     if if (*parser).tokens.tail != (*parser).tokens.end
@@ -907,7 +907,7 @@ unsafe fn yaml_parser_fetch_directive(mut parser: *mut yaml_parser_t) -> libc::c
 }
 unsafe fn yaml_parser_fetch_document_indicator(
     mut parser: *mut yaml_parser_t,
-    type_0: yaml_token_type_t,
+    type_: yaml_token_type_t,
 ) -> libc::c_int {
     let mut token = MaybeUninit::<yaml_token_t>::uninit();
     let token = token.as_mut_ptr();
@@ -1006,7 +1006,7 @@ unsafe fn yaml_parser_fetch_document_indicator(
         0_i32,
         size_of::<yaml_token_t>() as libc::c_ulong,
     );
-    (*token).type_0 = type_0;
+    (*token).type_ = type_;
     (*token).start_mark = start_mark;
     (*token).end_mark = end_mark;
     if if (*parser).tokens.tail != (*parser).tokens.end
@@ -1033,7 +1033,7 @@ unsafe fn yaml_parser_fetch_document_indicator(
 }
 unsafe fn yaml_parser_fetch_flow_collection_start(
     mut parser: *mut yaml_parser_t,
-    type_0: yaml_token_type_t,
+    type_: yaml_token_type_t,
 ) -> libc::c_int {
     let mut token = MaybeUninit::<yaml_token_t>::uninit();
     let token = token.as_mut_ptr();
@@ -1078,7 +1078,7 @@ unsafe fn yaml_parser_fetch_flow_collection_start(
         0_i32,
         size_of::<yaml_token_t>() as libc::c_ulong,
     );
-    (*token).type_0 = type_0;
+    (*token).type_ = type_;
     (*token).start_mark = start_mark;
     (*token).end_mark = end_mark;
     if if (*parser).tokens.tail != (*parser).tokens.end
@@ -1105,7 +1105,7 @@ unsafe fn yaml_parser_fetch_flow_collection_start(
 }
 unsafe fn yaml_parser_fetch_flow_collection_end(
     mut parser: *mut yaml_parser_t,
-    type_0: yaml_token_type_t,
+    type_: yaml_token_type_t,
 ) -> libc::c_int {
     let mut token = MaybeUninit::<yaml_token_t>::uninit();
     let token = token.as_mut_ptr();
@@ -1150,7 +1150,7 @@ unsafe fn yaml_parser_fetch_flow_collection_end(
         0_i32,
         size_of::<yaml_token_t>() as libc::c_ulong,
     );
-    (*token).type_0 = type_0;
+    (*token).type_ = type_;
     (*token).start_mark = start_mark;
     (*token).end_mark = end_mark;
     if if (*parser).tokens.tail != (*parser).tokens.end
@@ -1216,7 +1216,7 @@ unsafe fn yaml_parser_fetch_flow_entry(mut parser: *mut yaml_parser_t) -> libc::
         0_i32,
         size_of::<yaml_token_t>() as libc::c_ulong,
     );
-    (*token).type_0 = YAML_FLOW_ENTRY_TOKEN;
+    (*token).type_ = YAML_FLOW_ENTRY_TOKEN;
     (*token).start_mark = start_mark;
     (*token).end_mark = end_mark;
     if if (*parser).tokens.tail != (*parser).tokens.end
@@ -1303,7 +1303,7 @@ unsafe fn yaml_parser_fetch_block_entry(mut parser: *mut yaml_parser_t) -> libc:
         0_i32,
         size_of::<yaml_token_t>() as libc::c_ulong,
     );
-    (*token).type_0 = YAML_BLOCK_ENTRY_TOKEN;
+    (*token).type_ = YAML_BLOCK_ENTRY_TOKEN;
     (*token).start_mark = start_mark;
     (*token).end_mark = end_mark;
     if if (*parser).tokens.tail != (*parser).tokens.end
@@ -1390,7 +1390,7 @@ unsafe fn yaml_parser_fetch_key(mut parser: *mut yaml_parser_t) -> libc::c_int {
         0_i32,
         size_of::<yaml_token_t>() as libc::c_ulong,
     );
-    (*token).type_0 = YAML_KEY_TOKEN;
+    (*token).type_ = YAML_KEY_TOKEN;
     (*token).start_mark = start_mark;
     (*token).end_mark = end_mark;
     if if (*parser).tokens.tail != (*parser).tokens.end
@@ -1426,7 +1426,7 @@ unsafe fn yaml_parser_fetch_value(mut parser: *mut yaml_parser_t) -> libc::c_int
             0_i32,
             size_of::<yaml_token_t>() as libc::c_ulong,
         );
-        (*token).type_0 = YAML_KEY_TOKEN;
+        (*token).type_ = YAML_KEY_TOKEN;
         (*token).start_mark = (*simple_key).mark;
         (*token).end_mark = (*simple_key).mark;
         if if (*parser).tokens.tail != (*parser).tokens.end
@@ -1536,7 +1536,7 @@ unsafe fn yaml_parser_fetch_value(mut parser: *mut yaml_parser_t) -> libc::c_int
         0_i32,
         size_of::<yaml_token_t>() as libc::c_ulong,
     );
-    (*token).type_0 = YAML_VALUE_TOKEN;
+    (*token).type_ = YAML_VALUE_TOKEN;
     (*token).start_mark = start_mark;
     (*token).end_mark = end_mark;
     if if (*parser).tokens.tail != (*parser).tokens.end
@@ -1563,7 +1563,7 @@ unsafe fn yaml_parser_fetch_value(mut parser: *mut yaml_parser_t) -> libc::c_int
 }
 unsafe fn yaml_parser_fetch_anchor(
     mut parser: *mut yaml_parser_t,
-    type_0: yaml_token_type_t,
+    type_: yaml_token_type_t,
 ) -> libc::c_int {
     let mut token = MaybeUninit::<yaml_token_t>::uninit();
     let token = token.as_mut_ptr();
@@ -1571,7 +1571,7 @@ unsafe fn yaml_parser_fetch_anchor(
         return 0_i32;
     }
     (*parser).simple_key_allowed = 0_i32;
-    if yaml_parser_scan_anchor(parser, token, type_0) == 0 {
+    if yaml_parser_scan_anchor(parser, token, type_) == 0 {
         return 0_i32;
     }
     if if (*parser).tokens.tail != (*parser).tokens.end
@@ -2072,7 +2072,7 @@ unsafe fn yaml_parser_scan_directive(
                     0_i32,
                     size_of::<yaml_token_t>() as libc::c_ulong,
                 );
-                (*token).type_0 = YAML_VERSION_DIRECTIVE_TOKEN;
+                (*token).type_ = YAML_VERSION_DIRECTIVE_TOKEN;
                 (*token).start_mark = start_mark;
                 (*token).end_mark = end_mark;
                 (*token).data.version_directive.major = major;
@@ -2099,7 +2099,7 @@ unsafe fn yaml_parser_scan_directive(
                     0_i32,
                     size_of::<yaml_token_t>() as libc::c_ulong,
                 );
-                (*token).type_0 = YAML_TAG_DIRECTIVE_TOKEN;
+                (*token).type_ = YAML_TAG_DIRECTIVE_TOKEN;
                 (*token).start_mark = start_mark;
                 (*token).end_mark = end_mark;
                 let fresh112 = addr_of_mut!((*token).data.tag_directive.handle);
@@ -3149,7 +3149,7 @@ unsafe fn yaml_parser_scan_tag_directive_value(
 unsafe fn yaml_parser_scan_anchor(
     mut parser: *mut yaml_parser_t,
     mut token: *mut yaml_token_t,
-    type_0: yaml_token_type_t,
+    type_: yaml_token_type_t,
 ) -> libc::c_int {
     let current_block: u64;
     let mut length: libc::c_int = 0_i32;
@@ -3391,7 +3391,7 @@ unsafe fn yaml_parser_scan_anchor(
                     {
                         yaml_parser_set_scanner_error(
                             parser,
-                            if type_0 as libc::c_uint
+                            if type_ as libc::c_uint
                                 == YAML_ANCHOR_TOKEN as libc::c_int as libc::c_uint
                             {
                                 b"while scanning an anchor\0" as *const u8 as *const libc::c_char
@@ -3403,15 +3403,14 @@ unsafe fn yaml_parser_scan_anchor(
                                 as *const libc::c_char,
                         );
                     } else {
-                        if type_0 as libc::c_uint
-                            == YAML_ANCHOR_TOKEN as libc::c_int as libc::c_uint
+                        if type_ as libc::c_uint == YAML_ANCHOR_TOKEN as libc::c_int as libc::c_uint
                         {
                             memset(
                                 token as *mut libc::c_void,
                                 0_i32,
                                 size_of::<yaml_token_t>() as libc::c_ulong,
                             );
-                            (*token).type_0 = YAML_ANCHOR_TOKEN;
+                            (*token).type_ = YAML_ANCHOR_TOKEN;
                             (*token).start_mark = start_mark;
                             (*token).end_mark = end_mark;
                             let fresh220 = addr_of_mut!((*token).data.anchor.value);
@@ -3422,7 +3421,7 @@ unsafe fn yaml_parser_scan_anchor(
                                 0_i32,
                                 size_of::<yaml_token_t>() as libc::c_ulong,
                             );
-                            (*token).type_0 = YAML_ALIAS_TOKEN;
+                            (*token).type_ = YAML_ALIAS_TOKEN;
                             (*token).start_mark = start_mark;
                             (*token).end_mark = end_mark;
                             let fresh221 = addr_of_mut!((*token).data.alias.value);
@@ -3704,7 +3703,7 @@ unsafe fn yaml_parser_scan_tag(
                                 0_i32,
                                 size_of::<yaml_token_t>() as libc::c_ulong,
                             );
-                            (*token).type_0 = YAML_TAG_TOKEN;
+                            (*token).type_ = YAML_TAG_TOKEN;
                             (*token).start_mark = start_mark;
                             (*token).end_mark = end_mark;
                             let fresh234 = addr_of_mut!((*token).data.tag.handle);
@@ -5975,7 +5974,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                                                 0_i32,
                                                                                                 size_of::<yaml_token_t>() as libc::c_ulong,
                                                                                             );
-                                                                                            (*token).type_0 = YAML_SCALAR_TOKEN;
+                                                                                            (*token).type_ = YAML_SCALAR_TOKEN;
                                                                                             (*token).start_mark = start_mark;
                                                                                             (*token).end_mark = end_mark;
                                                                                             let fresh479 = addr_of_mut!((*token).data.scalar.value);
@@ -8163,7 +8162,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                 0_i32,
                                 size_of::<yaml_token_t>() as libc::c_ulong,
                             );
-                            (*token).type_0 = YAML_SCALAR_TOKEN;
+                            (*token).type_ = YAML_SCALAR_TOKEN;
                             (*token).start_mark = start_mark;
                             (*token).end_mark = end_mark;
                             let fresh716 = addr_of_mut!((*token).data.scalar.value);
@@ -9344,7 +9343,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                 0_i32,
                                 size_of::<yaml_token_t>() as libc::c_ulong,
                             );
-                            (*token).type_0 = YAML_SCALAR_TOKEN;
+                            (*token).type_ = YAML_SCALAR_TOKEN;
                             (*token).start_mark = start_mark;
                             (*token).end_mark = end_mark;
                             let fresh842 = addr_of_mut!((*token).data.scalar.value);

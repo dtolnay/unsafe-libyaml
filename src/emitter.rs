@@ -74,7 +74,7 @@ unsafe fn yaml_emitter_need_more_events(emitter: *mut yaml_emitter_t) -> libc::c
     if (*emitter).events.head == (*emitter).events.tail {
         return 1_i32;
     }
-    let accumulate = match (*(*emitter).events.head).type_0 as libc::c_uint {
+    let accumulate = match (*(*emitter).events.head).type_ as libc::c_uint {
         3 => 1_i32,
         7 => 2_i32,
         9 => 3_i32,
@@ -87,7 +87,7 @@ unsafe fn yaml_emitter_need_more_events(emitter: *mut yaml_emitter_t) -> libc::c
     }
     event = (*emitter).events.head;
     while event != (*emitter).events.tail {
-        match (*event).type_0 as libc::c_uint {
+        match (*event).type_ as libc::c_uint {
             1 | 3 | 7 | 9 => {
                 level += 1_i32;
             }
@@ -249,7 +249,7 @@ unsafe fn yaml_emitter_emit_stream_start(
     event: *mut yaml_event_t,
 ) -> libc::c_int {
     (*emitter).open_ended = 0_i32;
-    if (*event).type_0 as libc::c_uint == YAML_STREAM_START_EVENT as libc::c_int as libc::c_uint {
+    if (*event).type_ as libc::c_uint == YAML_STREAM_START_EVENT as libc::c_int as libc::c_uint {
         if (*emitter).encoding as u64 == 0 {
             (*emitter).encoding = (*event).data.stream_start.encoding;
         }
@@ -293,7 +293,7 @@ unsafe fn yaml_emitter_emit_document_start(
     event: *mut yaml_event_t,
     first: libc::c_int,
 ) -> libc::c_int {
-    if (*event).type_0 as libc::c_uint == YAML_DOCUMENT_START_EVENT as libc::c_int as libc::c_uint {
+    if (*event).type_ as libc::c_uint == YAML_DOCUMENT_START_EVENT as libc::c_int as libc::c_uint {
         let mut default_tag_directives: [yaml_tag_directive_t; 3] = [
             yaml_tag_directive_t {
                 handle: b"!\0" as *const u8 as *const libc::c_char as *mut yaml_char_t,
@@ -463,8 +463,7 @@ unsafe fn yaml_emitter_emit_document_start(
         (*emitter).state = YAML_EMIT_DOCUMENT_CONTENT_STATE;
         (*emitter).open_ended = 0_i32;
         return 1_i32;
-    } else if (*event).type_0 as libc::c_uint
-        == YAML_STREAM_END_EVENT as libc::c_int as libc::c_uint
+    } else if (*event).type_ as libc::c_uint == YAML_STREAM_END_EVENT as libc::c_int as libc::c_uint
     {
         if (*emitter).open_ended == 2_i32 {
             if yaml_emitter_write_indicator(
@@ -522,7 +521,7 @@ unsafe fn yaml_emitter_emit_document_end(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
 ) -> libc::c_int {
-    if (*event).type_0 as libc::c_uint == YAML_DOCUMENT_END_EVENT as libc::c_int as libc::c_uint {
+    if (*event).type_ as libc::c_uint == YAML_DOCUMENT_END_EVENT as libc::c_int as libc::c_uint {
         if yaml_emitter_write_indent(emitter) == 0 {
             return 0_i32;
         }
@@ -584,7 +583,7 @@ unsafe fn yaml_emitter_emit_flow_sequence_item(
         let fresh12 = addr_of_mut!((*emitter).flow_level);
         *fresh12 += 1;
     }
-    if (*event).type_0 as libc::c_uint == YAML_SEQUENCE_END_EVENT as libc::c_int as libc::c_uint {
+    if (*event).type_ as libc::c_uint == YAML_SEQUENCE_END_EVENT as libc::c_int as libc::c_uint {
         let fresh13 = addr_of_mut!((*emitter).flow_level);
         *fresh13 -= 1;
         let fresh14 = addr_of_mut!((*emitter).indents.top);
@@ -680,7 +679,7 @@ unsafe fn yaml_emitter_emit_flow_mapping_key(
         let fresh18 = addr_of_mut!((*emitter).flow_level);
         *fresh18 += 1;
     }
-    if (*event).type_0 as libc::c_uint == YAML_MAPPING_END_EVENT as libc::c_int as libc::c_uint {
+    if (*event).type_ as libc::c_uint == YAML_MAPPING_END_EVENT as libc::c_int as libc::c_uint {
         let fresh19 = addr_of_mut!((*emitter).flow_level);
         *fresh19 -= 1;
         let fresh20 = addr_of_mut!((*emitter).indents.top);
@@ -856,7 +855,7 @@ unsafe fn yaml_emitter_emit_block_sequence_item(
             return 0_i32;
         }
     }
-    if (*event).type_0 as libc::c_uint == YAML_SEQUENCE_END_EVENT as libc::c_int as libc::c_uint {
+    if (*event).type_ as libc::c_uint == YAML_SEQUENCE_END_EVENT as libc::c_int as libc::c_uint {
         let fresh28 = addr_of_mut!((*emitter).indents.top);
         *fresh28 = (*fresh28).wrapping_offset(-1);
         (*emitter).indent = **fresh28;
@@ -909,7 +908,7 @@ unsafe fn yaml_emitter_emit_block_mapping_key(
             return 0_i32;
         }
     }
-    if (*event).type_0 as libc::c_uint == YAML_MAPPING_END_EVENT as libc::c_int as libc::c_uint {
+    if (*event).type_ as libc::c_uint == YAML_MAPPING_END_EVENT as libc::c_int as libc::c_uint {
         let fresh32 = addr_of_mut!((*emitter).indents.top);
         *fresh32 = (*fresh32).wrapping_offset(-1);
         (*emitter).indent = **fresh32;
@@ -1039,7 +1038,7 @@ unsafe fn yaml_emitter_emit_node(
     (*emitter).sequence_context = sequence;
     (*emitter).mapping_context = mapping;
     (*emitter).simple_key_context = simple_key;
-    match (*event).type_0 as libc::c_uint {
+    match (*event).type_ as libc::c_uint {
         5 => yaml_emitter_emit_alias(emitter, event),
         6 => yaml_emitter_emit_scalar(emitter, event),
         7 => yaml_emitter_emit_sequence_start(emitter, event),
@@ -1157,24 +1156,24 @@ unsafe fn yaml_emitter_check_empty_sequence(emitter: *mut yaml_emitter_t) -> lib
     if (((*emitter).events.tail).c_offset_from((*emitter).events.head) as libc::c_long) < 2_i64 {
         return 0_i32;
     }
-    ((*((*emitter).events.head).wrapping_offset(0_isize)).type_0 as libc::c_uint
+    ((*((*emitter).events.head).wrapping_offset(0_isize)).type_ as libc::c_uint
         == YAML_SEQUENCE_START_EVENT as libc::c_int as libc::c_uint
-        && (*((*emitter).events.head).wrapping_offset(1_isize)).type_0 as libc::c_uint
+        && (*((*emitter).events.head).wrapping_offset(1_isize)).type_ as libc::c_uint
             == YAML_SEQUENCE_END_EVENT as libc::c_int as libc::c_uint) as libc::c_int
 }
 unsafe fn yaml_emitter_check_empty_mapping(emitter: *mut yaml_emitter_t) -> libc::c_int {
     if (((*emitter).events.tail).c_offset_from((*emitter).events.head) as libc::c_long) < 2_i64 {
         return 0_i32;
     }
-    ((*((*emitter).events.head).wrapping_offset(0_isize)).type_0 as libc::c_uint
+    ((*((*emitter).events.head).wrapping_offset(0_isize)).type_ as libc::c_uint
         == YAML_MAPPING_START_EVENT as libc::c_int as libc::c_uint
-        && (*((*emitter).events.head).wrapping_offset(1_isize)).type_0 as libc::c_uint
+        && (*((*emitter).events.head).wrapping_offset(1_isize)).type_ as libc::c_uint
             == YAML_MAPPING_END_EVENT as libc::c_int as libc::c_uint) as libc::c_int
 }
 unsafe fn yaml_emitter_check_simple_key(emitter: *mut yaml_emitter_t) -> libc::c_int {
     let event: *mut yaml_event_t = (*emitter).events.head;
     let mut length: size_t = 0_u64;
-    match (*event).type_0 as libc::c_uint {
+    match (*event).type_ as libc::c_uint {
         5 => {
             length = (length as libc::c_ulong).wrapping_add((*emitter).anchor_data.anchor_length)
                 as size_t as size_t;
@@ -2543,7 +2542,7 @@ unsafe fn yaml_emitter_analyze_event(
     let fresh55 = addr_of_mut!((*emitter).scalar_data.value);
     *fresh55 = ptr::null_mut::<yaml_char_t>();
     (*emitter).scalar_data.length = 0_u64;
-    match (*event).type_0 as libc::c_uint {
+    match (*event).type_ as libc::c_uint {
         5 => {
             if yaml_emitter_analyze_anchor(emitter, (*event).data.alias.anchor, 1_i32) == 0 {
                 return 0_i32;
