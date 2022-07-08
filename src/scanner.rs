@@ -1,5 +1,5 @@
 use crate::externs::{memcpy, memmove, memset, strcmp, strlen};
-use crate::yaml::{unnamed_yaml_token_s_data, unnamed_yaml_token_s_data_stream_start};
+use crate::yaml::{unnamed_yaml_token_t_data, unnamed_yaml_token_t_data_stream_start};
 use crate::{
     libc, ptrdiff_t, size_t, yaml_char_t, yaml_free, yaml_malloc, yaml_mark_t, yaml_parser_t,
     yaml_parser_update_buffer, yaml_queue_extend, yaml_scalar_style_t, yaml_simple_key_t,
@@ -628,8 +628,8 @@ unsafe fn yaml_parser_roll_indent(
 ) -> libc::c_int {
     let mut token = yaml_token_t {
         type_0: YAML_NO_TOKEN,
-        data: unnamed_yaml_token_s_data {
-            stream_start: unnamed_yaml_token_s_data_stream_start {
+        data: unnamed_yaml_token_t_data {
+            stream_start: unnamed_yaml_token_t_data_stream_start {
                 encoding: YAML_ANY_ENCODING,
             },
         },
@@ -745,8 +745,8 @@ unsafe fn yaml_parser_unroll_indent(
 ) -> libc::c_int {
     let mut token = yaml_token_t {
         type_0: YAML_NO_TOKEN,
-        data: unnamed_yaml_token_s_data {
-            stream_start: unnamed_yaml_token_s_data_stream_start {
+        data: unnamed_yaml_token_t_data {
+            stream_start: unnamed_yaml_token_t_data_stream_start {
                 encoding: YAML_ANY_ENCODING,
             },
         },
@@ -812,8 +812,8 @@ unsafe fn yaml_parser_fetch_stream_start(mut parser: *mut yaml_parser_t) -> libc
     };
     let mut token = yaml_token_t {
         type_0: YAML_NO_TOKEN,
-        data: unnamed_yaml_token_s_data {
-            stream_start: unnamed_yaml_token_s_data_stream_start {
+        data: unnamed_yaml_token_t_data {
+            stream_start: unnamed_yaml_token_t_data_stream_start {
                 encoding: YAML_ANY_ENCODING,
             },
         },
@@ -884,8 +884,8 @@ unsafe fn yaml_parser_fetch_stream_start(mut parser: *mut yaml_parser_t) -> libc
 unsafe fn yaml_parser_fetch_stream_end(mut parser: *mut yaml_parser_t) -> libc::c_int {
     let mut token = yaml_token_t {
         type_0: YAML_NO_TOKEN,
-        data: unnamed_yaml_token_s_data {
-            stream_start: unnamed_yaml_token_s_data_stream_start {
+        data: unnamed_yaml_token_t_data {
+            stream_start: unnamed_yaml_token_t_data_stream_start {
                 encoding: YAML_ANY_ENCODING,
             },
         },
@@ -984,8 +984,8 @@ unsafe fn yaml_parser_fetch_document_indicator(
 ) -> libc::c_int {
     let mut token = yaml_token_t {
         type_0: YAML_NO_TOKEN,
-        data: unnamed_yaml_token_s_data {
-            stream_start: unnamed_yaml_token_s_data_stream_start {
+        data: unnamed_yaml_token_t_data {
+            stream_start: unnamed_yaml_token_t_data_stream_start {
                 encoding: YAML_ANY_ENCODING,
             },
         },
@@ -1126,8 +1126,8 @@ unsafe fn yaml_parser_fetch_flow_collection_start(
 ) -> libc::c_int {
     let mut token = yaml_token_t {
         type_0: YAML_NO_TOKEN,
-        data: unnamed_yaml_token_s_data {
-            stream_start: unnamed_yaml_token_s_data_stream_start {
+        data: unnamed_yaml_token_t_data {
+            stream_start: unnamed_yaml_token_t_data_stream_start {
                 encoding: YAML_ANY_ENCODING,
             },
         },
@@ -1214,8 +1214,8 @@ unsafe fn yaml_parser_fetch_flow_collection_end(
 ) -> libc::c_int {
     let mut token = yaml_token_t {
         type_0: YAML_NO_TOKEN,
-        data: unnamed_yaml_token_s_data {
-            stream_start: unnamed_yaml_token_s_data_stream_start {
+        data: unnamed_yaml_token_t_data {
+            stream_start: unnamed_yaml_token_t_data_stream_start {
                 encoding: YAML_ANY_ENCODING,
             },
         },
@@ -1299,8 +1299,8 @@ unsafe fn yaml_parser_fetch_flow_collection_end(
 unsafe fn yaml_parser_fetch_flow_entry(mut parser: *mut yaml_parser_t) -> libc::c_int {
     let mut token = yaml_token_t {
         type_0: YAML_NO_TOKEN,
-        data: unnamed_yaml_token_s_data {
-            stream_start: unnamed_yaml_token_s_data_stream_start {
+        data: unnamed_yaml_token_t_data {
+            stream_start: unnamed_yaml_token_t_data_stream_start {
                 encoding: YAML_ANY_ENCODING,
             },
         },
@@ -1381,8 +1381,8 @@ unsafe fn yaml_parser_fetch_flow_entry(mut parser: *mut yaml_parser_t) -> libc::
 unsafe fn yaml_parser_fetch_block_entry(mut parser: *mut yaml_parser_t) -> libc::c_int {
     let mut token = yaml_token_t {
         type_0: YAML_NO_TOKEN,
-        data: unnamed_yaml_token_s_data {
-            stream_start: unnamed_yaml_token_s_data_stream_start {
+        data: unnamed_yaml_token_t_data {
+            stream_start: unnamed_yaml_token_t_data_stream_start {
                 encoding: YAML_ANY_ENCODING,
             },
         },
@@ -1484,8 +1484,8 @@ unsafe fn yaml_parser_fetch_block_entry(mut parser: *mut yaml_parser_t) -> libc:
 unsafe fn yaml_parser_fetch_key(mut parser: *mut yaml_parser_t) -> libc::c_int {
     let mut token = yaml_token_t {
         type_0: YAML_NO_TOKEN,
-        data: unnamed_yaml_token_s_data {
-            stream_start: unnamed_yaml_token_s_data_stream_start {
+        data: unnamed_yaml_token_t_data {
+            stream_start: unnamed_yaml_token_t_data_stream_start {
                 encoding: YAML_ANY_ENCODING,
             },
         },
@@ -1587,8 +1587,8 @@ unsafe fn yaml_parser_fetch_key(mut parser: *mut yaml_parser_t) -> libc::c_int {
 unsafe fn yaml_parser_fetch_value(mut parser: *mut yaml_parser_t) -> libc::c_int {
     let mut token = yaml_token_t {
         type_0: YAML_NO_TOKEN,
-        data: unnamed_yaml_token_s_data {
-            stream_start: unnamed_yaml_token_s_data_stream_start {
+        data: unnamed_yaml_token_t_data {
+            stream_start: unnamed_yaml_token_t_data_stream_start {
                 encoding: YAML_ANY_ENCODING,
             },
         },

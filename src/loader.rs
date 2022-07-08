@@ -1,5 +1,5 @@
 use crate::externs::{memset, strcmp};
-use crate::yaml::{unnamed_yaml_node_s_data, unnamed_yaml_node_s_data_scalar};
+use crate::yaml::{unnamed_yaml_node_t_data, unnamed_yaml_node_t_data_scalar};
 use crate::{
     libc, yaml_alias_data_t, yaml_char_t, yaml_document_delete, yaml_document_t, yaml_event_t,
     yaml_free, yaml_malloc, yaml_mark_t, yaml_node_item_t, yaml_node_pair_t, yaml_node_t,
@@ -472,8 +472,8 @@ unsafe fn yaml_parser_load_scalar(
     let mut node = yaml_node_t {
         type_0: YAML_NO_NODE,
         tag: ptr::null_mut::<yaml_char_t>(),
-        data: unnamed_yaml_node_s_data {
-            scalar: unnamed_yaml_node_s_data_scalar {
+        data: unnamed_yaml_node_t_data {
+            scalar: unnamed_yaml_node_t_data_scalar {
                 value: ptr::null_mut::<yaml_char_t>(),
                 length: 0,
                 style: YAML_ANY_SCALAR_STYLE,
@@ -578,8 +578,8 @@ unsafe fn yaml_parser_load_sequence(
     let mut node = yaml_node_t {
         type_0: YAML_NO_NODE,
         tag: ptr::null_mut::<yaml_char_t>(),
-        data: unnamed_yaml_node_s_data {
-            scalar: unnamed_yaml_node_s_data_scalar {
+        data: unnamed_yaml_node_t_data {
+            scalar: unnamed_yaml_node_t_data_scalar {
                 value: ptr::null_mut::<yaml_char_t>(),
                 length: 0,
                 style: YAML_ANY_SCALAR_STYLE,
@@ -758,8 +758,8 @@ unsafe fn yaml_parser_load_mapping(
     let mut node = yaml_node_t {
         type_0: YAML_NO_NODE,
         tag: ptr::null_mut::<yaml_char_t>(),
-        data: unnamed_yaml_node_s_data {
-            scalar: unnamed_yaml_node_s_data_scalar {
+        data: unnamed_yaml_node_t_data {
+            scalar: unnamed_yaml_node_t_data_scalar {
                 value: ptr::null_mut::<yaml_char_t>(),
                 length: 0,
                 style: YAML_ANY_SCALAR_STYLE,

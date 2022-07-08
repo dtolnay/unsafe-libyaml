@@ -1,6 +1,6 @@
 use crate::externs::{free, malloc, memcpy, memmove, memset, realloc, strdup, strlen};
 use crate::yaml::{
-    unnamed_yaml_node_s_data, unnamed_yaml_node_s_data_scalar, Unnamed_16, Unnamed_17, Unnamed_26,
+    unnamed_yaml_node_t_data, unnamed_yaml_node_t_data_scalar, Unnamed_16, Unnamed_17, Unnamed_26,
     Unnamed_27, Unnamed_28, Unnamed_29, Unnamed_30, Unnamed_31, Unnamed_32, Unnamed_33, Unnamed_34,
     Unnamed_35,
 };
@@ -1773,8 +1773,8 @@ pub unsafe fn yaml_document_add_scalar(
     let mut node = yaml_node_t {
         type_0: YAML_NO_NODE,
         tag: ptr::null_mut::<yaml_char_t>(),
-        data: unnamed_yaml_node_s_data {
-            scalar: unnamed_yaml_node_s_data_scalar {
+        data: unnamed_yaml_node_t_data {
+            scalar: unnamed_yaml_node_t_data_scalar {
                 value: ptr::null_mut::<yaml_char_t>(),
                 length: 0,
                 style: YAML_ANY_SCALAR_STYLE,
@@ -1873,8 +1873,8 @@ pub unsafe fn yaml_document_add_sequence(
     let mut node = yaml_node_t {
         type_0: YAML_NO_NODE,
         tag: ptr::null_mut::<yaml_char_t>(),
-        data: unnamed_yaml_node_s_data {
-            scalar: unnamed_yaml_node_s_data_scalar {
+        data: unnamed_yaml_node_t_data {
+            scalar: unnamed_yaml_node_t_data_scalar {
                 value: ptr::null_mut::<yaml_char_t>(),
                 length: 0,
                 style: YAML_ANY_SCALAR_STYLE,
@@ -1975,8 +1975,8 @@ pub unsafe fn yaml_document_add_mapping(
     let mut node = yaml_node_t {
         type_0: YAML_NO_NODE,
         tag: ptr::null_mut::<yaml_char_t>(),
-        data: unnamed_yaml_node_s_data {
-            scalar: unnamed_yaml_node_s_data_scalar {
+        data: unnamed_yaml_node_t_data {
+            scalar: unnamed_yaml_node_t_data_scalar {
                 value: ptr::null_mut::<yaml_char_t>(),
                 length: 0,
                 style: YAML_ANY_SCALAR_STYLE,
