@@ -40,7 +40,7 @@ pub mod libc {
 #[macro_use]
 pub mod externs {
     use crate::libc;
-    use alloc::alloc::Layout;
+    use alloc::alloc::{self as rust, Layout};
     use core::mem::{self, MaybeUninit};
     use core::ptr;
     use core::slice;
@@ -55,7 +55,7 @@ pub mod externs {
     pub unsafe fn malloc(size: libc::c_ulong) -> *mut libc::c_void {
         let size = HEADER + size as usize;
         let layout = Layout::from_size_align_unchecked(size, MALLOC_ALIGN);
-        let memory = alloc::alloc::alloc(layout);
+        let memory = rust::alloc(layout);
         memory.cast::<usize>().write(size);
         memory.add(HEADER).cast()
     }
@@ -65,7 +65,7 @@ pub mod externs {
         let size = memory.cast::<usize>().read();
         let layout = Layout::from_size_align_unchecked(size, MALLOC_ALIGN);
         let new_size = HEADER + new_size as usize;
-        memory = alloc::alloc::realloc(memory, layout, new_size);
+        memory = rust::realloc(memory, layout, new_size);
         memory.cast::<usize>().write(new_size);
         memory.add(HEADER).cast()
     }
@@ -74,7 +74,7 @@ pub mod externs {
         let memory = ptr.cast::<u8>().sub(HEADER);
         let size = memory.cast::<usize>().read();
         let layout = Layout::from_size_align_unchecked(size, MALLOC_ALIGN);
-        alloc::alloc::dealloc(memory, layout);
+        rust::dealloc(memory, layout);
     }
 
     pub unsafe fn memcmp(
