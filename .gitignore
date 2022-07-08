@@ -1,4 +1,4 @@
 /build.rs
 /rust-toolchain
-/target
-/Cargo.lock
+target
+Cargo.lock
