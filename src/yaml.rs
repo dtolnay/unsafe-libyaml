@@ -721,11 +721,11 @@ pub struct yaml_parser_t {
     /// EOF flag
     pub(crate) eof: libc::c_int,
     /// The working buffer.
-    pub(crate) buffer: unnamed_yaml_parser_t_buffer,
+    pub(crate) buffer: yaml_buffer_t<yaml_char_t>,
     /// The number of unread characters in the buffer.
     pub(crate) unread: size_t,
     /// The raw buffer.
-    pub(crate) raw_buffer: unnamed_yaml_parser_t_raw_buffer,
+    pub(crate) raw_buffer: yaml_buffer_t<libc::c_uchar>,
     /// The input encoding.
     pub(crate) encoding: yaml_encoding_t,
     /// The offset of the current position (in bytes).
@@ -809,32 +809,6 @@ pub(crate) struct unnamed_yaml_parser_t_input_string {
     pub end: *const libc::c_uchar,
     /// The string current position.
     pub current: *const libc::c_uchar,
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
-pub(crate) struct unnamed_yaml_parser_t_buffer {
-    /// The beginning of the buffer.
-    pub start: *mut yaml_char_t,
-    /// The end of the buffer.
-    pub end: *mut yaml_char_t,
-    /// The current position of the buffer.
-    pub pointer: *mut yaml_char_t,
-    /// The last filled position of the buffer.
-    pub last: *mut yaml_char_t,
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
-pub(crate) struct unnamed_yaml_parser_t_raw_buffer {
-    /// The beginning of the buffer.
-    pub start: *mut libc::c_uchar,
-    /// The end of the buffer.
-    pub end: *mut libc::c_uchar,
-    /// The current position of the buffer.
-    pub pointer: *mut libc::c_uchar,
-    /// The last filled position of the buffer.
-    pub last: *mut libc::c_uchar,
 }
 
 /// The prototype of a write handler.
@@ -927,9 +901,9 @@ pub struct yaml_emitter_t {
     /// Standard (string or file) output data.
     pub(crate) output: unnamed_yaml_emitter_t_output,
     /// The working buffer.
-    pub(crate) buffer: unnamed_yaml_emitter_t_buffer,
+    pub(crate) buffer: yaml_buffer_t<yaml_char_t>,
     /// The raw buffer.
-    pub(crate) raw_buffer: unnamed_yaml_emitter_t_raw_buffer,
+    pub(crate) raw_buffer: yaml_buffer_t<libc::c_uchar>,
     /// The stream encoding.
     pub(crate) encoding: yaml_encoding_t,
     /// If the output is in the canonical style?
@@ -1029,32 +1003,6 @@ pub(crate) struct unnamed_yaml_emitter_t_output_string {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub(crate) struct unnamed_yaml_emitter_t_buffer {
-    /// The beginning of the buffer.
-    pub start: *mut yaml_char_t,
-    /// The end of the buffer.
-    pub end: *mut yaml_char_t,
-    /// The current position of the buffer.
-    pub pointer: *mut yaml_char_t,
-    /// The last filled position of the buffer.
-    pub last: *mut yaml_char_t,
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
-pub(crate) struct unnamed_yaml_emitter_t_raw_buffer {
-    /// The beginning of the buffer.
-    pub start: *mut libc::c_uchar,
-    /// The end of the buffer.
-    pub end: *mut libc::c_uchar,
-    /// The current position of the buffer.
-    pub pointer: *mut libc::c_uchar,
-    /// The last filled position of the buffer.
-    pub last: *mut libc::c_uchar,
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
 pub(crate) struct unnamed_yaml_emitter_t_anchor_data {
     /// The anchor value.
     pub anchor: *mut yaml_char_t,
@@ -1104,6 +1052,19 @@ pub(crate) struct yaml_string_t {
     pub start: *mut yaml_char_t,
     pub end: *mut yaml_char_t,
     pub pointer: *mut yaml_char_t,
+}
+
+#[derive(Copy, Clone)]
+#[repr(C)]
+pub(crate) struct yaml_buffer_t<T> {
+    /// The beginning of the buffer.
+    pub start: *mut T,
+    /// The end of the buffer.
+    pub end: *mut T,
+    /// The current position of the buffer.
+    pub pointer: *mut T,
+    /// The last filled position of the buffer.
+    pub last: *mut T,
 }
 
 #[derive(Copy, Clone)]
