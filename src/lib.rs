@@ -254,28 +254,26 @@ pub use crate::api::{
     yaml_document_start_event_initialize, yaml_emitter_delete, yaml_emitter_initialize,
     yaml_emitter_set_break, yaml_emitter_set_canonical, yaml_emitter_set_encoding,
     yaml_emitter_set_indent, yaml_emitter_set_output, yaml_emitter_set_output_string,
-    yaml_emitter_set_unicode, yaml_emitter_set_width, yaml_event_delete, yaml_free,
-    yaml_get_version, yaml_get_version_string, yaml_malloc, yaml_mapping_end_event_initialize,
+    yaml_emitter_set_unicode, yaml_emitter_set_width, yaml_event_delete, yaml_get_version,
+    yaml_get_version_string, yaml_mapping_end_event_initialize,
     yaml_mapping_start_event_initialize, yaml_parser_delete, yaml_parser_initialize,
     yaml_parser_set_encoding, yaml_parser_set_input, yaml_parser_set_input_string,
-    yaml_queue_extend, yaml_realloc, yaml_scalar_event_initialize,
-    yaml_sequence_end_event_initialize, yaml_sequence_start_event_initialize, yaml_stack_extend,
-    yaml_strdup, yaml_stream_end_event_initialize, yaml_stream_start_event_initialize,
-    yaml_string_extend, yaml_string_join, yaml_token_delete,
+    yaml_scalar_event_initialize, yaml_sequence_end_event_initialize,
+    yaml_sequence_start_event_initialize, yaml_stream_end_event_initialize,
+    yaml_stream_start_event_initialize, yaml_token_delete,
 };
 pub use crate::dumper::{yaml_emitter_close, yaml_emitter_dump, yaml_emitter_open};
 pub use crate::emitter::yaml_emitter_emit;
 pub use crate::loader::yaml_parser_load;
 pub use crate::parser::yaml_parser_parse;
-pub use crate::reader::yaml_parser_update_buffer;
-pub use crate::scanner::{yaml_parser_fetch_more_tokens, yaml_parser_scan};
+pub use crate::scanner::yaml_parser_scan;
 pub use crate::writer::yaml_emitter_flush;
 pub use crate::yaml::{
     yaml_alias_data_t, yaml_anchors_t, yaml_break_t, yaml_document_t, yaml_emitter_state_t,
     yaml_emitter_t, yaml_encoding_t, yaml_error_type_t, yaml_event_t, yaml_event_type_t,
     yaml_mapping_style_t, yaml_mark_t, yaml_node_item_t, yaml_node_pair_t, yaml_node_t,
     yaml_node_type_t, yaml_parser_state_t, yaml_parser_t, yaml_read_handler_t, yaml_scalar_style_t,
-    yaml_sequence_style_t, yaml_simple_key_t, yaml_string_t, yaml_tag_directive_t, yaml_token_t,
+    yaml_sequence_style_t, yaml_simple_key_t, yaml_tag_directive_t, yaml_token_t,
     yaml_token_type_t, yaml_version_directive_t, yaml_write_handler_t, YAML_ALIAS_EVENT,
     YAML_ALIAS_TOKEN, YAML_ANCHOR_TOKEN, YAML_ANY_BREAK, YAML_ANY_ENCODING, YAML_ANY_MAPPING_STYLE,
     YAML_ANY_SCALAR_STYLE, YAML_ANY_SEQUENCE_STYLE, YAML_BLOCK_END_TOKEN, YAML_BLOCK_ENTRY_TOKEN,

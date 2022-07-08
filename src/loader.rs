@@ -1,11 +1,12 @@
+use crate::api::{yaml_free, yaml_malloc, yaml_stack_extend, yaml_strdup};
 use crate::externs::{memset, strcmp};
 use crate::yaml::yaml_char_t;
 use crate::{
-    libc, yaml_alias_data_t, yaml_document_delete, yaml_document_t, yaml_event_t, yaml_free,
-    yaml_malloc, yaml_mark_t, yaml_node_item_t, yaml_node_pair_t, yaml_node_t, yaml_parser_parse,
-    yaml_parser_t, yaml_stack_extend, yaml_strdup, PointerExt, YAML_COMPOSER_ERROR,
-    YAML_DOCUMENT_END_EVENT, YAML_DOCUMENT_START_EVENT, YAML_MAPPING_NODE, YAML_MEMORY_ERROR,
-    YAML_SCALAR_NODE, YAML_SEQUENCE_NODE, YAML_STREAM_END_EVENT, YAML_STREAM_START_EVENT,
+    libc, yaml_alias_data_t, yaml_document_delete, yaml_document_t, yaml_event_t, yaml_mark_t,
+    yaml_node_item_t, yaml_node_pair_t, yaml_node_t, yaml_parser_parse, yaml_parser_t, PointerExt,
+    YAML_COMPOSER_ERROR, YAML_DOCUMENT_END_EVENT, YAML_DOCUMENT_START_EVENT, YAML_MAPPING_NODE,
+    YAML_MEMORY_ERROR, YAML_SCALAR_NODE, YAML_SEQUENCE_NODE, YAML_STREAM_END_EVENT,
+    YAML_STREAM_START_EVENT,
 };
 use core::mem::{size_of, MaybeUninit};
 use core::ptr::{self, addr_of_mut};

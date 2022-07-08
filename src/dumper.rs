@@ -1,3 +1,4 @@
+use crate::api::{yaml_free, yaml_malloc};
 use crate::externs::{memset, strcmp};
 use crate::fmt::WriteToPtr;
 use crate::yaml::{
@@ -7,7 +8,7 @@ use crate::yaml::{
     YAML_MAPPING_START_EVENT, YAML_SCALAR_EVENT, YAML_SCALAR_NODE, YAML_SEQUENCE_END_EVENT,
     YAML_SEQUENCE_NODE, YAML_SEQUENCE_START_EVENT, YAML_STREAM_END_EVENT, YAML_STREAM_START_EVENT,
 };
-use crate::{libc, yaml_document_delete, yaml_emitter_emit, yaml_free, yaml_malloc, PointerExt};
+use crate::{libc, yaml_document_delete, yaml_emitter_emit, PointerExt};
 use core::mem::{size_of, MaybeUninit};
 use core::ptr::{self, addr_of_mut};
 pub unsafe fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> libc::c_int {

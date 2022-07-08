@@ -1,8 +1,9 @@
+use crate::api::{yaml_free, yaml_malloc, yaml_stack_extend, yaml_strdup};
 use crate::externs::{memcpy, memset, strcmp, strlen};
+use crate::scanner::yaml_parser_fetch_more_tokens;
 use crate::yaml::{size_t, yaml_char_t};
 use crate::{
-    libc, yaml_event_t, yaml_free, yaml_malloc, yaml_mark_t, yaml_parser_fetch_more_tokens,
-    yaml_parser_t, yaml_stack_extend, yaml_strdup, yaml_tag_directive_t, yaml_token_t,
+    libc, yaml_event_t, yaml_mark_t, yaml_parser_t, yaml_tag_directive_t, yaml_token_t,
     yaml_version_directive_t, YAML_ALIAS_EVENT, YAML_ALIAS_TOKEN, YAML_ANCHOR_TOKEN,
     YAML_BLOCK_END_TOKEN, YAML_BLOCK_ENTRY_TOKEN, YAML_BLOCK_MAPPING_START_TOKEN,
     YAML_BLOCK_MAPPING_STYLE, YAML_BLOCK_SEQUENCE_START_TOKEN, YAML_BLOCK_SEQUENCE_STYLE,

@@ -1,8 +1,8 @@
+use crate::api::{yaml_free, yaml_queue_extend, yaml_stack_extend, yaml_strdup};
 use crate::externs::{strcmp, strlen, strncmp};
-use crate::yaml::{size_t, yaml_char_t};
+use crate::yaml::{size_t, yaml_char_t, yaml_string_t};
 use crate::{
-    libc, yaml_emitter_flush, yaml_emitter_t, yaml_event_delete, yaml_event_t, yaml_free,
-    yaml_queue_extend, yaml_scalar_style_t, yaml_stack_extend, yaml_strdup, yaml_string_t,
+    libc, yaml_emitter_flush, yaml_emitter_t, yaml_event_delete, yaml_event_t, yaml_scalar_style_t,
     yaml_tag_directive_t, yaml_version_directive_t, PointerExt, YAML_ANY_SCALAR_STYLE,
     YAML_CRLN_BREAK, YAML_CR_BREAK, YAML_DOCUMENT_END_EVENT, YAML_DOCUMENT_START_EVENT,
     YAML_DOUBLE_QUOTED_SCALAR_STYLE, YAML_EMITTER_ERROR, YAML_EMIT_BLOCK_MAPPING_FIRST_KEY_STATE,
