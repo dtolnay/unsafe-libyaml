@@ -20,6 +20,7 @@ use crate::{
     YAML_STREAM_START_EVENT, YAML_UTF8_ENCODING,
 };
 use core::ptr::{self, addr_of_mut};
+
 unsafe fn yaml_emitter_set_emitter_error(
     mut emitter: *mut yaml_emitter_t,
     problem: *const libc::c_char,
@@ -29,6 +30,7 @@ unsafe fn yaml_emitter_set_emitter_error(
     *fresh0 = problem;
     0_i32
 }
+
 /// Emit an event.
 ///
 /// The event object may be generated using the yaml_parser_parse() function.
@@ -76,6 +78,7 @@ pub unsafe fn yaml_emitter_emit(
     }
     1_i32
 }
+
 unsafe fn yaml_emitter_need_more_events(emitter: *mut yaml_emitter_t) -> libc::c_int {
     let mut level: libc::c_int = 0_i32;
     let mut event: *mut yaml_event_t;
@@ -111,6 +114,7 @@ unsafe fn yaml_emitter_need_more_events(emitter: *mut yaml_emitter_t) -> libc::c
     }
     1_i32
 }
+
 unsafe fn yaml_emitter_append_tag_directive(
     mut emitter: *mut yaml_emitter_t,
     value: yaml_tag_directive_t,
@@ -165,6 +169,7 @@ unsafe fn yaml_emitter_append_tag_directive(
     yaml_free(copy.prefix as *mut libc::c_void);
     0_i32
 }
+
 unsafe fn yaml_emitter_increase_indent(
     mut emitter: *mut yaml_emitter_t,
     flow: libc::c_int,
@@ -200,6 +205,7 @@ unsafe fn yaml_emitter_increase_indent(
     }
     1_i32
 }
+
 unsafe fn yaml_emitter_state_machine(
     emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
@@ -252,6 +258,7 @@ unsafe fn yaml_emitter_state_machine(
     }
     0_i32
 }
+
 unsafe fn yaml_emitter_emit_stream_start(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
@@ -296,6 +303,7 @@ unsafe fn yaml_emitter_emit_stream_start(
         b"expected STREAM-START\0" as *const u8 as *const libc::c_char,
     )
 }
+
 unsafe fn yaml_emitter_emit_document_start(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
@@ -500,6 +508,7 @@ unsafe fn yaml_emitter_emit_document_start(
         b"expected DOCUMENT-START or STREAM-END\0" as *const u8 as *const libc::c_char,
     )
 }
+
 unsafe fn yaml_emitter_emit_document_content(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
@@ -525,6 +534,7 @@ unsafe fn yaml_emitter_emit_document_content(
     }
     yaml_emitter_emit_node(emitter, event, 1_i32, 0_i32, 0_i32, 0_i32)
 }
+
 unsafe fn yaml_emitter_emit_document_end(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
@@ -569,6 +579,7 @@ unsafe fn yaml_emitter_emit_document_end(
         b"expected DOCUMENT-END\0" as *const u8 as *const libc::c_char,
     )
 }
+
 unsafe fn yaml_emitter_emit_flow_sequence_item(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
@@ -665,6 +676,7 @@ unsafe fn yaml_emitter_emit_flow_sequence_item(
     }
     yaml_emitter_emit_node(emitter, event, 0_i32, 1_i32, 0_i32, 0_i32)
 }
+
 unsafe fn yaml_emitter_emit_flow_mapping_key(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
@@ -794,6 +806,7 @@ unsafe fn yaml_emitter_emit_flow_mapping_key(
         yaml_emitter_emit_node(emitter, event, 0_i32, 0_i32, 1_i32, 0_i32)
     }
 }
+
 unsafe fn yaml_emitter_emit_flow_mapping_value(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
@@ -848,6 +861,7 @@ unsafe fn yaml_emitter_emit_flow_mapping_value(
     }
     yaml_emitter_emit_node(emitter, event, 0_i32, 0_i32, 1_i32, 0_i32)
 }
+
 unsafe fn yaml_emitter_emit_block_sequence_item(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
@@ -906,6 +920,7 @@ unsafe fn yaml_emitter_emit_block_sequence_item(
     }
     yaml_emitter_emit_node(emitter, event, 0_i32, 1_i32, 0_i32, 0_i32)
 }
+
 unsafe fn yaml_emitter_emit_block_mapping_key(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
@@ -982,6 +997,7 @@ unsafe fn yaml_emitter_emit_block_mapping_key(
         yaml_emitter_emit_node(emitter, event, 0_i32, 0_i32, 1_i32, 0_i32)
     }
 }
+
 unsafe fn yaml_emitter_emit_block_mapping_value(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
@@ -1034,6 +1050,7 @@ unsafe fn yaml_emitter_emit_block_mapping_value(
     }
     yaml_emitter_emit_node(emitter, event, 0_i32, 0_i32, 1_i32, 0_i32)
 }
+
 unsafe fn yaml_emitter_emit_node(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
@@ -1058,6 +1075,7 @@ unsafe fn yaml_emitter_emit_node(
         ),
     }
 }
+
 unsafe fn yaml_emitter_emit_alias(
     mut emitter: *mut yaml_emitter_t,
     _event: *mut yaml_event_t,
@@ -1086,6 +1104,7 @@ unsafe fn yaml_emitter_emit_alias(
     (*emitter).state = **fresh43;
     1_i32
 }
+
 unsafe fn yaml_emitter_emit_scalar(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
@@ -1113,6 +1132,7 @@ unsafe fn yaml_emitter_emit_scalar(
     (*emitter).state = **fresh45;
     1_i32
 }
+
 unsafe fn yaml_emitter_emit_sequence_start(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
@@ -1135,6 +1155,7 @@ unsafe fn yaml_emitter_emit_sequence_start(
     }
     1_i32
 }
+
 unsafe fn yaml_emitter_emit_mapping_start(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
@@ -1157,9 +1178,11 @@ unsafe fn yaml_emitter_emit_mapping_start(
     }
     1_i32
 }
+
 unsafe fn yaml_emitter_check_empty_document(_emitter: *mut yaml_emitter_t) -> libc::c_int {
     0_i32
 }
+
 unsafe fn yaml_emitter_check_empty_sequence(emitter: *mut yaml_emitter_t) -> libc::c_int {
     if (((*emitter).events.tail).c_offset_from((*emitter).events.head) as libc::c_long) < 2_i64 {
         return 0_i32;
@@ -1169,6 +1192,7 @@ unsafe fn yaml_emitter_check_empty_sequence(emitter: *mut yaml_emitter_t) -> lib
         && (*((*emitter).events.head).wrapping_offset(1_isize)).type_ as libc::c_uint
             == YAML_SEQUENCE_END_EVENT as libc::c_int as libc::c_uint) as libc::c_int
 }
+
 unsafe fn yaml_emitter_check_empty_mapping(emitter: *mut yaml_emitter_t) -> libc::c_int {
     if (((*emitter).events.tail).c_offset_from((*emitter).events.head) as libc::c_long) < 2_i64 {
         return 0_i32;
@@ -1178,6 +1202,7 @@ unsafe fn yaml_emitter_check_empty_mapping(emitter: *mut yaml_emitter_t) -> libc
         && (*((*emitter).events.head).wrapping_offset(1_isize)).type_ as libc::c_uint
             == YAML_MAPPING_END_EVENT as libc::c_int as libc::c_uint) as libc::c_int
 }
+
 unsafe fn yaml_emitter_check_simple_key(emitter: *mut yaml_emitter_t) -> libc::c_int {
     let event: *mut yaml_event_t = (*emitter).events.head;
     let mut length: size_t = 0_u64;
@@ -1224,6 +1249,7 @@ unsafe fn yaml_emitter_check_simple_key(emitter: *mut yaml_emitter_t) -> libc::c
     }
     1_i32
 }
+
 unsafe fn yaml_emitter_select_scalar_style(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
@@ -1290,6 +1316,7 @@ unsafe fn yaml_emitter_select_scalar_style(
     (*emitter).scalar_data.style = style;
     1_i32
 }
+
 unsafe fn yaml_emitter_process_anchor(emitter: *mut yaml_emitter_t) -> libc::c_int {
     if ((*emitter).anchor_data.anchor).is_null() {
         return 1_i32;
@@ -1314,6 +1341,7 @@ unsafe fn yaml_emitter_process_anchor(emitter: *mut yaml_emitter_t) -> libc::c_i
         (*emitter).anchor_data.anchor_length,
     )
 }
+
 unsafe fn yaml_emitter_process_tag(emitter: *mut yaml_emitter_t) -> libc::c_int {
     if ((*emitter).tag_data.handle).is_null() && ((*emitter).tag_data.suffix).is_null() {
         return 1_i32;
@@ -1371,6 +1399,7 @@ unsafe fn yaml_emitter_process_tag(emitter: *mut yaml_emitter_t) -> libc::c_int 
     }
     1_i32
 }
+
 unsafe fn yaml_emitter_process_scalar(emitter: *mut yaml_emitter_t) -> libc::c_int {
     match (*emitter).scalar_data.style as libc::c_uint {
         1 => {
@@ -1415,6 +1444,7 @@ unsafe fn yaml_emitter_process_scalar(emitter: *mut yaml_emitter_t) -> libc::c_i
     }
     0_i32
 }
+
 unsafe fn yaml_emitter_analyze_version_directive(
     emitter: *mut yaml_emitter_t,
     version_directive: yaml_version_directive_t,
@@ -1429,6 +1459,7 @@ unsafe fn yaml_emitter_analyze_version_directive(
     }
     1_i32
 }
+
 unsafe fn yaml_emitter_analyze_tag_directive(
     emitter: *mut yaml_emitter_t,
     tag_directive: yaml_tag_directive_t,
@@ -1511,6 +1542,7 @@ unsafe fn yaml_emitter_analyze_tag_directive(
     }
     1_i32
 }
+
 unsafe fn yaml_emitter_analyze_anchor(
     mut emitter: *mut yaml_emitter_t,
     anchor: *mut yaml_char_t,
@@ -1583,6 +1615,7 @@ unsafe fn yaml_emitter_analyze_anchor(
     (*emitter).anchor_data.alias = alias;
     1_i32
 }
+
 unsafe fn yaml_emitter_analyze_tag(
     mut emitter: *mut yaml_emitter_t,
     tag: *mut yaml_char_t,
@@ -1629,6 +1662,7 @@ unsafe fn yaml_emitter_analyze_tag(
         string.end.c_offset_from(string.start) as libc::c_long as size_t;
     1_i32
 }
+
 unsafe fn yaml_emitter_analyze_scalar(
     mut emitter: *mut yaml_emitter_t,
     value: *mut yaml_char_t,
@@ -2534,6 +2568,7 @@ unsafe fn yaml_emitter_analyze_scalar(
     }
     1_i32
 }
+
 unsafe fn yaml_emitter_analyze_event(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
@@ -2619,6 +2654,7 @@ unsafe fn yaml_emitter_analyze_event(
         _ => 1_i32,
     }
 }
+
 unsafe fn yaml_emitter_write_bom(emitter: *mut yaml_emitter_t) -> libc::c_int {
     if !(((*emitter).buffer.pointer).wrapping_offset(5_isize) < (*emitter).buffer.end
         || yaml_emitter_flush(emitter) != 0)
@@ -2639,6 +2675,7 @@ unsafe fn yaml_emitter_write_bom(emitter: *mut yaml_emitter_t) -> libc::c_int {
     *fresh61 = -65i32 as yaml_char_t;
     1_i32
 }
+
 unsafe fn yaml_emitter_write_indent(mut emitter: *mut yaml_emitter_t) -> libc::c_int {
     let indent: libc::c_int = if (*emitter).indent >= 0_i32 {
         (*emitter).indent
@@ -2707,6 +2744,7 @@ unsafe fn yaml_emitter_write_indent(mut emitter: *mut yaml_emitter_t) -> libc::c
     (*emitter).indention = 1_i32;
     1_i32
 }
+
 unsafe fn yaml_emitter_write_indicator(
     mut emitter: *mut yaml_emitter_t,
     indicator: *const libc::c_char,
@@ -2817,6 +2855,7 @@ unsafe fn yaml_emitter_write_indicator(
     (*emitter).indention = ((*emitter).indention != 0 && is_indention != 0) as libc::c_int;
     1_i32
 }
+
 unsafe fn yaml_emitter_write_anchor(
     mut emitter: *mut yaml_emitter_t,
     value: *mut yaml_char_t,
@@ -2908,6 +2947,7 @@ unsafe fn yaml_emitter_write_anchor(
     (*emitter).indention = 0_i32;
     1_i32
 }
+
 unsafe fn yaml_emitter_write_tag_handle(
     mut emitter: *mut yaml_emitter_t,
     value: *mut yaml_char_t,
@@ -3015,6 +3055,7 @@ unsafe fn yaml_emitter_write_tag_handle(
     (*emitter).indention = 0_i32;
     1_i32
 }
+
 unsafe fn yaml_emitter_write_tag_content(
     mut emitter: *mut yaml_emitter_t,
     value: *mut yaml_char_t,
@@ -3260,6 +3301,7 @@ unsafe fn yaml_emitter_write_tag_content(
     (*emitter).indention = 0_i32;
     1_i32
 }
+
 unsafe fn yaml_emitter_write_plain_scalar(
     mut emitter: *mut yaml_emitter_t,
     value: *mut yaml_char_t,
@@ -3671,6 +3713,7 @@ unsafe fn yaml_emitter_write_plain_scalar(
     (*emitter).indention = 0_i32;
     1_i32
 }
+
 unsafe fn yaml_emitter_write_single_quoted_scalar(
     mut emitter: *mut yaml_emitter_t,
     value: *mut yaml_char_t,
@@ -4111,6 +4154,7 @@ unsafe fn yaml_emitter_write_single_quoted_scalar(
     (*emitter).indention = 0_i32;
     1_i32
 }
+
 unsafe fn yaml_emitter_write_double_quoted_scalar(
     mut emitter: *mut yaml_emitter_t,
     value: *mut yaml_char_t,
@@ -4792,6 +4836,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
     (*emitter).indention = 0_i32;
     1_i32
 }
+
 unsafe fn yaml_emitter_write_block_scalar_hints(
     mut emitter: *mut yaml_emitter_t,
     mut string: yaml_string_t,
@@ -4905,6 +4950,7 @@ unsafe fn yaml_emitter_write_block_scalar_hints(
     }
     1_i32
 }
+
 unsafe fn yaml_emitter_write_literal_scalar(
     mut emitter: *mut yaml_emitter_t,
     value: *mut yaml_char_t,
@@ -5195,6 +5241,7 @@ unsafe fn yaml_emitter_write_literal_scalar(
     }
     1_i32
 }
+
 unsafe fn yaml_emitter_write_folded_scalar(
     mut emitter: *mut yaml_emitter_t,
     value: *mut yaml_char_t,

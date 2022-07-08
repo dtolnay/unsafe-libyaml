@@ -10,12 +10,14 @@ use crate::{
 };
 use core::mem::{size_of, MaybeUninit};
 use core::ptr::{self, addr_of_mut};
+
 #[repr(C)]
 struct loader_ctx {
     start: *mut libc::c_int,
     end: *mut libc::c_int,
     top: *mut libc::c_int,
 }
+
 /// Parse the input stream and produce the next YAML document.
 ///
 /// Call this function subsequently to produce a sequence of documents
@@ -119,6 +121,7 @@ pub unsafe fn yaml_parser_load(
     *fresh8 = ptr::null_mut::<yaml_document_t>();
     0_i32
 }
+
 unsafe fn yaml_parser_set_composer_error(
     mut parser: *mut yaml_parser_t,
     problem: *const libc::c_char,
@@ -130,6 +133,7 @@ unsafe fn yaml_parser_set_composer_error(
     (*parser).problem_mark = problem_mark;
     0_i32
 }
+
 unsafe fn yaml_parser_set_composer_error_context(
     mut parser: *mut yaml_parser_t,
     context: *const libc::c_char,
@@ -146,6 +150,7 @@ unsafe fn yaml_parser_set_composer_error_context(
     (*parser).problem_mark = problem_mark;
     0_i32
 }
+
 unsafe fn yaml_parser_delete_aliases(parser: *mut yaml_parser_t) {
     while !((*parser).aliases.start == (*parser).aliases.top) {
         let fresh12 = addr_of_mut!((*parser).aliases.top);
@@ -160,6 +165,7 @@ unsafe fn yaml_parser_delete_aliases(parser: *mut yaml_parser_t) {
     let fresh15 = addr_of_mut!((*parser).aliases.start);
     *fresh15 = *fresh14;
 }
+
 unsafe fn yaml_parser_load_document(
     mut parser: *mut yaml_parser_t,
     event: *mut yaml_event_t,
@@ -206,6 +212,7 @@ unsafe fn yaml_parser_load_document(
     ctx.start = ctx.top;
     1_i32
 }
+
 unsafe fn yaml_parser_load_nodes(
     mut parser: *mut yaml_parser_t,
     ctx: *mut loader_ctx,
@@ -262,6 +269,7 @@ unsafe fn yaml_parser_load_nodes(
     (*(*parser).document).end_mark = (*event).end_mark;
     1_i32
 }
+
 unsafe fn yaml_parser_register_anchor(
     mut parser: *mut yaml_parser_t,
     index: libc::c_int,
@@ -317,6 +325,7 @@ unsafe fn yaml_parser_register_anchor(
     }
     1_i32
 }
+
 unsafe fn yaml_parser_load_node_add(
     mut parser: *mut yaml_parser_t,
     ctx: *mut loader_ctx,
@@ -429,6 +438,7 @@ unsafe fn yaml_parser_load_node_add(
     }
     1_i32
 }
+
 unsafe fn yaml_parser_load_alias(
     parser: *mut yaml_parser_t,
     event: *mut yaml_event_t,
@@ -455,6 +465,7 @@ unsafe fn yaml_parser_load_alias(
         (*event).start_mark,
     )
 }
+
 unsafe fn yaml_parser_load_scalar(
     mut parser: *mut yaml_parser_t,
     event: *mut yaml_event_t,
@@ -542,6 +553,7 @@ unsafe fn yaml_parser_load_scalar(
     yaml_free((*event).data.scalar.value as *mut libc::c_void);
     0_i32
 }
+
 unsafe fn yaml_parser_load_sequence(
     mut parser: *mut yaml_parser_t,
     event: *mut yaml_event_t,
@@ -690,6 +702,7 @@ unsafe fn yaml_parser_load_sequence(
     yaml_free((*event).data.sequence_start.anchor as *mut libc::c_void);
     0_i32
 }
+
 unsafe fn yaml_parser_load_sequence_end(
     parser: *mut yaml_parser_t,
     event: *mut yaml_event_t,
@@ -708,6 +721,7 @@ unsafe fn yaml_parser_load_sequence_end(
     *fresh31 = (*fresh31).wrapping_offset(-1);
     1_i32
 }
+
 unsafe fn yaml_parser_load_mapping(
     mut parser: *mut yaml_parser_t,
     event: *mut yaml_event_t,
@@ -856,6 +870,7 @@ unsafe fn yaml_parser_load_mapping(
     yaml_free((*event).data.mapping_start.anchor as *mut libc::c_void);
     0_i32
 }
+
 unsafe fn yaml_parser_load_mapping_end(
     parser: *mut yaml_parser_t,
     event: *mut yaml_event_t,

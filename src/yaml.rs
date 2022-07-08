@@ -1,10 +1,12 @@
+use crate::libc;
+
 pub use self::{
     yaml_break_t::*, yaml_emitter_state_t::*, yaml_encoding_t::*, yaml_error_type_t::*,
     yaml_event_type_t::*, yaml_mapping_style_t::*, yaml_node_type_t::*, yaml_parser_state_t::*,
     yaml_scalar_style_t::*, yaml_sequence_style_t::*, yaml_token_type_t::*,
 };
-use crate::libc;
 pub use core::primitive::{i64 as ptrdiff_t, u64 as size_t, u8 as yaml_char_t};
+
 /// The version directive data.
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -15,6 +17,7 @@ pub struct yaml_version_directive_t {
     /// The minor version number.
     pub minor: libc::c_int,
 }
+
 /// The tag directive data.
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -25,6 +28,7 @@ pub struct yaml_tag_directive_t {
     /// The tag prefix.
     pub prefix: *mut yaml_char_t,
 }
+
 /// The stream encoding.
 #[derive(Copy, Clone)]
 #[repr(u32)]
@@ -39,6 +43,7 @@ pub enum yaml_encoding_t {
     /// The UTF-16-BE encoding with BOM.
     YAML_UTF16BE_ENCODING = 3,
 }
+
 /// Line break type.
 #[derive(Copy, Clone)]
 #[repr(u32)]
@@ -53,6 +58,7 @@ pub enum yaml_break_t {
     /// Use CR LN for line breaks (DOS style).
     YAML_CRLN_BREAK = 3,
 }
+
 /// Many bad things could happen with the parser and emitter.
 #[derive(Copy, Clone)]
 #[repr(u32)]
@@ -75,6 +81,7 @@ pub enum yaml_error_type_t {
     /// Cannot emit a YAML stream.
     YAML_EMITTER_ERROR = 7,
 }
+
 /// The pointer position.
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -87,6 +94,7 @@ pub struct yaml_mark_t {
     /// The position column.
     pub column: size_t,
 }
+
 /// Scalar styles.
 #[derive(Copy, Clone)]
 #[repr(u32)]
@@ -105,6 +113,7 @@ pub enum yaml_scalar_style_t {
     /// The folded scalar style.
     YAML_FOLDED_SCALAR_STYLE = 5,
 }
+
 /// Sequence styles.
 #[derive(Copy, Clone)]
 #[repr(u32)]
@@ -117,6 +126,7 @@ pub enum yaml_sequence_style_t {
     /// The flow sequence style.
     YAML_FLOW_SEQUENCE_STYLE = 2,
 }
+
 /// Mapping styles.
 #[derive(Copy, Clone)]
 #[repr(u32)]
@@ -129,6 +139,7 @@ pub enum yaml_mapping_style_t {
     /// The flow mapping style.
     YAML_FLOW_MAPPING_STYLE = 2,
 }
+
 /// Token types.
 #[derive(Copy, Clone)]
 #[repr(u32)]
@@ -179,6 +190,7 @@ pub enum yaml_token_type_t {
     /// A SCALAR token.
     YAML_SCALAR_TOKEN = 21,
 }
+
 /// The token structure.
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -193,6 +205,7 @@ pub struct yaml_token_t {
     /// The end of the token.
     pub end_mark: yaml_mark_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub union unnamed_yaml_token_t_data {
@@ -211,6 +224,7 @@ pub union unnamed_yaml_token_t_data {
     /// The tag directive (for YAML_TAG_DIRECTIVE_TOKEN).
     pub tag_directive: unnamed_yaml_token_t_data_tag_directive,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -218,6 +232,7 @@ pub struct unnamed_yaml_token_t_data_stream_start {
     /// The stream encoding.
     pub encoding: yaml_encoding_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -225,6 +240,7 @@ pub struct unnamed_yaml_token_t_data_alias {
     /// The alias value.
     pub value: *mut yaml_char_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -232,6 +248,7 @@ pub struct unnamed_yaml_token_t_data_anchor {
     /// The anchor value.
     pub value: *mut yaml_char_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -241,6 +258,7 @@ pub struct unnamed_yaml_token_t_data_tag {
     /// The tag suffix.
     pub suffix: *mut yaml_char_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -252,6 +270,7 @@ pub struct unnamed_yaml_token_t_data_scalar {
     /// The scalar style.
     pub style: yaml_scalar_style_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -261,6 +280,7 @@ pub struct unnamed_yaml_token_t_data_version_directive {
     /// The minor version number.
     pub minor: libc::c_int,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -270,6 +290,7 @@ pub struct unnamed_yaml_token_t_data_tag_directive {
     /// The tag prefix.
     pub prefix: *mut yaml_char_t,
 }
+
 /// Event types.
 #[derive(Copy, Clone)]
 #[repr(u32)]
@@ -298,6 +319,7 @@ pub enum yaml_event_type_t {
     /// A MAPPING-END event.
     YAML_MAPPING_END_EVENT = 10,
 }
+
 /// The event structure.
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -312,6 +334,7 @@ pub struct yaml_event_t {
     /// The end of the event.
     pub end_mark: yaml_mark_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub union unnamed_yaml_event_t_data {
@@ -330,6 +353,7 @@ pub union unnamed_yaml_event_t_data {
     /// The mapping parameters (for YAML_MAPPING_START_EVENT).
     pub mapping_start: unnamed_yaml_event_t_data_mapping_start,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -337,6 +361,7 @@ pub struct unnamed_yaml_event_t_data_stream_start {
     /// The document encoding.
     pub encoding: yaml_encoding_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -348,6 +373,7 @@ pub struct unnamed_yaml_event_t_data_document_start {
     /// Is the document indicator implicit?
     pub implicit: libc::c_int,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -357,6 +383,7 @@ pub struct unnamed_yaml_event_t_data_document_start_tag_directives {
     /// The end of the tag directives list.
     pub end: *mut yaml_tag_directive_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -364,6 +391,7 @@ pub struct unnamed_yaml_event_t_data_document_end {
     /// Is the document end indicator implicit?
     pub implicit: libc::c_int,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -371,6 +399,7 @@ pub struct unnamed_yaml_event_t_data_alias {
     /// The anchor.
     pub anchor: *mut yaml_char_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -390,6 +419,7 @@ pub struct unnamed_yaml_event_t_data_scalar {
     /// The scalar style.
     pub style: yaml_scalar_style_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -403,6 +433,7 @@ pub struct unnamed_yaml_event_t_data_sequence_start {
     /// The sequence style.
     pub style: yaml_sequence_style_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -416,6 +447,7 @@ pub struct unnamed_yaml_event_t_data_mapping_start {
     /// The mapping style.
     pub style: yaml_mapping_style_t,
 }
+
 /// Node types.
 #[derive(Copy, Clone)]
 #[repr(u32)]
@@ -430,6 +462,7 @@ pub enum yaml_node_type_t {
     /// A mapping node.
     YAML_MAPPING_NODE = 3,
 }
+
 /// The node structure.
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -446,6 +479,7 @@ pub struct yaml_node_t {
     /// The end of the node.
     pub end_mark: yaml_mark_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub union unnamed_yaml_node_t_data {
@@ -456,6 +490,7 @@ pub union unnamed_yaml_node_t_data {
     /// The mapping parameters (for YAML_MAPPING_NODE).
     pub mapping: unnamed_yaml_node_t_data_mapping,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -467,8 +502,10 @@ pub struct unnamed_yaml_node_t_data_scalar {
     /// The scalar style.
     pub style: yaml_scalar_style_t,
 }
+
 /// An element of a sequence node.
 pub type yaml_node_item_t = libc::c_int;
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -478,6 +515,7 @@ pub struct unnamed_yaml_node_t_data_sequence {
     /// The sequence style.
     pub style: yaml_sequence_style_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -489,6 +527,7 @@ pub struct unnamed_yaml_node_t_data_sequence_items {
     /// The top of the stack.
     pub top: *mut yaml_node_item_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -498,6 +537,7 @@ pub struct unnamed_yaml_node_t_data_mapping {
     /// The mapping style.
     pub style: yaml_mapping_style_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -509,6 +549,7 @@ pub struct unnamed_yaml_node_t_data_mapping_pairs {
     /// The top of the stack.
     pub top: *mut yaml_node_pair_t,
 }
+
 /// An element of a mapping node.
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -519,6 +560,7 @@ pub struct yaml_node_pair_t {
     /// The value of the element.
     pub value: libc::c_int,
 }
+
 /// The document structure.
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -539,6 +581,7 @@ pub struct yaml_document_t {
     /// The end of the document.
     pub end_mark: yaml_mark_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -550,6 +593,7 @@ pub struct unnamed_yaml_document_t_nodes {
     /// The top of the stack.
     pub top: *mut yaml_node_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -559,6 +603,7 @@ pub struct unnamed_yaml_document_t_tag_directives {
     /// The end of the tag directives list.
     pub end: *mut yaml_tag_directive_t,
 }
+
 /// The prototype of a read handler.
 ///
 /// The read handler is called when the parser needs to read more bytes from the
@@ -574,6 +619,7 @@ pub type yaml_read_handler_t = unsafe fn(
     size: size_t,
     size_read: *mut size_t,
 ) -> libc::c_int;
+
 /// This structure holds information about a potential simple key.
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -588,6 +634,7 @@ pub struct yaml_simple_key_t {
     /// The position mark.
     pub mark: yaml_mark_t,
 }
+
 /// The states of the parser.
 #[derive(Copy, Clone)]
 #[repr(u32)]
@@ -642,6 +689,7 @@ pub enum yaml_parser_state_t {
     /// Expect nothing.
     YAML_PARSE_END_STATE = 23,
 }
+
 /// This structure holds aliases data.
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -654,6 +702,7 @@ pub struct yaml_alias_data_t {
     /// The anchor mark.
     pub mark: yaml_mark_t,
 }
+
 /// The parser structure.
 ///
 /// All members are internal. Manage the structure using the `yaml_parser_`
@@ -731,12 +780,14 @@ pub struct yaml_parser_t {
     /// The currently parsed document.
     pub(crate) document: *mut yaml_document_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub(crate) union unnamed_yaml_parser_t_input {
     /// String input data.
     pub string: unnamed_yaml_parser_t_input_string,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -748,6 +799,7 @@ pub(crate) struct unnamed_yaml_parser_t_input_string {
     /// The string current position.
     pub current: *const libc::c_uchar,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -761,6 +813,7 @@ pub(crate) struct unnamed_yaml_parser_t_buffer {
     /// The last filled position of the buffer.
     pub last: *mut yaml_char_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -774,6 +827,7 @@ pub(crate) struct unnamed_yaml_parser_t_raw_buffer {
     /// The last filled position of the buffer.
     pub last: *mut libc::c_uchar,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -787,6 +841,7 @@ pub(crate) struct unnamed_yaml_parser_t_tokens {
     /// The tail of the tokens queue.
     pub tail: *mut yaml_token_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -798,6 +853,7 @@ pub(crate) struct unnamed_yaml_parser_t_indents {
     /// The top of the stack.
     pub top: *mut libc::c_int,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -809,6 +865,7 @@ pub(crate) struct unnamed_yaml_parser_t_simple_keys {
     /// The top of the stack.
     pub top: *mut yaml_simple_key_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -820,6 +877,7 @@ pub(crate) struct unnamed_yaml_parser_t_states {
     /// The top of the stack.
     pub top: *mut yaml_parser_state_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -831,6 +889,7 @@ pub(crate) struct unnamed_yaml_parser_t_marks {
     /// The top of the stack.
     pub top: *mut yaml_mark_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -842,6 +901,7 @@ pub(crate) struct unnamed_yaml_parser_t_tag_directives {
     /// The top of the list.
     pub top: *mut yaml_tag_directive_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -853,6 +913,7 @@ pub(crate) struct unnamed_yaml_parser_t_aliases {
     /// The top of the list.
     pub top: *mut yaml_alias_data_t,
 }
+
 /// The prototype of a write handler.
 ///
 /// The write handler is called when the emitter needs to flush the accumulated
@@ -863,6 +924,7 @@ pub(crate) struct unnamed_yaml_parser_t_aliases {
 /// value should be 0.
 pub type yaml_write_handler_t =
     unsafe fn(data: *mut libc::c_void, buffer: *mut libc::c_uchar, size: size_t) -> libc::c_int;
+
 /// The emitter states.
 #[derive(Copy, Clone)]
 #[repr(u32)]
@@ -905,6 +967,7 @@ pub enum yaml_emitter_state_t {
     /// Expect nothing.
     YAML_EMIT_END_STATE = 17,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -916,6 +979,7 @@ pub(crate) struct yaml_anchors_t {
     /// If the node has been emitted?
     pub serialized: libc::c_int,
 }
+
 /// The emitter structure.
 ///
 /// All members are internal. Manage the structure using the `yaml_emitter_`
@@ -1001,12 +1065,14 @@ pub struct yaml_emitter_t {
     /// The currently emitted document.
     pub(crate) document: *mut yaml_document_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub(crate) union unnamed_yaml_emitter_t_output {
     /// String output data.
     pub string: unnamed_yaml_emitter_t_output_string,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -1018,6 +1084,7 @@ pub(crate) struct unnamed_yaml_emitter_t_output_string {
     /// The number of written bytes.
     pub size_written: *mut size_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -1031,6 +1098,7 @@ pub(crate) struct unnamed_yaml_emitter_t_buffer {
     /// The last filled position of the buffer.
     pub last: *mut yaml_char_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -1044,6 +1112,7 @@ pub(crate) struct unnamed_yaml_emitter_t_raw_buffer {
     /// The last filled position of the buffer.
     pub last: *mut libc::c_uchar,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -1055,6 +1124,7 @@ pub(crate) struct unnamed_yaml_emitter_t_states {
     /// The top of the stack.
     pub top: *mut yaml_emitter_state_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -1068,6 +1138,7 @@ pub(crate) struct unnamed_yaml_emitter_t_events {
     /// The tail of the event queue.
     pub tail: *mut yaml_event_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -1079,6 +1150,7 @@ pub(crate) struct unnamed_yaml_emitter_t_indents {
     /// The top of the stack.
     pub top: *mut libc::c_int,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -1090,6 +1162,7 @@ pub(crate) struct unnamed_yaml_emitter_t_tag_directives {
     /// The top of the list.
     pub top: *mut yaml_tag_directive_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -1101,6 +1174,7 @@ pub(crate) struct unnamed_yaml_emitter_t_anchor_data {
     /// Is it an alias?
     pub alias: libc::c_int,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -1114,6 +1188,7 @@ pub(crate) struct unnamed_yaml_emitter_t_tag_data {
     /// The tag suffix length.
     pub suffix_length: size_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -1135,6 +1210,7 @@ pub(crate) struct unnamed_yaml_emitter_t_scalar_data {
     /// The output style.
     pub style: yaml_scalar_style_t,
 }
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]

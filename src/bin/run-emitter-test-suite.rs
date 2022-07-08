@@ -36,6 +36,7 @@ use unsafe_libyaml::{
     YAML_LITERAL_SCALAR_STYLE, YAML_PLAIN_SCALAR_STYLE, YAML_SINGLE_QUOTED_SCALAR_STYLE,
     YAML_UTF8_ENCODING,
 };
+
 pub(crate) unsafe fn unsafe_main(
     stdin: &mut dyn Read,
     mut stdout: &mut dyn Write,
@@ -180,11 +181,13 @@ pub(crate) unsafe fn unsafe_main(
     yaml_emitter_delete(emitter);
     result
 }
+
 struct ReadBuf {
     buf: [u8; 1024],
     offset: usize,
     filled: usize,
 }
+
 impl ReadBuf {
     fn new() -> Self {
         ReadBuf {
@@ -193,6 +196,7 @@ impl ReadBuf {
             filled: 0,
         }
     }
+
     fn get_line(&mut self, input: &mut dyn Read) -> Option<&mut [u8]> {
         loop {
             for i in self.offset..self.offset + self.filled {
@@ -226,6 +230,7 @@ impl ReadBuf {
         }
     }
 }
+
 unsafe fn get_anchor(sigil: i8, line: *mut i8, anchor: *mut i8) -> *mut i8 {
     let mut start: *mut i8;
     let mut end: *mut i8;
@@ -246,6 +251,7 @@ unsafe fn get_anchor(sigil: i8, line: *mut i8, anchor: *mut i8) -> *mut i8 {
     *anchor.offset(end.offset_from(start) as i64 as isize) = '\0' as i32 as i8;
     anchor
 }
+
 unsafe fn get_tag(line: *mut i8, tag: *mut i8) -> *mut i8 {
     let start: *mut i8 = strchr(line, '<' as i32);
     if start.is_null() {
@@ -263,6 +269,7 @@ unsafe fn get_tag(line: *mut i8, tag: *mut i8) -> *mut i8 {
     *tag.offset((end.offset_from(start) as i64 - 1_i64) as isize) = '\0' as i32 as i8;
     tag
 }
+
 unsafe fn get_value(line: *mut i8, value: *mut i8, style: *mut yaml_scalar_style_t) {
     let mut i: i32 = 0_i32;
     let mut c: *mut i8;
@@ -345,6 +352,7 @@ unsafe fn get_value(line: *mut i8, value: *mut i8, style: *mut yaml_scalar_style
     }
     *value.offset(i as isize) = '\0' as i32 as i8;
 }
+
 unsafe fn memcpy(dest: *mut c_void, src: *const c_void, count: u64) -> *mut c_void {
     ptr::copy_nonoverlapping(
         src.cast::<MaybeUninit<u8>>(),
@@ -353,6 +361,7 @@ unsafe fn memcpy(dest: *mut c_void, src: *const c_void, count: u64) -> *mut c_vo
     );
     dest
 }
+
 unsafe fn strchr(mut str: *const i8, c: i32) -> *mut i8 {
     loop {
         match *str {
@@ -362,6 +371,7 @@ unsafe fn strchr(mut str: *const i8, c: i32) -> *mut i8 {
         }
     }
 }
+
 unsafe fn strlen(str: *const i8) -> u64 {
     let mut end = str;
     while *end != 0 {
@@ -369,6 +379,7 @@ unsafe fn strlen(str: *const i8) -> u64 {
     }
     end.offset_from(str) as u64
 }
+
 unsafe fn strncmp(lhs: *const i8, rhs: *const i8, mut count: u64) -> i32 {
     let mut lhs = lhs.cast::<u8>();
     let mut rhs = rhs.cast::<u8>();
@@ -383,6 +394,7 @@ unsafe fn strncmp(lhs: *const i8, rhs: *const i8, mut count: u64) -> i32 {
         (*lhs).cmp(&*rhs) as i32
     }
 }
+
 fn main() -> ExitCode {
     let args = env::args_os().skip(1);
     if args.len() == 0 {

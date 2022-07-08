@@ -11,6 +11,7 @@ use crate::yaml::{
 use crate::{libc, yaml_document_delete, yaml_emitter_emit, PointerExt};
 use core::mem::{size_of, MaybeUninit};
 use core::ptr::{self, addr_of_mut};
+
 /// Start a YAML stream.
 ///
 /// This function should be used before yaml_emitter_dump() is called.
@@ -41,6 +42,7 @@ pub unsafe fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> libc::c_int
     (*emitter).opened = 1_i32;
     1_i32
 }
+
 /// Finish a YAML stream.
 ///
 /// This function should be used after yaml_emitter_dump() is called.
@@ -73,6 +75,7 @@ pub unsafe fn yaml_emitter_close(mut emitter: *mut yaml_emitter_t) -> libc::c_in
     (*emitter).closed = 1_i32;
     1_i32
 }
+
 /// Emit a YAML document.
 ///
 /// The documen object may be generated using the yaml_parser_load() function or
@@ -169,6 +172,7 @@ pub unsafe fn yaml_emitter_dump(
     yaml_emitter_delete_document_and_anchors(emitter);
     0_i32
 }
+
 unsafe fn yaml_emitter_delete_document_and_anchors(mut emitter: *mut yaml_emitter_t) {
     let mut index: libc::c_int;
     if ((*emitter).anchors).is_null() {
@@ -217,6 +221,7 @@ unsafe fn yaml_emitter_delete_document_and_anchors(mut emitter: *mut yaml_emitte
     let fresh7 = addr_of_mut!((*emitter).document);
     *fresh7 = ptr::null_mut::<yaml_document_t>();
 }
+
 unsafe fn yaml_emitter_anchor_node(emitter: *mut yaml_emitter_t, index: libc::c_int) {
     let node: *mut yaml_node_t = ((*(*emitter).document).nodes.start)
         .wrapping_offset(index as isize)
@@ -252,6 +257,7 @@ unsafe fn yaml_emitter_anchor_node(emitter: *mut yaml_emitter_t, index: libc::c_
         (*((*emitter).anchors).wrapping_offset((index - 1_i32) as isize)).anchor = *fresh9;
     }
 }
+
 unsafe fn yaml_emitter_generate_anchor(
     _emitter: *mut yaml_emitter_t,
     anchor_id: libc::c_int,
@@ -263,6 +269,7 @@ unsafe fn yaml_emitter_generate_anchor(
     write!(WriteToPtr::new(anchor), "id{:03}\0", anchor_id);
     anchor
 }
+
 unsafe fn yaml_emitter_dump_node(emitter: *mut yaml_emitter_t, index: libc::c_int) -> libc::c_int {
     let node: *mut yaml_node_t = ((*(*emitter).document).nodes.start)
         .wrapping_offset(index as isize)
@@ -287,6 +294,7 @@ unsafe fn yaml_emitter_dump_node(emitter: *mut yaml_emitter_t, index: libc::c_in
         _ => __assert!(false),
     }
 }
+
 unsafe fn yaml_emitter_dump_alias(
     emitter: *mut yaml_emitter_t,
     anchor: *mut yaml_char_t,
@@ -309,6 +317,7 @@ unsafe fn yaml_emitter_dump_alias(
     (*event).data.alias.anchor = anchor;
     yaml_emitter_emit(emitter, event)
 }
+
 unsafe fn yaml_emitter_dump_scalar(
     emitter: *mut yaml_emitter_t,
     node: *mut yaml_node_t,
@@ -346,6 +355,7 @@ unsafe fn yaml_emitter_dump_scalar(
     (*event).data.scalar.style = (*node).data.scalar.style;
     yaml_emitter_emit(emitter, event)
 }
+
 unsafe fn yaml_emitter_dump_sequence(
     emitter: *mut yaml_emitter_t,
     node: *mut yaml_node_t,
@@ -398,6 +408,7 @@ unsafe fn yaml_emitter_dump_sequence(
     }
     1_i32
 }
+
 unsafe fn yaml_emitter_dump_mapping(
     emitter: *mut yaml_emitter_t,
     node: *mut yaml_node_t,
