@@ -1,4 +1,5 @@
 #![no_std]
+#![doc(html_root_url = "https://docs.rs/unsafe-libyaml/0.0.0")]
 #![allow(non_camel_case_types)]
 #![warn(clippy::pedantic)]
 #![allow(

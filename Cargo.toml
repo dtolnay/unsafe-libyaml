@@ -1,6 +1,6 @@
 [package]
 name = "unsafe-libyaml"
-version = "0.0.0"
+version = "0.0.0" # remember to update html_root_url
 edition = "2021"
 publish = false
 
