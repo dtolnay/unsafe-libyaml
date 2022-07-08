@@ -775,7 +775,7 @@ pub struct yaml_parser_t {
     /// The number of unclosed '[' and '{' indicators.
     pub(crate) flow_level: libc::c_int,
     /// The tokens queue.
-    pub(crate) tokens: unnamed_yaml_parser_t_tokens,
+    pub(crate) tokens: yaml_queue_t<yaml_token_t>,
     /// The number of tokens fetched from the queue.
     pub(crate) tokens_parsed: size_t,
     /// Does the tokens queue contain a token ready for dequeueing.
@@ -871,19 +871,6 @@ pub(crate) struct unnamed_yaml_parser_t_raw_buffer {
     pub pointer: *mut libc::c_uchar,
     /// The last filled position of the buffer.
     pub last: *mut libc::c_uchar,
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
-pub(crate) struct unnamed_yaml_parser_t_tokens {
-    /// The beginning of the tokens queue.
-    pub start: *mut yaml_token_t,
-    /// The end of the tokens queue.
-    pub end: *mut yaml_token_t,
-    /// The head of the tokens queue.
-    pub head: *mut yaml_token_t,
-    /// The tail of the tokens queue.
-    pub tail: *mut yaml_token_t,
 }
 
 #[derive(Copy, Clone)]
@@ -1062,7 +1049,7 @@ pub struct yaml_emitter_t {
     /// The current emitter state.
     pub(crate) state: yaml_emitter_state_t,
     /// The event queue.
-    pub(crate) events: unnamed_yaml_emitter_t_events,
+    pub(crate) events: yaml_queue_t<yaml_event_t>,
     /// The stack of indentation levels.
     pub(crate) indents: unnamed_yaml_emitter_t_indents,
     /// The list of tag directives.
@@ -1181,19 +1168,6 @@ pub(crate) struct unnamed_yaml_emitter_t_states {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-pub(crate) struct unnamed_yaml_emitter_t_events {
-    /// The beginning of the event queue.
-    pub start: *mut yaml_event_t,
-    /// The end of the event queue.
-    pub end: *mut yaml_event_t,
-    /// The head of the event queue.
-    pub head: *mut yaml_event_t,
-    /// The tail of the event queue.
-    pub tail: *mut yaml_event_t,
-}
-
-#[derive(Copy, Clone)]
-#[repr(C)]
 pub(crate) struct unnamed_yaml_emitter_t_indents {
     /// The beginning of the stack.
     pub start: *mut libc::c_int,
@@ -1265,4 +1239,17 @@ pub(crate) struct yaml_string_t {
     pub start: *mut yaml_char_t,
     pub end: *mut yaml_char_t,
     pub pointer: *mut yaml_char_t,
+}
+
+#[derive(Copy, Clone)]
+#[repr(C)]
+pub(crate) struct yaml_queue_t<T> {
+    /// The beginning of the queue.
+    pub start: *mut T,
+    /// The end of the queue.
+    pub end: *mut T,
+    /// The head of the queue.
+    pub head: *mut T,
+    /// The tail of the queue.
+    pub tail: *mut T,
 }
