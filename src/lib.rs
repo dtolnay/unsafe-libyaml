@@ -9,6 +9,7 @@
     clippy::cast_sign_loss,
     clippy::collapsible_if,
     clippy::if_not_else,
+    clippy::items_after_statements,
     clippy::let_underscore_drop,
     clippy::manual_swap,
     clippy::missing_panics_doc,

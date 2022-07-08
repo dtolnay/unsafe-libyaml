@@ -17,22 +17,6 @@ pub struct loader_ctx {
     pub end: *mut libc::c_int,
     pub top: *mut libc::c_int,
 }
-#[derive(Copy, Clone)]
-#[repr(C)]
-#[non_exhaustive]
-pub struct Unnamed_35 {
-    pub start: *mut yaml_node_pair_t,
-    pub end: *mut yaml_node_pair_t,
-    pub top: *mut yaml_node_pair_t,
-}
-#[derive(Copy, Clone)]
-#[repr(C)]
-#[non_exhaustive]
-pub struct Unnamed_36 {
-    pub start: *mut yaml_node_item_t,
-    pub end: *mut yaml_node_item_t,
-    pub top: *mut yaml_node_item_t,
-}
 pub unsafe fn yaml_parser_load(
     mut parser: *mut yaml_parser_t,
     document: *mut yaml_document_t,
@@ -551,7 +535,12 @@ unsafe fn yaml_parser_load_sequence(
     let current_block: u64;
     let mut node = MaybeUninit::<yaml_node_t>::uninit();
     let node = node.as_mut_ptr();
-    let mut items: Unnamed_36 = Unnamed_36 {
+    struct Items {
+        start: *mut yaml_node_item_t,
+        end: *mut yaml_node_item_t,
+        top: *mut yaml_node_item_t,
+    }
+    let mut items = Items {
         start: ptr::null_mut::<yaml_node_item_t>(),
         end: ptr::null_mut::<yaml_node_item_t>(),
         top: ptr::null_mut::<yaml_node_item_t>(),
@@ -712,7 +701,12 @@ unsafe fn yaml_parser_load_mapping(
     let current_block: u64;
     let mut node = MaybeUninit::<yaml_node_t>::uninit();
     let node = node.as_mut_ptr();
-    let mut pairs: Unnamed_35 = Unnamed_35 {
+    struct Pairs {
+        start: *mut yaml_node_pair_t,
+        end: *mut yaml_node_pair_t,
+        top: *mut yaml_node_pair_t,
+    }
+    let mut pairs = Pairs {
         start: ptr::null_mut::<yaml_node_pair_t>(),
         end: ptr::null_mut::<yaml_node_pair_t>(),
         top: ptr::null_mut::<yaml_node_pair_t>(),

@@ -29,21 +29,6 @@ use crate::{
 };
 use core::mem::size_of;
 use core::ptr::{self, addr_of_mut};
-#[derive(Copy, Clone)]
-#[repr(C)]
-#[non_exhaustive]
-pub struct Unnamed_35 {
-    pub start: *mut yaml_tag_directive_t,
-    pub end: *mut yaml_tag_directive_t,
-}
-#[derive(Copy, Clone)]
-#[repr(C)]
-#[non_exhaustive]
-pub struct Unnamed_36 {
-    pub start: *mut yaml_tag_directive_t,
-    pub end: *mut yaml_tag_directive_t,
-    pub top: *mut yaml_tag_directive_t,
-}
 pub unsafe fn yaml_parser_parse(
     parser: *mut yaml_parser_t,
     event: *mut yaml_event_t,
@@ -188,7 +173,11 @@ unsafe fn yaml_parser_parse_document_start(
     let mut token: *mut yaml_token_t;
     let mut version_directive: *mut yaml_version_directive_t =
         ptr::null_mut::<yaml_version_directive_t>();
-    let mut tag_directives: Unnamed_35 = Unnamed_35 {
+    struct TagDirectives {
+        start: *mut yaml_tag_directive_t,
+        end: *mut yaml_tag_directive_t,
+    }
+    let mut tag_directives = TagDirectives {
         start: ptr::null_mut::<yaml_tag_directive_t>(),
         end: ptr::null_mut::<yaml_tag_directive_t>(),
     };
@@ -1905,7 +1894,12 @@ unsafe fn yaml_parser_process_directives(
     let mut default_tag_directive: *mut yaml_tag_directive_t;
     let mut version_directive: *mut yaml_version_directive_t =
         ptr::null_mut::<yaml_version_directive_t>();
-    let mut tag_directives: Unnamed_36 = Unnamed_36 {
+    struct TagDirectives {
+        start: *mut yaml_tag_directive_t,
+        end: *mut yaml_tag_directive_t,
+        top: *mut yaml_tag_directive_t,
+    }
+    let mut tag_directives = TagDirectives {
         start: ptr::null_mut::<yaml_tag_directive_t>(),
         end: ptr::null_mut::<yaml_tag_directive_t>(),
         top: ptr::null_mut::<yaml_tag_directive_t>(),

@@ -241,20 +241,6 @@ pub struct unnamed_yaml_event_t_data_document_start_tag_directives {
 pub struct unnamed_yaml_event_t_data_stream_start {
     pub encoding: yaml_encoding_t,
 }
-#[derive(Copy, Clone)]
-#[repr(C)]
-#[non_exhaustive]
-pub struct Unnamed_16 {
-    pub start: *mut yaml_tag_directive_t,
-    pub end: *mut yaml_tag_directive_t,
-    pub top: *mut yaml_tag_directive_t,
-}
-#[derive(Copy, Clone)]
-#[repr(C)]
-#[non_exhaustive]
-pub struct Unnamed_17 {
-    pub error: yaml_error_type_t,
-}
 pub type yaml_node_type_t = libc::c_uint;
 pub const YAML_MAPPING_NODE: yaml_node_type_t = 3;
 pub const YAML_SEQUENCE_NODE: yaml_node_type_t = 2;
@@ -349,74 +335,6 @@ pub struct unnamed_yaml_document_t_nodes {
     pub start: *mut yaml_node_t,
     pub end: *mut yaml_node_t,
     pub top: *mut yaml_node_t,
-}
-#[derive(Copy, Clone)]
-#[repr(C)]
-#[non_exhaustive]
-pub struct Unnamed_26 {
-    pub start: *mut yaml_tag_directive_t,
-    pub end: *mut yaml_tag_directive_t,
-    pub top: *mut yaml_tag_directive_t,
-}
-#[derive(Copy, Clone)]
-#[repr(C)]
-#[non_exhaustive]
-pub struct Unnamed_27 {
-    pub start: *mut yaml_node_t,
-    pub end: *mut yaml_node_t,
-    pub top: *mut yaml_node_t,
-}
-#[derive(Copy, Clone)]
-#[repr(C)]
-#[non_exhaustive]
-pub struct Unnamed_28 {
-    pub error: yaml_error_type_t,
-}
-#[derive(Copy, Clone)]
-#[repr(C)]
-#[non_exhaustive]
-pub struct Unnamed_29 {
-    pub error: yaml_error_type_t,
-}
-#[derive(Copy, Clone)]
-#[repr(C)]
-#[non_exhaustive]
-pub struct Unnamed_30 {
-    pub start: *mut yaml_node_item_t,
-    pub end: *mut yaml_node_item_t,
-    pub top: *mut yaml_node_item_t,
-}
-#[derive(Copy, Clone)]
-#[repr(C)]
-#[non_exhaustive]
-pub struct Unnamed_31 {
-    pub error: yaml_error_type_t,
-}
-#[derive(Copy, Clone)]
-#[repr(C)]
-#[non_exhaustive]
-pub struct Unnamed_32 {
-    pub start: *mut yaml_node_pair_t,
-    pub end: *mut yaml_node_pair_t,
-    pub top: *mut yaml_node_pair_t,
-}
-#[derive(Copy, Clone)]
-#[repr(C)]
-#[non_exhaustive]
-pub struct Unnamed_33 {
-    pub error: yaml_error_type_t,
-}
-#[derive(Copy, Clone)]
-#[repr(C)]
-#[non_exhaustive]
-pub struct Unnamed_34 {
-    pub error: yaml_error_type_t,
-}
-#[derive(Copy, Clone)]
-#[repr(C)]
-#[non_exhaustive]
-pub struct Unnamed_35 {
-    pub error: yaml_error_type_t,
 }
 pub type yaml_read_handler_t =
     unsafe fn(*mut libc::c_void, *mut libc::c_uchar, size_t, *mut size_t) -> libc::c_int;

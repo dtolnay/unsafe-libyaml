@@ -1,14 +1,11 @@
 use crate::externs::{free, malloc, memcpy, memmove, memset, realloc, strdup, strlen};
-use crate::yaml::{
-    size_t, yaml_char_t, Unnamed_16, Unnamed_17, Unnamed_26, Unnamed_27, Unnamed_28, Unnamed_29,
-    Unnamed_30, Unnamed_31, Unnamed_32, Unnamed_33, Unnamed_34, Unnamed_35,
-};
+use crate::yaml::{size_t, yaml_char_t};
 use crate::{
     libc, yaml_break_t, yaml_document_t, yaml_emitter_state_t, yaml_emitter_t, yaml_encoding_t,
-    yaml_event_t, yaml_mapping_style_t, yaml_mark_t, yaml_node_item_t, yaml_node_pair_t,
-    yaml_node_t, yaml_parser_state_t, yaml_parser_t, yaml_read_handler_t, yaml_scalar_style_t,
-    yaml_sequence_style_t, yaml_simple_key_t, yaml_tag_directive_t, yaml_token_t,
-    yaml_version_directive_t, yaml_write_handler_t, PointerExt, YAML_ALIAS_EVENT,
+    yaml_error_type_t, yaml_event_t, yaml_mapping_style_t, yaml_mark_t, yaml_node_item_t,
+    yaml_node_pair_t, yaml_node_t, yaml_parser_state_t, yaml_parser_t, yaml_read_handler_t,
+    yaml_scalar_style_t, yaml_sequence_style_t, yaml_simple_key_t, yaml_tag_directive_t,
+    yaml_token_t, yaml_version_directive_t, yaml_write_handler_t, PointerExt, YAML_ALIAS_EVENT,
     YAML_DOCUMENT_END_EVENT, YAML_DOCUMENT_START_EVENT, YAML_MAPPING_END_EVENT, YAML_MAPPING_NODE,
     YAML_MAPPING_START_EVENT, YAML_MEMORY_ERROR, YAML_NO_ERROR, YAML_SCALAR_EVENT,
     YAML_SCALAR_NODE, YAML_SEQUENCE_END_EVENT, YAML_SEQUENCE_NODE, YAML_SEQUENCE_START_EVENT,
@@ -16,6 +13,9 @@ use crate::{
 };
 use core::mem::{size_of, MaybeUninit};
 use core::ptr::{self, addr_of_mut};
+struct api_context {
+    error: yaml_error_type_t,
+}
 pub unsafe fn yaml_get_version_string() -> *const libc::c_char {
     b"0.2.5\0" as *const u8 as *const libc::c_char
 }
@@ -970,7 +970,7 @@ pub unsafe fn yaml_document_start_event_initialize(
     implicit: libc::c_int,
 ) -> libc::c_int {
     let mut current_block: u64;
-    let mut context: Unnamed_17 = Unnamed_17 {
+    let mut context = api_context {
         error: YAML_NO_ERROR,
     };
     let mark = yaml_mark_t {
@@ -980,7 +980,12 @@ pub unsafe fn yaml_document_start_event_initialize(
     };
     let mut version_directive_copy: *mut yaml_version_directive_t =
         ptr::null_mut::<yaml_version_directive_t>();
-    let mut tag_directives_copy: Unnamed_16 = Unnamed_16 {
+    struct TagDirectivesCopy {
+        start: *mut yaml_tag_directive_t,
+        end: *mut yaml_tag_directive_t,
+        top: *mut yaml_tag_directive_t,
+    }
+    let mut tag_directives_copy = TagDirectivesCopy {
         start: ptr::null_mut::<yaml_tag_directive_t>(),
         end: ptr::null_mut::<yaml_tag_directive_t>(),
         top: ptr::null_mut::<yaml_tag_directive_t>(),
@@ -1497,17 +1502,27 @@ pub unsafe fn yaml_document_initialize(
     end_implicit: libc::c_int,
 ) -> libc::c_int {
     let mut current_block: u64;
-    let mut context: Unnamed_28 = Unnamed_28 {
+    let mut context = api_context {
         error: YAML_NO_ERROR,
     };
-    let mut nodes: Unnamed_27 = Unnamed_27 {
+    struct Nodes {
+        start: *mut yaml_node_t,
+        end: *mut yaml_node_t,
+        top: *mut yaml_node_t,
+    }
+    let mut nodes = Nodes {
         start: ptr::null_mut::<yaml_node_t>(),
         end: ptr::null_mut::<yaml_node_t>(),
         top: ptr::null_mut::<yaml_node_t>(),
     };
     let mut version_directive_copy: *mut yaml_version_directive_t =
         ptr::null_mut::<yaml_version_directive_t>();
-    let mut tag_directives_copy: Unnamed_26 = Unnamed_26 {
+    struct TagDirectivesCopy {
+        start: *mut yaml_tag_directive_t,
+        end: *mut yaml_tag_directive_t,
+        top: *mut yaml_tag_directive_t,
+    }
+    let mut tag_directives_copy = TagDirectivesCopy {
         start: ptr::null_mut::<yaml_tag_directive_t>(),
         end: ptr::null_mut::<yaml_tag_directive_t>(),
         top: ptr::null_mut::<yaml_tag_directive_t>(),
@@ -1759,7 +1774,7 @@ pub unsafe fn yaml_document_add_scalar(
     mut length: libc::c_int,
     style: yaml_scalar_style_t,
 ) -> libc::c_int {
-    let mut context: Unnamed_29 = Unnamed_29 {
+    let mut context = api_context {
         error: YAML_NO_ERROR,
     };
     let mark = yaml_mark_t {
@@ -1836,7 +1851,7 @@ pub unsafe fn yaml_document_add_sequence(
     mut tag: *const yaml_char_t,
     style: yaml_sequence_style_t,
 ) -> libc::c_int {
-    let mut context: Unnamed_31 = Unnamed_31 {
+    let mut context = api_context {
         error: YAML_NO_ERROR,
     };
     let mark = yaml_mark_t {
@@ -1845,7 +1860,12 @@ pub unsafe fn yaml_document_add_sequence(
         column: 0_u64,
     };
     let mut tag_copy: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
-    let mut items: Unnamed_30 = Unnamed_30 {
+    struct Items {
+        start: *mut yaml_node_item_t,
+        end: *mut yaml_node_item_t,
+        top: *mut yaml_node_item_t,
+    }
+    let mut items = Items {
         start: ptr::null_mut::<yaml_node_item_t>(),
         end: ptr::null_mut::<yaml_node_item_t>(),
         top: ptr::null_mut::<yaml_node_item_t>(),
@@ -1919,7 +1939,7 @@ pub unsafe fn yaml_document_add_mapping(
     mut tag: *const yaml_char_t,
     style: yaml_mapping_style_t,
 ) -> libc::c_int {
-    let mut context: Unnamed_33 = Unnamed_33 {
+    let mut context = api_context {
         error: YAML_NO_ERROR,
     };
     let mark = yaml_mark_t {
@@ -1928,7 +1948,12 @@ pub unsafe fn yaml_document_add_mapping(
         column: 0_u64,
     };
     let mut tag_copy: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
-    let mut pairs: Unnamed_32 = Unnamed_32 {
+    struct Pairs {
+        start: *mut yaml_node_pair_t,
+        end: *mut yaml_node_pair_t,
+        top: *mut yaml_node_pair_t,
+    }
+    let mut pairs = Pairs {
         start: ptr::null_mut::<yaml_node_pair_t>(),
         end: ptr::null_mut::<yaml_node_pair_t>(),
         top: ptr::null_mut::<yaml_node_pair_t>(),
@@ -2002,7 +2027,7 @@ pub unsafe fn yaml_document_append_sequence_item(
     sequence: libc::c_int,
     item: libc::c_int,
 ) -> libc::c_int {
-    let mut context: Unnamed_34 = Unnamed_34 {
+    let mut context = api_context {
         error: YAML_NO_ERROR,
     };
     __assert!(!document.is_null());
@@ -2080,7 +2105,7 @@ pub unsafe fn yaml_document_append_mapping_pair(
     key: libc::c_int,
     value: libc::c_int,
 ) -> libc::c_int {
-    let mut context: Unnamed_35 = Unnamed_35 {
+    let mut context = api_context {
         error: YAML_NO_ERROR,
     };
     __assert!(!document.is_null());
