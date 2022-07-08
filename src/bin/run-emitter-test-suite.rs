@@ -155,6 +155,7 @@ pub unsafe fn unsafe_main(
                     as *mut yaml_char_t,
             );
         } else {
+            yaml_emitter_delete(emitter);
             return Err(format!(
                 "Unknown event: '{}'",
                 CStr::from_ptr(line).to_string_lossy(),
@@ -170,34 +171,26 @@ pub unsafe fn unsafe_main(
             break;
         }
     }
-    match current_block {
-        13850764817919632987 => {
-            yaml_emitter_delete(emitter);
-            Err("Memory error: Not enough memory for creating an event".into())
-        }
-        6684355725484023210 => {
-            let error = match (*emitter).error as libc::c_uint {
-                1 => "Memory error: Not enough memory for emitting".into(),
-                6 => format!(
-                    "Writer error: {}",
-                    CStr::from_ptr((*emitter).problem).to_string_lossy(),
-                )
-                .into(),
-                7 => format!(
-                    "Emitter error: {}",
-                    CStr::from_ptr((*emitter).problem).to_string_lossy(),
-                )
-                .into(),
-                _ => "Internal error".into(),
-            };
-            yaml_emitter_delete(emitter);
-            Err(error)
-        }
-        _ => {
-            yaml_emitter_delete(emitter);
-            Ok(())
-        }
-    }
+    let result = match current_block {
+        13850764817919632987 => Err("Memory error: Not enough memory for creating an event".into()),
+        6684355725484023210 => Err(match (*emitter).error as libc::c_uint {
+            1 => "Memory error: Not enough memory for emitting".into(),
+            6 => format!(
+                "Writer error: {}",
+                CStr::from_ptr((*emitter).problem).to_string_lossy(),
+            )
+            .into(),
+            7 => format!(
+                "Emitter error: {}",
+                CStr::from_ptr((*emitter).problem).to_string_lossy(),
+            )
+            .into(),
+            _ => "Internal error".into(),
+        }),
+        _ => Ok(()),
+    };
+    yaml_emitter_delete(emitter);
+    result
 }
 struct ReadBuf {
     buf: [u8; 1024],

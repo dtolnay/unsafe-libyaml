@@ -70,6 +70,7 @@ pub unsafe fn unsafe_main(
                     ((*parser).problem_mark.column).wrapping_add(1_u64),
                 );
             }
+            yaml_parser_delete(parser);
             return Err(error.into());
         }
         let type_0: yaml_event_type_t = (*event).type_0;
