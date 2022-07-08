@@ -1,6 +1,5 @@
 use crate::libc;
-pub type size_t = libc::c_ulong;
-pub type yaml_char_t = libc::c_uchar;
+pub use core::primitive::{i64 as ptrdiff_t, u64 as size_t, u8 as yaml_char_t};
 #[derive(Copy, Clone)]
 #[repr(C)]
 #[non_exhaustive]
@@ -762,4 +761,3 @@ pub struct yaml_string_t {
     pub end: *mut yaml_char_t,
     pub pointer: *mut yaml_char_t,
 }
-pub type ptrdiff_t = libc::c_long;

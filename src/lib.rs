@@ -31,14 +31,10 @@ use core::mem::size_of;
 
 pub mod libc {
     pub use core::ffi::c_void;
-    pub type c_char = i8;
-    pub type c_int = i32;
-    pub type c_long = i64;
-    pub type c_schar = i8;
-    pub type c_uchar = u8;
-    pub type c_uint = u32;
-    pub type c_ulong = u64;
-    pub type c_ushort = u16;
+    pub use core::primitive::{
+        i32 as c_int, i64 as c_long, i8 as c_char, i8 as c_schar, u16 as c_ushort, u32 as c_uint,
+        u64 as c_ulong, u8 as c_uchar,
+    };
 }
 
 #[macro_use]

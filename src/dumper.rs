@@ -11,7 +11,6 @@ use crate::{libc, yaml_document_delete, yaml_emitter_emit, yaml_free, yaml_mallo
 use core::mem::{size_of, MaybeUninit};
 use core::ptr::{self, addr_of_mut};
 use core::slice;
-use std::io::Write;
 pub unsafe fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> libc::c_int {
     let mut event = MaybeUninit::<yaml_event_t>::uninit();
     let event = event.as_mut_ptr();
