@@ -162,7 +162,6 @@ pub mod externs {
         }
     }
 
-    #[macro_export]
     macro_rules! __assert {
         (false $(,)?) => {
             $crate::externs::__assert_fail(stringify!(false), file!(), line!())
@@ -174,7 +173,11 @@ pub mod externs {
         };
     }
 
-    pub unsafe fn __assert_fail(__assertion: &'static str, __file: &'static str, __line: u32) -> ! {
+    pub(crate) unsafe fn __assert_fail(
+        __assertion: &'static str,
+        __file: &'static str,
+        __line: u32,
+    ) -> ! {
         struct Abort;
         impl Drop for Abort {
             fn drop(&mut self) {
