@@ -201,6 +201,58 @@ pub struct yaml_token_t {
     /// The token type.
     pub type_: yaml_token_type_t,
     /// The token data.
+    ///
+    /// ```
+    /// # const _: &str = stringify! {
+    /// union {
+    ///     /// The stream start (for YAML_STREAM_START_TOKEN).
+    ///     stream_start: struct {
+    ///         /// The stream encoding.
+    ///         encoding: yaml_encoding_t,
+    ///     },
+    ///     /// The alias (for YAML_ALIAS_TOKEN).
+    ///     alias: struct {
+    ///         /// The alias value.
+    ///         value: *mut u8,
+    ///     },
+    ///     /// The anchor (for YAML_ANCHOR_TOKEN).
+    ///     anchor: struct {
+    ///         /// The anchor value.
+    ///         value: *mut u8,
+    ///     },
+    ///     /// The tag (for YAML_TAG_TOKEN).
+    ///     tag: struct {
+    ///         /// The tag handle.
+    ///         handle: *mut u8,
+    ///         /// The tag suffix.
+    ///         suffix: *mut u8,
+    ///     },
+    ///     /// The scalar value (for YAML_SCALAR_TOKEN).
+    ///     scalar: struct {
+    ///         /// The scalar value.
+    ///         value: *mut u8,
+    ///         /// The length of the scalar value.
+    ///         length: u64,
+    ///         /// The scalar style.
+    ///         style: yaml_scalar_style_t,
+    ///     },
+    ///     /// The version directive (for YAML_VERSION_DIRECTIVE_TOKEN).
+    ///     version_directive: struct {
+    ///         /// The major version number.
+    ///         major: i32,
+    ///         /// The minor version number.
+    ///         minor: i32,
+    ///     },
+    ///     /// The tag directive (for YAML_TAG_DIRECTIVE_TOKEN).
+    ///     tag_directive: struct {
+    ///         /// The tag handle.
+    ///         handle: *mut u8,
+    ///         /// The tag prefix.
+    ///         prefix: *mut u8,
+    ///     },
+    /// }
+    /// # };
+    /// ```
     pub data: unnamed_yaml_token_t_data,
     /// The beginning of the token.
     pub start_mark: yaml_mark_t,
@@ -330,6 +382,81 @@ pub struct yaml_event_t {
     /// The event type.
     pub type_: yaml_event_type_t,
     /// The event data.
+    ///
+    /// ```
+    /// # const _: &str = stringify! {
+    /// union {
+    ///     /// The stream parameters (for YAML_STREAM_START_EVENT).
+    ///     stream_start: struct {
+    ///         /// The document encoding.
+    ///         encoding: yaml_encoding_t,
+    ///     },
+    ///     /// The document parameters (for YAML_DOCUMENT_START_EVENT).
+    ///     document_start: struct {
+    ///         /// The version directive.
+    ///         version_directive: *mut yaml_version_directive_t,
+    ///         /// The list of tag directives.
+    ///         tag_directives: struct {
+    ///             /// The beginning of the tag directives list.
+    ///             start: *mut yaml_tag_directive_t,
+    ///             /// The end of the tag directives list.
+    ///             end: *mut yaml_tag_directive_t,
+    ///         },
+    ///         /// Is the document indicator implicit?
+    ///         implicit: i32,
+    ///     },
+    ///     /// The document end parameters (for YAML_DOCUMENT_END_EVENT).
+    ///     document_end: struct {
+    ///         /// Is the document end indicator implicit?
+    ///         implicit: i32,
+    ///     },
+    ///     /// The alias parameters (for YAML_ALIAS_EVENT).
+    ///     alias: struct {
+    ///         /// The anchor.
+    ///         anchor: *mut u8,
+    ///     },
+    ///     /// The scalar parameters (for YAML_SCALAR_EVENT).
+    ///     scalar: struct {
+    ///         /// The anchor.
+    ///         anchor: *mut u8,
+    ///         /// The tag.
+    ///         tag: *mut u8,
+    ///         /// The scalar value.
+    ///         value: *mut u8,
+    ///         /// The length of the scalar value.
+    ///         length: u64,
+    ///         /// Is the tag optional for the plain style?
+    ///         plain_implicit: i32,
+    ///         /// Is the tag optional for any non-plain style?
+    ///         quoted_implicit: i32,
+    ///         /// The scalar style.
+    ///         style: yaml_scalar_style_t,
+    ///     },
+    ///     /// The sequence parameters (for YAML_SEQUENCE_START_EVENT).
+    ///     sequence_start: struct {
+    ///         /// The anchor.
+    ///         anchor: *mut u8,
+    ///         /// The tag.
+    ///         tag: *mut u8,
+    ///         /// Is the tag optional?
+    ///         implicit: i32,
+    ///         /// The sequence style.
+    ///         style: yaml_sequence_style_t,
+    ///     },
+    ///     /// The mapping parameters (for YAML_MAPPING_START_EVENT).
+    ///     mapping_start: struct {
+    ///         /// The anchor.
+    ///         anchor: *mut u8,
+    ///         /// The tag.
+    ///         tag: *mut u8,
+    ///         /// Is the tag optional?
+    ///         implicit: i32,
+    ///         /// The mapping style.
+    ///         style: yaml_mapping_style_t,
+    ///     },
+    /// }
+    /// # };
+    /// ```
     pub data: unnamed_yaml_event_t_data,
     /// The beginning of the event.
     pub start_mark: yaml_mark_t,
@@ -475,6 +602,36 @@ pub struct yaml_node_t {
     /// The node tag.
     pub tag: *mut yaml_char_t,
     /// The node data.
+    ///
+    /// ```
+    /// # const _: &str = stringify! {
+    /// union {
+    ///     /// The scalar parameters (for YAML_SCALAR_NODE).
+    ///     scalar: struct {
+    ///         /// The scalar value.
+    ///         value: *mut u8,
+    ///         /// The length of the scalar value.
+    ///         length: u64,
+    ///         /// The scalar style.
+    ///         style: yaml_scalar_style_t,
+    ///     },
+    ///     /// The sequence parameters (for YAML_SEQUENCE_NODE).
+    ///     sequence: struct {
+    ///         /// The stack of sequence items.
+    ///         items: yaml_stack_t<yaml_node_item_t>,
+    ///         /// The sequence style.
+    ///         style: yaml_sequence_style_t,
+    ///     },
+    ///     /// The mapping parameters (for YAML_MAPPING_NODE).
+    ///     mapping: struct {
+    ///         /// The stack of mapping pairs (key, value).
+    ///         pairs: yaml_stack_t<yaml_node_pair_t>,
+    ///         /// The mapping style.
+    ///         style: yaml_mapping_style_t,
+    ///     },
+    /// }
+    /// # };
+    /// ```
     pub data: unnamed_yaml_node_t_data,
     /// The beginning of the node.
     pub start_mark: yaml_mark_t,
@@ -549,6 +706,17 @@ pub struct yaml_document_t {
     /// The version directive.
     pub version_directive: *mut yaml_version_directive_t,
     /// The list of tag directives.
+    ///
+    /// ```
+    /// # const _: &str = stringify! {
+    /// struct {
+    ///     /// The beginning of the tag directives list.
+    ///     start: *mut yaml_tag_directive_t,
+    ///     /// The end of the tag directives list.
+    ///     end: *mut yaml_tag_directive_t,
+    /// }
+    /// # };
+    /// ```
     pub tag_directives: unnamed_yaml_document_t_tag_directives,
     /// Is the document start indicator implicit?
     pub start_implicit: libc::c_int,
