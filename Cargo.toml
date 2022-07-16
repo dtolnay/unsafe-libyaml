@@ -13,6 +13,8 @@ keywords = ["yaml"]
 categories = ["encoding"]
 
 [workspace]
+members = ["safe"]
+
 [dev-dependencies]
 pretty_assertions = "1.0"
 unsafe-libyaml-test-suite = { path = "tests/data" }
