@@ -824,7 +824,7 @@ unsafe fn yaml_string_write_handler(
 /// Set a string output.
 ///
 /// The emitter will write the output characters to the `output` buffer of the
-/// size `size. The emitter will set `size_written` to the number of written
+/// size `size`. The emitter will set `size_written` to the number of written
 /// bytes. If the buffer is smaller than required, the emitter produces the
 /// YAML_WRITE_ERROR error.
 pub unsafe fn yaml_emitter_set_output_string(
