@@ -1747,8 +1747,9 @@ unsafe fn yaml_emitter_analyze_scalar(
         flow_indicators = 1_i32;
     }
     preceded_by_whitespace = 1_i32;
-    followed_by_whitespace = (*string.pointer.wrapping_offset(
-        (if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
+    followed_by_whitespace = IS_BLANKZ_AT!(
+        string,
+        if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
             1_i32
         } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
             2_i32
@@ -1758,178 +1759,8 @@ unsafe fn yaml_emitter_analyze_scalar(
             4_i32
         } else {
             0_i32
-        }) as isize,
-    ) as libc::c_int
-        == ' ' as i32 as yaml_char_t as libc::c_int
-        || *string.pointer.wrapping_offset(
-            (if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                1_i32
-            } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                2_i32
-            } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                3_i32
-            } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                4_i32
-            } else {
-                0_i32
-            }) as isize,
-        ) as libc::c_int
-            == '\t' as i32 as yaml_char_t as libc::c_int
-        || (*string.pointer.wrapping_offset(
-            (if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                1_i32
-            } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                2_i32
-            } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                3_i32
-            } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                4_i32
-            } else {
-                0_i32
-            }) as isize,
-        ) as libc::c_int
-            == '\r' as i32 as yaml_char_t as libc::c_int
-            || *string.pointer.wrapping_offset(
-                (if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                    1_i32
-                } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                    2_i32
-                } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                    3_i32
-                } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                    4_i32
-                } else {
-                    0_i32
-                }) as isize,
-            ) as libc::c_int
-                == '\n' as i32 as yaml_char_t as libc::c_int
-            || *string.pointer.wrapping_offset(
-                (if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                    1_i32
-                } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                    2_i32
-                } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                    3_i32
-                } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                    4_i32
-                } else {
-                    0_i32
-                }) as isize,
-            ) as libc::c_int
-                == -62i32 as yaml_char_t as libc::c_int
-                && *string.pointer.wrapping_offset(
-                    ((if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                        1_i32
-                    } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                        2_i32
-                    } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                        3_i32
-                    } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                        4_i32
-                    } else {
-                        0_i32
-                    }) + 1_i32) as isize,
-                ) as libc::c_int
-                    == -123i32 as yaml_char_t as libc::c_int
-            || *string.pointer.wrapping_offset(
-                (if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                    1_i32
-                } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                    2_i32
-                } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                    3_i32
-                } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                    4_i32
-                } else {
-                    0_i32
-                }) as isize,
-            ) as libc::c_int
-                == -30i32 as yaml_char_t as libc::c_int
-                && *string.pointer.wrapping_offset(
-                    ((if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                        1_i32
-                    } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                        2_i32
-                    } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                        3_i32
-                    } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                        4_i32
-                    } else {
-                        0_i32
-                    }) + 1_i32) as isize,
-                ) as libc::c_int
-                    == -128i32 as yaml_char_t as libc::c_int
-                && *string.pointer.wrapping_offset(
-                    ((if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                        1_i32
-                    } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                        2_i32
-                    } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                        3_i32
-                    } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                        4_i32
-                    } else {
-                        0_i32
-                    }) + 2_i32) as isize,
-                ) as libc::c_int
-                    == -88i32 as yaml_char_t as libc::c_int
-            || *string.pointer.wrapping_offset(
-                (if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                    1_i32
-                } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                    2_i32
-                } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                    3_i32
-                } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                    4_i32
-                } else {
-                    0_i32
-                }) as isize,
-            ) as libc::c_int
-                == -30i32 as yaml_char_t as libc::c_int
-                && *string.pointer.wrapping_offset(
-                    ((if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                        1_i32
-                    } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                        2_i32
-                    } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                        3_i32
-                    } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                        4_i32
-                    } else {
-                        0_i32
-                    }) + 1_i32) as isize,
-                ) as libc::c_int
-                    == -128i32 as yaml_char_t as libc::c_int
-                && *string.pointer.wrapping_offset(
-                    ((if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                        1_i32
-                    } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                        2_i32
-                    } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                        3_i32
-                    } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                        4_i32
-                    } else {
-                        0_i32
-                    }) + 2_i32) as isize,
-                ) as libc::c_int
-                    == -87i32 as yaml_char_t as libc::c_int
-            || *string.pointer.wrapping_offset(
-                (if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                    1_i32
-                } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                    2_i32
-                } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                    3_i32
-                } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                    4_i32
-                } else {
-                    0_i32
-                }) as isize,
-            ) as libc::c_int
-                == '\0' as i32 as yaml_char_t as libc::c_int))
-        as libc::c_int;
+        }
+    ) as libc::c_int;
     while string.pointer != string.end {
         if string.start == string.pointer {
             if *string.pointer as libc::c_int == '#' as i32 as yaml_char_t as libc::c_int
@@ -2100,8 +1931,9 @@ unsafe fn yaml_emitter_analyze_scalar(
         preceded_by_whitespace = IS_BLANKZ!(string) as libc::c_int;
         MOVE!(string);
         if string.pointer != string.end {
-            followed_by_whitespace = (*string.pointer.wrapping_offset(
-                (if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
+            followed_by_whitespace = IS_BLANKZ_AT!(
+                string,
+                if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
                     1_i32
                 } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
                     2_i32
@@ -2111,178 +1943,8 @@ unsafe fn yaml_emitter_analyze_scalar(
                     4_i32
                 } else {
                     0_i32
-                }) as isize,
-            ) as libc::c_int
-                == ' ' as i32 as yaml_char_t as libc::c_int
-                || *string.pointer.wrapping_offset(
-                    (if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                        1_i32
-                    } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                        2_i32
-                    } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                        3_i32
-                    } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                        4_i32
-                    } else {
-                        0_i32
-                    }) as isize,
-                ) as libc::c_int
-                    == '\t' as i32 as yaml_char_t as libc::c_int
-                || (*string.pointer.wrapping_offset(
-                    (if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                        1_i32
-                    } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                        2_i32
-                    } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                        3_i32
-                    } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                        4_i32
-                    } else {
-                        0_i32
-                    }) as isize,
-                ) as libc::c_int
-                    == '\r' as i32 as yaml_char_t as libc::c_int
-                    || *string.pointer.wrapping_offset(
-                        (if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                            1_i32
-                        } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                            2_i32
-                        } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                            3_i32
-                        } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                            4_i32
-                        } else {
-                            0_i32
-                        }) as isize,
-                    ) as libc::c_int
-                        == '\n' as i32 as yaml_char_t as libc::c_int
-                    || *string.pointer.wrapping_offset(
-                        (if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                            1_i32
-                        } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                            2_i32
-                        } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                            3_i32
-                        } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                            4_i32
-                        } else {
-                            0_i32
-                        }) as isize,
-                    ) as libc::c_int
-                        == -62i32 as yaml_char_t as libc::c_int
-                        && *string.pointer.wrapping_offset(
-                            ((if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                                1_i32
-                            } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                                2_i32
-                            } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                                3_i32
-                            } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                                4_i32
-                            } else {
-                                0_i32
-                            }) + 1_i32) as isize,
-                        ) as libc::c_int
-                            == -123i32 as yaml_char_t as libc::c_int
-                    || *string.pointer.wrapping_offset(
-                        (if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                            1_i32
-                        } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                            2_i32
-                        } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                            3_i32
-                        } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                            4_i32
-                        } else {
-                            0_i32
-                        }) as isize,
-                    ) as libc::c_int
-                        == -30i32 as yaml_char_t as libc::c_int
-                        && *string.pointer.wrapping_offset(
-                            ((if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                                1_i32
-                            } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                                2_i32
-                            } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                                3_i32
-                            } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                                4_i32
-                            } else {
-                                0_i32
-                            }) + 1_i32) as isize,
-                        ) as libc::c_int
-                            == -128i32 as yaml_char_t as libc::c_int
-                        && *string.pointer.wrapping_offset(
-                            ((if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                                1_i32
-                            } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                                2_i32
-                            } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                                3_i32
-                            } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                                4_i32
-                            } else {
-                                0_i32
-                            }) + 2_i32) as isize,
-                        ) as libc::c_int
-                            == -88i32 as yaml_char_t as libc::c_int
-                    || *string.pointer.wrapping_offset(
-                        (if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                            1_i32
-                        } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                            2_i32
-                        } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                            3_i32
-                        } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                            4_i32
-                        } else {
-                            0_i32
-                        }) as isize,
-                    ) as libc::c_int
-                        == -30i32 as yaml_char_t as libc::c_int
-                        && *string.pointer.wrapping_offset(
-                            ((if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                                1_i32
-                            } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                                2_i32
-                            } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                                3_i32
-                            } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                                4_i32
-                            } else {
-                                0_i32
-                            }) + 1_i32) as isize,
-                        ) as libc::c_int
-                            == -128i32 as yaml_char_t as libc::c_int
-                        && *string.pointer.wrapping_offset(
-                            ((if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                                1_i32
-                            } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                                2_i32
-                            } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                                3_i32
-                            } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                                4_i32
-                            } else {
-                                0_i32
-                            }) + 2_i32) as isize,
-                        ) as libc::c_int
-                            == -87i32 as yaml_char_t as libc::c_int
-                    || *string.pointer.wrapping_offset(
-                        (if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                            1_i32
-                        } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                            2_i32
-                        } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                            3_i32
-                        } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                            4_i32
-                        } else {
-                            0_i32
-                        }) as isize,
-                    ) as libc::c_int
-                        == '\0' as i32 as yaml_char_t as libc::c_int))
-                as libc::c_int;
+                }
+            ) as libc::c_int;
         }
     }
     (*emitter).scalar_data.multiline = line_breaks;
@@ -3335,38 +2997,7 @@ unsafe fn yaml_emitter_write_folded_scalar(
                         0_i32
                     };
                 }
-                if !(*string.pointer.wrapping_offset(k as isize) as libc::c_int
-                    == ' ' as i32 as yaml_char_t as libc::c_int
-                    || *string.pointer.wrapping_offset(k as isize) as libc::c_int
-                        == '\t' as i32 as yaml_char_t as libc::c_int
-                    || (*string.pointer.wrapping_offset(k as isize) as libc::c_int
-                        == '\r' as i32 as yaml_char_t as libc::c_int
-                        || *string.pointer.wrapping_offset(k as isize) as libc::c_int
-                            == '\n' as i32 as yaml_char_t as libc::c_int
-                        || *string.pointer.wrapping_offset(k as isize) as libc::c_int
-                            == -62i32 as yaml_char_t as libc::c_int
-                            && *string.pointer.wrapping_offset((k + 1_i32) as isize)
-                                as libc::c_int
-                                == -123i32 as yaml_char_t as libc::c_int
-                        || *string.pointer.wrapping_offset(k as isize) as libc::c_int
-                            == -30i32 as yaml_char_t as libc::c_int
-                            && *string.pointer.wrapping_offset((k + 1_i32) as isize)
-                                as libc::c_int
-                                == -128i32 as yaml_char_t as libc::c_int
-                            && *string.pointer.wrapping_offset((k + 2_i32) as isize)
-                                as libc::c_int
-                                == -88i32 as yaml_char_t as libc::c_int
-                        || *string.pointer.wrapping_offset(k as isize) as libc::c_int
-                            == -30i32 as yaml_char_t as libc::c_int
-                            && *string.pointer.wrapping_offset((k + 1_i32) as isize)
-                                as libc::c_int
-                                == -128i32 as yaml_char_t as libc::c_int
-                            && *string.pointer.wrapping_offset((k + 2_i32) as isize)
-                                as libc::c_int
-                                == -87i32 as yaml_char_t as libc::c_int
-                        || *string.pointer.wrapping_offset(k as isize) as libc::c_int
-                            == '\0' as i32 as yaml_char_t as libc::c_int))
-                {
+                if !IS_BLANKZ_AT!(string, k) {
                     if !(PUT_BREAK!(emitter)) {
                         return 0_i32;
                     }
