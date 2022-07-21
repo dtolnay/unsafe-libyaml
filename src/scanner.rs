@@ -128,71 +128,7 @@ macro_rules! READ {
             0_i32
         } != 0
         {
-            if *(*$parser).buffer.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                let fresh130 = addr_of_mut!((*$parser).buffer.pointer);
-                let fresh131 = *fresh130;
-                *fresh130 = (*fresh130).wrapping_offset(1);
-                let fresh132 = $string.pointer;
-                $string.pointer = $string.pointer.wrapping_offset(1);
-                *fresh132 = *fresh131;
-            } else if *(*$parser).buffer.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                let fresh133 = addr_of_mut!((*$parser).buffer.pointer);
-                let fresh134 = *fresh133;
-                *fresh133 = (*fresh133).wrapping_offset(1);
-                let fresh135 = $string.pointer;
-                $string.pointer = $string.pointer.wrapping_offset(1);
-                *fresh135 = *fresh134;
-                let fresh136 = addr_of_mut!((*$parser).buffer.pointer);
-                let fresh137 = *fresh136;
-                *fresh136 = (*fresh136).wrapping_offset(1);
-                let fresh138 = $string.pointer;
-                $string.pointer = $string.pointer.wrapping_offset(1);
-                *fresh138 = *fresh137;
-            } else if *(*$parser).buffer.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                let fresh139 = addr_of_mut!((*$parser).buffer.pointer);
-                let fresh140 = *fresh139;
-                *fresh139 = (*fresh139).wrapping_offset(1);
-                let fresh141 = $string.pointer;
-                $string.pointer = $string.pointer.wrapping_offset(1);
-                *fresh141 = *fresh140;
-                let fresh142 = addr_of_mut!((*$parser).buffer.pointer);
-                let fresh143 = *fresh142;
-                *fresh142 = (*fresh142).wrapping_offset(1);
-                let fresh144 = $string.pointer;
-                $string.pointer = $string.pointer.wrapping_offset(1);
-                *fresh144 = *fresh143;
-                let fresh145 = addr_of_mut!((*$parser).buffer.pointer);
-                let fresh146 = *fresh145;
-                *fresh145 = (*fresh145).wrapping_offset(1);
-                let fresh147 = $string.pointer;
-                $string.pointer = $string.pointer.wrapping_offset(1);
-                *fresh147 = *fresh146;
-            } else if *(*$parser).buffer.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                let fresh148 = addr_of_mut!((*$parser).buffer.pointer);
-                let fresh149 = *fresh148;
-                *fresh148 = (*fresh148).wrapping_offset(1);
-                let fresh150 = $string.pointer;
-                $string.pointer = $string.pointer.wrapping_offset(1);
-                *fresh150 = *fresh149;
-                let fresh151 = addr_of_mut!((*$parser).buffer.pointer);
-                let fresh152 = *fresh151;
-                *fresh151 = (*fresh151).wrapping_offset(1);
-                let fresh153 = $string.pointer;
-                $string.pointer = $string.pointer.wrapping_offset(1);
-                *fresh153 = *fresh152;
-                let fresh154 = addr_of_mut!((*$parser).buffer.pointer);
-                let fresh155 = *fresh154;
-                *fresh154 = (*fresh154).wrapping_offset(1);
-                let fresh156 = $string.pointer;
-                $string.pointer = $string.pointer.wrapping_offset(1);
-                *fresh156 = *fresh155;
-                let fresh157 = addr_of_mut!((*$parser).buffer.pointer);
-                let fresh158 = *fresh157;
-                *fresh157 = (*fresh157).wrapping_offset(1);
-                let fresh159 = $string.pointer;
-                $string.pointer = $string.pointer.wrapping_offset(1);
-                *fresh159 = *fresh158;
-            };
+            COPY!($string, (*$parser).buffer);
             let fresh160 = addr_of_mut!((*$parser).mark.index);
             *fresh160 = (*fresh160).wrapping_add(1);
             let fresh161 = addr_of_mut!((*$parser).mark.column);

@@ -82,71 +82,7 @@ macro_rules! PUT_BREAK {
 macro_rules! WRITE {
     ($emitter:expr, $string:expr) => {
         FLUSH!($emitter) && {
-            if *$string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                let fresh77 = $string.pointer;
-                $string.pointer = $string.pointer.wrapping_offset(1);
-                let fresh78 = addr_of_mut!((*$emitter).buffer.pointer);
-                let fresh79 = *fresh78;
-                *fresh78 = (*fresh78).wrapping_offset(1);
-                *fresh79 = *fresh77;
-            } else if *$string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                let fresh80 = $string.pointer;
-                $string.pointer = $string.pointer.wrapping_offset(1);
-                let fresh81 = addr_of_mut!((*$emitter).buffer.pointer);
-                let fresh82 = *fresh81;
-                *fresh81 = (*fresh81).wrapping_offset(1);
-                *fresh82 = *fresh80;
-                let fresh83 = $string.pointer;
-                $string.pointer = $string.pointer.wrapping_offset(1);
-                let fresh84 = addr_of_mut!((*$emitter).buffer.pointer);
-                let fresh85 = *fresh84;
-                *fresh84 = (*fresh84).wrapping_offset(1);
-                *fresh85 = *fresh83;
-            } else if *$string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                let fresh86 = $string.pointer;
-                $string.pointer = $string.pointer.wrapping_offset(1);
-                let fresh87 = addr_of_mut!((*$emitter).buffer.pointer);
-                let fresh88 = *fresh87;
-                *fresh87 = (*fresh87).wrapping_offset(1);
-                *fresh88 = *fresh86;
-                let fresh89 = $string.pointer;
-                $string.pointer = $string.pointer.wrapping_offset(1);
-                let fresh90 = addr_of_mut!((*$emitter).buffer.pointer);
-                let fresh91 = *fresh90;
-                *fresh90 = (*fresh90).wrapping_offset(1);
-                *fresh91 = *fresh89;
-                let fresh92 = $string.pointer;
-                $string.pointer = $string.pointer.wrapping_offset(1);
-                let fresh93 = addr_of_mut!((*$emitter).buffer.pointer);
-                let fresh94 = *fresh93;
-                *fresh93 = (*fresh93).wrapping_offset(1);
-                *fresh94 = *fresh92;
-            } else if *$string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                let fresh95 = $string.pointer;
-                $string.pointer = $string.pointer.wrapping_offset(1);
-                let fresh96 = addr_of_mut!((*$emitter).buffer.pointer);
-                let fresh97 = *fresh96;
-                *fresh96 = (*fresh96).wrapping_offset(1);
-                *fresh97 = *fresh95;
-                let fresh98 = $string.pointer;
-                $string.pointer = $string.pointer.wrapping_offset(1);
-                let fresh99 = addr_of_mut!((*$emitter).buffer.pointer);
-                let fresh100 = *fresh99;
-                *fresh99 = (*fresh99).wrapping_offset(1);
-                *fresh100 = *fresh98;
-                let fresh101 = $string.pointer;
-                $string.pointer = $string.pointer.wrapping_offset(1);
-                let fresh102 = addr_of_mut!((*$emitter).buffer.pointer);
-                let fresh103 = *fresh102;
-                *fresh102 = (*fresh102).wrapping_offset(1);
-                *fresh103 = *fresh101;
-                let fresh104 = $string.pointer;
-                $string.pointer = $string.pointer.wrapping_offset(1);
-                let fresh105 = addr_of_mut!((*$emitter).buffer.pointer);
-                let fresh106 = *fresh105;
-                *fresh105 = (*fresh105).wrapping_offset(1);
-                *fresh106 = *fresh104;
-            };
+            COPY!((*$emitter).buffer, $string);
             let fresh107 = addr_of_mut!((*$emitter).column);
             *fresh107 += 1;
             true
@@ -162,71 +98,7 @@ macro_rules! WRITE_BREAK {
                 $string.pointer = $string.pointer.wrapping_offset(1);
                 1_i32
             } else {
-                if *$string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                    let fresh270 = $string.pointer;
-                    $string.pointer = $string.pointer.wrapping_offset(1);
-                    let fresh271 = addr_of_mut!((*$emitter).buffer.pointer);
-                    let fresh272 = *fresh271;
-                    *fresh271 = (*fresh271).wrapping_offset(1);
-                    *fresh272 = *fresh270;
-                } else if *$string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                    let fresh273 = $string.pointer;
-                    $string.pointer = $string.pointer.wrapping_offset(1);
-                    let fresh274 = addr_of_mut!((*$emitter).buffer.pointer);
-                    let fresh275 = *fresh274;
-                    *fresh274 = (*fresh274).wrapping_offset(1);
-                    *fresh275 = *fresh273;
-                    let fresh276 = $string.pointer;
-                    $string.pointer = $string.pointer.wrapping_offset(1);
-                    let fresh277 = addr_of_mut!((*$emitter).buffer.pointer);
-                    let fresh278 = *fresh277;
-                    *fresh277 = (*fresh277).wrapping_offset(1);
-                    *fresh278 = *fresh276;
-                } else if *$string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                    let fresh279 = $string.pointer;
-                    $string.pointer = $string.pointer.wrapping_offset(1);
-                    let fresh280 = addr_of_mut!((*$emitter).buffer.pointer);
-                    let fresh281 = *fresh280;
-                    *fresh280 = (*fresh280).wrapping_offset(1);
-                    *fresh281 = *fresh279;
-                    let fresh282 = $string.pointer;
-                    $string.pointer = $string.pointer.wrapping_offset(1);
-                    let fresh283 = addr_of_mut!((*$emitter).buffer.pointer);
-                    let fresh284 = *fresh283;
-                    *fresh283 = (*fresh283).wrapping_offset(1);
-                    *fresh284 = *fresh282;
-                    let fresh285 = $string.pointer;
-                    $string.pointer = $string.pointer.wrapping_offset(1);
-                    let fresh286 = addr_of_mut!((*$emitter).buffer.pointer);
-                    let fresh287 = *fresh286;
-                    *fresh286 = (*fresh286).wrapping_offset(1);
-                    *fresh287 = *fresh285;
-                } else if *$string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                    let fresh288 = $string.pointer;
-                    $string.pointer = $string.pointer.wrapping_offset(1);
-                    let fresh289 = addr_of_mut!((*$emitter).buffer.pointer);
-                    let fresh290 = *fresh289;
-                    *fresh289 = (*fresh289).wrapping_offset(1);
-                    *fresh290 = *fresh288;
-                    let fresh291 = $string.pointer;
-                    $string.pointer = $string.pointer.wrapping_offset(1);
-                    let fresh292 = addr_of_mut!((*$emitter).buffer.pointer);
-                    let fresh293 = *fresh292;
-                    *fresh292 = (*fresh292).wrapping_offset(1);
-                    *fresh293 = *fresh291;
-                    let fresh294 = $string.pointer;
-                    $string.pointer = $string.pointer.wrapping_offset(1);
-                    let fresh295 = addr_of_mut!((*$emitter).buffer.pointer);
-                    let fresh296 = *fresh295;
-                    *fresh295 = (*fresh295).wrapping_offset(1);
-                    *fresh296 = *fresh294;
-                    let fresh297 = $string.pointer;
-                    $string.pointer = $string.pointer.wrapping_offset(1);
-                    let fresh298 = addr_of_mut!((*$emitter).buffer.pointer);
-                    let fresh299 = *fresh298;
-                    *fresh298 = (*fresh298).wrapping_offset(1);
-                    *fresh299 = *fresh297;
-                };
+                COPY!((*$emitter).buffer, $string);
                 (*$emitter).column = 0_i32;
                 let fresh300 = addr_of_mut!((*$emitter).line);
                 *fresh300 += 1;
