@@ -3013,10 +3013,7 @@ unsafe fn yaml_emitter_write_folded_scalar(
                 if yaml_emitter_write_indent(emitter) == 0 {
                     return 0_i32;
                 }
-                leading_spaces = (*string.pointer as libc::c_int
-                    == ' ' as i32 as yaml_char_t as libc::c_int
-                    || *string.pointer as libc::c_int == '\t' as i32 as yaml_char_t as libc::c_int)
-                    as libc::c_int;
+                leading_spaces = IS_BLANK!(string) as libc::c_int;
             }
             if breaks == 0
                 && *string.pointer as libc::c_int == ' ' as i32 as yaml_char_t as libc::c_int
