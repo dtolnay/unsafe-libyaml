@@ -21,6 +21,45 @@ use crate::{
 };
 use core::ptr::{self, addr_of_mut};
 
+macro_rules! PUT_BREAK {
+    ($emitter:expr) => {
+        (((*$emitter).buffer.pointer).wrapping_offset(5_isize) < (*$emitter).buffer.end
+            || yaml_emitter_flush($emitter) != 0)
+            && {
+                if (*$emitter).line_break as libc::c_uint
+                    == YAML_CR_BREAK as libc::c_int as libc::c_uint
+                {
+                    let fresh62 = addr_of_mut!((*$emitter).buffer.pointer);
+                    let fresh63 = *fresh62;
+                    *fresh62 = (*fresh62).wrapping_offset(1);
+                    *fresh63 = '\r' as i32 as yaml_char_t;
+                } else if (*$emitter).line_break as libc::c_uint
+                    == YAML_LN_BREAK as libc::c_int as libc::c_uint
+                {
+                    let fresh64 = addr_of_mut!((*$emitter).buffer.pointer);
+                    let fresh65 = *fresh64;
+                    *fresh64 = (*fresh64).wrapping_offset(1);
+                    *fresh65 = '\n' as i32 as yaml_char_t;
+                } else if (*$emitter).line_break as libc::c_uint
+                    == YAML_CRLN_BREAK as libc::c_int as libc::c_uint
+                {
+                    let fresh66 = addr_of_mut!((*$emitter).buffer.pointer);
+                    let fresh67 = *fresh66;
+                    *fresh66 = (*fresh66).wrapping_offset(1);
+                    *fresh67 = '\r' as i32 as yaml_char_t;
+                    let fresh68 = addr_of_mut!((*$emitter).buffer.pointer);
+                    let fresh69 = *fresh68;
+                    *fresh68 = (*fresh68).wrapping_offset(1);
+                    *fresh69 = '\n' as i32 as yaml_char_t;
+                };
+                (*$emitter).column = 0_i32;
+                let fresh70 = addr_of_mut!((*$emitter).line);
+                *fresh70 += 1;
+                true
+            }
+    };
+}
+
 unsafe fn yaml_emitter_set_emitter_error(
     mut emitter: *mut yaml_emitter_t,
     problem: *const libc::c_char,
@@ -2382,41 +2421,7 @@ unsafe fn yaml_emitter_write_indent(mut emitter: *mut yaml_emitter_t) -> libc::c
         || (*emitter).column > indent
         || (*emitter).column == indent && (*emitter).whitespace == 0
     {
-        if !((((*emitter).buffer.pointer).wrapping_offset(5_isize) < (*emitter).buffer.end
-            || yaml_emitter_flush(emitter) != 0)
-            && {
-                if (*emitter).line_break as libc::c_uint
-                    == YAML_CR_BREAK as libc::c_int as libc::c_uint
-                {
-                    let fresh62 = addr_of_mut!((*emitter).buffer.pointer);
-                    let fresh63 = *fresh62;
-                    *fresh62 = (*fresh62).wrapping_offset(1);
-                    *fresh63 = '\r' as i32 as yaml_char_t;
-                } else if (*emitter).line_break as libc::c_uint
-                    == YAML_LN_BREAK as libc::c_int as libc::c_uint
-                {
-                    let fresh64 = addr_of_mut!((*emitter).buffer.pointer);
-                    let fresh65 = *fresh64;
-                    *fresh64 = (*fresh64).wrapping_offset(1);
-                    *fresh65 = '\n' as i32 as yaml_char_t;
-                } else if (*emitter).line_break as libc::c_uint
-                    == YAML_CRLN_BREAK as libc::c_int as libc::c_uint
-                {
-                    let fresh66 = addr_of_mut!((*emitter).buffer.pointer);
-                    let fresh67 = *fresh66;
-                    *fresh66 = (*fresh66).wrapping_offset(1);
-                    *fresh67 = '\r' as i32 as yaml_char_t;
-                    let fresh68 = addr_of_mut!((*emitter).buffer.pointer);
-                    let fresh69 = *fresh68;
-                    *fresh68 = (*fresh68).wrapping_offset(1);
-                    *fresh69 = '\n' as i32 as yaml_char_t;
-                };
-                (*emitter).column = 0_i32;
-                let fresh70 = addr_of_mut!((*emitter).line);
-                *fresh70 += 1;
-                true
-            })
-        {
+        if !(PUT_BREAK!(emitter)) {
             return 0_i32;
         }
     }
@@ -3104,83 +3109,14 @@ unsafe fn yaml_emitter_write_plain_scalar(
             if breaks == 0
                 && *string.pointer as libc::c_int == '\n' as i32 as yaml_char_t as libc::c_int
             {
-                if !((((*emitter).buffer.pointer).wrapping_offset(5_isize) < (*emitter).buffer.end
-                    || yaml_emitter_flush(emitter) != 0)
-                    && {
-                        if (*emitter).line_break as libc::c_uint
-                            == YAML_CR_BREAK as libc::c_int as libc::c_uint
-                        {
-                            let fresh252 = addr_of_mut!((*emitter).buffer.pointer);
-                            let fresh253 = *fresh252;
-                            *fresh252 = (*fresh252).wrapping_offset(1);
-                            *fresh253 = '\r' as i32 as yaml_char_t;
-                        } else if (*emitter).line_break as libc::c_uint
-                            == YAML_LN_BREAK as libc::c_int as libc::c_uint
-                        {
-                            let fresh254 = addr_of_mut!((*emitter).buffer.pointer);
-                            let fresh255 = *fresh254;
-                            *fresh254 = (*fresh254).wrapping_offset(1);
-                            *fresh255 = '\n' as i32 as yaml_char_t;
-                        } else if (*emitter).line_break as libc::c_uint
-                            == YAML_CRLN_BREAK as libc::c_int as libc::c_uint
-                        {
-                            let fresh256 = addr_of_mut!((*emitter).buffer.pointer);
-                            let fresh257 = *fresh256;
-                            *fresh256 = (*fresh256).wrapping_offset(1);
-                            *fresh257 = '\r' as i32 as yaml_char_t;
-                            let fresh258 = addr_of_mut!((*emitter).buffer.pointer);
-                            let fresh259 = *fresh258;
-                            *fresh258 = (*fresh258).wrapping_offset(1);
-                            *fresh259 = '\n' as i32 as yaml_char_t;
-                        };
-                        (*emitter).column = 0_i32;
-                        let fresh260 = addr_of_mut!((*emitter).line);
-                        *fresh260 += 1;
-                        true
-                    })
-                {
+                if !(PUT_BREAK!(emitter)) {
                     return 0_i32;
                 }
             }
             if !((((*emitter).buffer.pointer).wrapping_offset(5_isize) < (*emitter).buffer.end
                 || yaml_emitter_flush(emitter) != 0)
                 && (if *string.pointer as libc::c_int == '\n' as i32 as yaml_char_t as libc::c_int {
-                    if ((*emitter).buffer.pointer).wrapping_offset(5_isize) < (*emitter).buffer.end
-                        || yaml_emitter_flush(emitter) != 0
-                    {
-                        {
-                            if (*emitter).line_break as libc::c_uint
-                                == YAML_CR_BREAK as libc::c_int as libc::c_uint
-                            {
-                                let fresh261 = addr_of_mut!((*emitter).buffer.pointer);
-                                let fresh262 = *fresh261;
-                                *fresh261 = (*fresh261).wrapping_offset(1);
-                                *fresh262 = '\r' as i32 as yaml_char_t;
-                            } else if (*emitter).line_break as libc::c_uint
-                                == YAML_LN_BREAK as libc::c_int as libc::c_uint
-                            {
-                                let fresh263 = addr_of_mut!((*emitter).buffer.pointer);
-                                let fresh264 = *fresh263;
-                                *fresh263 = (*fresh263).wrapping_offset(1);
-                                *fresh264 = '\n' as i32 as yaml_char_t;
-                            } else if (*emitter).line_break as libc::c_uint
-                                == YAML_CRLN_BREAK as libc::c_int as libc::c_uint
-                            {
-                                let fresh265 = addr_of_mut!((*emitter).buffer.pointer);
-                                let fresh266 = *fresh265;
-                                *fresh265 = (*fresh265).wrapping_offset(1);
-                                *fresh266 = '\r' as i32 as yaml_char_t;
-                                let fresh267 = addr_of_mut!((*emitter).buffer.pointer);
-                                let fresh268 = *fresh267;
-                                *fresh267 = (*fresh267).wrapping_offset(1);
-                                *fresh268 = '\n' as i32 as yaml_char_t;
-                            };
-                            (*emitter).column = 0_i32;
-                            let fresh269 = addr_of_mut!((*emitter).line);
-                            *fresh269 += 1;
-                            true
-                        };
-                    }
+                    let _ = PUT_BREAK!(emitter);
                     string.pointer = string.pointer.wrapping_offset(1);
                     1_i32
                 } else {
@@ -3483,83 +3419,14 @@ unsafe fn yaml_emitter_write_single_quoted_scalar(
             if breaks == 0
                 && *string.pointer as libc::c_int == '\n' as i32 as yaml_char_t as libc::c_int
             {
-                if !((((*emitter).buffer.pointer).wrapping_offset(5_isize) < (*emitter).buffer.end
-                    || yaml_emitter_flush(emitter) != 0)
-                    && {
-                        if (*emitter).line_break as libc::c_uint
-                            == YAML_CR_BREAK as libc::c_int as libc::c_uint
-                        {
-                            let fresh363 = addr_of_mut!((*emitter).buffer.pointer);
-                            let fresh364 = *fresh363;
-                            *fresh363 = (*fresh363).wrapping_offset(1);
-                            *fresh364 = '\r' as i32 as yaml_char_t;
-                        } else if (*emitter).line_break as libc::c_uint
-                            == YAML_LN_BREAK as libc::c_int as libc::c_uint
-                        {
-                            let fresh365 = addr_of_mut!((*emitter).buffer.pointer);
-                            let fresh366 = *fresh365;
-                            *fresh365 = (*fresh365).wrapping_offset(1);
-                            *fresh366 = '\n' as i32 as yaml_char_t;
-                        } else if (*emitter).line_break as libc::c_uint
-                            == YAML_CRLN_BREAK as libc::c_int as libc::c_uint
-                        {
-                            let fresh367 = addr_of_mut!((*emitter).buffer.pointer);
-                            let fresh368 = *fresh367;
-                            *fresh367 = (*fresh367).wrapping_offset(1);
-                            *fresh368 = '\r' as i32 as yaml_char_t;
-                            let fresh369 = addr_of_mut!((*emitter).buffer.pointer);
-                            let fresh370 = *fresh369;
-                            *fresh369 = (*fresh369).wrapping_offset(1);
-                            *fresh370 = '\n' as i32 as yaml_char_t;
-                        };
-                        (*emitter).column = 0_i32;
-                        let fresh371 = addr_of_mut!((*emitter).line);
-                        *fresh371 += 1;
-                        true
-                    })
-                {
+                if !(PUT_BREAK!(emitter)) {
                     return 0_i32;
                 }
             }
             if !((((*emitter).buffer.pointer).wrapping_offset(5_isize) < (*emitter).buffer.end
                 || yaml_emitter_flush(emitter) != 0)
                 && (if *string.pointer as libc::c_int == '\n' as i32 as yaml_char_t as libc::c_int {
-                    if ((*emitter).buffer.pointer).wrapping_offset(5_isize) < (*emitter).buffer.end
-                        || yaml_emitter_flush(emitter) != 0
-                    {
-                        {
-                            if (*emitter).line_break as libc::c_uint
-                                == YAML_CR_BREAK as libc::c_int as libc::c_uint
-                            {
-                                let fresh372 = addr_of_mut!((*emitter).buffer.pointer);
-                                let fresh373 = *fresh372;
-                                *fresh372 = (*fresh372).wrapping_offset(1);
-                                *fresh373 = '\r' as i32 as yaml_char_t;
-                            } else if (*emitter).line_break as libc::c_uint
-                                == YAML_LN_BREAK as libc::c_int as libc::c_uint
-                            {
-                                let fresh374 = addr_of_mut!((*emitter).buffer.pointer);
-                                let fresh375 = *fresh374;
-                                *fresh374 = (*fresh374).wrapping_offset(1);
-                                *fresh375 = '\n' as i32 as yaml_char_t;
-                            } else if (*emitter).line_break as libc::c_uint
-                                == YAML_CRLN_BREAK as libc::c_int as libc::c_uint
-                            {
-                                let fresh376 = addr_of_mut!((*emitter).buffer.pointer);
-                                let fresh377 = *fresh376;
-                                *fresh376 = (*fresh376).wrapping_offset(1);
-                                *fresh377 = '\r' as i32 as yaml_char_t;
-                                let fresh378 = addr_of_mut!((*emitter).buffer.pointer);
-                                let fresh379 = *fresh378;
-                                *fresh378 = (*fresh378).wrapping_offset(1);
-                                *fresh379 = '\n' as i32 as yaml_char_t;
-                            };
-                            (*emitter).column = 0_i32;
-                            let fresh380 = addr_of_mut!((*emitter).line);
-                            *fresh380 += 1;
-                            true
-                        };
-                    }
+                    let _ = PUT_BREAK!(emitter);
                     string.pointer = string.pointer.wrapping_offset(1);
                     1_i32
                 } else {
@@ -4535,40 +4402,7 @@ unsafe fn yaml_emitter_write_literal_scalar(
     if yaml_emitter_write_block_scalar_hints(emitter, string) == 0 {
         return 0_i32;
     }
-    if !((((*emitter).buffer.pointer).wrapping_offset(5_isize) < (*emitter).buffer.end
-        || yaml_emitter_flush(emitter) != 0)
-        && {
-            if (*emitter).line_break as libc::c_uint == YAML_CR_BREAK as libc::c_int as libc::c_uint
-            {
-                let fresh571 = addr_of_mut!((*emitter).buffer.pointer);
-                let fresh572 = *fresh571;
-                *fresh571 = (*fresh571).wrapping_offset(1);
-                *fresh572 = '\r' as i32 as yaml_char_t;
-            } else if (*emitter).line_break as libc::c_uint
-                == YAML_LN_BREAK as libc::c_int as libc::c_uint
-            {
-                let fresh573 = addr_of_mut!((*emitter).buffer.pointer);
-                let fresh574 = *fresh573;
-                *fresh573 = (*fresh573).wrapping_offset(1);
-                *fresh574 = '\n' as i32 as yaml_char_t;
-            } else if (*emitter).line_break as libc::c_uint
-                == YAML_CRLN_BREAK as libc::c_int as libc::c_uint
-            {
-                let fresh575 = addr_of_mut!((*emitter).buffer.pointer);
-                let fresh576 = *fresh575;
-                *fresh575 = (*fresh575).wrapping_offset(1);
-                *fresh576 = '\r' as i32 as yaml_char_t;
-                let fresh577 = addr_of_mut!((*emitter).buffer.pointer);
-                let fresh578 = *fresh577;
-                *fresh577 = (*fresh577).wrapping_offset(1);
-                *fresh578 = '\n' as i32 as yaml_char_t;
-            };
-            (*emitter).column = 0_i32;
-            let fresh579 = addr_of_mut!((*emitter).line);
-            *fresh579 += 1;
-            true
-        })
-    {
+    if !(PUT_BREAK!(emitter)) {
         return 0_i32;
     }
     (*emitter).indention = 1_i32;
@@ -4593,42 +4427,7 @@ unsafe fn yaml_emitter_write_literal_scalar(
             if !((((*emitter).buffer.pointer).wrapping_offset(5_isize) < (*emitter).buffer.end
                 || yaml_emitter_flush(emitter) != 0)
                 && (if *string.pointer as libc::c_int == '\n' as i32 as yaml_char_t as libc::c_int {
-                    if ((*emitter).buffer.pointer).wrapping_offset(5_isize) < (*emitter).buffer.end
-                        || yaml_emitter_flush(emitter) != 0
-                    {
-                        {
-                            if (*emitter).line_break as libc::c_uint
-                                == YAML_CR_BREAK as libc::c_int as libc::c_uint
-                            {
-                                let fresh580 = addr_of_mut!((*emitter).buffer.pointer);
-                                let fresh581 = *fresh580;
-                                *fresh580 = (*fresh580).wrapping_offset(1);
-                                *fresh581 = '\r' as i32 as yaml_char_t;
-                            } else if (*emitter).line_break as libc::c_uint
-                                == YAML_LN_BREAK as libc::c_int as libc::c_uint
-                            {
-                                let fresh582 = addr_of_mut!((*emitter).buffer.pointer);
-                                let fresh583 = *fresh582;
-                                *fresh582 = (*fresh582).wrapping_offset(1);
-                                *fresh583 = '\n' as i32 as yaml_char_t;
-                            } else if (*emitter).line_break as libc::c_uint
-                                == YAML_CRLN_BREAK as libc::c_int as libc::c_uint
-                            {
-                                let fresh584 = addr_of_mut!((*emitter).buffer.pointer);
-                                let fresh585 = *fresh584;
-                                *fresh584 = (*fresh584).wrapping_offset(1);
-                                *fresh585 = '\r' as i32 as yaml_char_t;
-                                let fresh586 = addr_of_mut!((*emitter).buffer.pointer);
-                                let fresh587 = *fresh586;
-                                *fresh586 = (*fresh586).wrapping_offset(1);
-                                *fresh587 = '\n' as i32 as yaml_char_t;
-                            };
-                            (*emitter).column = 0_i32;
-                            let fresh588 = addr_of_mut!((*emitter).line);
-                            *fresh588 += 1;
-                            true
-                        };
-                    }
+                    let _ = PUT_BREAK!(emitter);
                     string.pointer = string.pointer.wrapping_offset(1);
                     1_i32
                 } else {
@@ -4820,40 +4619,7 @@ unsafe fn yaml_emitter_write_folded_scalar(
     if yaml_emitter_write_block_scalar_hints(emitter, string) == 0 {
         return 0_i32;
     }
-    if !((((*emitter).buffer.pointer).wrapping_offset(5_isize) < (*emitter).buffer.end
-        || yaml_emitter_flush(emitter) != 0)
-        && {
-            if (*emitter).line_break as libc::c_uint == YAML_CR_BREAK as libc::c_int as libc::c_uint
-            {
-                let fresh651 = addr_of_mut!((*emitter).buffer.pointer);
-                let fresh652 = *fresh651;
-                *fresh651 = (*fresh651).wrapping_offset(1);
-                *fresh652 = '\r' as i32 as yaml_char_t;
-            } else if (*emitter).line_break as libc::c_uint
-                == YAML_LN_BREAK as libc::c_int as libc::c_uint
-            {
-                let fresh653 = addr_of_mut!((*emitter).buffer.pointer);
-                let fresh654 = *fresh653;
-                *fresh653 = (*fresh653).wrapping_offset(1);
-                *fresh654 = '\n' as i32 as yaml_char_t;
-            } else if (*emitter).line_break as libc::c_uint
-                == YAML_CRLN_BREAK as libc::c_int as libc::c_uint
-            {
-                let fresh655 = addr_of_mut!((*emitter).buffer.pointer);
-                let fresh656 = *fresh655;
-                *fresh655 = (*fresh655).wrapping_offset(1);
-                *fresh656 = '\r' as i32 as yaml_char_t;
-                let fresh657 = addr_of_mut!((*emitter).buffer.pointer);
-                let fresh658 = *fresh657;
-                *fresh657 = (*fresh657).wrapping_offset(1);
-                *fresh658 = '\n' as i32 as yaml_char_t;
-            };
-            (*emitter).column = 0_i32;
-            let fresh659 = addr_of_mut!((*emitter).line);
-            *fresh659 += 1;
-            true
-        })
-    {
+    if !(PUT_BREAK!(emitter)) {
         return 0_i32;
     }
     (*emitter).indention = 1_i32;
@@ -4953,42 +4719,7 @@ unsafe fn yaml_emitter_write_folded_scalar(
                         || *string.pointer.wrapping_offset(k as isize) as libc::c_int
                             == '\0' as i32 as yaml_char_t as libc::c_int))
                 {
-                    if !((((*emitter).buffer.pointer).wrapping_offset(5_isize)
-                        < (*emitter).buffer.end
-                        || yaml_emitter_flush(emitter) != 0)
-                        && {
-                            if (*emitter).line_break as libc::c_uint
-                                == YAML_CR_BREAK as libc::c_int as libc::c_uint
-                            {
-                                let fresh660 = addr_of_mut!((*emitter).buffer.pointer);
-                                let fresh661 = *fresh660;
-                                *fresh660 = (*fresh660).wrapping_offset(1);
-                                *fresh661 = '\r' as i32 as yaml_char_t;
-                            } else if (*emitter).line_break as libc::c_uint
-                                == YAML_LN_BREAK as libc::c_int as libc::c_uint
-                            {
-                                let fresh662 = addr_of_mut!((*emitter).buffer.pointer);
-                                let fresh663 = *fresh662;
-                                *fresh662 = (*fresh662).wrapping_offset(1);
-                                *fresh663 = '\n' as i32 as yaml_char_t;
-                            } else if (*emitter).line_break as libc::c_uint
-                                == YAML_CRLN_BREAK as libc::c_int as libc::c_uint
-                            {
-                                let fresh664 = addr_of_mut!((*emitter).buffer.pointer);
-                                let fresh665 = *fresh664;
-                                *fresh664 = (*fresh664).wrapping_offset(1);
-                                *fresh665 = '\r' as i32 as yaml_char_t;
-                                let fresh666 = addr_of_mut!((*emitter).buffer.pointer);
-                                let fresh667 = *fresh666;
-                                *fresh666 = (*fresh666).wrapping_offset(1);
-                                *fresh667 = '\n' as i32 as yaml_char_t;
-                            };
-                            (*emitter).column = 0_i32;
-                            let fresh668 = addr_of_mut!((*emitter).line);
-                            *fresh668 += 1;
-                            true
-                        })
-                    {
+                    if !(PUT_BREAK!(emitter)) {
                         return 0_i32;
                     }
                 }
@@ -4996,42 +4727,7 @@ unsafe fn yaml_emitter_write_folded_scalar(
             if !((((*emitter).buffer.pointer).wrapping_offset(5_isize) < (*emitter).buffer.end
                 || yaml_emitter_flush(emitter) != 0)
                 && (if *string.pointer as libc::c_int == '\n' as i32 as yaml_char_t as libc::c_int {
-                    if ((*emitter).buffer.pointer).wrapping_offset(5_isize) < (*emitter).buffer.end
-                        || yaml_emitter_flush(emitter) != 0
-                    {
-                        {
-                            if (*emitter).line_break as libc::c_uint
-                                == YAML_CR_BREAK as libc::c_int as libc::c_uint
-                            {
-                                let fresh669 = addr_of_mut!((*emitter).buffer.pointer);
-                                let fresh670 = *fresh669;
-                                *fresh669 = (*fresh669).wrapping_offset(1);
-                                *fresh670 = '\r' as i32 as yaml_char_t;
-                            } else if (*emitter).line_break as libc::c_uint
-                                == YAML_LN_BREAK as libc::c_int as libc::c_uint
-                            {
-                                let fresh671 = addr_of_mut!((*emitter).buffer.pointer);
-                                let fresh672 = *fresh671;
-                                *fresh671 = (*fresh671).wrapping_offset(1);
-                                *fresh672 = '\n' as i32 as yaml_char_t;
-                            } else if (*emitter).line_break as libc::c_uint
-                                == YAML_CRLN_BREAK as libc::c_int as libc::c_uint
-                            {
-                                let fresh673 = addr_of_mut!((*emitter).buffer.pointer);
-                                let fresh674 = *fresh673;
-                                *fresh673 = (*fresh673).wrapping_offset(1);
-                                *fresh674 = '\r' as i32 as yaml_char_t;
-                                let fresh675 = addr_of_mut!((*emitter).buffer.pointer);
-                                let fresh676 = *fresh675;
-                                *fresh675 = (*fresh675).wrapping_offset(1);
-                                *fresh676 = '\n' as i32 as yaml_char_t;
-                            };
-                            (*emitter).column = 0_i32;
-                            let fresh677 = addr_of_mut!((*emitter).line);
-                            *fresh677 += 1;
-                            true
-                        };
-                    }
+                    let _ = PUT_BREAK!(emitter);
                     string.pointer = string.pointer.wrapping_offset(1);
                     1_i32
                 } else {
