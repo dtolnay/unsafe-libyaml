@@ -1094,7 +1094,7 @@ unsafe fn yaml_emitter_emit_alias(
                 *fresh41 = ' ' as i32 as yaml_char_t;
                 let fresh42 = addr_of_mut!((*emitter).column);
                 *fresh42 += 1;
-                1_i32 != 0
+                true
             })
         {
             return 0_i32;
@@ -2414,7 +2414,7 @@ unsafe fn yaml_emitter_write_indent(mut emitter: *mut yaml_emitter_t) -> libc::c
                 (*emitter).column = 0_i32;
                 let fresh70 = addr_of_mut!((*emitter).line);
                 *fresh70 += 1;
-                1_i32 != 0
+                true
             })
         {
             return 0_i32;
@@ -2430,7 +2430,7 @@ unsafe fn yaml_emitter_write_indent(mut emitter: *mut yaml_emitter_t) -> libc::c
                 *fresh72 = ' ' as i32 as yaml_char_t;
                 let fresh73 = addr_of_mut!((*emitter).column);
                 *fresh73 += 1;
-                1_i32 != 0
+                true
             })
         {
             return 0_i32;
@@ -2464,7 +2464,7 @@ unsafe fn yaml_emitter_write_indicator(
                 *fresh75 = ' ' as i32 as yaml_char_t;
                 let fresh76 = addr_of_mut!((*emitter).column);
                 *fresh76 += 1;
-                1_i32 != 0
+                true
             })
         {
             return 0_i32;
@@ -2541,7 +2541,7 @@ unsafe fn yaml_emitter_write_indicator(
                 };
                 let fresh107 = addr_of_mut!((*emitter).column);
                 *fresh107 += 1;
-                1_i32 != 0
+                true
             })
         {
             return 0_i32;
@@ -2633,7 +2633,7 @@ unsafe fn yaml_emitter_write_anchor(
                 };
                 let fresh138 = addr_of_mut!((*emitter).column);
                 *fresh138 += 1;
-                1_i32 != 0
+                true
             })
         {
             return 0_i32;
@@ -2664,7 +2664,7 @@ unsafe fn yaml_emitter_write_tag_handle(
                 *fresh140 = ' ' as i32 as yaml_char_t;
                 let fresh141 = addr_of_mut!((*emitter).column);
                 *fresh141 += 1;
-                1_i32 != 0
+                true
             })
         {
             return 0_i32;
@@ -2741,7 +2741,7 @@ unsafe fn yaml_emitter_write_tag_handle(
                 };
                 let fresh172 = addr_of_mut!((*emitter).column);
                 *fresh172 += 1;
-                1_i32 != 0
+                true
             })
         {
             return 0_i32;
@@ -2773,7 +2773,7 @@ unsafe fn yaml_emitter_write_tag_content(
                 *fresh174 = ' ' as i32 as yaml_char_t;
                 let fresh175 = addr_of_mut!((*emitter).column);
                 *fresh175 += 1;
-                1_i32 != 0
+                true
             })
         {
             return 0_i32;
@@ -2878,7 +2878,7 @@ unsafe fn yaml_emitter_write_tag_content(
                     };
                     let fresh206 = addr_of_mut!((*emitter).column);
                     *fresh206 += 1;
-                    1_i32 != 0
+                    true
                 })
             {
                 return 0_i32;
@@ -2914,7 +2914,7 @@ unsafe fn yaml_emitter_write_tag_content(
                         *fresh210 = '%' as i32 as yaml_char_t;
                         let fresh211 = addr_of_mut!((*emitter).column);
                         *fresh211 += 1;
-                        1_i32 != 0
+                        true
                     })
                 {
                     return 0_i32;
@@ -2934,7 +2934,7 @@ unsafe fn yaml_emitter_write_tag_content(
                         ) as yaml_char_t;
                         let fresh214 = addr_of_mut!((*emitter).column);
                         *fresh214 += 1;
-                        1_i32 != 0
+                        true
                     })
                 {
                     return 0_i32;
@@ -2954,7 +2954,7 @@ unsafe fn yaml_emitter_write_tag_content(
                         ) as yaml_char_t;
                         let fresh217 = addr_of_mut!((*emitter).column);
                         *fresh217 += 1;
-                        1_i32 != 0
+                        true
                     })
                 {
                     return 0_i32;
@@ -2990,7 +2990,7 @@ unsafe fn yaml_emitter_write_plain_scalar(
                 *fresh219 = ' ' as i32 as yaml_char_t;
                 let fresh220 = addr_of_mut!((*emitter).column);
                 *fresh220 += 1;
-                1_i32 != 0
+                true
             })
         {
             return 0_i32;
@@ -3079,7 +3079,7 @@ unsafe fn yaml_emitter_write_plain_scalar(
                     };
                     let fresh251 = addr_of_mut!((*emitter).column);
                     *fresh251 += 1;
-                    1_i32 != 0
+                    true
                 })
             {
                 return 0_i32;
@@ -3136,7 +3136,7 @@ unsafe fn yaml_emitter_write_plain_scalar(
                         (*emitter).column = 0_i32;
                         let fresh260 = addr_of_mut!((*emitter).line);
                         *fresh260 += 1;
-                        1_i32 != 0
+                        true
                     })
                 {
                     return 0_i32;
@@ -3178,7 +3178,7 @@ unsafe fn yaml_emitter_write_plain_scalar(
                             (*emitter).column = 0_i32;
                             let fresh269 = addr_of_mut!((*emitter).line);
                             *fresh269 += 1;
-                            1_i32 != 0
+                            true
                         };
                     }
                     string.pointer = string.pointer.wrapping_offset(1);
@@ -3335,7 +3335,7 @@ unsafe fn yaml_emitter_write_plain_scalar(
                     };
                     let fresh331 = addr_of_mut!((*emitter).column);
                     *fresh331 += 1;
-                    1_i32 != 0
+                    true
                 })
             {
                 return 0_i32;
@@ -3458,7 +3458,7 @@ unsafe fn yaml_emitter_write_single_quoted_scalar(
                     };
                     let fresh362 = addr_of_mut!((*emitter).column);
                     *fresh362 += 1;
-                    1_i32 != 0
+                    true
                 })
             {
                 return 0_i32;
@@ -3515,7 +3515,7 @@ unsafe fn yaml_emitter_write_single_quoted_scalar(
                         (*emitter).column = 0_i32;
                         let fresh371 = addr_of_mut!((*emitter).line);
                         *fresh371 += 1;
-                        1_i32 != 0
+                        true
                     })
                 {
                     return 0_i32;
@@ -3557,7 +3557,7 @@ unsafe fn yaml_emitter_write_single_quoted_scalar(
                             (*emitter).column = 0_i32;
                             let fresh380 = addr_of_mut!((*emitter).line);
                             *fresh380 += 1;
-                            1_i32 != 0
+                            true
                         };
                     }
                     string.pointer = string.pointer.wrapping_offset(1);
@@ -3654,7 +3654,7 @@ unsafe fn yaml_emitter_write_single_quoted_scalar(
                         *fresh413 = '\'' as i32 as yaml_char_t;
                         let fresh414 = addr_of_mut!((*emitter).column);
                         *fresh414 += 1;
-                        1_i32 != 0
+                        true
                     })
                 {
                     return 0_i32;
@@ -3730,7 +3730,7 @@ unsafe fn yaml_emitter_write_single_quoted_scalar(
                     };
                     let fresh445 = addr_of_mut!((*emitter).column);
                     *fresh445 += 1;
-                    1_i32 != 0
+                    true
                 })
             {
                 return 0_i32;
@@ -3869,7 +3869,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                     *fresh447 = '\\' as i32 as yaml_char_t;
                     let fresh448 = addr_of_mut!((*emitter).column);
                     *fresh448 += 1;
-                    1_i32 != 0
+                    true
                 })
             {
                 return 0_i32;
@@ -3886,7 +3886,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                             *fresh450 = '0' as i32 as yaml_char_t;
                             let fresh451 = addr_of_mut!((*emitter).column);
                             *fresh451 += 1;
-                            1_i32 != 0
+                            true
                         })
                     {
                         return 0_i32;
@@ -3903,7 +3903,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                             *fresh453 = 'a' as i32 as yaml_char_t;
                             let fresh454 = addr_of_mut!((*emitter).column);
                             *fresh454 += 1;
-                            1_i32 != 0
+                            true
                         })
                     {
                         return 0_i32;
@@ -3920,7 +3920,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                             *fresh456 = 'b' as i32 as yaml_char_t;
                             let fresh457 = addr_of_mut!((*emitter).column);
                             *fresh457 += 1;
-                            1_i32 != 0
+                            true
                         })
                     {
                         return 0_i32;
@@ -3937,7 +3937,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                             *fresh459 = 't' as i32 as yaml_char_t;
                             let fresh460 = addr_of_mut!((*emitter).column);
                             *fresh460 += 1;
-                            1_i32 != 0
+                            true
                         })
                     {
                         return 0_i32;
@@ -3954,7 +3954,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                             *fresh462 = 'n' as i32 as yaml_char_t;
                             let fresh463 = addr_of_mut!((*emitter).column);
                             *fresh463 += 1;
-                            1_i32 != 0
+                            true
                         })
                     {
                         return 0_i32;
@@ -3971,7 +3971,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                             *fresh465 = 'v' as i32 as yaml_char_t;
                             let fresh466 = addr_of_mut!((*emitter).column);
                             *fresh466 += 1;
-                            1_i32 != 0
+                            true
                         })
                     {
                         return 0_i32;
@@ -3988,7 +3988,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                             *fresh468 = 'f' as i32 as yaml_char_t;
                             let fresh469 = addr_of_mut!((*emitter).column);
                             *fresh469 += 1;
-                            1_i32 != 0
+                            true
                         })
                     {
                         return 0_i32;
@@ -4005,7 +4005,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                             *fresh471 = 'r' as i32 as yaml_char_t;
                             let fresh472 = addr_of_mut!((*emitter).column);
                             *fresh472 += 1;
-                            1_i32 != 0
+                            true
                         })
                     {
                         return 0_i32;
@@ -4022,7 +4022,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                             *fresh474 = 'e' as i32 as yaml_char_t;
                             let fresh475 = addr_of_mut!((*emitter).column);
                             *fresh475 += 1;
-                            1_i32 != 0
+                            true
                         })
                     {
                         return 0_i32;
@@ -4039,7 +4039,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                             *fresh477 = '"' as i32 as yaml_char_t;
                             let fresh478 = addr_of_mut!((*emitter).column);
                             *fresh478 += 1;
-                            1_i32 != 0
+                            true
                         })
                     {
                         return 0_i32;
@@ -4056,7 +4056,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                             *fresh480 = '\\' as i32 as yaml_char_t;
                             let fresh481 = addr_of_mut!((*emitter).column);
                             *fresh481 += 1;
-                            1_i32 != 0
+                            true
                         })
                     {
                         return 0_i32;
@@ -4073,7 +4073,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                             *fresh483 = 'N' as i32 as yaml_char_t;
                             let fresh484 = addr_of_mut!((*emitter).column);
                             *fresh484 += 1;
-                            1_i32 != 0
+                            true
                         })
                     {
                         return 0_i32;
@@ -4090,7 +4090,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                             *fresh486 = '_' as i32 as yaml_char_t;
                             let fresh487 = addr_of_mut!((*emitter).column);
                             *fresh487 += 1;
-                            1_i32 != 0
+                            true
                         })
                     {
                         return 0_i32;
@@ -4107,7 +4107,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                             *fresh489 = 'L' as i32 as yaml_char_t;
                             let fresh490 = addr_of_mut!((*emitter).column);
                             *fresh490 += 1;
-                            1_i32 != 0
+                            true
                         })
                     {
                         return 0_i32;
@@ -4124,7 +4124,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                             *fresh492 = 'P' as i32 as yaml_char_t;
                             let fresh493 = addr_of_mut!((*emitter).column);
                             *fresh493 += 1;
-                            1_i32 != 0
+                            true
                         })
                     {
                         return 0_i32;
@@ -4142,7 +4142,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                                 *fresh495 = 'x' as i32 as yaml_char_t;
                                 let fresh496 = addr_of_mut!((*emitter).column);
                                 *fresh496 += 1;
-                                1_i32 != 0
+                                true
                             })
                         {
                             return 0_i32;
@@ -4159,7 +4159,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                                 *fresh498 = 'u' as i32 as yaml_char_t;
                                 let fresh499 = addr_of_mut!((*emitter).column);
                                 *fresh499 += 1;
-                                1_i32 != 0
+                                true
                             })
                         {
                             return 0_i32;
@@ -4176,7 +4176,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                                 *fresh501 = 'U' as i32 as yaml_char_t;
                                 let fresh502 = addr_of_mut!((*emitter).column);
                                 *fresh502 += 1;
-                                1_i32 != 0
+                                true
                             })
                         {
                             return 0_i32;
@@ -4202,7 +4202,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                                     })) as yaml_char_t;
                                 let fresh505 = addr_of_mut!((*emitter).column);
                                 *fresh505 += 1;
-                                1_i32 != 0
+                                true
                             })
                         {
                             return 0_i32;
@@ -4235,7 +4235,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                             *fresh507 = '\\' as i32 as yaml_char_t;
                             let fresh508 = addr_of_mut!((*emitter).column);
                             *fresh508 += 1;
-                            1_i32 != 0
+                            true
                         })
                     {
                         return 0_i32;
@@ -4313,7 +4313,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                     };
                     let fresh539 = addr_of_mut!((*emitter).column);
                     *fresh539 += 1;
-                    1_i32 != 0
+                    true
                 })
             {
                 return 0_i32;
@@ -4390,7 +4390,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                     };
                     let fresh570 = addr_of_mut!((*emitter).column);
                     *fresh570 += 1;
-                    1_i32 != 0
+                    true
                 })
             {
                 return 0_i32;
@@ -4566,7 +4566,7 @@ unsafe fn yaml_emitter_write_literal_scalar(
             (*emitter).column = 0_i32;
             let fresh579 = addr_of_mut!((*emitter).line);
             *fresh579 += 1;
-            1_i32 != 0
+            true
         })
     {
         return 0_i32;
@@ -4626,7 +4626,7 @@ unsafe fn yaml_emitter_write_literal_scalar(
                             (*emitter).column = 0_i32;
                             let fresh588 = addr_of_mut!((*emitter).line);
                             *fresh588 += 1;
-                            1_i32 != 0
+                            true
                         };
                     }
                     string.pointer = string.pointer.wrapping_offset(1);
@@ -4783,7 +4783,7 @@ unsafe fn yaml_emitter_write_literal_scalar(
                     };
                     let fresh650 = addr_of_mut!((*emitter).column);
                     *fresh650 += 1;
-                    1_i32 != 0
+                    true
                 })
             {
                 return 0_i32;
@@ -4851,7 +4851,7 @@ unsafe fn yaml_emitter_write_folded_scalar(
             (*emitter).column = 0_i32;
             let fresh659 = addr_of_mut!((*emitter).line);
             *fresh659 += 1;
-            1_i32 != 0
+            true
         })
     {
         return 0_i32;
@@ -4986,7 +4986,7 @@ unsafe fn yaml_emitter_write_folded_scalar(
                             (*emitter).column = 0_i32;
                             let fresh668 = addr_of_mut!((*emitter).line);
                             *fresh668 += 1;
-                            1_i32 != 0
+                            true
                         })
                     {
                         return 0_i32;
@@ -5029,7 +5029,7 @@ unsafe fn yaml_emitter_write_folded_scalar(
                             (*emitter).column = 0_i32;
                             let fresh677 = addr_of_mut!((*emitter).line);
                             *fresh677 += 1;
-                            1_i32 != 0
+                            true
                         };
                     }
                     string.pointer = string.pointer.wrapping_offset(1);
@@ -5201,7 +5201,7 @@ unsafe fn yaml_emitter_write_folded_scalar(
                     };
                     let fresh739 = addr_of_mut!((*emitter).column);
                     *fresh739 += 1;
-                    1_i32 != 0
+                    true
                 })
             {
                 return 0_i32;
