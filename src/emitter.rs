@@ -60,6 +60,88 @@ macro_rules! PUT_BREAK {
     };
 }
 
+macro_rules! WRITE_BREAK {
+    ($emitter:expr, $string:expr) => {
+        (((*$emitter).buffer.pointer).wrapping_offset(5_isize) < (*$emitter).buffer.end
+            || yaml_emitter_flush($emitter) != 0)
+            && (if *$string.pointer as libc::c_int == '\n' as i32 as yaml_char_t as libc::c_int {
+                let _ = PUT_BREAK!($emitter);
+                $string.pointer = $string.pointer.wrapping_offset(1);
+                1_i32
+            } else {
+                if *$string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
+                    let fresh270 = $string.pointer;
+                    $string.pointer = $string.pointer.wrapping_offset(1);
+                    let fresh271 = addr_of_mut!((*$emitter).buffer.pointer);
+                    let fresh272 = *fresh271;
+                    *fresh271 = (*fresh271).wrapping_offset(1);
+                    *fresh272 = *fresh270;
+                } else if *$string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
+                    let fresh273 = $string.pointer;
+                    $string.pointer = $string.pointer.wrapping_offset(1);
+                    let fresh274 = addr_of_mut!((*$emitter).buffer.pointer);
+                    let fresh275 = *fresh274;
+                    *fresh274 = (*fresh274).wrapping_offset(1);
+                    *fresh275 = *fresh273;
+                    let fresh276 = $string.pointer;
+                    $string.pointer = $string.pointer.wrapping_offset(1);
+                    let fresh277 = addr_of_mut!((*$emitter).buffer.pointer);
+                    let fresh278 = *fresh277;
+                    *fresh277 = (*fresh277).wrapping_offset(1);
+                    *fresh278 = *fresh276;
+                } else if *$string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
+                    let fresh279 = $string.pointer;
+                    $string.pointer = $string.pointer.wrapping_offset(1);
+                    let fresh280 = addr_of_mut!((*$emitter).buffer.pointer);
+                    let fresh281 = *fresh280;
+                    *fresh280 = (*fresh280).wrapping_offset(1);
+                    *fresh281 = *fresh279;
+                    let fresh282 = $string.pointer;
+                    $string.pointer = $string.pointer.wrapping_offset(1);
+                    let fresh283 = addr_of_mut!((*$emitter).buffer.pointer);
+                    let fresh284 = *fresh283;
+                    *fresh283 = (*fresh283).wrapping_offset(1);
+                    *fresh284 = *fresh282;
+                    let fresh285 = $string.pointer;
+                    $string.pointer = $string.pointer.wrapping_offset(1);
+                    let fresh286 = addr_of_mut!((*$emitter).buffer.pointer);
+                    let fresh287 = *fresh286;
+                    *fresh286 = (*fresh286).wrapping_offset(1);
+                    *fresh287 = *fresh285;
+                } else if *$string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
+                    let fresh288 = $string.pointer;
+                    $string.pointer = $string.pointer.wrapping_offset(1);
+                    let fresh289 = addr_of_mut!((*$emitter).buffer.pointer);
+                    let fresh290 = *fresh289;
+                    *fresh289 = (*fresh289).wrapping_offset(1);
+                    *fresh290 = *fresh288;
+                    let fresh291 = $string.pointer;
+                    $string.pointer = $string.pointer.wrapping_offset(1);
+                    let fresh292 = addr_of_mut!((*$emitter).buffer.pointer);
+                    let fresh293 = *fresh292;
+                    *fresh292 = (*fresh292).wrapping_offset(1);
+                    *fresh293 = *fresh291;
+                    let fresh294 = $string.pointer;
+                    $string.pointer = $string.pointer.wrapping_offset(1);
+                    let fresh295 = addr_of_mut!((*$emitter).buffer.pointer);
+                    let fresh296 = *fresh295;
+                    *fresh295 = (*fresh295).wrapping_offset(1);
+                    *fresh296 = *fresh294;
+                    let fresh297 = $string.pointer;
+                    $string.pointer = $string.pointer.wrapping_offset(1);
+                    let fresh298 = addr_of_mut!((*$emitter).buffer.pointer);
+                    let fresh299 = *fresh298;
+                    *fresh298 = (*fresh298).wrapping_offset(1);
+                    *fresh299 = *fresh297;
+                };
+                (*$emitter).column = 0_i32;
+                let fresh300 = addr_of_mut!((*$emitter).line);
+                *fresh300 += 1;
+                1_i32
+            }) != 0
+    };
+}
+
 unsafe fn yaml_emitter_set_emitter_error(
     mut emitter: *mut yaml_emitter_t,
     problem: *const libc::c_char,
@@ -3113,84 +3195,7 @@ unsafe fn yaml_emitter_write_plain_scalar(
                     return 0_i32;
                 }
             }
-            if !((((*emitter).buffer.pointer).wrapping_offset(5_isize) < (*emitter).buffer.end
-                || yaml_emitter_flush(emitter) != 0)
-                && (if *string.pointer as libc::c_int == '\n' as i32 as yaml_char_t as libc::c_int {
-                    let _ = PUT_BREAK!(emitter);
-                    string.pointer = string.pointer.wrapping_offset(1);
-                    1_i32
-                } else {
-                    if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                        let fresh270 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh271 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh272 = *fresh271;
-                        *fresh271 = (*fresh271).wrapping_offset(1);
-                        *fresh272 = *fresh270;
-                    } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                        let fresh273 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh274 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh275 = *fresh274;
-                        *fresh274 = (*fresh274).wrapping_offset(1);
-                        *fresh275 = *fresh273;
-                        let fresh276 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh277 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh278 = *fresh277;
-                        *fresh277 = (*fresh277).wrapping_offset(1);
-                        *fresh278 = *fresh276;
-                    } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                        let fresh279 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh280 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh281 = *fresh280;
-                        *fresh280 = (*fresh280).wrapping_offset(1);
-                        *fresh281 = *fresh279;
-                        let fresh282 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh283 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh284 = *fresh283;
-                        *fresh283 = (*fresh283).wrapping_offset(1);
-                        *fresh284 = *fresh282;
-                        let fresh285 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh286 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh287 = *fresh286;
-                        *fresh286 = (*fresh286).wrapping_offset(1);
-                        *fresh287 = *fresh285;
-                    } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                        let fresh288 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh289 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh290 = *fresh289;
-                        *fresh289 = (*fresh289).wrapping_offset(1);
-                        *fresh290 = *fresh288;
-                        let fresh291 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh292 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh293 = *fresh292;
-                        *fresh292 = (*fresh292).wrapping_offset(1);
-                        *fresh293 = *fresh291;
-                        let fresh294 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh295 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh296 = *fresh295;
-                        *fresh295 = (*fresh295).wrapping_offset(1);
-                        *fresh296 = *fresh294;
-                        let fresh297 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh298 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh299 = *fresh298;
-                        *fresh298 = (*fresh298).wrapping_offset(1);
-                        *fresh299 = *fresh297;
-                    };
-                    (*emitter).column = 0_i32;
-                    let fresh300 = addr_of_mut!((*emitter).line);
-                    *fresh300 += 1;
-                    1_i32
-                }) != 0)
-            {
+            if !(WRITE_BREAK!(emitter, string)) {
                 return 0_i32;
             }
             (*emitter).indention = 1_i32;
@@ -3423,84 +3428,7 @@ unsafe fn yaml_emitter_write_single_quoted_scalar(
                     return 0_i32;
                 }
             }
-            if !((((*emitter).buffer.pointer).wrapping_offset(5_isize) < (*emitter).buffer.end
-                || yaml_emitter_flush(emitter) != 0)
-                && (if *string.pointer as libc::c_int == '\n' as i32 as yaml_char_t as libc::c_int {
-                    let _ = PUT_BREAK!(emitter);
-                    string.pointer = string.pointer.wrapping_offset(1);
-                    1_i32
-                } else {
-                    if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                        let fresh381 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh382 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh383 = *fresh382;
-                        *fresh382 = (*fresh382).wrapping_offset(1);
-                        *fresh383 = *fresh381;
-                    } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                        let fresh384 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh385 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh386 = *fresh385;
-                        *fresh385 = (*fresh385).wrapping_offset(1);
-                        *fresh386 = *fresh384;
-                        let fresh387 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh388 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh389 = *fresh388;
-                        *fresh388 = (*fresh388).wrapping_offset(1);
-                        *fresh389 = *fresh387;
-                    } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                        let fresh390 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh391 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh392 = *fresh391;
-                        *fresh391 = (*fresh391).wrapping_offset(1);
-                        *fresh392 = *fresh390;
-                        let fresh393 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh394 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh395 = *fresh394;
-                        *fresh394 = (*fresh394).wrapping_offset(1);
-                        *fresh395 = *fresh393;
-                        let fresh396 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh397 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh398 = *fresh397;
-                        *fresh397 = (*fresh397).wrapping_offset(1);
-                        *fresh398 = *fresh396;
-                    } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                        let fresh399 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh400 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh401 = *fresh400;
-                        *fresh400 = (*fresh400).wrapping_offset(1);
-                        *fresh401 = *fresh399;
-                        let fresh402 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh403 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh404 = *fresh403;
-                        *fresh403 = (*fresh403).wrapping_offset(1);
-                        *fresh404 = *fresh402;
-                        let fresh405 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh406 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh407 = *fresh406;
-                        *fresh406 = (*fresh406).wrapping_offset(1);
-                        *fresh407 = *fresh405;
-                        let fresh408 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh409 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh410 = *fresh409;
-                        *fresh409 = (*fresh409).wrapping_offset(1);
-                        *fresh410 = *fresh408;
-                    };
-                    (*emitter).column = 0_i32;
-                    let fresh411 = addr_of_mut!((*emitter).line);
-                    *fresh411 += 1;
-                    1_i32
-                }) != 0)
-            {
+            if !(WRITE_BREAK!(emitter, string)) {
                 return 0_i32;
             }
             (*emitter).indention = 1_i32;
@@ -4424,84 +4352,7 @@ unsafe fn yaml_emitter_write_literal_scalar(
                 && *string.pointer.wrapping_offset(2_isize) as libc::c_int
                     == -87i32 as yaml_char_t as libc::c_int
         {
-            if !((((*emitter).buffer.pointer).wrapping_offset(5_isize) < (*emitter).buffer.end
-                || yaml_emitter_flush(emitter) != 0)
-                && (if *string.pointer as libc::c_int == '\n' as i32 as yaml_char_t as libc::c_int {
-                    let _ = PUT_BREAK!(emitter);
-                    string.pointer = string.pointer.wrapping_offset(1);
-                    1_i32
-                } else {
-                    if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                        let fresh589 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh590 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh591 = *fresh590;
-                        *fresh590 = (*fresh590).wrapping_offset(1);
-                        *fresh591 = *fresh589;
-                    } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                        let fresh592 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh593 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh594 = *fresh593;
-                        *fresh593 = (*fresh593).wrapping_offset(1);
-                        *fresh594 = *fresh592;
-                        let fresh595 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh596 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh597 = *fresh596;
-                        *fresh596 = (*fresh596).wrapping_offset(1);
-                        *fresh597 = *fresh595;
-                    } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                        let fresh598 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh599 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh600 = *fresh599;
-                        *fresh599 = (*fresh599).wrapping_offset(1);
-                        *fresh600 = *fresh598;
-                        let fresh601 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh602 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh603 = *fresh602;
-                        *fresh602 = (*fresh602).wrapping_offset(1);
-                        *fresh603 = *fresh601;
-                        let fresh604 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh605 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh606 = *fresh605;
-                        *fresh605 = (*fresh605).wrapping_offset(1);
-                        *fresh606 = *fresh604;
-                    } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                        let fresh607 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh608 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh609 = *fresh608;
-                        *fresh608 = (*fresh608).wrapping_offset(1);
-                        *fresh609 = *fresh607;
-                        let fresh610 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh611 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh612 = *fresh611;
-                        *fresh611 = (*fresh611).wrapping_offset(1);
-                        *fresh612 = *fresh610;
-                        let fresh613 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh614 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh615 = *fresh614;
-                        *fresh614 = (*fresh614).wrapping_offset(1);
-                        *fresh615 = *fresh613;
-                        let fresh616 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh617 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh618 = *fresh617;
-                        *fresh617 = (*fresh617).wrapping_offset(1);
-                        *fresh618 = *fresh616;
-                    };
-                    (*emitter).column = 0_i32;
-                    let fresh619 = addr_of_mut!((*emitter).line);
-                    *fresh619 += 1;
-                    1_i32
-                }) != 0)
-            {
+            if !(WRITE_BREAK!(emitter, string)) {
                 return 0_i32;
             }
             (*emitter).indention = 1_i32;
@@ -4724,84 +4575,7 @@ unsafe fn yaml_emitter_write_folded_scalar(
                     }
                 }
             }
-            if !((((*emitter).buffer.pointer).wrapping_offset(5_isize) < (*emitter).buffer.end
-                || yaml_emitter_flush(emitter) != 0)
-                && (if *string.pointer as libc::c_int == '\n' as i32 as yaml_char_t as libc::c_int {
-                    let _ = PUT_BREAK!(emitter);
-                    string.pointer = string.pointer.wrapping_offset(1);
-                    1_i32
-                } else {
-                    if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                        let fresh678 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh679 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh680 = *fresh679;
-                        *fresh679 = (*fresh679).wrapping_offset(1);
-                        *fresh680 = *fresh678;
-                    } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                        let fresh681 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh682 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh683 = *fresh682;
-                        *fresh682 = (*fresh682).wrapping_offset(1);
-                        *fresh683 = *fresh681;
-                        let fresh684 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh685 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh686 = *fresh685;
-                        *fresh685 = (*fresh685).wrapping_offset(1);
-                        *fresh686 = *fresh684;
-                    } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                        let fresh687 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh688 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh689 = *fresh688;
-                        *fresh688 = (*fresh688).wrapping_offset(1);
-                        *fresh689 = *fresh687;
-                        let fresh690 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh691 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh692 = *fresh691;
-                        *fresh691 = (*fresh691).wrapping_offset(1);
-                        *fresh692 = *fresh690;
-                        let fresh693 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh694 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh695 = *fresh694;
-                        *fresh694 = (*fresh694).wrapping_offset(1);
-                        *fresh695 = *fresh693;
-                    } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                        let fresh696 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh697 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh698 = *fresh697;
-                        *fresh697 = (*fresh697).wrapping_offset(1);
-                        *fresh698 = *fresh696;
-                        let fresh699 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh700 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh701 = *fresh700;
-                        *fresh700 = (*fresh700).wrapping_offset(1);
-                        *fresh701 = *fresh699;
-                        let fresh702 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh703 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh704 = *fresh703;
-                        *fresh703 = (*fresh703).wrapping_offset(1);
-                        *fresh704 = *fresh702;
-                        let fresh705 = string.pointer;
-                        string.pointer = string.pointer.wrapping_offset(1);
-                        let fresh706 = addr_of_mut!((*emitter).buffer.pointer);
-                        let fresh707 = *fresh706;
-                        *fresh706 = (*fresh706).wrapping_offset(1);
-                        *fresh707 = *fresh705;
-                    };
-                    (*emitter).column = 0_i32;
-                    let fresh708 = addr_of_mut!((*emitter).line);
-                    *fresh708 += 1;
-                    1_i32
-                }) != 0)
-            {
+            if !(WRITE_BREAK!(emitter, string)) {
                 return 0_i32;
             }
             (*emitter).indention = 1_i32;
