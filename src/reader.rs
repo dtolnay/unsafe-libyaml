@@ -188,7 +188,7 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
                 as libc::c_long as size_t;
             match (*parser).encoding as libc::c_uint {
                 1 => {
-                    octet = *((*parser).raw_buffer.pointer).wrapping_offset(0_isize);
+                    octet = *((*parser).raw_buffer.pointer);
                     width = (if octet as libc::c_int & 0x80_i32 == 0_i32 {
                         1_i32
                     } else if octet as libc::c_int & 0xe0_i32 == 0xc0_i32 {

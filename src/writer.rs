@@ -67,7 +67,7 @@ pub unsafe fn yaml_emitter_flush(emitter: *mut yaml_emitter_t) -> libc::c_int {
         let mut octet: libc::c_uchar;
         let mut value: libc::c_uint;
         let mut k: size_t;
-        octet = *((*emitter).buffer.pointer).wrapping_offset(0_isize);
+        octet = *((*emitter).buffer.pointer);
         let width: libc::c_uint = (if octet as libc::c_int & 0x80_i32 == 0_i32 {
             1_i32
         } else if octet as libc::c_int & 0xe0_i32 == 0xc0_i32 {

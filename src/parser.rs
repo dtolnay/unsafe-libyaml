@@ -760,7 +760,7 @@ unsafe fn yaml_parser_parse_node(
                             if value.is_null() {
                                 (*parser).error = YAML_MEMORY_ERROR;
                             } else {
-                                *value.wrapping_offset(0_isize) = '\0' as i32 as yaml_char_t;
+                                *value = '\0' as i32 as yaml_char_t;
                                 let fresh53 = addr_of_mut!((*parser).states.top);
                                 *fresh53 = (*fresh53).wrapping_offset(-1);
                                 (*parser).state = **fresh53;
@@ -1535,7 +1535,7 @@ unsafe fn yaml_parser_process_empty_scalar(
         (*parser).error = YAML_MEMORY_ERROR;
         return 0_i32;
     }
-    *value.wrapping_offset(0_isize) = '\0' as i32 as yaml_char_t;
+    *value = '\0' as i32 as yaml_char_t;
     memset(
         event as *mut libc::c_void,
         0_i32,

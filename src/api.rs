@@ -948,7 +948,7 @@ unsafe fn yaml_check_utf8(start: *const yaml_char_t, length: size_t) -> libc::c_
         let mut octet: libc::c_uchar;
         let mut value: libc::c_uint;
         let mut k: size_t;
-        octet = *pointer.wrapping_offset(0_isize);
+        octet = *pointer;
         let width: libc::c_uint = (if octet as libc::c_int & 0x80_i32 == 0_i32 {
             1_i32
         } else if octet as libc::c_int & 0xe0_i32 == 0xc0_i32 {
