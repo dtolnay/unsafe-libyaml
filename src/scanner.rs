@@ -2379,6 +2379,8 @@ unsafe fn yaml_parser_scan_version_directive_value(
     1_i32
 }
 
+const MAX_NUMBER_LENGTH: u64 = 9_u64;
+
 unsafe fn yaml_parser_scan_version_directive_number(
     parser: *mut yaml_parser_t,
     start_mark: yaml_mark_t,
@@ -2395,7 +2397,7 @@ unsafe fn yaml_parser_scan_version_directive_number(
             <= '9' as i32 as yaml_char_t as libc::c_int
     {
         length = length.wrapping_add(1);
-        if length > 9_u64 {
+        if length > MAX_NUMBER_LENGTH {
             return yaml_parser_set_scanner_error(
                 parser,
                 b"while scanning a %YAML directive\0" as *const u8 as *const libc::c_char,
