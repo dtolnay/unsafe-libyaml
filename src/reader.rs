@@ -20,6 +20,10 @@ unsafe fn yaml_parser_set_reader_error(
     0_i32
 }
 
+const BOM_UTF8: *const libc::c_char = b"\xEF\xBB\xBF\0" as *const u8 as *const libc::c_char;
+const BOM_UTF16LE: *const libc::c_char = b"\xFF\xFE\0" as *const u8 as *const libc::c_char;
+const BOM_UTF16BE: *const libc::c_char = b"\xFE\xFF\0" as *const u8 as *const libc::c_char;
+
 unsafe fn yaml_parser_determine_encoding(mut parser: *mut yaml_parser_t) -> libc::c_int {
     while (*parser).eof == 0
         && (((*parser).raw_buffer.last).c_offset_from((*parser).raw_buffer.pointer) as libc::c_long)
@@ -33,7 +37,7 @@ unsafe fn yaml_parser_determine_encoding(mut parser: *mut yaml_parser_t) -> libc
         >= 2_i64
         && memcmp(
             (*parser).raw_buffer.pointer as *const libc::c_void,
-            b"\xFF\xFE\0" as *const u8 as *const libc::c_char as *const libc::c_void,
+            BOM_UTF16LE as *const libc::c_void,
             2_u64,
         ) == 0
     {
@@ -47,7 +51,7 @@ unsafe fn yaml_parser_determine_encoding(mut parser: *mut yaml_parser_t) -> libc
         >= 2_i64
         && memcmp(
             (*parser).raw_buffer.pointer as *const libc::c_void,
-            b"\xFE\xFF\0" as *const u8 as *const libc::c_char as *const libc::c_void,
+            BOM_UTF16BE as *const libc::c_void,
             2_u64,
         ) == 0
     {
@@ -61,7 +65,7 @@ unsafe fn yaml_parser_determine_encoding(mut parser: *mut yaml_parser_t) -> libc
         >= 3_i64
         && memcmp(
             (*parser).raw_buffer.pointer as *const libc::c_void,
-            b"\xEF\xBB\xBF\0" as *const u8 as *const libc::c_char as *const libc::c_void,
+            BOM_UTF8 as *const libc::c_void,
             3_u64,
         ) == 0
     {
