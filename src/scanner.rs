@@ -20,6 +20,42 @@ use crate::{
 use core::mem::{size_of, MaybeUninit};
 use core::ptr::{self, addr_of_mut};
 
+macro_rules! SKIP {
+    ($parser:expr) => {
+        let index = addr_of_mut!((*$parser).mark.index);
+        *index = (*index).wrapping_add(1);
+        let column = addr_of_mut!((*$parser).mark.column);
+        *column = (*column).wrapping_add(1);
+        let unread = addr_of_mut!((*$parser).unread);
+        *unread = (*unread).wrapping_sub(1);
+        let pointer = addr_of_mut!((*$parser).buffer.pointer);
+        *pointer = (*pointer).wrapping_offset(
+            (if *((*$parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0x80_i32
+                == 0_i32
+            {
+                1_i32
+            } else if *((*$parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
+                & 0xe0_i32
+                == 0xc0_i32
+            {
+                2_i32
+            } else if *((*$parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
+                & 0xf0_i32
+                == 0xe0_i32
+            {
+                3_i32
+            } else if *((*$parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
+                & 0xf8_i32
+                == 0xf0_i32
+            {
+                4_i32
+            } else {
+                0_i32
+            }) as isize,
+        );
+    };
+}
+
 /// Scan the input stream and produce the next token.
 ///
 /// Call the function subsequently to produce a sequence of tokens corresponding
@@ -952,87 +988,9 @@ unsafe fn yaml_parser_fetch_document_indicator(
     }
     (*parser).simple_key_allowed = 0_i32;
     let start_mark: yaml_mark_t = (*parser).mark;
-    let fresh27 = addr_of_mut!((*parser).mark.index);
-    *fresh27 = (*fresh27).wrapping_add(1);
-    let fresh28 = addr_of_mut!((*parser).mark.column);
-    *fresh28 = (*fresh28).wrapping_add(1);
-    let fresh29 = addr_of_mut!((*parser).unread);
-    *fresh29 = (*fresh29).wrapping_sub(1);
-    let fresh30 = addr_of_mut!((*parser).buffer.pointer);
-    *fresh30 = (*fresh30).wrapping_offset(
-        (if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0x80_i32 == 0_i32
-        {
-            1_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xe0_i32
-            == 0xc0_i32
-        {
-            2_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf0_i32
-            == 0xe0_i32
-        {
-            3_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf8_i32
-            == 0xf0_i32
-        {
-            4_i32
-        } else {
-            0_i32
-        }) as isize,
-    );
-    let fresh31 = addr_of_mut!((*parser).mark.index);
-    *fresh31 = (*fresh31).wrapping_add(1);
-    let fresh32 = addr_of_mut!((*parser).mark.column);
-    *fresh32 = (*fresh32).wrapping_add(1);
-    let fresh33 = addr_of_mut!((*parser).unread);
-    *fresh33 = (*fresh33).wrapping_sub(1);
-    let fresh34 = addr_of_mut!((*parser).buffer.pointer);
-    *fresh34 = (*fresh34).wrapping_offset(
-        (if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0x80_i32 == 0_i32
-        {
-            1_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xe0_i32
-            == 0xc0_i32
-        {
-            2_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf0_i32
-            == 0xe0_i32
-        {
-            3_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf8_i32
-            == 0xf0_i32
-        {
-            4_i32
-        } else {
-            0_i32
-        }) as isize,
-    );
-    let fresh35 = addr_of_mut!((*parser).mark.index);
-    *fresh35 = (*fresh35).wrapping_add(1);
-    let fresh36 = addr_of_mut!((*parser).mark.column);
-    *fresh36 = (*fresh36).wrapping_add(1);
-    let fresh37 = addr_of_mut!((*parser).unread);
-    *fresh37 = (*fresh37).wrapping_sub(1);
-    let fresh38 = addr_of_mut!((*parser).buffer.pointer);
-    *fresh38 = (*fresh38).wrapping_offset(
-        (if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0x80_i32 == 0_i32
-        {
-            1_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xe0_i32
-            == 0xc0_i32
-        {
-            2_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf0_i32
-            == 0xe0_i32
-        {
-            3_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf8_i32
-            == 0xf0_i32
-        {
-            4_i32
-        } else {
-            0_i32
-        }) as isize,
-    );
+    SKIP!(parser);
+    SKIP!(parser);
+    SKIP!(parser);
     let end_mark: yaml_mark_t = (*parser).mark;
     memset(
         token as *mut libc::c_void,
@@ -1079,33 +1037,7 @@ unsafe fn yaml_parser_fetch_flow_collection_start(
     }
     (*parser).simple_key_allowed = 1_i32;
     let start_mark: yaml_mark_t = (*parser).mark;
-    let fresh41 = addr_of_mut!((*parser).mark.index);
-    *fresh41 = (*fresh41).wrapping_add(1);
-    let fresh42 = addr_of_mut!((*parser).mark.column);
-    *fresh42 = (*fresh42).wrapping_add(1);
-    let fresh43 = addr_of_mut!((*parser).unread);
-    *fresh43 = (*fresh43).wrapping_sub(1);
-    let fresh44 = addr_of_mut!((*parser).buffer.pointer);
-    *fresh44 = (*fresh44).wrapping_offset(
-        (if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0x80_i32 == 0_i32
-        {
-            1_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xe0_i32
-            == 0xc0_i32
-        {
-            2_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf0_i32
-            == 0xe0_i32
-        {
-            3_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf8_i32
-            == 0xf0_i32
-        {
-            4_i32
-        } else {
-            0_i32
-        }) as isize,
-    );
+    SKIP!(parser);
     let end_mark: yaml_mark_t = (*parser).mark;
     memset(
         token as *mut libc::c_void,
@@ -1152,33 +1084,7 @@ unsafe fn yaml_parser_fetch_flow_collection_end(
     }
     (*parser).simple_key_allowed = 0_i32;
     let start_mark: yaml_mark_t = (*parser).mark;
-    let fresh47 = addr_of_mut!((*parser).mark.index);
-    *fresh47 = (*fresh47).wrapping_add(1);
-    let fresh48 = addr_of_mut!((*parser).mark.column);
-    *fresh48 = (*fresh48).wrapping_add(1);
-    let fresh49 = addr_of_mut!((*parser).unread);
-    *fresh49 = (*fresh49).wrapping_sub(1);
-    let fresh50 = addr_of_mut!((*parser).buffer.pointer);
-    *fresh50 = (*fresh50).wrapping_offset(
-        (if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0x80_i32 == 0_i32
-        {
-            1_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xe0_i32
-            == 0xc0_i32
-        {
-            2_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf0_i32
-            == 0xe0_i32
-        {
-            3_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf8_i32
-            == 0xf0_i32
-        {
-            4_i32
-        } else {
-            0_i32
-        }) as isize,
-    );
+    SKIP!(parser);
     let end_mark: yaml_mark_t = (*parser).mark;
     memset(
         token as *mut libc::c_void,
@@ -1219,33 +1125,7 @@ unsafe fn yaml_parser_fetch_flow_entry(mut parser: *mut yaml_parser_t) -> libc::
     }
     (*parser).simple_key_allowed = 1_i32;
     let start_mark: yaml_mark_t = (*parser).mark;
-    let fresh53 = addr_of_mut!((*parser).mark.index);
-    *fresh53 = (*fresh53).wrapping_add(1);
-    let fresh54 = addr_of_mut!((*parser).mark.column);
-    *fresh54 = (*fresh54).wrapping_add(1);
-    let fresh55 = addr_of_mut!((*parser).unread);
-    *fresh55 = (*fresh55).wrapping_sub(1);
-    let fresh56 = addr_of_mut!((*parser).buffer.pointer);
-    *fresh56 = (*fresh56).wrapping_offset(
-        (if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0x80_i32 == 0_i32
-        {
-            1_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xe0_i32
-            == 0xc0_i32
-        {
-            2_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf0_i32
-            == 0xe0_i32
-        {
-            3_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf8_i32
-            == 0xf0_i32
-        {
-            4_i32
-        } else {
-            0_i32
-        }) as isize,
-    );
+    SKIP!(parser);
     let end_mark: yaml_mark_t = (*parser).mark;
     memset(
         token as *mut libc::c_void,
@@ -1307,33 +1187,7 @@ unsafe fn yaml_parser_fetch_block_entry(mut parser: *mut yaml_parser_t) -> libc:
     }
     (*parser).simple_key_allowed = 1_i32;
     let start_mark: yaml_mark_t = (*parser).mark;
-    let fresh59 = addr_of_mut!((*parser).mark.index);
-    *fresh59 = (*fresh59).wrapping_add(1);
-    let fresh60 = addr_of_mut!((*parser).mark.column);
-    *fresh60 = (*fresh60).wrapping_add(1);
-    let fresh61 = addr_of_mut!((*parser).unread);
-    *fresh61 = (*fresh61).wrapping_sub(1);
-    let fresh62 = addr_of_mut!((*parser).buffer.pointer);
-    *fresh62 = (*fresh62).wrapping_offset(
-        (if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0x80_i32 == 0_i32
-        {
-            1_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xe0_i32
-            == 0xc0_i32
-        {
-            2_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf0_i32
-            == 0xe0_i32
-        {
-            3_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf8_i32
-            == 0xf0_i32
-        {
-            4_i32
-        } else {
-            0_i32
-        }) as isize,
-    );
+    SKIP!(parser);
     let end_mark: yaml_mark_t = (*parser).mark;
     memset(
         token as *mut libc::c_void,
@@ -1395,33 +1249,7 @@ unsafe fn yaml_parser_fetch_key(mut parser: *mut yaml_parser_t) -> libc::c_int {
     }
     (*parser).simple_key_allowed = ((*parser).flow_level == 0) as libc::c_int;
     let start_mark: yaml_mark_t = (*parser).mark;
-    let fresh65 = addr_of_mut!((*parser).mark.index);
-    *fresh65 = (*fresh65).wrapping_add(1);
-    let fresh66 = addr_of_mut!((*parser).mark.column);
-    *fresh66 = (*fresh66).wrapping_add(1);
-    let fresh67 = addr_of_mut!((*parser).unread);
-    *fresh67 = (*fresh67).wrapping_sub(1);
-    let fresh68 = addr_of_mut!((*parser).buffer.pointer);
-    *fresh68 = (*fresh68).wrapping_offset(
-        (if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0x80_i32 == 0_i32
-        {
-            1_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xe0_i32
-            == 0xc0_i32
-        {
-            2_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf0_i32
-            == 0xe0_i32
-        {
-            3_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf8_i32
-            == 0xf0_i32
-        {
-            4_i32
-        } else {
-            0_i32
-        }) as isize,
-    );
+    SKIP!(parser);
     let end_mark: yaml_mark_t = (*parser).mark;
     memset(
         token as *mut libc::c_void,
@@ -1542,33 +1370,7 @@ unsafe fn yaml_parser_fetch_value(mut parser: *mut yaml_parser_t) -> libc::c_int
         (*parser).simple_key_allowed = ((*parser).flow_level == 0) as libc::c_int;
     }
     let start_mark: yaml_mark_t = (*parser).mark;
-    let fresh72 = addr_of_mut!((*parser).mark.index);
-    *fresh72 = (*fresh72).wrapping_add(1);
-    let fresh73 = addr_of_mut!((*parser).mark.column);
-    *fresh73 = (*fresh73).wrapping_add(1);
-    let fresh74 = addr_of_mut!((*parser).unread);
-    *fresh74 = (*fresh74).wrapping_sub(1);
-    let fresh75 = addr_of_mut!((*parser).buffer.pointer);
-    *fresh75 = (*fresh75).wrapping_offset(
-        (if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0x80_i32 == 0_i32
-        {
-            1_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xe0_i32
-            == 0xc0_i32
-        {
-            2_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf0_i32
-            == 0xe0_i32
-        {
-            3_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf8_i32
-            == 0xf0_i32
-        {
-            4_i32
-        } else {
-            0_i32
-        }) as isize,
-    );
+    SKIP!(parser);
     let end_mark: yaml_mark_t = (*parser).mark;
     memset(
         token as *mut libc::c_void,
@@ -1798,37 +1600,7 @@ unsafe fn yaml_parser_scan_to_next_token(mut parser: *mut yaml_parser_t) -> libc
                 && *((*parser).buffer.pointer).wrapping_offset(2_isize) as libc::c_int
                     == -65i32 as yaml_char_t as libc::c_int)
         {
-            let fresh88 = addr_of_mut!((*parser).mark.index);
-            *fresh88 = (*fresh88).wrapping_add(1);
-            let fresh89 = addr_of_mut!((*parser).mark.column);
-            *fresh89 = (*fresh89).wrapping_add(1);
-            let fresh90 = addr_of_mut!((*parser).unread);
-            *fresh90 = (*fresh90).wrapping_sub(1);
-            let fresh91 = addr_of_mut!((*parser).buffer.pointer);
-            *fresh91 = (*fresh91).wrapping_offset(
-                (if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0x80_i32
-                    == 0_i32
-                {
-                    1_i32
-                } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                    & 0xe0_i32
-                    == 0xc0_i32
-                {
-                    2_i32
-                } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                    & 0xf0_i32
-                    == 0xe0_i32
-                {
-                    3_i32
-                } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                    & 0xf8_i32
-                    == 0xf0_i32
-                {
-                    4_i32
-                } else {
-                    0_i32
-                }) as isize,
-            );
+            SKIP!(parser);
         }
         if if (*parser).unread >= 1_u64 {
             1_i32
@@ -1844,37 +1616,7 @@ unsafe fn yaml_parser_scan_to_next_token(mut parser: *mut yaml_parser_t) -> libc
                 && *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
                     == '\t' as i32 as yaml_char_t as libc::c_int
         {
-            let fresh92 = addr_of_mut!((*parser).mark.index);
-            *fresh92 = (*fresh92).wrapping_add(1);
-            let fresh93 = addr_of_mut!((*parser).mark.column);
-            *fresh93 = (*fresh93).wrapping_add(1);
-            let fresh94 = addr_of_mut!((*parser).unread);
-            *fresh94 = (*fresh94).wrapping_sub(1);
-            let fresh95 = addr_of_mut!((*parser).buffer.pointer);
-            *fresh95 = (*fresh95).wrapping_offset(
-                (if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0x80_i32
-                    == 0_i32
-                {
-                    1_i32
-                } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                    & 0xe0_i32
-                    == 0xc0_i32
-                {
-                    2_i32
-                } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                    & 0xf0_i32
-                    == 0xe0_i32
-                {
-                    3_i32
-                } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                    & 0xf8_i32
-                    == 0xf0_i32
-                {
-                    4_i32
-                } else {
-                    0_i32
-                }) as isize,
-            );
+            SKIP!(parser);
             if if (*parser).unread >= 1_u64 {
                 1_i32
             } else {
@@ -1910,38 +1652,7 @@ unsafe fn yaml_parser_scan_to_next_token(mut parser: *mut yaml_parser_t) -> libc
                 || *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
                     == '\0' as i32 as yaml_char_t as libc::c_int)
             {
-                let fresh96 = addr_of_mut!((*parser).mark.index);
-                *fresh96 = (*fresh96).wrapping_add(1);
-                let fresh97 = addr_of_mut!((*parser).mark.column);
-                *fresh97 = (*fresh97).wrapping_add(1);
-                let fresh98 = addr_of_mut!((*parser).unread);
-                *fresh98 = (*fresh98).wrapping_sub(1);
-                let fresh99 = addr_of_mut!((*parser).buffer.pointer);
-                *fresh99 = (*fresh99).wrapping_offset(
-                    (if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                        & 0x80_i32
-                        == 0_i32
-                    {
-                        1_i32
-                    } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                        & 0xe0_i32
-                        == 0xc0_i32
-                    {
-                        2_i32
-                    } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                        & 0xf0_i32
-                        == 0xe0_i32
-                    {
-                        3_i32
-                    } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                        & 0xf8_i32
-                        == 0xf0_i32
-                    {
-                        4_i32
-                    } else {
-                        0_i32
-                    }) as isize,
-                );
+                SKIP!(parser);
                 if if (*parser).unread >= 1_u64 {
                     1_i32
                 } else {
@@ -2070,33 +1781,7 @@ unsafe fn yaml_parser_scan_directive(
     let mut handle: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
     let mut prefix: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
     let start_mark: yaml_mark_t = (*parser).mark;
-    let fresh108 = addr_of_mut!((*parser).mark.index);
-    *fresh108 = (*fresh108).wrapping_add(1);
-    let fresh109 = addr_of_mut!((*parser).mark.column);
-    *fresh109 = (*fresh109).wrapping_add(1);
-    let fresh110 = addr_of_mut!((*parser).unread);
-    *fresh110 = (*fresh110).wrapping_sub(1);
-    let fresh111 = addr_of_mut!((*parser).buffer.pointer);
-    *fresh111 = (*fresh111).wrapping_offset(
-        (if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0x80_i32 == 0_i32
-        {
-            1_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xe0_i32
-            == 0xc0_i32
-        {
-            2_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf0_i32
-            == 0xe0_i32
-        {
-            3_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf8_i32
-            == 0xf0_i32
-        {
-            4_i32
-        } else {
-            0_i32
-        }) as isize,
-    );
+    SKIP!(parser);
     if !(yaml_parser_scan_directive_name(parser, start_mark, addr_of_mut!(name)) == 0) {
         if strcmp(
             name as *mut libc::c_char,
@@ -2181,41 +1866,7 @@ unsafe fn yaml_parser_scan_directive(
                             current_block = 11584701595673473500;
                             break;
                         }
-                        let fresh114 = addr_of_mut!((*parser).mark.index);
-                        *fresh114 = (*fresh114).wrapping_add(1);
-                        let fresh115 = addr_of_mut!((*parser).mark.column);
-                        *fresh115 = (*fresh115).wrapping_add(1);
-                        let fresh116 = addr_of_mut!((*parser).unread);
-                        *fresh116 = (*fresh116).wrapping_sub(1);
-                        let fresh117 = addr_of_mut!((*parser).buffer.pointer);
-                        *fresh117 = (*fresh117).wrapping_offset(
-                            (if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                                & 0x80_i32
-                                == 0_i32
-                            {
-                                1_i32
-                            } else if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                as libc::c_int
-                                & 0xe0_i32
-                                == 0xc0_i32
-                            {
-                                2_i32
-                            } else if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                as libc::c_int
-                                & 0xf0_i32
-                                == 0xe0_i32
-                            {
-                                3_i32
-                            } else if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                as libc::c_int
-                                & 0xf8_i32
-                                == 0xf0_i32
-                            {
-                                4_i32
-                            } else {
-                                0_i32
-                            }) as isize,
-                        );
+                        SKIP!(parser);
                         if if (*parser).unread >= 1_u64 {
                             1_i32
                         } else {
@@ -2270,45 +1921,7 @@ unsafe fn yaml_parser_scan_directive(
                                         current_block = 6669252993407410313;
                                         break;
                                     }
-                                    let fresh118 = addr_of_mut!((*parser).mark.index);
-                                    *fresh118 = (*fresh118).wrapping_add(1);
-                                    let fresh119 = addr_of_mut!((*parser).mark.column);
-                                    *fresh119 = (*fresh119).wrapping_add(1);
-                                    let fresh120 = addr_of_mut!((*parser).unread);
-                                    *fresh120 = (*fresh120).wrapping_sub(1);
-                                    let fresh121 = addr_of_mut!((*parser).buffer.pointer);
-                                    *fresh121 = (*fresh121).wrapping_offset(
-                                        (if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                            as libc::c_int
-                                            & 0x80_i32
-                                            == 0_i32
-                                        {
-                                            1_i32
-                                        } else if *((*parser).buffer.pointer)
-                                            .wrapping_offset(0_isize)
-                                            as libc::c_int
-                                            & 0xe0_i32
-                                            == 0xc0_i32
-                                        {
-                                            2_i32
-                                        } else if *((*parser).buffer.pointer)
-                                            .wrapping_offset(0_isize)
-                                            as libc::c_int
-                                            & 0xf0_i32
-                                            == 0xe0_i32
-                                        {
-                                            3_i32
-                                        } else if *((*parser).buffer.pointer)
-                                            .wrapping_offset(0_isize)
-                                            as libc::c_int
-                                            & 0xf8_i32
-                                            == 0xf0_i32
-                                        {
-                                            4_i32
-                                        } else {
-                                            0_i32
-                                        }) as isize,
-                                    );
+                                    SKIP!(parser);
                                     if if (*parser).unread >= 1_u64 {
                                         1_i32
                                     } else {
@@ -2790,34 +2403,7 @@ unsafe fn yaml_parser_scan_version_directive_value(
         || *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
             == '\t' as i32 as yaml_char_t as libc::c_int
     {
-        let fresh163 = addr_of_mut!((*parser).mark.index);
-        *fresh163 = (*fresh163).wrapping_add(1);
-        let fresh164 = addr_of_mut!((*parser).mark.column);
-        *fresh164 = (*fresh164).wrapping_add(1);
-        let fresh165 = addr_of_mut!((*parser).unread);
-        *fresh165 = (*fresh165).wrapping_sub(1);
-        let fresh166 = addr_of_mut!((*parser).buffer.pointer);
-        *fresh166 = (*fresh166).wrapping_offset(
-            (if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0x80_i32
-                == 0_i32
-            {
-                1_i32
-            } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xe0_i32
-                == 0xc0_i32
-            {
-                2_i32
-            } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf0_i32
-                == 0xe0_i32
-            {
-                3_i32
-            } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf8_i32
-                == 0xf0_i32
-            {
-                4_i32
-            } else {
-                0_i32
-            }) as isize,
-        );
+        SKIP!(parser);
         if if (*parser).unread >= 1_u64 {
             1_i32
         } else {
@@ -2840,33 +2426,7 @@ unsafe fn yaml_parser_scan_version_directive_value(
             b"did not find expected digit or '.' character\0" as *const u8 as *const libc::c_char,
         );
     }
-    let fresh167 = addr_of_mut!((*parser).mark.index);
-    *fresh167 = (*fresh167).wrapping_add(1);
-    let fresh168 = addr_of_mut!((*parser).mark.column);
-    *fresh168 = (*fresh168).wrapping_add(1);
-    let fresh169 = addr_of_mut!((*parser).unread);
-    *fresh169 = (*fresh169).wrapping_sub(1);
-    let fresh170 = addr_of_mut!((*parser).buffer.pointer);
-    *fresh170 = (*fresh170).wrapping_offset(
-        (if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0x80_i32 == 0_i32
-        {
-            1_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xe0_i32
-            == 0xc0_i32
-        {
-            2_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf0_i32
-            == 0xe0_i32
-        {
-            3_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf8_i32
-            == 0xf0_i32
-        {
-            4_i32
-        } else {
-            0_i32
-        }) as isize,
-    );
+    SKIP!(parser);
     if yaml_parser_scan_version_directive_number(parser, start_mark, minor) == 0 {
         return 0_i32;
     }
@@ -2905,34 +2465,7 @@ unsafe fn yaml_parser_scan_version_directive_number(
         value = value * 10_i32
             + (*((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
                 - '0' as i32 as yaml_char_t as libc::c_int);
-        let fresh171 = addr_of_mut!((*parser).mark.index);
-        *fresh171 = (*fresh171).wrapping_add(1);
-        let fresh172 = addr_of_mut!((*parser).mark.column);
-        *fresh172 = (*fresh172).wrapping_add(1);
-        let fresh173 = addr_of_mut!((*parser).unread);
-        *fresh173 = (*fresh173).wrapping_sub(1);
-        let fresh174 = addr_of_mut!((*parser).buffer.pointer);
-        *fresh174 = (*fresh174).wrapping_offset(
-            (if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0x80_i32
-                == 0_i32
-            {
-                1_i32
-            } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xe0_i32
-                == 0xc0_i32
-            {
-                2_i32
-            } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf0_i32
-                == 0xe0_i32
-            {
-                3_i32
-            } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf8_i32
-                == 0xf0_i32
-            {
-                4_i32
-            } else {
-                0_i32
-            }) as isize,
-        );
+        SKIP!(parser);
         if if (*parser).unread >= 1_u64 {
             1_i32
         } else {
@@ -2986,41 +2519,7 @@ unsafe fn yaml_parser_scan_tag_directive_value(
                     || *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
                         == '\t' as i32 as yaml_char_t as libc::c_int
                 {
-                    let fresh175 = addr_of_mut!((*parser).mark.index);
-                    *fresh175 = (*fresh175).wrapping_add(1);
-                    let fresh176 = addr_of_mut!((*parser).mark.column);
-                    *fresh176 = (*fresh176).wrapping_add(1);
-                    let fresh177 = addr_of_mut!((*parser).unread);
-                    *fresh177 = (*fresh177).wrapping_sub(1);
-                    let fresh178 = addr_of_mut!((*parser).buffer.pointer);
-                    *fresh178 = (*fresh178).wrapping_offset(
-                        (if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                            & 0x80_i32
-                            == 0_i32
-                        {
-                            1_i32
-                        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                            as libc::c_int
-                            & 0xe0_i32
-                            == 0xc0_i32
-                        {
-                            2_i32
-                        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                            as libc::c_int
-                            & 0xf0_i32
-                            == 0xe0_i32
-                        {
-                            3_i32
-                        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                            as libc::c_int
-                            & 0xf8_i32
-                            == 0xf0_i32
-                        {
-                            4_i32
-                        } else {
-                            0_i32
-                        }) as isize,
-                    );
+                    SKIP!(parser);
                     if if (*parser).unread >= 1_u64 {
                         1_i32
                     } else {
@@ -3071,42 +2570,7 @@ unsafe fn yaml_parser_scan_tag_directive_value(
                             || *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
                                 == '\t' as i32 as yaml_char_t as libc::c_int
                         {
-                            let fresh179 = addr_of_mut!((*parser).mark.index);
-                            *fresh179 = (*fresh179).wrapping_add(1);
-                            let fresh180 = addr_of_mut!((*parser).mark.column);
-                            *fresh180 = (*fresh180).wrapping_add(1);
-                            let fresh181 = addr_of_mut!((*parser).unread);
-                            *fresh181 = (*fresh181).wrapping_sub(1);
-                            let fresh182 = addr_of_mut!((*parser).buffer.pointer);
-                            *fresh182 = (*fresh182).wrapping_offset(
-                                (if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                    as libc::c_int
-                                    & 0x80_i32
-                                    == 0_i32
-                                {
-                                    1_i32
-                                } else if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                    as libc::c_int
-                                    & 0xe0_i32
-                                    == 0xc0_i32
-                                {
-                                    2_i32
-                                } else if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                    as libc::c_int
-                                    & 0xf0_i32
-                                    == 0xe0_i32
-                                {
-                                    3_i32
-                                } else if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                    as libc::c_int
-                                    & 0xf8_i32
-                                    == 0xf0_i32
-                                {
-                                    4_i32
-                                } else {
-                                    0_i32
-                                }) as isize,
-                            );
+                            SKIP!(parser);
                             if if (*parser).unread >= 1_u64 {
                                 1_i32
                             } else {
@@ -3223,34 +2687,7 @@ unsafe fn yaml_parser_scan_anchor(
     } == 0)
     {
         start_mark = (*parser).mark;
-        let fresh183 = addr_of_mut!((*parser).mark.index);
-        *fresh183 = (*fresh183).wrapping_add(1);
-        let fresh184 = addr_of_mut!((*parser).mark.column);
-        *fresh184 = (*fresh184).wrapping_add(1);
-        let fresh185 = addr_of_mut!((*parser).unread);
-        *fresh185 = (*fresh185).wrapping_sub(1);
-        let fresh186 = addr_of_mut!((*parser).buffer.pointer);
-        *fresh186 = (*fresh186).wrapping_offset(
-            (if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0x80_i32
-                == 0_i32
-            {
-                1_i32
-            } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xe0_i32
-                == 0xc0_i32
-            {
-                2_i32
-            } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf0_i32
-                == 0xe0_i32
-            {
-                3_i32
-            } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf8_i32
-                == 0xf0_i32
-            {
-                4_i32
-            } else {
-                0_i32
-            }) as isize,
-        );
+        SKIP!(parser);
         if !(if (*parser).unread >= 1_u64 {
             1_i32
         } else {
@@ -3514,70 +2951,8 @@ unsafe fn yaml_parser_scan_tag(
                 current_block = 17708497480799081542;
             } else {
                 *handle.wrapping_offset(0_isize) = '\0' as i32 as yaml_char_t;
-                let fresh222 = addr_of_mut!((*parser).mark.index);
-                *fresh222 = (*fresh222).wrapping_add(1);
-                let fresh223 = addr_of_mut!((*parser).mark.column);
-                *fresh223 = (*fresh223).wrapping_add(1);
-                let fresh224 = addr_of_mut!((*parser).unread);
-                *fresh224 = (*fresh224).wrapping_sub(1);
-                let fresh225 = addr_of_mut!((*parser).buffer.pointer);
-                *fresh225 = (*fresh225).wrapping_offset(
-                    (if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                        & 0x80_i32
-                        == 0_i32
-                    {
-                        1_i32
-                    } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                        & 0xe0_i32
-                        == 0xc0_i32
-                    {
-                        2_i32
-                    } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                        & 0xf0_i32
-                        == 0xe0_i32
-                    {
-                        3_i32
-                    } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                        & 0xf8_i32
-                        == 0xf0_i32
-                    {
-                        4_i32
-                    } else {
-                        0_i32
-                    }) as isize,
-                );
-                let fresh226 = addr_of_mut!((*parser).mark.index);
-                *fresh226 = (*fresh226).wrapping_add(1);
-                let fresh227 = addr_of_mut!((*parser).mark.column);
-                *fresh227 = (*fresh227).wrapping_add(1);
-                let fresh228 = addr_of_mut!((*parser).unread);
-                *fresh228 = (*fresh228).wrapping_sub(1);
-                let fresh229 = addr_of_mut!((*parser).buffer.pointer);
-                *fresh229 = (*fresh229).wrapping_offset(
-                    (if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                        & 0x80_i32
-                        == 0_i32
-                    {
-                        1_i32
-                    } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                        & 0xe0_i32
-                        == 0xc0_i32
-                    {
-                        2_i32
-                    } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                        & 0xf0_i32
-                        == 0xe0_i32
-                    {
-                        3_i32
-                    } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                        & 0xf8_i32
-                        == 0xf0_i32
-                    {
-                        4_i32
-                    } else {
-                        0_i32
-                    }) as isize,
-                );
+                SKIP!(parser);
+                SKIP!(parser);
                 if yaml_parser_scan_tag_uri(
                     parser,
                     1_i32,
@@ -3599,41 +2974,7 @@ unsafe fn yaml_parser_scan_tag(
                     );
                     current_block = 17708497480799081542;
                 } else {
-                    let fresh230 = addr_of_mut!((*parser).mark.index);
-                    *fresh230 = (*fresh230).wrapping_add(1);
-                    let fresh231 = addr_of_mut!((*parser).mark.column);
-                    *fresh231 = (*fresh231).wrapping_add(1);
-                    let fresh232 = addr_of_mut!((*parser).unread);
-                    *fresh232 = (*fresh232).wrapping_sub(1);
-                    let fresh233 = addr_of_mut!((*parser).buffer.pointer);
-                    *fresh233 = (*fresh233).wrapping_offset(
-                        (if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                            & 0x80_i32
-                            == 0_i32
-                        {
-                            1_i32
-                        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                            as libc::c_int
-                            & 0xe0_i32
-                            == 0xc0_i32
-                        {
-                            2_i32
-                        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                            as libc::c_int
-                            & 0xf0_i32
-                            == 0xe0_i32
-                        {
-                            3_i32
-                        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                            as libc::c_int
-                            & 0xf8_i32
-                            == 0xf0_i32
-                        {
-                            4_i32
-                        } else {
-                            0_i32
-                        }) as isize,
-                    );
+                    SKIP!(parser);
                     current_block = 4488286894823169796;
                 }
             }
@@ -4634,90 +3975,9 @@ unsafe fn yaml_parser_scan_uri_escapes(
         let fresh369 = *fresh368;
         *fresh368 = (*fresh368).wrapping_offset(1);
         *fresh369 = octet;
-        let fresh370 = addr_of_mut!((*parser).mark.index);
-        *fresh370 = (*fresh370).wrapping_add(1);
-        let fresh371 = addr_of_mut!((*parser).mark.column);
-        *fresh371 = (*fresh371).wrapping_add(1);
-        let fresh372 = addr_of_mut!((*parser).unread);
-        *fresh372 = (*fresh372).wrapping_sub(1);
-        let fresh373 = addr_of_mut!((*parser).buffer.pointer);
-        *fresh373 = (*fresh373).wrapping_offset(
-            (if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0x80_i32
-                == 0_i32
-            {
-                1_i32
-            } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xe0_i32
-                == 0xc0_i32
-            {
-                2_i32
-            } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf0_i32
-                == 0xe0_i32
-            {
-                3_i32
-            } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf8_i32
-                == 0xf0_i32
-            {
-                4_i32
-            } else {
-                0_i32
-            }) as isize,
-        );
-        let fresh374 = addr_of_mut!((*parser).mark.index);
-        *fresh374 = (*fresh374).wrapping_add(1);
-        let fresh375 = addr_of_mut!((*parser).mark.column);
-        *fresh375 = (*fresh375).wrapping_add(1);
-        let fresh376 = addr_of_mut!((*parser).unread);
-        *fresh376 = (*fresh376).wrapping_sub(1);
-        let fresh377 = addr_of_mut!((*parser).buffer.pointer);
-        *fresh377 = (*fresh377).wrapping_offset(
-            (if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0x80_i32
-                == 0_i32
-            {
-                1_i32
-            } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xe0_i32
-                == 0xc0_i32
-            {
-                2_i32
-            } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf0_i32
-                == 0xe0_i32
-            {
-                3_i32
-            } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf8_i32
-                == 0xf0_i32
-            {
-                4_i32
-            } else {
-                0_i32
-            }) as isize,
-        );
-        let fresh378 = addr_of_mut!((*parser).mark.index);
-        *fresh378 = (*fresh378).wrapping_add(1);
-        let fresh379 = addr_of_mut!((*parser).mark.column);
-        *fresh379 = (*fresh379).wrapping_add(1);
-        let fresh380 = addr_of_mut!((*parser).unread);
-        *fresh380 = (*fresh380).wrapping_sub(1);
-        let fresh381 = addr_of_mut!((*parser).buffer.pointer);
-        *fresh381 = (*fresh381).wrapping_offset(
-            (if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0x80_i32
-                == 0_i32
-            {
-                1_i32
-            } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xe0_i32
-                == 0xc0_i32
-            {
-                2_i32
-            } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf0_i32
-                == 0xe0_i32
-            {
-                3_i32
-            } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0xf8_i32
-                == 0xf0_i32
-            {
-                4_i32
-            } else {
-                0_i32
-            }) as isize,
-        );
+        SKIP!(parser);
+        SKIP!(parser);
+        SKIP!(parser);
         width -= 1;
         if !(width != 0) {
             break;
@@ -4788,38 +4048,7 @@ unsafe fn yaml_parser_scan_block_scalar(
             } == 0)
             {
                 start_mark = (*parser).mark;
-                let fresh382 = addr_of_mut!((*parser).mark.index);
-                *fresh382 = (*fresh382).wrapping_add(1);
-                let fresh383 = addr_of_mut!((*parser).mark.column);
-                *fresh383 = (*fresh383).wrapping_add(1);
-                let fresh384 = addr_of_mut!((*parser).unread);
-                *fresh384 = (*fresh384).wrapping_sub(1);
-                let fresh385 = addr_of_mut!((*parser).buffer.pointer);
-                *fresh385 = (*fresh385).wrapping_offset(
-                    (if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                        & 0x80_i32
-                        == 0_i32
-                    {
-                        1_i32
-                    } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                        & 0xe0_i32
-                        == 0xc0_i32
-                    {
-                        2_i32
-                    } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                        & 0xf0_i32
-                        == 0xe0_i32
-                    {
-                        3_i32
-                    } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                        & 0xf8_i32
-                        == 0xf0_i32
-                    {
-                        4_i32
-                    } else {
-                        0_i32
-                    }) as isize,
-                );
+                SKIP!(parser);
                 if !(if (*parser).unread >= 1_u64 {
                     1_i32
                 } else {
@@ -4839,41 +4068,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                         } else {
                             -1_i32
                         };
-                        let fresh386 = addr_of_mut!((*parser).mark.index);
-                        *fresh386 = (*fresh386).wrapping_add(1);
-                        let fresh387 = addr_of_mut!((*parser).mark.column);
-                        *fresh387 = (*fresh387).wrapping_add(1);
-                        let fresh388 = addr_of_mut!((*parser).unread);
-                        *fresh388 = (*fresh388).wrapping_sub(1);
-                        let fresh389 = addr_of_mut!((*parser).buffer.pointer);
-                        *fresh389 = (*fresh389).wrapping_offset(
-                            (if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                                & 0x80_i32
-                                == 0_i32
-                            {
-                                1_i32
-                            } else if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                as libc::c_int
-                                & 0xe0_i32
-                                == 0xc0_i32
-                            {
-                                2_i32
-                            } else if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                as libc::c_int
-                                & 0xf0_i32
-                                == 0xe0_i32
-                            {
-                                3_i32
-                            } else if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                as libc::c_int
-                                & 0xf8_i32
-                                == 0xf0_i32
-                            {
-                                4_i32
-                            } else {
-                                0_i32
-                            }) as isize,
-                        );
+                        SKIP!(parser);
                         if if (*parser).unread >= 1_u64 {
                             1_i32
                         } else {
@@ -4903,42 +4098,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                                 increment = *((*parser).buffer.pointer).wrapping_offset(0_isize)
                                     as libc::c_int
                                     - '0' as i32 as yaml_char_t as libc::c_int;
-                                let fresh390 = addr_of_mut!((*parser).mark.index);
-                                *fresh390 = (*fresh390).wrapping_add(1);
-                                let fresh391 = addr_of_mut!((*parser).mark.column);
-                                *fresh391 = (*fresh391).wrapping_add(1);
-                                let fresh392 = addr_of_mut!((*parser).unread);
-                                *fresh392 = (*fresh392).wrapping_sub(1);
-                                let fresh393 = addr_of_mut!((*parser).buffer.pointer);
-                                *fresh393 = (*fresh393).wrapping_offset(
-                                    (if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                        as libc::c_int
-                                        & 0x80_i32
-                                        == 0_i32
-                                    {
-                                        1_i32
-                                    } else if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                        as libc::c_int
-                                        & 0xe0_i32
-                                        == 0xc0_i32
-                                    {
-                                        2_i32
-                                    } else if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                        as libc::c_int
-                                        & 0xf0_i32
-                                        == 0xe0_i32
-                                    {
-                                        3_i32
-                                    } else if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                        as libc::c_int
-                                        & 0xf8_i32
-                                        == 0xf0_i32
-                                    {
-                                        4_i32
-                                    } else {
-                                        0_i32
-                                    }) as isize,
-                                );
+                                SKIP!(parser);
                                 current_block = 11913429853522160501;
                             }
                         } else {
@@ -4965,42 +4125,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                             increment = *((*parser).buffer.pointer).wrapping_offset(0_isize)
                                 as libc::c_int
                                 - '0' as i32 as yaml_char_t as libc::c_int;
-                            let fresh394 = addr_of_mut!((*parser).mark.index);
-                            *fresh394 = (*fresh394).wrapping_add(1);
-                            let fresh395 = addr_of_mut!((*parser).mark.column);
-                            *fresh395 = (*fresh395).wrapping_add(1);
-                            let fresh396 = addr_of_mut!((*parser).unread);
-                            *fresh396 = (*fresh396).wrapping_sub(1);
-                            let fresh397 = addr_of_mut!((*parser).buffer.pointer);
-                            *fresh397 = (*fresh397).wrapping_offset(
-                                (if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                    as libc::c_int
-                                    & 0x80_i32
-                                    == 0_i32
-                                {
-                                    1_i32
-                                } else if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                    as libc::c_int
-                                    & 0xe0_i32
-                                    == 0xc0_i32
-                                {
-                                    2_i32
-                                } else if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                    as libc::c_int
-                                    & 0xf0_i32
-                                    == 0xe0_i32
-                                {
-                                    3_i32
-                                } else if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                    as libc::c_int
-                                    & 0xf8_i32
-                                    == 0xf0_i32
-                                {
-                                    4_i32
-                                } else {
-                                    0_i32
-                                }) as isize,
-                            );
+                            SKIP!(parser);
                             if if (*parser).unread >= 1_u64 {
                                 1_i32
                             } else {
@@ -5025,45 +4150,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                                     } else {
                                         -1_i32
                                     };
-                                    let fresh398 = addr_of_mut!((*parser).mark.index);
-                                    *fresh398 = (*fresh398).wrapping_add(1);
-                                    let fresh399 = addr_of_mut!((*parser).mark.column);
-                                    *fresh399 = (*fresh399).wrapping_add(1);
-                                    let fresh400 = addr_of_mut!((*parser).unread);
-                                    *fresh400 = (*fresh400).wrapping_sub(1);
-                                    let fresh401 = addr_of_mut!((*parser).buffer.pointer);
-                                    *fresh401 = (*fresh401).wrapping_offset(
-                                        (if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                            as libc::c_int
-                                            & 0x80_i32
-                                            == 0_i32
-                                        {
-                                            1_i32
-                                        } else if *((*parser).buffer.pointer)
-                                            .wrapping_offset(0_isize)
-                                            as libc::c_int
-                                            & 0xe0_i32
-                                            == 0xc0_i32
-                                        {
-                                            2_i32
-                                        } else if *((*parser).buffer.pointer)
-                                            .wrapping_offset(0_isize)
-                                            as libc::c_int
-                                            & 0xf0_i32
-                                            == 0xe0_i32
-                                        {
-                                            3_i32
-                                        } else if *((*parser).buffer.pointer)
-                                            .wrapping_offset(0_isize)
-                                            as libc::c_int
-                                            & 0xf8_i32
-                                            == 0xf0_i32
-                                        {
-                                            4_i32
-                                        } else {
-                                            0_i32
-                                        }) as isize,
-                                    );
+                                    SKIP!(parser);
                                 }
                                 current_block = 11913429853522160501;
                             }
@@ -5091,45 +4178,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                                         current_block = 4090602189656566074;
                                         break;
                                     }
-                                    let fresh402 = addr_of_mut!((*parser).mark.index);
-                                    *fresh402 = (*fresh402).wrapping_add(1);
-                                    let fresh403 = addr_of_mut!((*parser).mark.column);
-                                    *fresh403 = (*fresh403).wrapping_add(1);
-                                    let fresh404 = addr_of_mut!((*parser).unread);
-                                    *fresh404 = (*fresh404).wrapping_sub(1);
-                                    let fresh405 = addr_of_mut!((*parser).buffer.pointer);
-                                    *fresh405 = (*fresh405).wrapping_offset(
-                                        (if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                            as libc::c_int
-                                            & 0x80_i32
-                                            == 0_i32
-                                        {
-                                            1_i32
-                                        } else if *((*parser).buffer.pointer)
-                                            .wrapping_offset(0_isize)
-                                            as libc::c_int
-                                            & 0xe0_i32
-                                            == 0xc0_i32
-                                        {
-                                            2_i32
-                                        } else if *((*parser).buffer.pointer)
-                                            .wrapping_offset(0_isize)
-                                            as libc::c_int
-                                            & 0xf0_i32
-                                            == 0xe0_i32
-                                        {
-                                            3_i32
-                                        } else if *((*parser).buffer.pointer)
-                                            .wrapping_offset(0_isize)
-                                            as libc::c_int
-                                            & 0xf8_i32
-                                            == 0xf0_i32
-                                        {
-                                            4_i32
-                                        } else {
-                                            0_i32
-                                        }) as isize,
-                                    );
+                                    SKIP!(parser);
                                     if if (*parser).unread >= 1_u64 {
                                         1_i32
                                     } else {
@@ -5196,48 +4245,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                     current_block = 12997042908615822766;
                                                     break;
                                                 }
-                                                let fresh406 = addr_of_mut!((*parser).mark.index);
-                                                *fresh406 = (*fresh406).wrapping_add(1);
-                                                let fresh407 = addr_of_mut!((*parser).mark.column);
-                                                *fresh407 = (*fresh407).wrapping_add(1);
-                                                let fresh408 = addr_of_mut!((*parser).unread);
-                                                *fresh408 = (*fresh408).wrapping_sub(1);
-                                                let fresh409 =
-                                                    addr_of_mut!((*parser).buffer.pointer);
-                                                *fresh409 = (*fresh409).wrapping_offset(
-                                                    (if *((*parser).buffer.pointer)
-                                                        .wrapping_offset(0_isize)
-                                                        as libc::c_int
-                                                        & 0x80_i32
-                                                        == 0_i32
-                                                    {
-                                                        1_i32
-                                                    } else if *((*parser).buffer.pointer)
-                                                        .wrapping_offset(0_isize)
-                                                        as libc::c_int
-                                                        & 0xe0_i32
-                                                        == 0xc0_i32
-                                                    {
-                                                        2_i32
-                                                    } else if *((*parser).buffer.pointer)
-                                                        .wrapping_offset(0_isize)
-                                                        as libc::c_int
-                                                        & 0xf0_i32
-                                                        == 0xe0_i32
-                                                    {
-                                                        3_i32
-                                                    } else if *((*parser).buffer.pointer)
-                                                        .wrapping_offset(0_isize)
-                                                        as libc::c_int
-                                                        & 0xf8_i32
-                                                        == 0xf0_i32
-                                                    {
-                                                        4_i32
-                                                    } else {
-                                                        0_i32
-                                                    })
-                                                        as isize,
-                                                );
+                                                SKIP!(parser);
                                                 if if (*parser).unread >= 1_u64 {
                                                     1_i32
                                                 } else {
@@ -6116,37 +5124,7 @@ unsafe fn yaml_parser_scan_block_scalar_breaks(
             && *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
                 == ' ' as i32 as yaml_char_t as libc::c_int
         {
-            let fresh480 = addr_of_mut!((*parser).mark.index);
-            *fresh480 = (*fresh480).wrapping_add(1);
-            let fresh481 = addr_of_mut!((*parser).mark.column);
-            *fresh481 = (*fresh481).wrapping_add(1);
-            let fresh482 = addr_of_mut!((*parser).unread);
-            *fresh482 = (*fresh482).wrapping_sub(1);
-            let fresh483 = addr_of_mut!((*parser).buffer.pointer);
-            *fresh483 = (*fresh483).wrapping_offset(
-                (if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int & 0x80_i32
-                    == 0_i32
-                {
-                    1_i32
-                } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                    & 0xe0_i32
-                    == 0xc0_i32
-                {
-                    2_i32
-                } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                    & 0xf0_i32
-                    == 0xe0_i32
-                {
-                    3_i32
-                } else if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                    & 0xf8_i32
-                    == 0xf0_i32
-                {
-                    4_i32
-                } else {
-                    0_i32
-                }) as isize,
-            );
+            SKIP!(parser);
             if if (*parser).unread >= 1_u64 {
                 1_i32
             } else {
@@ -6402,41 +5380,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                 } == 0)
                 {
                     start_mark = (*parser).mark;
-                    let fresh517 = addr_of_mut!((*parser).mark.index);
-                    *fresh517 = (*fresh517).wrapping_add(1);
-                    let fresh518 = addr_of_mut!((*parser).mark.column);
-                    *fresh518 = (*fresh518).wrapping_add(1);
-                    let fresh519 = addr_of_mut!((*parser).unread);
-                    *fresh519 = (*fresh519).wrapping_sub(1);
-                    let fresh520 = addr_of_mut!((*parser).buffer.pointer);
-                    *fresh520 = (*fresh520).wrapping_offset(
-                        (if *((*parser).buffer.pointer).wrapping_offset(0_isize) as libc::c_int
-                            & 0x80_i32
-                            == 0_i32
-                        {
-                            1_i32
-                        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                            as libc::c_int
-                            & 0xe0_i32
-                            == 0xc0_i32
-                        {
-                            2_i32
-                        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                            as libc::c_int
-                            & 0xf0_i32
-                            == 0xe0_i32
-                        {
-                            3_i32
-                        } else if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                            as libc::c_int
-                            & 0xf8_i32
-                            == 0xf0_i32
-                        {
-                            4_i32
-                        } else {
-                            0_i32
-                        }) as isize,
-                    );
+                    SKIP!(parser);
                     's_58: loop {
                         if if (*parser).unread >= 4_u64 {
                             1_i32
@@ -6611,84 +5555,8 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                     let fresh521 = string.pointer;
                                     string.pointer = string.pointer.wrapping_offset(1);
                                     *fresh521 = '\'' as i32 as yaml_char_t;
-                                    let fresh522 = addr_of_mut!((*parser).mark.index);
-                                    *fresh522 = (*fresh522).wrapping_add(1);
-                                    let fresh523 = addr_of_mut!((*parser).mark.column);
-                                    *fresh523 = (*fresh523).wrapping_add(1);
-                                    let fresh524 = addr_of_mut!((*parser).unread);
-                                    *fresh524 = (*fresh524).wrapping_sub(1);
-                                    let fresh525 = addr_of_mut!((*parser).buffer.pointer);
-                                    *fresh525 = (*fresh525).wrapping_offset(
-                                        (if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                            as libc::c_int
-                                            & 0x80_i32
-                                            == 0_i32
-                                        {
-                                            1_i32
-                                        } else if *((*parser).buffer.pointer)
-                                            .wrapping_offset(0_isize)
-                                            as libc::c_int
-                                            & 0xe0_i32
-                                            == 0xc0_i32
-                                        {
-                                            2_i32
-                                        } else if *((*parser).buffer.pointer)
-                                            .wrapping_offset(0_isize)
-                                            as libc::c_int
-                                            & 0xf0_i32
-                                            == 0xe0_i32
-                                        {
-                                            3_i32
-                                        } else if *((*parser).buffer.pointer)
-                                            .wrapping_offset(0_isize)
-                                            as libc::c_int
-                                            & 0xf8_i32
-                                            == 0xf0_i32
-                                        {
-                                            4_i32
-                                        } else {
-                                            0_i32
-                                        }) as isize,
-                                    );
-                                    let fresh526 = addr_of_mut!((*parser).mark.index);
-                                    *fresh526 = (*fresh526).wrapping_add(1);
-                                    let fresh527 = addr_of_mut!((*parser).mark.column);
-                                    *fresh527 = (*fresh527).wrapping_add(1);
-                                    let fresh528 = addr_of_mut!((*parser).unread);
-                                    *fresh528 = (*fresh528).wrapping_sub(1);
-                                    let fresh529 = addr_of_mut!((*parser).buffer.pointer);
-                                    *fresh529 = (*fresh529).wrapping_offset(
-                                        (if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                            as libc::c_int
-                                            & 0x80_i32
-                                            == 0_i32
-                                        {
-                                            1_i32
-                                        } else if *((*parser).buffer.pointer)
-                                            .wrapping_offset(0_isize)
-                                            as libc::c_int
-                                            & 0xe0_i32
-                                            == 0xc0_i32
-                                        {
-                                            2_i32
-                                        } else if *((*parser).buffer.pointer)
-                                            .wrapping_offset(0_isize)
-                                            as libc::c_int
-                                            & 0xf0_i32
-                                            == 0xe0_i32
-                                        {
-                                            3_i32
-                                        } else if *((*parser).buffer.pointer)
-                                            .wrapping_offset(0_isize)
-                                            as libc::c_int
-                                            & 0xf8_i32
-                                            == 0xf0_i32
-                                        {
-                                            4_i32
-                                        } else {
-                                            0_i32
-                                        }) as isize,
-                                    );
+                                    SKIP!(parser);
+                                    SKIP!(parser);
                                 } else {
                                     if *((*parser).buffer.pointer).wrapping_offset(0_isize)
                                         as libc::c_int
@@ -6747,45 +5615,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                             current_block = 8114179180390253173;
                                             break 's_58;
                                         }
-                                        let fresh530 = addr_of_mut!((*parser).mark.index);
-                                        *fresh530 = (*fresh530).wrapping_add(1);
-                                        let fresh531 = addr_of_mut!((*parser).mark.column);
-                                        *fresh531 = (*fresh531).wrapping_add(1);
-                                        let fresh532 = addr_of_mut!((*parser).unread);
-                                        *fresh532 = (*fresh532).wrapping_sub(1);
-                                        let fresh533 = addr_of_mut!((*parser).buffer.pointer);
-                                        *fresh533 = (*fresh533).wrapping_offset(
-                                            (if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                                as libc::c_int
-                                                & 0x80_i32
-                                                == 0_i32
-                                            {
-                                                1_i32
-                                            } else if *((*parser).buffer.pointer)
-                                                .wrapping_offset(0_isize)
-                                                as libc::c_int
-                                                & 0xe0_i32
-                                                == 0xc0_i32
-                                            {
-                                                2_i32
-                                            } else if *((*parser).buffer.pointer)
-                                                .wrapping_offset(0_isize)
-                                                as libc::c_int
-                                                & 0xf0_i32
-                                                == 0xe0_i32
-                                            {
-                                                3_i32
-                                            } else if *((*parser).buffer.pointer)
-                                                .wrapping_offset(0_isize)
-                                                as libc::c_int
-                                                & 0xf8_i32
-                                                == 0xf0_i32
-                                            {
-                                                4_i32
-                                            } else {
-                                                0_i32
-                                            }) as isize,
-                                        );
+                                        SKIP!(parser);
                                         if *((*parser).buffer.pointer).wrapping_offset(0_isize)
                                             as libc::c_int
                                             == '\r' as i32 as yaml_char_t as libc::c_int
@@ -7040,84 +5870,8 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                 break 's_58;
                                             }
                                         }
-                                        let fresh565 = addr_of_mut!((*parser).mark.index);
-                                        *fresh565 = (*fresh565).wrapping_add(1);
-                                        let fresh566 = addr_of_mut!((*parser).mark.column);
-                                        *fresh566 = (*fresh566).wrapping_add(1);
-                                        let fresh567 = addr_of_mut!((*parser).unread);
-                                        *fresh567 = (*fresh567).wrapping_sub(1);
-                                        let fresh568 = addr_of_mut!((*parser).buffer.pointer);
-                                        *fresh568 = (*fresh568).wrapping_offset(
-                                            (if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                                as libc::c_int
-                                                & 0x80_i32
-                                                == 0_i32
-                                            {
-                                                1_i32
-                                            } else if *((*parser).buffer.pointer)
-                                                .wrapping_offset(0_isize)
-                                                as libc::c_int
-                                                & 0xe0_i32
-                                                == 0xc0_i32
-                                            {
-                                                2_i32
-                                            } else if *((*parser).buffer.pointer)
-                                                .wrapping_offset(0_isize)
-                                                as libc::c_int
-                                                & 0xf0_i32
-                                                == 0xe0_i32
-                                            {
-                                                3_i32
-                                            } else if *((*parser).buffer.pointer)
-                                                .wrapping_offset(0_isize)
-                                                as libc::c_int
-                                                & 0xf8_i32
-                                                == 0xf0_i32
-                                            {
-                                                4_i32
-                                            } else {
-                                                0_i32
-                                            }) as isize,
-                                        );
-                                        let fresh569 = addr_of_mut!((*parser).mark.index);
-                                        *fresh569 = (*fresh569).wrapping_add(1);
-                                        let fresh570 = addr_of_mut!((*parser).mark.column);
-                                        *fresh570 = (*fresh570).wrapping_add(1);
-                                        let fresh571 = addr_of_mut!((*parser).unread);
-                                        *fresh571 = (*fresh571).wrapping_sub(1);
-                                        let fresh572 = addr_of_mut!((*parser).buffer.pointer);
-                                        *fresh572 = (*fresh572).wrapping_offset(
-                                            (if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                                as libc::c_int
-                                                & 0x80_i32
-                                                == 0_i32
-                                            {
-                                                1_i32
-                                            } else if *((*parser).buffer.pointer)
-                                                .wrapping_offset(0_isize)
-                                                as libc::c_int
-                                                & 0xe0_i32
-                                                == 0xc0_i32
-                                            {
-                                                2_i32
-                                            } else if *((*parser).buffer.pointer)
-                                                .wrapping_offset(0_isize)
-                                                as libc::c_int
-                                                & 0xf0_i32
-                                                == 0xe0_i32
-                                            {
-                                                3_i32
-                                            } else if *((*parser).buffer.pointer)
-                                                .wrapping_offset(0_isize)
-                                                as libc::c_int
-                                                & 0xf8_i32
-                                                == 0xf0_i32
-                                            {
-                                                4_i32
-                                            } else {
-                                                0_i32
-                                            }) as isize,
-                                        );
+                                        SKIP!(parser);
+                                        SKIP!(parser);
                                         if code_length != 0 {
                                             let mut value: libc::c_uint = 0_u32;
                                             let mut k: size_t;
@@ -7315,50 +6069,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                 }
                                                 k = 0_u64;
                                                 while k < code_length {
-                                                    let fresh583 =
-                                                        addr_of_mut!((*parser).mark.index);
-                                                    *fresh583 = (*fresh583).wrapping_add(1);
-                                                    let fresh584 =
-                                                        addr_of_mut!((*parser).mark.column);
-                                                    *fresh584 = (*fresh584).wrapping_add(1);
-                                                    let fresh585 = addr_of_mut!((*parser).unread);
-                                                    *fresh585 = (*fresh585).wrapping_sub(1);
-                                                    let fresh586 =
-                                                        addr_of_mut!((*parser).buffer.pointer);
-                                                    *fresh586 = (*fresh586).wrapping_offset(
-                                                        (if *((*parser).buffer.pointer)
-                                                            .wrapping_offset(0_isize)
-                                                            as libc::c_int
-                                                            & 0x80_i32
-                                                            == 0_i32
-                                                        {
-                                                            1_i32
-                                                        } else if *((*parser).buffer.pointer)
-                                                            .wrapping_offset(0_isize)
-                                                            as libc::c_int
-                                                            & 0xe0_i32
-                                                            == 0xc0_i32
-                                                        {
-                                                            2_i32
-                                                        } else if *((*parser).buffer.pointer)
-                                                            .wrapping_offset(0_isize)
-                                                            as libc::c_int
-                                                            & 0xf0_i32
-                                                            == 0xe0_i32
-                                                        {
-                                                            3_i32
-                                                        } else if *((*parser).buffer.pointer)
-                                                            .wrapping_offset(0_isize)
-                                                            as libc::c_int
-                                                            & 0xf8_i32
-                                                            == 0xf0_i32
-                                                        {
-                                                            4_i32
-                                                        } else {
-                                                            0_i32
-                                                        })
-                                                            as isize,
-                                                    );
+                                                    SKIP!(parser);
                                                     k = k.wrapping_add(1);
                                                 }
                                             }
@@ -7673,45 +6384,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                             break 's_58;
                                         }
                                     } else {
-                                        let fresh653 = addr_of_mut!((*parser).mark.index);
-                                        *fresh653 = (*fresh653).wrapping_add(1);
-                                        let fresh654 = addr_of_mut!((*parser).mark.column);
-                                        *fresh654 = (*fresh654).wrapping_add(1);
-                                        let fresh655 = addr_of_mut!((*parser).unread);
-                                        *fresh655 = (*fresh655).wrapping_sub(1);
-                                        let fresh656 = addr_of_mut!((*parser).buffer.pointer);
-                                        *fresh656 = (*fresh656).wrapping_offset(
-                                            (if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                                as libc::c_int
-                                                & 0x80_i32
-                                                == 0_i32
-                                            {
-                                                1_i32
-                                            } else if *((*parser).buffer.pointer)
-                                                .wrapping_offset(0_isize)
-                                                as libc::c_int
-                                                & 0xe0_i32
-                                                == 0xc0_i32
-                                            {
-                                                2_i32
-                                            } else if *((*parser).buffer.pointer)
-                                                .wrapping_offset(0_isize)
-                                                as libc::c_int
-                                                & 0xf0_i32
-                                                == 0xe0_i32
-                                            {
-                                                3_i32
-                                            } else if *((*parser).buffer.pointer)
-                                                .wrapping_offset(0_isize)
-                                                as libc::c_int
-                                                & 0xf8_i32
-                                                == 0xf0_i32
-                                            {
-                                                4_i32
-                                            } else {
-                                                0_i32
-                                            }) as isize,
-                                        );
+                                        SKIP!(parser);
                                     }
                                 } else {
                                     if if (*parser).unread >= 2_u64 {
@@ -8178,42 +6851,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                     match current_block {
                         8114179180390253173 => {}
                         _ => {
-                            let fresh712 = addr_of_mut!((*parser).mark.index);
-                            *fresh712 = (*fresh712).wrapping_add(1);
-                            let fresh713 = addr_of_mut!((*parser).mark.column);
-                            *fresh713 = (*fresh713).wrapping_add(1);
-                            let fresh714 = addr_of_mut!((*parser).unread);
-                            *fresh714 = (*fresh714).wrapping_sub(1);
-                            let fresh715 = addr_of_mut!((*parser).buffer.pointer);
-                            *fresh715 = (*fresh715).wrapping_offset(
-                                (if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                    as libc::c_int
-                                    & 0x80_i32
-                                    == 0_i32
-                                {
-                                    1_i32
-                                } else if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                    as libc::c_int
-                                    & 0xe0_i32
-                                    == 0xc0_i32
-                                {
-                                    2_i32
-                                } else if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                    as libc::c_int
-                                    & 0xf0_i32
-                                    == 0xe0_i32
-                                {
-                                    3_i32
-                                } else if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                    as libc::c_int
-                                    & 0xf8_i32
-                                    == 0xf0_i32
-                                {
-                                    4_i32
-                                } else {
-                                    0_i32
-                                }) as isize,
-                            );
+                            SKIP!(parser);
                             end_mark = (*parser).mark;
                             memset(
                                 token as *mut libc::c_void,
@@ -9053,45 +7691,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                         break 's_57;
                                     }
                                 } else {
-                                    let fresh784 = addr_of_mut!((*parser).mark.index);
-                                    *fresh784 = (*fresh784).wrapping_add(1);
-                                    let fresh785 = addr_of_mut!((*parser).mark.column);
-                                    *fresh785 = (*fresh785).wrapping_add(1);
-                                    let fresh786 = addr_of_mut!((*parser).unread);
-                                    *fresh786 = (*fresh786).wrapping_sub(1);
-                                    let fresh787 = addr_of_mut!((*parser).buffer.pointer);
-                                    *fresh787 = (*fresh787).wrapping_offset(
-                                        (if *((*parser).buffer.pointer).wrapping_offset(0_isize)
-                                            as libc::c_int
-                                            & 0x80_i32
-                                            == 0_i32
-                                        {
-                                            1_i32
-                                        } else if *((*parser).buffer.pointer)
-                                            .wrapping_offset(0_isize)
-                                            as libc::c_int
-                                            & 0xe0_i32
-                                            == 0xc0_i32
-                                        {
-                                            2_i32
-                                        } else if *((*parser).buffer.pointer)
-                                            .wrapping_offset(0_isize)
-                                            as libc::c_int
-                                            & 0xf0_i32
-                                            == 0xe0_i32
-                                        {
-                                            3_i32
-                                        } else if *((*parser).buffer.pointer)
-                                            .wrapping_offset(0_isize)
-                                            as libc::c_int
-                                            & 0xf8_i32
-                                            == 0xf0_i32
-                                        {
-                                            4_i32
-                                        } else {
-                                            0_i32
-                                        }) as isize,
-                                    );
+                                    SKIP!(parser);
                                 }
                             } else {
                                 if if (*parser).unread >= 2_u64 {
