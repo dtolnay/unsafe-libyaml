@@ -244,6 +244,9 @@ impl<T> PointerExt for *mut T {
     }
 }
 
+#[macro_use]
+mod macros;
+
 mod api;
 mod dumper;
 mod emitter;
