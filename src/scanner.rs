@@ -476,10 +476,7 @@ unsafe fn yaml_parser_fetch_next_token(parser: *mut yaml_parser_t) -> libc::c_in
         || *((*parser).buffer.pointer) as libc::c_int == '@' as i32 as yaml_char_t as libc::c_int
         || *((*parser).buffer.pointer) as libc::c_int == '`' as i32 as yaml_char_t as libc::c_int)
         || *((*parser).buffer.pointer) as libc::c_int == '-' as i32 as yaml_char_t as libc::c_int
-            && !(*((*parser).buffer.pointer).wrapping_offset(1_isize) as libc::c_int
-                == ' ' as i32 as yaml_char_t as libc::c_int
-                || *((*parser).buffer.pointer).wrapping_offset(1_isize) as libc::c_int
-                    == '\t' as i32 as yaml_char_t as libc::c_int)
+            && !IS_BLANK_AT!((*parser).buffer, 1)
         || (*parser).flow_level == 0
             && (*((*parser).buffer.pointer) as libc::c_int
                 == '?' as i32 as yaml_char_t as libc::c_int

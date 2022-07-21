@@ -1,16 +1,21 @@
+macro_rules! IS_BLANK_AT {
+    ($string:expr, $offset:expr) => {
+        *$string.pointer.wrapping_offset($offset as isize) as libc::c_int
+            == ' ' as i32 as yaml_char_t as libc::c_int
+            || *$string.pointer.wrapping_offset($offset as isize) as libc::c_int
+                == '\t' as i32 as yaml_char_t as libc::c_int
+    };
+}
+
 macro_rules! IS_BLANK {
     ($string:expr) => {
-        *$string.pointer as libc::c_int == ' ' as i32 as yaml_char_t as libc::c_int
-            || *$string.pointer as libc::c_int == '\t' as i32 as yaml_char_t as libc::c_int
+        IS_BLANK_AT!($string, 0)
     };
 }
 
 macro_rules! IS_BLANKZ_AT {
     ($string:expr, $offset:expr) => {
-        (*$string.pointer.wrapping_offset($offset as isize) as libc::c_int
-            == ' ' as i32 as yaml_char_t as libc::c_int
-            || *$string.pointer.wrapping_offset($offset as isize) as libc::c_int
-                == '\t' as i32 as yaml_char_t as libc::c_int
+        IS_BLANK_AT!($string, $offset)
             || (*$string.pointer.wrapping_offset($offset as isize) as libc::c_int
                 == '\r' as i32 as yaml_char_t as libc::c_int
                 || *$string.pointer.wrapping_offset($offset as isize) as libc::c_int
@@ -32,7 +37,7 @@ macro_rules! IS_BLANKZ_AT {
                     && *$string.pointer.wrapping_offset($offset as isize + 2) as libc::c_int
                         == -87i32 as yaml_char_t as libc::c_int
                 || *$string.pointer.wrapping_offset($offset as isize) as libc::c_int
-                    == '\0' as i32 as yaml_char_t as libc::c_int))
+                    == '\0' as i32 as yaml_char_t as libc::c_int)
     };
 }
 
