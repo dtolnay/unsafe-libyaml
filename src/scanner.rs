@@ -607,27 +607,7 @@ unsafe fn yaml_parser_fetch_next_token(parser: *mut yaml_parser_t) -> libc::c_in
     if *((*parser).buffer.pointer) as libc::c_int == '"' as i32 as yaml_char_t as libc::c_int {
         return yaml_parser_fetch_flow_scalar(parser, 0_i32);
     }
-    if !(*((*parser).buffer.pointer) as libc::c_int == ' ' as i32 as yaml_char_t as libc::c_int
-        || *((*parser).buffer.pointer) as libc::c_int == '\t' as i32 as yaml_char_t as libc::c_int
-        || (*((*parser).buffer.pointer) as libc::c_int
-            == '\r' as i32 as yaml_char_t as libc::c_int
-            || *((*parser).buffer.pointer) as libc::c_int
-                == '\n' as i32 as yaml_char_t as libc::c_int
-            || *((*parser).buffer.pointer) as libc::c_int == -62i32 as yaml_char_t as libc::c_int
-                && *((*parser).buffer.pointer).wrapping_offset(1_isize) as libc::c_int
-                    == -123i32 as yaml_char_t as libc::c_int
-            || *((*parser).buffer.pointer) as libc::c_int == -30i32 as yaml_char_t as libc::c_int
-                && *((*parser).buffer.pointer).wrapping_offset(1_isize) as libc::c_int
-                    == -128i32 as yaml_char_t as libc::c_int
-                && *((*parser).buffer.pointer).wrapping_offset(2_isize) as libc::c_int
-                    == -88i32 as yaml_char_t as libc::c_int
-            || *((*parser).buffer.pointer) as libc::c_int == -30i32 as yaml_char_t as libc::c_int
-                && *((*parser).buffer.pointer).wrapping_offset(1_isize) as libc::c_int
-                    == -128i32 as yaml_char_t as libc::c_int
-                && *((*parser).buffer.pointer).wrapping_offset(2_isize) as libc::c_int
-                    == -87i32 as yaml_char_t as libc::c_int
-            || *((*parser).buffer.pointer) as libc::c_int
-                == '\0' as i32 as yaml_char_t as libc::c_int)
+    if !(IS_BLANKZ!((*parser).buffer)
         || *((*parser).buffer.pointer) as libc::c_int == '-' as i32 as yaml_char_t as libc::c_int
         || *((*parser).buffer.pointer) as libc::c_int == '?' as i32 as yaml_char_t as libc::c_int
         || *((*parser).buffer.pointer) as libc::c_int == ':' as i32 as yaml_char_t as libc::c_int
@@ -2115,38 +2095,7 @@ unsafe fn yaml_parser_scan_directive_name(
                             b"could not find expected directive name\0" as *const u8
                                 as *const libc::c_char,
                         );
-                    } else if !(*((*parser).buffer.pointer) as libc::c_int
-                        == ' ' as i32 as yaml_char_t as libc::c_int
-                        || *((*parser).buffer.pointer) as libc::c_int
-                            == '\t' as i32 as yaml_char_t as libc::c_int
-                        || (*((*parser).buffer.pointer) as libc::c_int
-                            == '\r' as i32 as yaml_char_t as libc::c_int
-                            || *((*parser).buffer.pointer) as libc::c_int
-                                == '\n' as i32 as yaml_char_t as libc::c_int
-                            || *((*parser).buffer.pointer) as libc::c_int
-                                == -62i32 as yaml_char_t as libc::c_int
-                                && *((*parser).buffer.pointer).wrapping_offset(1_isize)
-                                    as libc::c_int
-                                    == -123i32 as yaml_char_t as libc::c_int
-                            || *((*parser).buffer.pointer) as libc::c_int
-                                == -30i32 as yaml_char_t as libc::c_int
-                                && *((*parser).buffer.pointer).wrapping_offset(1_isize)
-                                    as libc::c_int
-                                    == -128i32 as yaml_char_t as libc::c_int
-                                && *((*parser).buffer.pointer).wrapping_offset(2_isize)
-                                    as libc::c_int
-                                    == -88i32 as yaml_char_t as libc::c_int
-                            || *((*parser).buffer.pointer) as libc::c_int
-                                == -30i32 as yaml_char_t as libc::c_int
-                                && *((*parser).buffer.pointer).wrapping_offset(1_isize)
-                                    as libc::c_int
-                                    == -128i32 as yaml_char_t as libc::c_int
-                                && *((*parser).buffer.pointer).wrapping_offset(2_isize)
-                                    as libc::c_int
-                                    == -87i32 as yaml_char_t as libc::c_int
-                            || *((*parser).buffer.pointer) as libc::c_int
-                                == '\0' as i32 as yaml_char_t as libc::c_int))
-                    {
+                    } else if !IS_BLANKZ!((*parser).buffer) {
                         yaml_parser_set_scanner_error(
                             parser,
                             b"while scanning a directive\0" as *const u8 as *const libc::c_char,
@@ -2338,38 +2287,7 @@ unsafe fn yaml_parser_scan_tag_directive_value(
                             current_block = 5231181710497607163;
                             continue;
                         }
-                        if !(*((*parser).buffer.pointer) as libc::c_int
-                            == ' ' as i32 as yaml_char_t as libc::c_int
-                            || *((*parser).buffer.pointer) as libc::c_int
-                                == '\t' as i32 as yaml_char_t as libc::c_int
-                            || (*((*parser).buffer.pointer) as libc::c_int
-                                == '\r' as i32 as yaml_char_t as libc::c_int
-                                || *((*parser).buffer.pointer) as libc::c_int
-                                    == '\n' as i32 as yaml_char_t as libc::c_int
-                                || *((*parser).buffer.pointer) as libc::c_int
-                                    == -62i32 as yaml_char_t as libc::c_int
-                                    && *((*parser).buffer.pointer).wrapping_offset(1_isize)
-                                        as libc::c_int
-                                        == -123i32 as yaml_char_t as libc::c_int
-                                || *((*parser).buffer.pointer) as libc::c_int
-                                    == -30i32 as yaml_char_t as libc::c_int
-                                    && *((*parser).buffer.pointer).wrapping_offset(1_isize)
-                                        as libc::c_int
-                                        == -128i32 as yaml_char_t as libc::c_int
-                                    && *((*parser).buffer.pointer).wrapping_offset(2_isize)
-                                        as libc::c_int
-                                        == -88i32 as yaml_char_t as libc::c_int
-                                || *((*parser).buffer.pointer) as libc::c_int
-                                    == -30i32 as yaml_char_t as libc::c_int
-                                    && *((*parser).buffer.pointer).wrapping_offset(1_isize)
-                                        as libc::c_int
-                                        == -128i32 as yaml_char_t as libc::c_int
-                                    && *((*parser).buffer.pointer).wrapping_offset(2_isize)
-                                        as libc::c_int
-                                        == -87i32 as yaml_char_t as libc::c_int
-                                || *((*parser).buffer.pointer) as libc::c_int
-                                    == '\0' as i32 as yaml_char_t as libc::c_int))
-                        {
+                        if !IS_BLANKZ!((*parser).buffer) {
                             yaml_parser_set_scanner_error(
                                 parser,
                                 b"while scanning a %TAG directive\0" as *const u8
@@ -2453,37 +2371,7 @@ unsafe fn yaml_parser_scan_anchor(
                 _ => {
                     end_mark = (*parser).mark;
                     if length == 0
-                        || !(*((*parser).buffer.pointer) as libc::c_int
-                            == ' ' as i32 as yaml_char_t as libc::c_int
-                            || *((*parser).buffer.pointer) as libc::c_int
-                                == '\t' as i32 as yaml_char_t as libc::c_int
-                            || (*((*parser).buffer.pointer) as libc::c_int
-                                == '\r' as i32 as yaml_char_t as libc::c_int
-                                || *((*parser).buffer.pointer) as libc::c_int
-                                    == '\n' as i32 as yaml_char_t as libc::c_int
-                                || *((*parser).buffer.pointer) as libc::c_int
-                                    == -62i32 as yaml_char_t as libc::c_int
-                                    && *((*parser).buffer.pointer).wrapping_offset(1_isize)
-                                        as libc::c_int
-                                        == -123i32 as yaml_char_t as libc::c_int
-                                || *((*parser).buffer.pointer) as libc::c_int
-                                    == -30i32 as yaml_char_t as libc::c_int
-                                    && *((*parser).buffer.pointer).wrapping_offset(1_isize)
-                                        as libc::c_int
-                                        == -128i32 as yaml_char_t as libc::c_int
-                                    && *((*parser).buffer.pointer).wrapping_offset(2_isize)
-                                        as libc::c_int
-                                        == -88i32 as yaml_char_t as libc::c_int
-                                || *((*parser).buffer.pointer) as libc::c_int
-                                    == -30i32 as yaml_char_t as libc::c_int
-                                    && *((*parser).buffer.pointer).wrapping_offset(1_isize)
-                                        as libc::c_int
-                                        == -128i32 as yaml_char_t as libc::c_int
-                                    && *((*parser).buffer.pointer).wrapping_offset(2_isize)
-                                        as libc::c_int
-                                        == -87i32 as yaml_char_t as libc::c_int
-                                || *((*parser).buffer.pointer) as libc::c_int
-                                    == '\0' as i32 as yaml_char_t as libc::c_int)
+                        || !(IS_BLANKZ!((*parser).buffer)
                             || *((*parser).buffer.pointer) as libc::c_int
                                 == '?' as i32 as yaml_char_t as libc::c_int
                             || *((*parser).buffer.pointer) as libc::c_int
@@ -2650,38 +2538,7 @@ unsafe fn yaml_parser_scan_tag(
             17708497480799081542 => {}
             _ => {
                 if !(CACHE!(parser, 1_u64) == 0) {
-                    if !(*((*parser).buffer.pointer) as libc::c_int
-                        == ' ' as i32 as yaml_char_t as libc::c_int
-                        || *((*parser).buffer.pointer) as libc::c_int
-                            == '\t' as i32 as yaml_char_t as libc::c_int
-                        || (*((*parser).buffer.pointer) as libc::c_int
-                            == '\r' as i32 as yaml_char_t as libc::c_int
-                            || *((*parser).buffer.pointer) as libc::c_int
-                                == '\n' as i32 as yaml_char_t as libc::c_int
-                            || *((*parser).buffer.pointer) as libc::c_int
-                                == -62i32 as yaml_char_t as libc::c_int
-                                && *((*parser).buffer.pointer).wrapping_offset(1_isize)
-                                    as libc::c_int
-                                    == -123i32 as yaml_char_t as libc::c_int
-                            || *((*parser).buffer.pointer) as libc::c_int
-                                == -30i32 as yaml_char_t as libc::c_int
-                                && *((*parser).buffer.pointer).wrapping_offset(1_isize)
-                                    as libc::c_int
-                                    == -128i32 as yaml_char_t as libc::c_int
-                                && *((*parser).buffer.pointer).wrapping_offset(2_isize)
-                                    as libc::c_int
-                                    == -88i32 as yaml_char_t as libc::c_int
-                            || *((*parser).buffer.pointer) as libc::c_int
-                                == -30i32 as yaml_char_t as libc::c_int
-                                && *((*parser).buffer.pointer).wrapping_offset(1_isize)
-                                    as libc::c_int
-                                    == -128i32 as yaml_char_t as libc::c_int
-                                && *((*parser).buffer.pointer).wrapping_offset(2_isize)
-                                    as libc::c_int
-                                    == -87i32 as yaml_char_t as libc::c_int
-                            || *((*parser).buffer.pointer) as libc::c_int
-                                == '\0' as i32 as yaml_char_t as libc::c_int))
-                    {
+                    if !IS_BLANKZ!((*parser).buffer) {
                         if (*parser).flow_level == 0
                             || !(*((*parser).buffer.pointer) as libc::c_int
                                 == ',' as i32 as yaml_char_t as libc::c_int)
@@ -4075,38 +3932,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                 break;
                             }
                             leading_blanks = 0_i32;
-                            while !(*((*parser).buffer.pointer) as libc::c_int
-                                == ' ' as i32 as yaml_char_t as libc::c_int
-                                || *((*parser).buffer.pointer) as libc::c_int
-                                    == '\t' as i32 as yaml_char_t as libc::c_int
-                                || (*((*parser).buffer.pointer) as libc::c_int
-                                    == '\r' as i32 as yaml_char_t as libc::c_int
-                                    || *((*parser).buffer.pointer) as libc::c_int
-                                        == '\n' as i32 as yaml_char_t as libc::c_int
-                                    || *((*parser).buffer.pointer) as libc::c_int
-                                        == -62i32 as yaml_char_t as libc::c_int
-                                        && *((*parser).buffer.pointer).wrapping_offset(1_isize)
-                                            as libc::c_int
-                                            == -123i32 as yaml_char_t as libc::c_int
-                                    || *((*parser).buffer.pointer) as libc::c_int
-                                        == -30i32 as yaml_char_t as libc::c_int
-                                        && *((*parser).buffer.pointer).wrapping_offset(1_isize)
-                                            as libc::c_int
-                                            == -128i32 as yaml_char_t as libc::c_int
-                                        && *((*parser).buffer.pointer).wrapping_offset(2_isize)
-                                            as libc::c_int
-                                            == -88i32 as yaml_char_t as libc::c_int
-                                    || *((*parser).buffer.pointer) as libc::c_int
-                                        == -30i32 as yaml_char_t as libc::c_int
-                                        && *((*parser).buffer.pointer).wrapping_offset(1_isize)
-                                            as libc::c_int
-                                            == -128i32 as yaml_char_t as libc::c_int
-                                        && *((*parser).buffer.pointer).wrapping_offset(2_isize)
-                                            as libc::c_int
-                                            == -87i32 as yaml_char_t as libc::c_int
-                                    || *((*parser).buffer.pointer) as libc::c_int
-                                        == '\0' as i32 as yaml_char_t as libc::c_int))
-                            {
+                            while !IS_BLANKZ!((*parser).buffer) {
                                 if single != 0
                                     && *((*parser).buffer.pointer) as libc::c_int
                                         == '\'' as i32 as yaml_char_t as libc::c_int
@@ -4992,38 +4818,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
                             current_block = 6281126495347172768;
                             break;
                         }
-                        while !(*((*parser).buffer.pointer) as libc::c_int
-                            == ' ' as i32 as yaml_char_t as libc::c_int
-                            || *((*parser).buffer.pointer) as libc::c_int
-                                == '\t' as i32 as yaml_char_t as libc::c_int
-                            || (*((*parser).buffer.pointer) as libc::c_int
-                                == '\r' as i32 as yaml_char_t as libc::c_int
-                                || *((*parser).buffer.pointer) as libc::c_int
-                                    == '\n' as i32 as yaml_char_t as libc::c_int
-                                || *((*parser).buffer.pointer) as libc::c_int
-                                    == -62i32 as yaml_char_t as libc::c_int
-                                    && *((*parser).buffer.pointer).wrapping_offset(1_isize)
-                                        as libc::c_int
-                                        == -123i32 as yaml_char_t as libc::c_int
-                                || *((*parser).buffer.pointer) as libc::c_int
-                                    == -30i32 as yaml_char_t as libc::c_int
-                                    && *((*parser).buffer.pointer).wrapping_offset(1_isize)
-                                        as libc::c_int
-                                        == -128i32 as yaml_char_t as libc::c_int
-                                    && *((*parser).buffer.pointer).wrapping_offset(2_isize)
-                                        as libc::c_int
-                                        == -88i32 as yaml_char_t as libc::c_int
-                                || *((*parser).buffer.pointer) as libc::c_int
-                                    == -30i32 as yaml_char_t as libc::c_int
-                                    && *((*parser).buffer.pointer).wrapping_offset(1_isize)
-                                        as libc::c_int
-                                        == -128i32 as yaml_char_t as libc::c_int
-                                    && *((*parser).buffer.pointer).wrapping_offset(2_isize)
-                                        as libc::c_int
-                                        == -87i32 as yaml_char_t as libc::c_int
-                                || *((*parser).buffer.pointer) as libc::c_int
-                                    == '\0' as i32 as yaml_char_t as libc::c_int))
-                        {
+                        while !IS_BLANKZ!((*parser).buffer) {
                             if (*parser).flow_level != 0
                                 && *((*parser).buffer.pointer) as libc::c_int
                                     == ':' as i32 as yaml_char_t as libc::c_int
