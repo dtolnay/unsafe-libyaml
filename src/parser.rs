@@ -351,9 +351,7 @@ unsafe fn yaml_parser_parse_document_content(
         || (*token).type_ as libc::c_uint == YAML_DOCUMENT_END_TOKEN as libc::c_int as libc::c_uint
         || (*token).type_ as libc::c_uint == YAML_STREAM_END_TOKEN as libc::c_int as libc::c_uint
     {
-        let fresh21 = addr_of_mut!((*parser).states.top);
-        *fresh21 = (*fresh21).wrapping_offset(-1);
-        (*parser).state = **fresh21;
+        (*parser).state = POP!((*parser).states);
         yaml_parser_process_empty_scalar(parser, event, (*token).start_mark)
     } else {
         yaml_parser_parse_node(parser, event, 1_i32, 0_i32)
@@ -378,9 +376,7 @@ unsafe fn yaml_parser_parse_document_end(
         implicit = 0_i32;
     }
     while !((*parser).tag_directives.start == (*parser).tag_directives.top) {
-        let fresh24 = addr_of_mut!((*parser).tag_directives.top);
-        *fresh24 = (*fresh24).wrapping_offset(-1);
-        let tag_directive: yaml_tag_directive_t = **fresh24;
+        let tag_directive = POP!((*parser).tag_directives);
         yaml_free(tag_directive.handle as *mut libc::c_void);
         yaml_free(tag_directive.prefix as *mut libc::c_void);
     }
@@ -422,9 +418,7 @@ unsafe fn yaml_parser_parse_node(
         return 0_i32;
     }
     if (*token).type_ as libc::c_uint == YAML_ALIAS_TOKEN as libc::c_int as libc::c_uint {
-        let fresh25 = addr_of_mut!((*parser).states.top);
-        *fresh25 = (*fresh25).wrapping_offset(-1);
-        (*parser).state = **fresh25;
+        (*parser).state = POP!((*parser).states);
         memset(
             event as *mut libc::c_void,
             0_i32,
@@ -618,9 +612,7 @@ unsafe fn yaml_parser_parse_node(
                             } else if tag.is_null() {
                                 quoted_implicit = 1_i32;
                             }
-                            let fresh39 = addr_of_mut!((*parser).states.top);
-                            *fresh39 = (*fresh39).wrapping_offset(-1);
-                            (*parser).state = **fresh39;
+                            (*parser).state = POP!((*parser).states);
                             memset(
                                 event as *mut libc::c_void,
                                 0_i32,
@@ -729,9 +721,7 @@ unsafe fn yaml_parser_parse_node(
                                 (*parser).error = YAML_MEMORY_ERROR;
                             } else {
                                 *value = '\0' as i32 as yaml_char_t;
-                                let fresh53 = addr_of_mut!((*parser).states.top);
-                                *fresh53 = (*fresh53).wrapping_offset(-1);
-                                (*parser).state = **fresh53;
+                                (*parser).state = POP!((*parser).states);
                                 memset(
                                     event as *mut libc::c_void,
                                     0_i32,
@@ -823,11 +813,8 @@ unsafe fn yaml_parser_parse_block_sequence_entry(
         }
     } else if (*token).type_ as libc::c_uint == YAML_BLOCK_END_TOKEN as libc::c_int as libc::c_uint
     {
-        let fresh65 = addr_of_mut!((*parser).states.top);
-        *fresh65 = (*fresh65).wrapping_offset(-1);
-        (*parser).state = **fresh65;
-        let fresh66 = addr_of_mut!((*parser).marks.top);
-        *fresh66 = (*fresh66).wrapping_offset(-1);
+        (*parser).state = POP!((*parser).states);
+        let _ = POP!((*parser).marks);
         memset(
             event as *mut libc::c_void,
             0_i32,
@@ -839,12 +826,10 @@ unsafe fn yaml_parser_parse_block_sequence_entry(
         SKIP_TOKEN!(parser);
         1_i32
     } else {
-        let fresh69 = addr_of_mut!((*parser).marks.top);
-        *fresh69 = (*fresh69).wrapping_offset(-1);
         yaml_parser_set_parser_error_context(
             parser,
             b"while parsing a block collection\0" as *const u8 as *const libc::c_char,
-            **fresh69,
+            POP!((*parser).marks),
             b"did not find expected '-' indicator\0" as *const u8 as *const libc::c_char,
             (*token).start_mark,
         )
@@ -886,9 +871,7 @@ unsafe fn yaml_parser_parse_indentless_sequence_entry(
             yaml_parser_process_empty_scalar(parser, event, mark)
         }
     } else {
-        let fresh74 = addr_of_mut!((*parser).states.top);
-        *fresh74 = (*fresh74).wrapping_offset(-1);
-        (*parser).state = **fresh74;
+        (*parser).state = POP!((*parser).states);
         memset(
             event as *mut libc::c_void,
             0_i32,
@@ -944,11 +927,8 @@ unsafe fn yaml_parser_parse_block_mapping_key(
         }
     } else if (*token).type_ as libc::c_uint == YAML_BLOCK_END_TOKEN as libc::c_int as libc::c_uint
     {
-        let fresh83 = addr_of_mut!((*parser).states.top);
-        *fresh83 = (*fresh83).wrapping_offset(-1);
-        (*parser).state = **fresh83;
-        let fresh84 = addr_of_mut!((*parser).marks.top);
-        *fresh84 = (*fresh84).wrapping_offset(-1);
+        (*parser).state = POP!((*parser).states);
+        let _ = POP!((*parser).marks);
         memset(
             event as *mut libc::c_void,
             0_i32,
@@ -960,12 +940,10 @@ unsafe fn yaml_parser_parse_block_mapping_key(
         SKIP_TOKEN!(parser);
         1_i32
     } else {
-        let fresh87 = addr_of_mut!((*parser).marks.top);
-        *fresh87 = (*fresh87).wrapping_offset(-1);
         yaml_parser_set_parser_error_context(
             parser,
             b"while parsing a block mapping\0" as *const u8 as *const libc::c_char,
-            **fresh87,
+            POP!((*parser).marks),
             b"did not find expected key\0" as *const u8 as *const libc::c_char,
             (*token).start_mark,
         )
@@ -1035,12 +1013,10 @@ unsafe fn yaml_parser_parse_flow_sequence_entry(
                     return 0_i32;
                 }
             } else {
-                let fresh98 = addr_of_mut!((*parser).marks.top);
-                *fresh98 = (*fresh98).wrapping_offset(-1);
                 return yaml_parser_set_parser_error_context(
                     parser,
                     b"while parsing a flow sequence\0" as *const u8 as *const libc::c_char,
-                    **fresh98,
+                    POP!((*parser).marks),
                     b"did not find expected ',' or ']'\0" as *const u8 as *const libc::c_char,
                     (*token).start_mark,
                 );
@@ -1078,11 +1054,8 @@ unsafe fn yaml_parser_parse_flow_sequence_entry(
             return yaml_parser_parse_node(parser, event, 0_i32, 0_i32);
         }
     }
-    let fresh105 = addr_of_mut!((*parser).states.top);
-    *fresh105 = (*fresh105).wrapping_offset(-1);
-    (*parser).state = **fresh105;
-    let fresh106 = addr_of_mut!((*parser).marks.top);
-    *fresh106 = (*fresh106).wrapping_offset(-1);
+    (*parser).state = POP!((*parser).states);
+    let _ = POP!((*parser).marks);
     memset(
         event as *mut libc::c_void,
         0_i32,
@@ -1208,12 +1181,10 @@ unsafe fn yaml_parser_parse_flow_mapping_key(
                     return 0_i32;
                 }
             } else {
-                let fresh123 = addr_of_mut!((*parser).marks.top);
-                *fresh123 = (*fresh123).wrapping_offset(-1);
                 return yaml_parser_set_parser_error_context(
                     parser,
                     b"while parsing a flow mapping\0" as *const u8 as *const libc::c_char,
-                    **fresh123,
+                    POP!((*parser).marks),
                     b"did not find expected ',' or '}'\0" as *const u8 as *const libc::c_char,
                     (*token).start_mark,
                 );
@@ -1258,11 +1229,8 @@ unsafe fn yaml_parser_parse_flow_mapping_key(
             return yaml_parser_parse_node(parser, event, 0_i32, 0_i32);
         }
     }
-    let fresh130 = addr_of_mut!((*parser).states.top);
-    *fresh130 = (*fresh130).wrapping_offset(-1);
-    (*parser).state = **fresh130;
-    let fresh131 = addr_of_mut!((*parser).marks.top);
-    *fresh131 = (*fresh131).wrapping_offset(-1);
+    (*parser).state = POP!((*parser).states);
+    let _ = POP!((*parser).marks);
     memset(
         event as *mut libc::c_void,
         0_i32,
@@ -1502,8 +1470,7 @@ unsafe fn yaml_parser_process_directives(
     }
     yaml_free(version_directive as *mut libc::c_void);
     while !(tag_directives.start == tag_directives.top) {
-        tag_directives.top = tag_directives.top.wrapping_offset(-1);
-        let tag_directive: yaml_tag_directive_t = *tag_directives.top;
+        let tag_directive = POP!(tag_directives);
         yaml_free(tag_directive.handle as *mut libc::c_void);
         yaml_free(tag_directive.prefix as *mut libc::c_void);
     }

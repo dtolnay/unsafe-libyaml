@@ -451,7 +451,12 @@ macro_rules! PUSH {
 }
 
 macro_rules! POP {
-    () => {}; // TODO
+    ($stack:expr) => {
+        *{
+            $stack.top = $stack.top.offset(-1);
+            $stack.top
+        }
+    };
 }
 
 macro_rules! QUEUE_INIT {

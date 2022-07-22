@@ -585,9 +585,7 @@ unsafe fn yaml_emitter_emit_document_end(
         }
         (*emitter).state = YAML_EMIT_DOCUMENT_START_STATE;
         while !((*emitter).tag_directives.start == (*emitter).tag_directives.top) {
-            let fresh11 = addr_of_mut!((*emitter).tag_directives.top);
-            *fresh11 = (*fresh11).wrapping_offset(-1);
-            let tag_directive: yaml_tag_directive_t = **fresh11;
+            let tag_directive = POP!((*emitter).tag_directives);
             yaml_free(tag_directive.handle as *mut libc::c_void);
             yaml_free(tag_directive.prefix as *mut libc::c_void);
         }
@@ -624,9 +622,7 @@ unsafe fn yaml_emitter_emit_flow_sequence_item(
     if (*event).type_ as libc::c_uint == YAML_SEQUENCE_END_EVENT as libc::c_int as libc::c_uint {
         let fresh13 = addr_of_mut!((*emitter).flow_level);
         *fresh13 -= 1;
-        let fresh14 = addr_of_mut!((*emitter).indents.top);
-        *fresh14 = (*fresh14).wrapping_offset(-1);
-        (*emitter).indent = **fresh14;
+        (*emitter).indent = POP!((*emitter).indents);
         if (*emitter).canonical != 0 && first == 0 {
             if yaml_emitter_write_indicator(
                 emitter,
@@ -652,9 +648,7 @@ unsafe fn yaml_emitter_emit_flow_sequence_item(
         {
             return 0_i32;
         }
-        let fresh15 = addr_of_mut!((*emitter).states.top);
-        *fresh15 = (*fresh15).wrapping_offset(-1);
-        (*emitter).state = **fresh15;
+        (*emitter).state = POP!((*emitter).states);
         return 1_i32;
     }
     if first == 0 {
@@ -710,9 +704,7 @@ unsafe fn yaml_emitter_emit_flow_mapping_key(
     if (*event).type_ as libc::c_uint == YAML_MAPPING_END_EVENT as libc::c_int as libc::c_uint {
         let fresh19 = addr_of_mut!((*emitter).flow_level);
         *fresh19 -= 1;
-        let fresh20 = addr_of_mut!((*emitter).indents.top);
-        *fresh20 = (*fresh20).wrapping_offset(-1);
-        (*emitter).indent = **fresh20;
+        (*emitter).indent = POP!((*emitter).indents);
         if (*emitter).canonical != 0 && first == 0 {
             if yaml_emitter_write_indicator(
                 emitter,
@@ -738,9 +730,7 @@ unsafe fn yaml_emitter_emit_flow_mapping_key(
         {
             return 0_i32;
         }
-        let fresh21 = addr_of_mut!((*emitter).states.top);
-        *fresh21 = (*fresh21).wrapping_offset(-1);
-        (*emitter).state = **fresh21;
+        (*emitter).state = POP!((*emitter).states);
         return 1_i32;
     }
     if first == 0 {
@@ -848,12 +838,8 @@ unsafe fn yaml_emitter_emit_block_sequence_item(
         }
     }
     if (*event).type_ as libc::c_uint == YAML_SEQUENCE_END_EVENT as libc::c_int as libc::c_uint {
-        let fresh28 = addr_of_mut!((*emitter).indents.top);
-        *fresh28 = (*fresh28).wrapping_offset(-1);
-        (*emitter).indent = **fresh28;
-        let fresh29 = addr_of_mut!((*emitter).states.top);
-        *fresh29 = (*fresh29).wrapping_offset(-1);
-        (*emitter).state = **fresh29;
+        (*emitter).indent = POP!((*emitter).indents);
+        (*emitter).state = POP!((*emitter).states);
         return 1_i32;
     }
     if yaml_emitter_write_indent(emitter) == 0 {
@@ -891,12 +877,8 @@ unsafe fn yaml_emitter_emit_block_mapping_key(
         }
     }
     if (*event).type_ as libc::c_uint == YAML_MAPPING_END_EVENT as libc::c_int as libc::c_uint {
-        let fresh32 = addr_of_mut!((*emitter).indents.top);
-        *fresh32 = (*fresh32).wrapping_offset(-1);
-        (*emitter).indent = **fresh32;
-        let fresh33 = addr_of_mut!((*emitter).states.top);
-        *fresh33 = (*fresh33).wrapping_offset(-1);
-        (*emitter).state = **fresh33;
+        (*emitter).indent = POP!((*emitter).indents);
+        (*emitter).state = POP!((*emitter).states);
         return 1_i32;
     }
     if yaml_emitter_write_indent(emitter) == 0 {
@@ -1014,9 +996,7 @@ unsafe fn yaml_emitter_emit_alias(
             return 0_i32;
         }
     }
-    let fresh43 = addr_of_mut!((*emitter).states.top);
-    *fresh43 = (*fresh43).wrapping_offset(-1);
-    (*emitter).state = **fresh43;
+    (*emitter).state = POP!((*emitter).states);
     1_i32
 }
 
@@ -1039,12 +1019,8 @@ unsafe fn yaml_emitter_emit_scalar(
     if yaml_emitter_process_scalar(emitter) == 0 {
         return 0_i32;
     }
-    let fresh44 = addr_of_mut!((*emitter).indents.top);
-    *fresh44 = (*fresh44).wrapping_offset(-1);
-    (*emitter).indent = **fresh44;
-    let fresh45 = addr_of_mut!((*emitter).states.top);
-    *fresh45 = (*fresh45).wrapping_offset(-1);
-    (*emitter).state = **fresh45;
+    (*emitter).indent = POP!((*emitter).indents);
+    (*emitter).state = POP!((*emitter).states);
     1_i32
 }
 

@@ -259,9 +259,7 @@ pub unsafe fn yaml_parser_delete(parser: *mut yaml_parser_t) {
     STACK_DEL!((*parser).states);
     STACK_DEL!((*parser).marks);
     while !((*parser).tag_directives.start == (*parser).tag_directives.top) {
-        let fresh76 = addr_of_mut!((*parser).tag_directives.top);
-        *fresh76 = (*fresh76).wrapping_offset(-1);
-        let tag_directive: yaml_tag_directive_t = **fresh76;
+        let tag_directive = POP!((*parser).tag_directives);
         yaml_free(tag_directive.handle as *mut libc::c_void);
         yaml_free(tag_directive.prefix as *mut libc::c_void);
     }
@@ -402,9 +400,7 @@ pub unsafe fn yaml_emitter_delete(emitter: *mut yaml_emitter_t) {
     QUEUE_DEL!((*emitter).events);
     STACK_DEL!((*emitter).indents);
     while !((*emitter).tag_directives.start == (*emitter).tag_directives.top) {
-        let fresh149 = addr_of_mut!((*emitter).tag_directives.top);
-        *fresh149 = (*fresh149).wrapping_offset(-1);
-        let tag_directive: yaml_tag_directive_t = **fresh149;
+        let tag_directive = POP!((*emitter).tag_directives);
         yaml_free(tag_directive.handle as *mut libc::c_void);
         yaml_free(tag_directive.prefix as *mut libc::c_void);
     }
@@ -809,10 +805,9 @@ pub unsafe fn yaml_document_start_event_initialize(
     }
     yaml_free(version_directive_copy as *mut libc::c_void);
     while !(tag_directives_copy.start == tag_directives_copy.top) {
-        tag_directives_copy.top = tag_directives_copy.top.wrapping_offset(-1);
-        let value_0: yaml_tag_directive_t = *tag_directives_copy.top;
-        yaml_free(value_0.handle as *mut libc::c_void);
-        yaml_free(value_0.prefix as *mut libc::c_void);
+        let value = POP!(tag_directives_copy);
+        yaml_free(value.handle as *mut libc::c_void);
+        yaml_free(value.prefix as *mut libc::c_void);
     }
     STACK_DEL!(tag_directives_copy);
     yaml_free(value.handle as *mut libc::c_void);
@@ -1395,10 +1390,9 @@ pub unsafe fn yaml_document_initialize(
     STACK_DEL!(nodes);
     yaml_free(version_directive_copy as *mut libc::c_void);
     while !(tag_directives_copy.start == tag_directives_copy.top) {
-        tag_directives_copy.top = tag_directives_copy.top.wrapping_offset(-1);
-        let value_0: yaml_tag_directive_t = *tag_directives_copy.top;
-        yaml_free(value_0.handle as *mut libc::c_void);
-        yaml_free(value_0.prefix as *mut libc::c_void);
+        let value = POP!(tag_directives_copy);
+        yaml_free(value.handle as *mut libc::c_void);
+        yaml_free(value.prefix as *mut libc::c_void);
     }
     STACK_DEL!(tag_directives_copy);
     yaml_free(value.handle as *mut libc::c_void);
@@ -1411,9 +1405,7 @@ pub unsafe fn yaml_document_delete(document: *mut yaml_document_t) {
     let mut tag_directive: *mut yaml_tag_directive_t;
     __assert!(!document.is_null());
     while !((*document).nodes.start == (*document).nodes.top) {
-        let fresh182 = addr_of_mut!((*document).nodes.top);
-        *fresh182 = (*fresh182).wrapping_offset(-1);
-        let mut node: yaml_node_t = **fresh182;
+        let mut node = POP!((*document).nodes);
         yaml_free(node.tag as *mut libc::c_void);
         match node.type_ as libc::c_uint {
             1 => {

@@ -555,8 +555,7 @@ unsafe fn yaml_parser_decrease_flow_level(parser: *mut yaml_parser_t) -> libc::c
     if (*parser).flow_level != 0 {
         let fresh8 = addr_of_mut!((*parser).flow_level);
         *fresh8 -= 1;
-        let fresh9 = addr_of_mut!((*parser).simple_keys.top);
-        *fresh9 = (*fresh9).wrapping_offset(-1);
+        let _ = POP!((*parser).simple_keys);
     }
     1_i32
 }
@@ -628,9 +627,7 @@ unsafe fn yaml_parser_unroll_indent(
         if ENQUEUE!(parser, (*parser).tokens, *token) == 0 {
             return 0_i32;
         }
-        let fresh17 = addr_of_mut!((*parser).indents.top);
-        *fresh17 = (*fresh17).wrapping_offset(-1);
-        (*parser).indent = **fresh17;
+        (*parser).indent = POP!((*parser).indents);
     }
     1_i32
 }

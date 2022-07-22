@@ -127,9 +127,7 @@ unsafe fn yaml_parser_set_composer_error_context(
 
 unsafe fn yaml_parser_delete_aliases(parser: *mut yaml_parser_t) {
     while !((*parser).aliases.start == (*parser).aliases.top) {
-        let fresh12 = addr_of_mut!((*parser).aliases.top);
-        *fresh12 = (*fresh12).wrapping_offset(-1);
-        yaml_free((**fresh12).anchor as *mut libc::c_void);
+        yaml_free(POP!((*parser).aliases).anchor as *mut libc::c_void);
     }
     STACK_DEL!((*parser).aliases);
 }
@@ -558,8 +556,7 @@ unsafe fn yaml_parser_load_sequence_end(
     );
     (*((*(*parser).document).nodes.start).wrapping_offset((index - 1_i32) as isize)).end_mark =
         (*event).end_mark;
-    let fresh31 = addr_of_mut!((*ctx).top);
-    *fresh31 = (*fresh31).wrapping_offset(-1);
+    let _ = POP!(*ctx);
     1_i32
 }
 
@@ -682,7 +679,6 @@ unsafe fn yaml_parser_load_mapping_end(
     );
     (*((*(*parser).document).nodes.start).wrapping_offset((index - 1_i32) as isize)).end_mark =
         (*event).end_mark;
-    let fresh36 = addr_of_mut!((*ctx).top);
-    *fresh36 = (*fresh36).wrapping_offset(-1);
+    let _ = POP!(*ctx);
     1_i32
 }
