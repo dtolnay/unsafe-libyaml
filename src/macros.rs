@@ -90,6 +90,17 @@ macro_rules! STRING_EXTEND {
     };
 }
 
+macro_rules! CLEAR {
+    ($string:expr) => {{
+        $string.pointer = $string.start;
+        memset(
+            $string.start as *mut libc::c_void,
+            0_i32,
+            $string.end.c_offset_from($string.start) as libc::c_ulong,
+        );
+    }};
+}
+
 macro_rules! IS_BLANK_AT {
     ($string:expr, $offset:expr) => {
         *$string.pointer.wrapping_offset($offset as isize) as libc::c_int

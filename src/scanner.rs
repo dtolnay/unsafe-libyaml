@@ -3044,13 +3044,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                                 string.pointer = string.pointer.wrapping_offset(1);
                                                                                 *fresh418 = ' ' as i32 as yaml_char_t;
                                                                             }
-                                                                            leading_break.pointer = leading_break.start;
-                                                                            memset(
-                                                                                leading_break.start as *mut libc::c_void,
-                                                                                0_i32,
-                                                                                leading_break.end.c_offset_from(leading_break.start)
-                                                                                    as libc::c_long as libc::c_ulong,
-                                                                            );
+                                                                            CLEAR!(leading_break);
                                                                         } else {
                                                                             if if yaml_string_join(
                                                                                 addr_of_mut!(string.start),
@@ -3071,13 +3065,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                                 current_block = 14984465786483313892;
                                                                                 break;
                                                                             }
-                                                                            leading_break.pointer = leading_break.start;
-                                                                            memset(
-                                                                                leading_break.start as *mut libc::c_void,
-                                                                                0_i32,
-                                                                                leading_break.end.c_offset_from(leading_break.start)
-                                                                                    as libc::c_long as libc::c_ulong,
-                                                                            );
+                                                                            CLEAR!(leading_break);
                                                                         }
                                                                         if if yaml_string_join(
                                                                             addr_of_mut!(string.start),
@@ -3098,13 +3086,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                             current_block = 14984465786483313892;
                                                                             break;
                                                                         }
-                                                                        trailing_breaks.pointer = trailing_breaks.start;
-                                                                        memset(
-                                                                            trailing_breaks.start as *mut libc::c_void,
-                                                                            0_i32,
-                                                                            trailing_breaks.end.c_offset_from(trailing_breaks.start)
-                                                                                as libc::c_long as libc::c_ulong,
-                                                                        );
+                                                                        CLEAR!(trailing_breaks);
                                                                         leading_blank = IS_BLANK!((*parser).buffer) as libc::c_int;
                                                                         while !(*((*parser).buffer.pointer)
                                                                              as libc::c_int
@@ -3904,14 +3886,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                         break 's_58;
                                     }
                                     if leading_blanks == 0 {
-                                        whitespaces.pointer = whitespaces.start;
-                                        memset(
-                                            whitespaces.start as *mut libc::c_void,
-                                            0_i32,
-                                            whitespaces.end.c_offset_from(whitespaces.start)
-                                                as libc::c_long
-                                                as libc::c_ulong,
-                                        );
+                                        CLEAR!(whitespaces);
                                         if READ_LINE!(parser, leading_break) == 0 {
                                             current_block = 8114179180390253173;
                                             break 's_58;
@@ -3957,24 +3932,9 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                             current_block = 8114179180390253173;
                                             break;
                                         }
-                                        trailing_breaks.pointer = trailing_breaks.start;
-                                        memset(
-                                            trailing_breaks.start as *mut libc::c_void,
-                                            0_i32,
-                                            (trailing_breaks.end)
-                                                .c_offset_from(trailing_breaks.start)
-                                                as libc::c_long
-                                                as libc::c_ulong,
-                                        );
+                                        CLEAR!(trailing_breaks);
                                     }
-                                    leading_break.pointer = leading_break.start;
-                                    memset(
-                                        leading_break.start as *mut libc::c_void,
-                                        0_i32,
-                                        leading_break.end.c_offset_from(leading_break.start)
-                                            as libc::c_long
-                                            as libc::c_ulong,
-                                    );
+                                    CLEAR!(leading_break);
                                 } else {
                                     if if yaml_string_join(
                                         addr_of_mut!(string.start),
@@ -4014,22 +3974,8 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                         current_block = 8114179180390253173;
                                         break;
                                     }
-                                    leading_break.pointer = leading_break.start;
-                                    memset(
-                                        leading_break.start as *mut libc::c_void,
-                                        0_i32,
-                                        leading_break.end.c_offset_from(leading_break.start)
-                                            as libc::c_long
-                                            as libc::c_ulong,
-                                    );
-                                    trailing_breaks.pointer = trailing_breaks.start;
-                                    memset(
-                                        trailing_breaks.start as *mut libc::c_void,
-                                        0_i32,
-                                        trailing_breaks.end.c_offset_from(trailing_breaks.start)
-                                            as libc::c_long
-                                            as libc::c_ulong,
-                                    );
+                                    CLEAR!(leading_break);
+                                    CLEAR!(trailing_breaks);
                                 }
                             } else {
                                 if if yaml_string_join(
@@ -4051,13 +3997,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                     current_block = 8114179180390253173;
                                     break;
                                 }
-                                whitespaces.pointer = whitespaces.start;
-                                memset(
-                                    whitespaces.start as *mut libc::c_void,
-                                    0_i32,
-                                    whitespaces.end.c_offset_from(whitespaces.start) as libc::c_long
-                                        as libc::c_ulong,
-                                );
+                                CLEAR!(whitespaces);
                             }
                         }
                     }
@@ -4235,25 +4175,9 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                                     current_block = 16642808987012640029;
                                                     break 's_57;
                                                 }
-                                                trailing_breaks.pointer = trailing_breaks.start;
-                                                memset(
-                                                    trailing_breaks.start as *mut libc::c_void,
-                                                    0_i32,
-                                                    (trailing_breaks.end)
-                                                        .c_offset_from(trailing_breaks.start)
-                                                        as libc::c_long
-                                                        as libc::c_ulong,
-                                                );
+                                                CLEAR!(trailing_breaks);
                                             }
-                                            leading_break.pointer = leading_break.start;
-                                            memset(
-                                                leading_break.start as *mut libc::c_void,
-                                                0_i32,
-                                                (leading_break.end)
-                                                    .c_offset_from(leading_break.start)
-                                                    as libc::c_long
-                                                    as libc::c_ulong,
-                                            );
+                                            CLEAR!(leading_break);
                                         } else {
                                             if if yaml_string_join(
                                                 addr_of_mut!(string.start),
@@ -4293,24 +4217,8 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                                 current_block = 16642808987012640029;
                                                 break 's_57;
                                             }
-                                            leading_break.pointer = leading_break.start;
-                                            memset(
-                                                leading_break.start as *mut libc::c_void,
-                                                0_i32,
-                                                (leading_break.end)
-                                                    .c_offset_from(leading_break.start)
-                                                    as libc::c_long
-                                                    as libc::c_ulong,
-                                            );
-                                            trailing_breaks.pointer = trailing_breaks.start;
-                                            memset(
-                                                trailing_breaks.start as *mut libc::c_void,
-                                                0_i32,
-                                                (trailing_breaks.end)
-                                                    .c_offset_from(trailing_breaks.start)
-                                                    as libc::c_long
-                                                    as libc::c_ulong,
-                                            );
+                                            CLEAR!(leading_break);
+                                            CLEAR!(trailing_breaks);
                                         }
                                         leading_blanks = 0_i32;
                                     } else {
@@ -4333,14 +4241,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                             current_block = 16642808987012640029;
                                             break 's_57;
                                         }
-                                        whitespaces.pointer = whitespaces.start;
-                                        memset(
-                                            whitespaces.start as *mut libc::c_void,
-                                            0_i32,
-                                            whitespaces.end.c_offset_from(whitespaces.start)
-                                                as libc::c_long
-                                                as libc::c_ulong,
-                                        );
+                                        CLEAR!(whitespaces);
                                     }
                                 }
                                 if READ!(parser, string) == 0 {
@@ -4446,14 +4347,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                     break 's_57;
                                 }
                                 if leading_blanks == 0 {
-                                    whitespaces.pointer = whitespaces.start;
-                                    memset(
-                                        whitespaces.start as *mut libc::c_void,
-                                        0_i32,
-                                        whitespaces.end.c_offset_from(whitespaces.start)
-                                            as libc::c_long
-                                            as libc::c_ulong,
-                                    );
+                                    CLEAR!(whitespaces);
                                     if READ_LINE!(parser, leading_break) == 0 {
                                         current_block = 16642808987012640029;
                                         break 's_57;
