@@ -27,6 +27,21 @@ macro_rules! BUFFER_INIT {
     }};
 }
 
+macro_rules! BUFFER_DEL {
+    ($context:expr, $buffer:expr) => {{
+        if false {
+            let _ = $context;
+        }
+        yaml_free($buffer.start as *mut libc::c_void);
+        let end = addr_of_mut!($buffer.end);
+        *end = ptr::null_mut::<yaml_char_t>();
+        let pointer = addr_of_mut!($buffer.pointer);
+        *pointer = *end;
+        let start = addr_of_mut!($buffer.start);
+        *start = *pointer;
+    }};
+}
+
 macro_rules! IS_BLANK_AT {
     ($string:expr, $offset:expr) => {
         *$string.pointer.wrapping_offset($offset as isize) as libc::c_int
