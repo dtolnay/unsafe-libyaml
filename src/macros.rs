@@ -121,6 +121,102 @@ macro_rules! JOIN {
     };
 }
 
+macro_rules! CHECK_AT {
+    () => {}; // TODO
+}
+
+macro_rules! CHECK {
+    () => {}; // TODO
+}
+
+macro_rules! IS_ALPHA_AT {
+    () => {}; // TODO
+}
+
+macro_rules! IS_ALPHA {
+    () => {}; // TODO
+}
+
+macro_rules! IS_DIGIT_AT {
+    () => {}; // TODO
+}
+
+macro_rules! IS_DIGIT {
+    () => {}; // TODO
+}
+
+macro_rules! AS_DIGIT_AT {
+    () => {}; // TODO
+}
+
+macro_rules! AS_DIGIT {
+    () => {}; // TODO
+}
+
+macro_rules! IS_HEX_AT {
+    () => {}; // TODO
+}
+
+macro_rules! IS_HEX {
+    () => {}; // TODO
+}
+
+macro_rules! AS_HEX_AT {
+    () => {}; // TODO
+}
+
+macro_rules! AS_HEX {
+    () => {}; // TODO
+}
+
+macro_rules! IS_ASCII_AT {
+    () => {}; // TODO
+}
+
+macro_rules! IS_ASCII {
+    () => {}; // TODO
+}
+
+macro_rules! IS_PRINTABLE_AT {
+    () => {}; // TODO
+}
+
+macro_rules! IS_PRINTABLE {
+    () => {}; // TODO
+}
+
+macro_rules! IS_Z_AT {
+    () => {}; // TODO
+}
+
+macro_rules! IS_Z {
+    () => {}; // TODO
+}
+
+macro_rules! IS_BOM_AT {
+    () => {}; // TODO
+}
+
+macro_rules! IS_BOM {
+    () => {}; // TODO
+}
+
+macro_rules! IS_SPACE_AT {
+    () => {}; // TODO
+}
+
+macro_rules! IS_SPACE {
+    () => {}; // TODO
+}
+
+macro_rules! IS_TAB_AT {
+    () => {}; // TODO
+}
+
+macro_rules! IS_TAB {
+    () => {}; // TODO
+}
+
 macro_rules! IS_BLANK_AT {
     ($string:expr, $offset:expr) => {
         *$string.pointer.wrapping_offset($offset as isize) as libc::c_int
@@ -134,6 +230,38 @@ macro_rules! IS_BLANK {
     ($string:expr) => {
         IS_BLANK_AT!($string, 0)
     };
+}
+
+macro_rules! IS_BREAK_AT {
+    () => {}; // TODO
+}
+
+macro_rules! IS_BREAK {
+    () => {}; // TODO
+}
+
+macro_rules! IS_CRLF_AT {
+    () => {}; // TODO
+}
+
+macro_rules! IS_CRLF {
+    () => {}; // TODO
+}
+
+macro_rules! IS_BREAKZ_AT {
+    () => {}; // TODO
+}
+
+macro_rules! IS_BREAKZ {
+    () => {}; // TODO
+}
+
+macro_rules! IS_SPACEZ_AT {
+    () => {}; // TODO
+}
+
+macro_rules! IS_SPACEZ {
+    () => {}; // TODO
 }
 
 macro_rules! IS_BLANKZ_AT {
@@ -168,6 +296,14 @@ macro_rules! IS_BLANKZ {
     ($string:expr) => {
         IS_BLANKZ_AT!($string, 0)
     };
+}
+
+macro_rules! WIDTH_AT {
+    () => {}; // TODO
+}
+
+macro_rules! WIDTH {
+    () => {}; // TODO
 }
 
 macro_rules! MOVE {
@@ -256,4 +392,52 @@ macro_rules! COPY {
             *fresh106 = *fresh104;
         }
     };
+}
+
+macro_rules! STACK_INIT {
+    () => {}; // TODO
+}
+
+macro_rules! STACK_DEL {
+    () => {}; // TODO
+}
+
+macro_rules! STACK_EMPTY {
+    () => {}; // TODO
+}
+
+macro_rules! STACK_LIMIT {
+    () => {}; // TODO
+}
+
+macro_rules! PUSH {
+    () => {}; // TODO
+}
+
+macro_rules! POP {
+    () => {}; // TODO
+}
+
+macro_rules! QUEUE_INIT {
+    () => {}; // TODO
+}
+
+macro_rules! QUEUE_DEL {
+    () => {}; // TODO
+}
+
+macro_rules! QUEUE_EMPTY {
+    () => {}; // TODO
+}
+
+macro_rules! ENQUEUE {
+    () => {}; // TODO
+}
+
+macro_rules! DEQUEUE {
+    () => {}; // TODO
+}
+
+macro_rules! QUEUE_INSERT {
+    () => {}; // TODO
 }

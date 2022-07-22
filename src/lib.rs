@@ -6,7 +6,7 @@
 
 #![no_std]
 #![doc(html_root_url = "https://docs.rs/unsafe-libyaml/0.1.2")]
-#![allow(non_camel_case_types)]
+#![allow(non_camel_case_types, unused_macros)]
 #![warn(clippy::pedantic)]
 #![allow(
     clippy::cast_lossless,
