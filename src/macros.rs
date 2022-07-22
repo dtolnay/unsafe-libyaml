@@ -395,7 +395,17 @@ macro_rules! COPY {
 }
 
 macro_rules! STACK_INIT {
-    () => {}; // TODO
+    ($context:expr, $stack:expr, $type:ty) => {{
+        $stack.start = yaml_malloc(16 * size_of::<$type>() as libc::c_ulong) as *mut $type;
+        if !$stack.start.is_null() {
+            $stack.top = $stack.start;
+            $stack.end = $stack.start.offset(16_isize);
+            1_i32
+        } else {
+            (*$context).error = YAML_MEMORY_ERROR;
+            0_i32
+        }
+    }};
 }
 
 macro_rules! STACK_DEL {

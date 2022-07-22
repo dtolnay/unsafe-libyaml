@@ -49,20 +49,7 @@ pub unsafe fn yaml_parser_load(
         0_i32,
         size_of::<yaml_document_t>() as libc::c_ulong,
     );
-    let fresh0 = addr_of_mut!((*document).nodes.start);
-    *fresh0 = yaml_malloc((16_u64).wrapping_mul(size_of::<yaml_node_t>() as libc::c_ulong))
-        as *mut yaml_node_t;
-    if !(if !(*fresh0).is_null() {
-        let fresh1 = addr_of_mut!((*document).nodes.top);
-        *fresh1 = (*document).nodes.start;
-        let fresh2 = addr_of_mut!((*document).nodes.end);
-        *fresh2 = ((*document).nodes.start).wrapping_offset(16_isize);
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0)
-    {
+    if !(STACK_INIT!(parser, (*document).nodes, yaml_node_t) == 0) {
         if (*parser).stream_start_produced == 0 {
             if yaml_parser_parse(parser, event) == 0 {
                 current_block = 6234624449317607669;
@@ -88,21 +75,7 @@ pub unsafe fn yaml_parser_load(
                     {
                         return 1_i32;
                     }
-                    let fresh3 = addr_of_mut!((*parser).aliases.start);
-                    *fresh3 = yaml_malloc(
-                        (16_u64).wrapping_mul(size_of::<yaml_alias_data_t>() as libc::c_ulong),
-                    ) as *mut yaml_alias_data_t;
-                    if !(if !(*fresh3).is_null() {
-                        let fresh4 = addr_of_mut!((*parser).aliases.top);
-                        *fresh4 = (*parser).aliases.start;
-                        let fresh5 = addr_of_mut!((*parser).aliases.end);
-                        *fresh5 = ((*parser).aliases.start).wrapping_offset(16_isize);
-                        1_i32
-                    } else {
-                        (*parser).error = YAML_MEMORY_ERROR;
-                        0_i32
-                    } == 0)
-                    {
+                    if !(STACK_INIT!(parser, (*parser).aliases, yaml_alias_data_t) == 0) {
                         let fresh6 = addr_of_mut!((*parser).document);
                         *fresh6 = document;
                         if !(yaml_parser_load_document(parser, event) == 0) {
@@ -187,17 +160,7 @@ unsafe fn yaml_parser_load_document(
     *fresh18 = (*event).data.document_start.tag_directives.end;
     (*(*parser).document).start_implicit = (*event).data.document_start.implicit;
     (*(*parser).document).start_mark = (*event).start_mark;
-    ctx.start = yaml_malloc((16_u64).wrapping_mul(size_of::<libc::c_int>() as libc::c_ulong))
-        as *mut libc::c_int;
-    if if !ctx.start.is_null() {
-        ctx.top = ctx.start;
-        ctx.end = ctx.start.wrapping_offset(16_isize);
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0
-    {
+    if STACK_INIT!(parser, ctx, libc::c_int) == 0 {
         return 0_i32;
     }
     if yaml_parser_load_nodes(parser, addr_of_mut!(ctx)) == 0 {
@@ -539,18 +502,7 @@ unsafe fn yaml_parser_load_sequence(
         match current_block {
             13474536459355229096 => {}
             _ => {
-                items.start = yaml_malloc(
-                    (16_u64).wrapping_mul(size_of::<yaml_node_item_t>() as libc::c_ulong),
-                ) as *mut yaml_node_item_t;
-                if !(if !items.start.is_null() {
-                    items.top = items.start;
-                    items.end = items.start.wrapping_offset(16_isize);
-                    1_i32
-                } else {
-                    (*parser).error = YAML_MEMORY_ERROR;
-                    0_i32
-                } == 0)
-                {
+                if !(STACK_INIT!(parser, items, yaml_node_item_t) == 0) {
                     memset(
                         node as *mut libc::c_void,
                         0_i32,
@@ -674,18 +626,7 @@ unsafe fn yaml_parser_load_mapping(
         match current_block {
             13635467803606088781 => {}
             _ => {
-                pairs.start = yaml_malloc(
-                    (16_u64).wrapping_mul(size_of::<yaml_node_pair_t>() as libc::c_ulong),
-                ) as *mut yaml_node_pair_t;
-                if !(if !pairs.start.is_null() {
-                    pairs.top = pairs.start;
-                    pairs.end = pairs.start.wrapping_offset(16_isize);
-                    1_i32
-                } else {
-                    (*parser).error = YAML_MEMORY_ERROR;
-                    0_i32
-                } == 0)
-                {
+                if !(STACK_INIT!(parser, pairs, yaml_node_pair_t) == 0) {
                     memset(
                         node as *mut libc::c_void,
                         0_i32,

@@ -230,84 +230,15 @@ pub unsafe fn yaml_parser_initialize(parser: *mut yaml_parser_t) -> libc::c_int 
                 0_i32
             } == 0)
             {
-                let fresh12 = addr_of_mut!((*parser).indents.start);
-                *fresh12 =
-                    yaml_malloc((16_u64).wrapping_mul(size_of::<libc::c_int>() as libc::c_ulong))
-                        as *mut libc::c_int;
-                if !(if !(*fresh12).is_null() {
-                    let fresh13 = addr_of_mut!((*parser).indents.top);
-                    *fresh13 = (*parser).indents.start;
-                    let fresh14 = addr_of_mut!((*parser).indents.end);
-                    *fresh14 = ((*parser).indents.start).wrapping_offset(16_isize);
-                    1_i32
-                } else {
-                    (*parser).error = YAML_MEMORY_ERROR;
-                    0_i32
-                } == 0)
-                {
-                    let fresh15 = addr_of_mut!((*parser).simple_keys.start);
-                    *fresh15 = yaml_malloc(
-                        (16_u64).wrapping_mul(size_of::<yaml_simple_key_t>() as libc::c_ulong),
-                    ) as *mut yaml_simple_key_t;
-                    if !(if !(*fresh15).is_null() {
-                        let fresh16 = addr_of_mut!((*parser).simple_keys.top);
-                        *fresh16 = (*parser).simple_keys.start;
-                        let fresh17 = addr_of_mut!((*parser).simple_keys.end);
-                        *fresh17 = ((*parser).simple_keys.start).wrapping_offset(16_isize);
-                        1_i32
-                    } else {
-                        (*parser).error = YAML_MEMORY_ERROR;
-                        0_i32
-                    } == 0)
-                    {
-                        let fresh18 = addr_of_mut!((*parser).states.start);
-                        *fresh18 = yaml_malloc(
-                            (16_u64)
-                                .wrapping_mul(size_of::<yaml_parser_state_t>() as libc::c_ulong),
-                        ) as *mut yaml_parser_state_t;
-                        if !(if !(*fresh18).is_null() {
-                            let fresh19 = addr_of_mut!((*parser).states.top);
-                            *fresh19 = (*parser).states.start;
-                            let fresh20 = addr_of_mut!((*parser).states.end);
-                            *fresh20 = ((*parser).states.start).wrapping_offset(16_isize);
-                            1_i32
-                        } else {
-                            (*parser).error = YAML_MEMORY_ERROR;
-                            0_i32
-                        } == 0)
-                        {
-                            let fresh21 = addr_of_mut!((*parser).marks.start);
-                            *fresh21 = yaml_malloc(
-                                (16_u64).wrapping_mul(size_of::<yaml_mark_t>() as libc::c_ulong),
-                            ) as *mut yaml_mark_t;
-                            if !(if !(*fresh21).is_null() {
-                                let fresh22 = addr_of_mut!((*parser).marks.top);
-                                *fresh22 = (*parser).marks.start;
-                                let fresh23 = addr_of_mut!((*parser).marks.end);
-                                *fresh23 = ((*parser).marks.start).wrapping_offset(16_isize);
-                                1_i32
-                            } else {
-                                (*parser).error = YAML_MEMORY_ERROR;
-                                0_i32
-                            } == 0)
-                            {
-                                let fresh24 = addr_of_mut!((*parser).tag_directives.start);
-                                *fresh24 =
-                                    yaml_malloc((16_u64).wrapping_mul(
-                                        size_of::<yaml_tag_directive_t>() as libc::c_ulong,
-                                    ))
-                                        as *mut yaml_tag_directive_t;
-                                if !(if !(*fresh24).is_null() {
-                                    let fresh25 = addr_of_mut!((*parser).tag_directives.top);
-                                    *fresh25 = (*parser).tag_directives.start;
-                                    let fresh26 = addr_of_mut!((*parser).tag_directives.end);
-                                    *fresh26 =
-                                        ((*parser).tag_directives.start).wrapping_offset(16_isize);
-                                    1_i32
-                                } else {
-                                    (*parser).error = YAML_MEMORY_ERROR;
-                                    0_i32
-                                } == 0)
+                if !(STACK_INIT!(parser, (*parser).indents, libc::c_int) == 0) {
+                    if !(STACK_INIT!(parser, (*parser).simple_keys, yaml_simple_key_t) == 0) {
+                        if !(STACK_INIT!(parser, (*parser).states, yaml_parser_state_t) == 0) {
+                            if !(STACK_INIT!(parser, (*parser).marks, yaml_mark_t) == 0) {
+                                if !(STACK_INIT!(
+                                    parser,
+                                    (*parser).tag_directives,
+                                    yaml_tag_directive_t
+                                ) == 0)
                                 {
                                     return 1_i32;
                                 }
@@ -528,21 +459,7 @@ pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> libc:
     );
     if !(BUFFER_INIT!(emitter, (*emitter).buffer, OUTPUT_BUFFER_SIZE) == 0) {
         if !(BUFFER_INIT!(emitter, (*emitter).raw_buffer, OUTPUT_RAW_BUFFER_SIZE) == 0) {
-            let fresh99 = addr_of_mut!((*emitter).states.start);
-            *fresh99 = yaml_malloc(
-                (16_u64).wrapping_mul(size_of::<yaml_emitter_state_t>() as libc::c_ulong),
-            ) as *mut yaml_emitter_state_t;
-            if !(if !(*fresh99).is_null() {
-                let fresh100 = addr_of_mut!((*emitter).states.top);
-                *fresh100 = (*emitter).states.start;
-                let fresh101 = addr_of_mut!((*emitter).states.end);
-                *fresh101 = ((*emitter).states.start).wrapping_offset(16_isize);
-                1_i32
-            } else {
-                (*emitter).error = YAML_MEMORY_ERROR;
-                0_i32
-            } == 0)
-            {
+            if !(STACK_INIT!(emitter, (*emitter).states, yaml_emitter_state_t) == 0) {
                 let fresh102 = addr_of_mut!((*emitter).events.start);
                 *fresh102 =
                     yaml_malloc((16_u64).wrapping_mul(size_of::<yaml_event_t>() as libc::c_ulong))
@@ -560,36 +477,9 @@ pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> libc:
                     0_i32
                 } == 0)
                 {
-                    let fresh106 = addr_of_mut!((*emitter).indents.start);
-                    *fresh106 = yaml_malloc(
-                        (16_u64).wrapping_mul(size_of::<libc::c_int>() as libc::c_ulong),
-                    ) as *mut libc::c_int;
-                    if !(if !(*fresh106).is_null() {
-                        let fresh107 = addr_of_mut!((*emitter).indents.top);
-                        *fresh107 = (*emitter).indents.start;
-                        let fresh108 = addr_of_mut!((*emitter).indents.end);
-                        *fresh108 = ((*emitter).indents.start).wrapping_offset(16_isize);
-                        1_i32
-                    } else {
-                        (*emitter).error = YAML_MEMORY_ERROR;
-                        0_i32
-                    } == 0)
-                    {
-                        let fresh109 = addr_of_mut!((*emitter).tag_directives.start);
-                        *fresh109 = yaml_malloc(
-                            (16_u64)
-                                .wrapping_mul(size_of::<yaml_tag_directive_t>() as libc::c_ulong),
-                        ) as *mut yaml_tag_directive_t;
-                        if !(if !(*fresh109).is_null() {
-                            let fresh110 = addr_of_mut!((*emitter).tag_directives.top);
-                            *fresh110 = (*emitter).tag_directives.start;
-                            let fresh111 = addr_of_mut!((*emitter).tag_directives.end);
-                            *fresh111 = ((*emitter).tag_directives.start).wrapping_offset(16_isize);
-                            1_i32
-                        } else {
-                            (*emitter).error = YAML_MEMORY_ERROR;
-                            0_i32
-                        } == 0)
+                    if !(STACK_INIT!(emitter, (*emitter).indents, libc::c_int) == 0) {
+                        if !(STACK_INIT!(emitter, (*emitter).tag_directives, yaml_tag_directive_t)
+                            == 0)
                         {
                             return 1_i32;
                         }
@@ -1002,17 +892,11 @@ pub unsafe fn yaml_document_start_event_initialize(
         1394248824506584008 => {
             if tag_directives_start != tag_directives_end {
                 let mut tag_directive: *mut yaml_tag_directive_t;
-                tag_directives_copy.start = yaml_malloc(
-                    (16_u64).wrapping_mul(size_of::<yaml_tag_directive_t>() as libc::c_ulong),
-                ) as *mut yaml_tag_directive_t;
-                if if !tag_directives_copy.start.is_null() {
-                    tag_directives_copy.top = tag_directives_copy.start;
-                    tag_directives_copy.end = tag_directives_copy.start.wrapping_offset(16_isize);
-                    1_i32
-                } else {
-                    context.error = YAML_MEMORY_ERROR;
-                    0_i32
-                } == 0
+                if STACK_INIT!(
+                    addr_of_mut!(context),
+                    tag_directives_copy,
+                    yaml_tag_directive_t
+                ) == 0
                 {
                     current_block = 14964981520188694172;
                 } else {
@@ -1570,17 +1454,7 @@ pub unsafe fn yaml_document_initialize(
         !tag_directives_start.is_null() && !tag_directives_end.is_null()
             || tag_directives_start == tag_directives_end
     );
-    nodes.start = yaml_malloc((16_u64).wrapping_mul(size_of::<yaml_node_t>() as libc::c_ulong))
-        as *mut yaml_node_t;
-    if !(if !nodes.start.is_null() {
-        nodes.top = nodes.start;
-        nodes.end = nodes.start.wrapping_offset(16_isize);
-        1_i32
-    } else {
-        context.error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0)
-    {
+    if !(STACK_INIT!(addr_of_mut!(context), nodes, yaml_node_t) == 0) {
         if !version_directive.is_null() {
             version_directive_copy =
                 yaml_malloc(size_of::<yaml_version_directive_t>() as libc::c_ulong)
@@ -1600,20 +1474,11 @@ pub unsafe fn yaml_document_initialize(
             _ => {
                 if tag_directives_start != tag_directives_end {
                     let mut tag_directive: *mut yaml_tag_directive_t;
-                    tag_directives_copy.start =
-                        yaml_malloc(
-                            (16_u64)
-                                .wrapping_mul(size_of::<yaml_tag_directive_t>() as libc::c_ulong),
-                        ) as *mut yaml_tag_directive_t;
-                    if if !tag_directives_copy.start.is_null() {
-                        tag_directives_copy.top = tag_directives_copy.start;
-                        tag_directives_copy.end =
-                            tag_directives_copy.start.wrapping_offset(16_isize);
-                        1_i32
-                    } else {
-                        context.error = YAML_MEMORY_ERROR;
-                        0_i32
-                    } == 0
+                    if STACK_INIT!(
+                        addr_of_mut!(context),
+                        tag_directives_copy,
+                        yaml_tag_directive_t
+                    ) == 0
                     {
                         current_block = 8142820162064489797;
                     } else {
@@ -1909,18 +1774,7 @@ pub unsafe fn yaml_document_add_sequence(
     if !(yaml_check_utf8(tag, strlen(tag as *mut libc::c_char)) == 0) {
         tag_copy = yaml_strdup(tag);
         if !tag_copy.is_null() {
-            items.start =
-                yaml_malloc((16_u64).wrapping_mul(size_of::<yaml_node_item_t>() as libc::c_ulong))
-                    as *mut yaml_node_item_t;
-            if !(if !items.start.is_null() {
-                items.top = items.start;
-                items.end = items.start.wrapping_offset(16_isize);
-                1_i32
-            } else {
-                context.error = YAML_MEMORY_ERROR;
-                0_i32
-            } == 0)
-            {
+            if !(STACK_INIT!(addr_of_mut!(context), items, yaml_node_item_t) == 0) {
                 memset(
                     node as *mut libc::c_void,
                     0_i32,
@@ -1988,18 +1842,7 @@ pub unsafe fn yaml_document_add_mapping(
     if !(yaml_check_utf8(tag, strlen(tag as *mut libc::c_char)) == 0) {
         tag_copy = yaml_strdup(tag);
         if !tag_copy.is_null() {
-            pairs.start =
-                yaml_malloc((16_u64).wrapping_mul(size_of::<yaml_node_pair_t>() as libc::c_ulong))
-                    as *mut yaml_node_pair_t;
-            if !(if !pairs.start.is_null() {
-                pairs.top = pairs.start;
-                pairs.end = pairs.start.wrapping_offset(16_isize);
-                1_i32
-            } else {
-                context.error = YAML_MEMORY_ERROR;
-                0_i32
-            } == 0)
-            {
+            if !(STACK_INIT!(addr_of_mut!(context), pairs, yaml_node_pair_t) == 0) {
                 memset(
                     node as *mut libc::c_void,
                     0_i32,

@@ -1376,18 +1376,7 @@ unsafe fn yaml_parser_process_directives(
         top: ptr::null_mut::<yaml_tag_directive_t>(),
     };
     let mut token: *mut yaml_token_t;
-    tag_directives.start =
-        yaml_malloc((16_u64).wrapping_mul(size_of::<yaml_tag_directive_t>() as libc::c_ulong))
-            as *mut yaml_tag_directive_t;
-    if !(if !tag_directives.start.is_null() {
-        tag_directives.top = tag_directives.start;
-        tag_directives.end = tag_directives.start.wrapping_offset(16_isize);
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0)
-    {
+    if !(STACK_INIT!(parser, tag_directives, yaml_tag_directive_t) == 0) {
         token = PEEK_TOKEN!(parser);
         if !token.is_null() {
             loop {
