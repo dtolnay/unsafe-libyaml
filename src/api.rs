@@ -18,6 +18,11 @@ struct api_context {
     error: yaml_error_type_t,
 }
 
+const INPUT_RAW_BUFFER_SIZE: usize = 16384;
+const INPUT_BUFFER_SIZE: usize = INPUT_RAW_BUFFER_SIZE * 3;
+const OUTPUT_BUFFER_SIZE: usize = 16384;
+const OUTPUT_RAW_BUFFER_SIZE: usize = OUTPUT_BUFFER_SIZE * 2 + 2;
+
 /// Get the libyaml version as a string.
 ///
 /// Returns the pointer to a static string of the form `"X.Y.Z"`, where `X` is
@@ -208,14 +213,14 @@ pub unsafe fn yaml_parser_initialize(parser: *mut yaml_parser_t) -> libc::c_int 
         size_of::<yaml_parser_t>() as libc::c_ulong,
     );
     let fresh0 = addr_of_mut!((*parser).raw_buffer.start);
-    *fresh0 = yaml_malloc(16384_u64) as *mut yaml_char_t;
+    *fresh0 = yaml_malloc(INPUT_RAW_BUFFER_SIZE as size_t) as *mut yaml_char_t;
     if !(if !(*fresh0).is_null() {
         let fresh1 = addr_of_mut!((*parser).raw_buffer.pointer);
         *fresh1 = (*parser).raw_buffer.start;
         let fresh2 = addr_of_mut!((*parser).raw_buffer.last);
         *fresh2 = *fresh1;
         let fresh3 = addr_of_mut!((*parser).raw_buffer.end);
-        *fresh3 = ((*parser).raw_buffer.start).wrapping_offset(16384_isize);
+        *fresh3 = ((*parser).raw_buffer.start).wrapping_add(INPUT_RAW_BUFFER_SIZE);
         1_i32
     } else {
         (*parser).error = YAML_MEMORY_ERROR;
@@ -223,14 +228,14 @@ pub unsafe fn yaml_parser_initialize(parser: *mut yaml_parser_t) -> libc::c_int 
     } == 0)
     {
         let fresh4 = addr_of_mut!((*parser).buffer.start);
-        *fresh4 = yaml_malloc((16384_i32 * 3_i32) as size_t) as *mut yaml_char_t;
+        *fresh4 = yaml_malloc(INPUT_BUFFER_SIZE as size_t) as *mut yaml_char_t;
         if !(if !(*fresh4).is_null() {
             let fresh5 = addr_of_mut!((*parser).buffer.pointer);
             *fresh5 = (*parser).buffer.start;
             let fresh6 = addr_of_mut!((*parser).buffer.last);
             *fresh6 = *fresh5;
             let fresh7 = addr_of_mut!((*parser).buffer.end);
-            *fresh7 = ((*parser).buffer.start).wrapping_offset((16384_i32 * 3_i32) as isize);
+            *fresh7 = ((*parser).buffer.start).wrapping_add(INPUT_BUFFER_SIZE);
             1_i32
         } else {
             (*parser).error = YAML_MEMORY_ERROR;
@@ -577,14 +582,14 @@ pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> libc:
         size_of::<yaml_emitter_t>() as libc::c_ulong,
     );
     let fresh91 = addr_of_mut!((*emitter).buffer.start);
-    *fresh91 = yaml_malloc(16384_u64) as *mut yaml_char_t;
+    *fresh91 = yaml_malloc(OUTPUT_BUFFER_SIZE as size_t) as *mut yaml_char_t;
     if !(if !(*fresh91).is_null() {
         let fresh92 = addr_of_mut!((*emitter).buffer.pointer);
         *fresh92 = (*emitter).buffer.start;
         let fresh93 = addr_of_mut!((*emitter).buffer.last);
         *fresh93 = *fresh92;
         let fresh94 = addr_of_mut!((*emitter).buffer.end);
-        *fresh94 = ((*emitter).buffer.start).wrapping_offset(16384_isize);
+        *fresh94 = ((*emitter).buffer.start).wrapping_add(OUTPUT_BUFFER_SIZE);
         1_i32
     } else {
         (*emitter).error = YAML_MEMORY_ERROR;
@@ -592,15 +597,14 @@ pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> libc:
     } == 0)
     {
         let fresh95 = addr_of_mut!((*emitter).raw_buffer.start);
-        *fresh95 = yaml_malloc((16384_i32 * 2_i32 + 2_i32) as size_t) as *mut yaml_char_t;
+        *fresh95 = yaml_malloc(OUTPUT_RAW_BUFFER_SIZE as size_t) as *mut yaml_char_t;
         if !(if !(*fresh95).is_null() {
             let fresh96 = addr_of_mut!((*emitter).raw_buffer.pointer);
             *fresh96 = (*emitter).raw_buffer.start;
             let fresh97 = addr_of_mut!((*emitter).raw_buffer.last);
             *fresh97 = *fresh96;
             let fresh98 = addr_of_mut!((*emitter).raw_buffer.end);
-            *fresh98 =
-                ((*emitter).raw_buffer.start).wrapping_offset((16384_i32 * 2_i32 + 2_i32) as isize);
+            *fresh98 = ((*emitter).raw_buffer.start).wrapping_add(OUTPUT_RAW_BUFFER_SIZE);
             1_i32
         } else {
             (*emitter).error = YAML_MEMORY_ERROR;
