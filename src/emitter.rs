@@ -141,10 +141,7 @@ pub unsafe fn yaml_emitter_emit(
         if yaml_emitter_state_machine(emitter, (*emitter).events.head) == 0 {
             return 0_i32;
         }
-        let fresh3 = addr_of_mut!((*emitter).events.head);
-        let fresh4 = *fresh3;
-        *fresh3 = (*fresh3).wrapping_offset(1);
-        yaml_event_delete(fresh4);
+        yaml_event_delete(addr_of_mut!(DEQUEUE!((*emitter).events)));
     }
     1_i32
 }

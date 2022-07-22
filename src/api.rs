@@ -373,10 +373,7 @@ pub unsafe fn yaml_parser_delete(parser: *mut yaml_parser_t) {
     BUFFER_DEL!((*parser).raw_buffer);
     BUFFER_DEL!((*parser).buffer);
     while !((*parser).tokens.head == (*parser).tokens.tail) {
-        let fresh58 = addr_of_mut!((*parser).tokens.head);
-        let fresh59 = *fresh58;
-        *fresh58 = (*fresh58).wrapping_offset(1);
-        yaml_token_delete(fresh59);
+        yaml_token_delete(addr_of_mut!(DEQUEUE!((*parser).tokens)));
     }
     yaml_free((*parser).tokens.start as *mut libc::c_void);
     let fresh60 = addr_of_mut!((*parser).tokens.end);
@@ -649,10 +646,7 @@ pub unsafe fn yaml_emitter_delete(emitter: *mut yaml_emitter_t) {
     let fresh139 = addr_of_mut!((*emitter).states.start);
     *fresh139 = *fresh138;
     while !((*emitter).events.head == (*emitter).events.tail) {
-        let fresh140 = addr_of_mut!((*emitter).events.head);
-        let fresh141 = *fresh140;
-        *fresh140 = (*fresh140).wrapping_offset(1);
-        yaml_event_delete(fresh141);
+        yaml_event_delete(addr_of_mut!(DEQUEUE!((*emitter).events)));
     }
     yaml_free((*emitter).events.start as *mut libc::c_void);
     let fresh142 = addr_of_mut!((*emitter).events.end);

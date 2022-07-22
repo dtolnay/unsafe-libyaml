@@ -266,10 +266,7 @@ pub unsafe fn yaml_parser_scan(
             return 0_i32;
         }
     }
-    let fresh0 = addr_of_mut!((*parser).tokens.head);
-    let fresh1 = *fresh0;
-    *fresh0 = (*fresh0).wrapping_offset(1);
-    *token = *fresh1;
+    *token = DEQUEUE!((*parser).tokens);
     (*parser).token_available = 0_i32;
     let fresh2 = addr_of_mut!((*parser).tokens_parsed);
     *fresh2 = (*fresh2).wrapping_add(1);
