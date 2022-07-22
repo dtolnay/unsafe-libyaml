@@ -1,3 +1,13 @@
+macro_rules! NULL_STRING {
+    () => {
+        yaml_string_t {
+            start: ptr::null_mut::<yaml_char_t>(),
+            end: ptr::null_mut::<yaml_char_t>(),
+            pointer: ptr::null_mut::<yaml_char_t>(),
+        }
+    };
+}
+
 macro_rules! IS_BLANK_AT {
     ($string:expr, $offset:expr) => {
         *$string.pointer.wrapping_offset($offset as isize) as libc::c_int
