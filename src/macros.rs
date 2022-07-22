@@ -450,7 +450,18 @@ macro_rules! POP {
 }
 
 macro_rules! QUEUE_INIT {
-    () => {}; // TODO
+    ($context:expr, $queue:expr, $type:ty) => {{
+        $queue.start = yaml_malloc(16 * size_of::<$type>() as libc::c_ulong) as *mut $type;
+        if !$queue.start.is_null() {
+            $queue.tail = $queue.start;
+            $queue.head = $queue.tail;
+            $queue.end = $queue.start.offset(16_isize);
+            1_i32
+        } else {
+            (*$context).error = YAML_MEMORY_ERROR;
+            0_i32
+        }
+    }};
 }
 
 macro_rules! QUEUE_DEL {

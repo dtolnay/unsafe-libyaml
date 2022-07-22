@@ -214,22 +214,7 @@ pub unsafe fn yaml_parser_initialize(parser: *mut yaml_parser_t) -> libc::c_int 
     );
     if !(BUFFER_INIT!(parser, (*parser).raw_buffer, INPUT_RAW_BUFFER_SIZE) == 0) {
         if !(BUFFER_INIT!(parser, (*parser).buffer, INPUT_BUFFER_SIZE) == 0) {
-            let fresh8 = addr_of_mut!((*parser).tokens.start);
-            *fresh8 = yaml_malloc((16_u64).wrapping_mul(size_of::<yaml_token_t>() as libc::c_ulong))
-                as *mut yaml_token_t;
-            if !(if !(*fresh8).is_null() {
-                let fresh9 = addr_of_mut!((*parser).tokens.tail);
-                *fresh9 = (*parser).tokens.start;
-                let fresh10 = addr_of_mut!((*parser).tokens.head);
-                *fresh10 = *fresh9;
-                let fresh11 = addr_of_mut!((*parser).tokens.end);
-                *fresh11 = ((*parser).tokens.start).wrapping_offset(16_isize);
-                1_i32
-            } else {
-                (*parser).error = YAML_MEMORY_ERROR;
-                0_i32
-            } == 0)
-            {
+            if !(QUEUE_INIT!(parser, (*parser).tokens, yaml_token_t) == 0) {
                 if !(STACK_INIT!(parser, (*parser).indents, libc::c_int) == 0) {
                     if !(STACK_INIT!(parser, (*parser).simple_keys, yaml_simple_key_t) == 0) {
                         if !(STACK_INIT!(parser, (*parser).states, yaml_parser_state_t) == 0) {
@@ -460,23 +445,7 @@ pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> libc:
     if !(BUFFER_INIT!(emitter, (*emitter).buffer, OUTPUT_BUFFER_SIZE) == 0) {
         if !(BUFFER_INIT!(emitter, (*emitter).raw_buffer, OUTPUT_RAW_BUFFER_SIZE) == 0) {
             if !(STACK_INIT!(emitter, (*emitter).states, yaml_emitter_state_t) == 0) {
-                let fresh102 = addr_of_mut!((*emitter).events.start);
-                *fresh102 =
-                    yaml_malloc((16_u64).wrapping_mul(size_of::<yaml_event_t>() as libc::c_ulong))
-                        as *mut yaml_event_t;
-                if !(if !(*fresh102).is_null() {
-                    let fresh103 = addr_of_mut!((*emitter).events.tail);
-                    *fresh103 = (*emitter).events.start;
-                    let fresh104 = addr_of_mut!((*emitter).events.head);
-                    *fresh104 = *fresh103;
-                    let fresh105 = addr_of_mut!((*emitter).events.end);
-                    *fresh105 = ((*emitter).events.start).wrapping_offset(16_isize);
-                    1_i32
-                } else {
-                    (*emitter).error = YAML_MEMORY_ERROR;
-                    0_i32
-                } == 0)
-                {
+                if !(QUEUE_INIT!(emitter, (*emitter).events, yaml_event_t) == 0) {
                     if !(STACK_INIT!(emitter, (*emitter).indents, libc::c_int) == 0) {
                         if !(STACK_INIT!(emitter, (*emitter).tag_directives, yaml_tag_directive_t)
                             == 0)
