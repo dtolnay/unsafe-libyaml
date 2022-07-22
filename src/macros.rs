@@ -52,6 +52,21 @@ macro_rules! STRING_ASSIGN {
     };
 }
 
+macro_rules! STRING_INIT {
+    ($context:expr, $string:expr) => {{
+        $string.start = yaml_malloc(16) as *mut yaml_char_t;
+        if !$string.start.is_null() {
+            $string.pointer = $string.start;
+            $string.end = $string.start.wrapping_add(16);
+            memset($string.start as *mut libc::c_void, 0, 16);
+            1_i32
+        } else {
+            (*$context).error = YAML_MEMORY_ERROR;
+            0_i32
+        }
+    }};
+}
+
 macro_rules! IS_BLANK_AT {
     ($string:expr, $offset:expr) => {
         *$string.pointer.wrapping_offset($offset as isize) as libc::c_int

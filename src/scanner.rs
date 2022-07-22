@@ -1851,17 +1851,7 @@ unsafe fn yaml_parser_scan_directive_name(
 ) -> libc::c_int {
     let current_block: u64;
     let mut string = NULL_STRING!();
-    string.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-    if !(if !string.start.is_null() {
-        string.pointer = string.start;
-        string.end = string.start.wrapping_offset(16_isize);
-        memset(string.start as *mut libc::c_void, 0_i32, 16_u64);
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0)
-    {
+    if !(STRING_INIT!(parser, string) == 0) {
         if !(CACHE!(parser, 1_u64) == 0) {
             loop {
                 if !(*((*parser).buffer.pointer) as libc::c_int
@@ -2112,17 +2102,7 @@ unsafe fn yaml_parser_scan_anchor(
     let start_mark: yaml_mark_t;
     let end_mark: yaml_mark_t;
     let mut string = NULL_STRING!();
-    string.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-    if !(if !string.start.is_null() {
-        string.pointer = string.start;
-        string.end = string.start.wrapping_offset(16_isize);
-        memset(string.start as *mut libc::c_void, 0_i32, 16_u64);
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0)
-    {
+    if !(STRING_INIT!(parser, string) == 0) {
         start_mark = (*parser).mark;
         SKIP!(parser);
         if !(CACHE!(parser, 1_u64) == 0) {
@@ -2382,17 +2362,7 @@ unsafe fn yaml_parser_scan_tag_handle(
 ) -> libc::c_int {
     let mut current_block: u64;
     let mut string = NULL_STRING!();
-    string.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-    if !(if !string.start.is_null() {
-        string.pointer = string.start;
-        string.end = string.start.wrapping_offset(16_isize);
-        memset(string.start as *mut libc::c_void, 0_i32, 16_u64);
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0)
-    {
+    if !(STRING_INIT!(parser, string) == 0) {
         if !(CACHE!(parser, 1_u64) == 0) {
             if !(*((*parser).buffer.pointer) as libc::c_int
                 == '!' as i32 as yaml_char_t as libc::c_int)
@@ -2500,17 +2470,7 @@ unsafe fn yaml_parser_scan_tag_uri(
         0_u64
     };
     let mut string = NULL_STRING!();
-    string.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-    if if !string.start.is_null() {
-        string.pointer = string.start;
-        string.end = string.start.wrapping_offset(16_isize);
-        memset(string.start as *mut libc::c_void, 0_i32, 16_u64);
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0
-    {
+    if STRING_INIT!(parser, string) == 0 {
         current_block = 15265153392498847348;
     } else {
         current_block = 14916268686031723178;
@@ -2842,39 +2802,9 @@ unsafe fn yaml_parser_scan_block_scalar(
     let mut indent: libc::c_int = 0_i32;
     let mut leading_blank: libc::c_int = 0_i32;
     let mut trailing_blank: libc::c_int;
-    string.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-    if !(if !string.start.is_null() {
-        string.pointer = string.start;
-        string.end = string.start.wrapping_offset(16_isize);
-        memset(string.start as *mut libc::c_void, 0_i32, 16_u64);
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0)
-    {
-        leading_break.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-        if !(if !leading_break.start.is_null() {
-            leading_break.pointer = leading_break.start;
-            leading_break.end = leading_break.start.wrapping_offset(16_isize);
-            memset(leading_break.start as *mut libc::c_void, 0_i32, 16_u64);
-            1_i32
-        } else {
-            (*parser).error = YAML_MEMORY_ERROR;
-            0_i32
-        } == 0)
-        {
-            trailing_breaks.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-            if !(if !trailing_breaks.start.is_null() {
-                trailing_breaks.pointer = trailing_breaks.start;
-                trailing_breaks.end = trailing_breaks.start.wrapping_offset(16_isize);
-                memset(trailing_breaks.start as *mut libc::c_void, 0_i32, 16_u64);
-                1_i32
-            } else {
-                (*parser).error = YAML_MEMORY_ERROR;
-                0_i32
-            } == 0)
-            {
+    if !(STRING_INIT!(parser, string) == 0) {
+        if !(STRING_INIT!(parser, leading_break) == 0) {
+            if !(STRING_INIT!(parser, trailing_breaks) == 0) {
                 start_mark = (*parser).mark;
                 SKIP!(parser);
                 if !(CACHE!(parser, 1_u64) == 0) {
@@ -3528,50 +3458,10 @@ unsafe fn yaml_parser_scan_flow_scalar(
     let mut trailing_breaks = NULL_STRING!();
     let mut whitespaces = NULL_STRING!();
     let mut leading_blanks: libc::c_int;
-    string.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-    if !(if !string.start.is_null() {
-        string.pointer = string.start;
-        string.end = string.start.wrapping_offset(16_isize);
-        memset(string.start as *mut libc::c_void, 0_i32, 16_u64);
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0)
-    {
-        leading_break.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-        if !(if !leading_break.start.is_null() {
-            leading_break.pointer = leading_break.start;
-            leading_break.end = leading_break.start.wrapping_offset(16_isize);
-            memset(leading_break.start as *mut libc::c_void, 0_i32, 16_u64);
-            1_i32
-        } else {
-            (*parser).error = YAML_MEMORY_ERROR;
-            0_i32
-        } == 0)
-        {
-            trailing_breaks.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-            if !(if !trailing_breaks.start.is_null() {
-                trailing_breaks.pointer = trailing_breaks.start;
-                trailing_breaks.end = trailing_breaks.start.wrapping_offset(16_isize);
-                memset(trailing_breaks.start as *mut libc::c_void, 0_i32, 16_u64);
-                1_i32
-            } else {
-                (*parser).error = YAML_MEMORY_ERROR;
-                0_i32
-            } == 0)
-            {
-                whitespaces.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-                if !(if !whitespaces.start.is_null() {
-                    whitespaces.pointer = whitespaces.start;
-                    whitespaces.end = whitespaces.start.wrapping_offset(16_isize);
-                    memset(whitespaces.start as *mut libc::c_void, 0_i32, 16_u64);
-                    1_i32
-                } else {
-                    (*parser).error = YAML_MEMORY_ERROR;
-                    0_i32
-                } == 0)
-                {
+    if !(STRING_INIT!(parser, string) == 0) {
+        if !(STRING_INIT!(parser, leading_break) == 0) {
+            if !(STRING_INIT!(parser, trailing_breaks) == 0) {
+                if !(STRING_INIT!(parser, whitespaces) == 0) {
                     start_mark = (*parser).mark;
                     SKIP!(parser);
                     's_58: loop {
@@ -4369,50 +4259,10 @@ unsafe fn yaml_parser_scan_plain_scalar(
     let mut whitespaces = NULL_STRING!();
     let mut leading_blanks: libc::c_int = 0_i32;
     let indent: libc::c_int = (*parser).indent + 1_i32;
-    string.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-    if !(if !string.start.is_null() {
-        string.pointer = string.start;
-        string.end = string.start.wrapping_offset(16_isize);
-        memset(string.start as *mut libc::c_void, 0_i32, 16_u64);
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0)
-    {
-        leading_break.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-        if !(if !leading_break.start.is_null() {
-            leading_break.pointer = leading_break.start;
-            leading_break.end = leading_break.start.wrapping_offset(16_isize);
-            memset(leading_break.start as *mut libc::c_void, 0_i32, 16_u64);
-            1_i32
-        } else {
-            (*parser).error = YAML_MEMORY_ERROR;
-            0_i32
-        } == 0)
-        {
-            trailing_breaks.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-            if !(if !trailing_breaks.start.is_null() {
-                trailing_breaks.pointer = trailing_breaks.start;
-                trailing_breaks.end = trailing_breaks.start.wrapping_offset(16_isize);
-                memset(trailing_breaks.start as *mut libc::c_void, 0_i32, 16_u64);
-                1_i32
-            } else {
-                (*parser).error = YAML_MEMORY_ERROR;
-                0_i32
-            } == 0)
-            {
-                whitespaces.start = yaml_malloc(16_u64) as *mut yaml_char_t;
-                if !(if !whitespaces.start.is_null() {
-                    whitespaces.pointer = whitespaces.start;
-                    whitespaces.end = whitespaces.start.wrapping_offset(16_isize);
-                    memset(whitespaces.start as *mut libc::c_void, 0_i32, 16_u64);
-                    1_i32
-                } else {
-                    (*parser).error = YAML_MEMORY_ERROR;
-                    0_i32
-                } == 0)
-                {
+    if !(STRING_INIT!(parser, string) == 0) {
+        if !(STRING_INIT!(parser, leading_break) == 0) {
+            if !(STRING_INIT!(parser, trailing_breaks) == 0) {
+                if !(STRING_INIT!(parser, whitespaces) == 0) {
                     end_mark = (*parser).mark;
                     start_mark = end_mark;
                     's_57: loop {
