@@ -1482,19 +1482,13 @@ unsafe fn yaml_parser_process_directives(
                                     *tag_directives_end_ref =
                                         ptr::null_mut::<yaml_tag_directive_t>();
                                     *tag_directives_start_ref = *tag_directives_end_ref;
-                                    yaml_free(tag_directives.start as *mut libc::c_void);
-                                    tag_directives.end = ptr::null_mut::<yaml_tag_directive_t>();
-                                    tag_directives.top = tag_directives.end;
-                                    tag_directives.start = tag_directives.top;
+                                    STACK_DEL!(tag_directives);
                                 } else {
                                     *tag_directives_start_ref = tag_directives.start;
                                     *tag_directives_end_ref = tag_directives.top;
                                 }
                             } else {
-                                yaml_free(tag_directives.start as *mut libc::c_void);
-                                tag_directives.end = ptr::null_mut::<yaml_tag_directive_t>();
-                                tag_directives.top = tag_directives.end;
-                                tag_directives.start = tag_directives.top;
+                                STACK_DEL!(tag_directives);
                             }
                             if version_directive_ref.is_null() {
                                 yaml_free(version_directive as *mut libc::c_void);
@@ -1513,10 +1507,7 @@ unsafe fn yaml_parser_process_directives(
         yaml_free(tag_directive.handle as *mut libc::c_void);
         yaml_free(tag_directive.prefix as *mut libc::c_void);
     }
-    yaml_free(tag_directives.start as *mut libc::c_void);
-    tag_directives.end = ptr::null_mut::<yaml_tag_directive_t>();
-    tag_directives.top = tag_directives.end;
-    tag_directives.start = tag_directives.top;
+    STACK_DEL!(tag_directives);
     0_i32
 }
 

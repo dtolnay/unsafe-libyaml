@@ -131,13 +131,7 @@ unsafe fn yaml_parser_delete_aliases(parser: *mut yaml_parser_t) {
         *fresh12 = (*fresh12).wrapping_offset(-1);
         yaml_free((**fresh12).anchor as *mut libc::c_void);
     }
-    yaml_free((*parser).aliases.start as *mut libc::c_void);
-    let fresh13 = addr_of_mut!((*parser).aliases.end);
-    *fresh13 = ptr::null_mut::<yaml_alias_data_t>();
-    let fresh14 = addr_of_mut!((*parser).aliases.top);
-    *fresh14 = *fresh13;
-    let fresh15 = addr_of_mut!((*parser).aliases.start);
-    *fresh15 = *fresh14;
+    STACK_DEL!((*parser).aliases);
 }
 
 unsafe fn yaml_parser_load_document(
@@ -164,16 +158,10 @@ unsafe fn yaml_parser_load_document(
         return 0_i32;
     }
     if yaml_parser_load_nodes(parser, addr_of_mut!(ctx)) == 0 {
-        yaml_free(ctx.start as *mut libc::c_void);
-        ctx.end = ptr::null_mut::<libc::c_int>();
-        ctx.top = ctx.end;
-        ctx.start = ctx.top;
+        STACK_DEL!(ctx);
         return 0_i32;
     }
-    yaml_free(ctx.start as *mut libc::c_void);
-    ctx.end = ptr::null_mut::<libc::c_int>();
-    ctx.top = ctx.end;
-    ctx.start = ctx.top;
+    STACK_DEL!(ctx);
     1_i32
 }
 

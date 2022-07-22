@@ -409,7 +409,12 @@ macro_rules! STACK_INIT {
 }
 
 macro_rules! STACK_DEL {
-    () => {}; // TODO
+    ($stack:expr) => {
+        yaml_free($stack.start as *mut libc::c_void);
+        $stack.end = ptr::null_mut();
+        $stack.top = ptr::null_mut();
+        $stack.start = ptr::null_mut();
+    };
 }
 
 macro_rules! STACK_EMPTY {

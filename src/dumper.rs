@@ -197,26 +197,14 @@ unsafe fn yaml_emitter_delete_document_and_anchors(mut emitter: *mut yaml_emitte
             }
         }
         if node.type_ as libc::c_uint == YAML_SEQUENCE_NODE as libc::c_int as libc::c_uint {
-            yaml_free(node.data.sequence.items.start as *mut libc::c_void);
-            node.data.sequence.items.end = ptr::null_mut::<yaml_node_item_t>();
-            node.data.sequence.items.top = node.data.sequence.items.end;
-            node.data.sequence.items.start = node.data.sequence.items.top;
+            STACK_DEL!(node.data.sequence.items);
         }
         if node.type_ as libc::c_uint == YAML_MAPPING_NODE as libc::c_int as libc::c_uint {
-            yaml_free(node.data.mapping.pairs.start as *mut libc::c_void);
-            node.data.mapping.pairs.end = ptr::null_mut::<yaml_node_pair_t>();
-            node.data.mapping.pairs.top = node.data.mapping.pairs.end;
-            node.data.mapping.pairs.start = node.data.mapping.pairs.top;
+            STACK_DEL!(node.data.mapping.pairs);
         }
         index += 1;
     }
-    yaml_free((*(*emitter).document).nodes.start as *mut libc::c_void);
-    let fresh3 = addr_of_mut!((*(*emitter).document).nodes.end);
-    *fresh3 = ptr::null_mut::<yaml_node_t>();
-    let fresh4 = addr_of_mut!((*(*emitter).document).nodes.top);
-    *fresh4 = *fresh3;
-    let fresh5 = addr_of_mut!((*(*emitter).document).nodes.start);
-    *fresh5 = *fresh4;
+    STACK_DEL!((*(*emitter).document).nodes);
     yaml_free((*emitter).anchors as *mut libc::c_void);
     let fresh6 = addr_of_mut!((*emitter).anchors);
     *fresh6 = ptr::null_mut::<yaml_anchors_t>();
