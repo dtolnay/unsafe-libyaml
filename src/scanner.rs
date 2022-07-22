@@ -1908,10 +1908,7 @@ unsafe fn yaml_parser_scan_directive_name(
             }
         }
     }
-    yaml_free(string.start as *mut libc::c_void);
-    string.end = ptr::null_mut::<yaml_char_t>();
-    string.pointer = string.end;
-    string.start = string.pointer;
+    STRING_DEL!(string);
     0_i32
 }
 
@@ -2202,10 +2199,7 @@ unsafe fn yaml_parser_scan_anchor(
             }
         }
     }
-    yaml_free(string.start as *mut libc::c_void);
-    string.end = ptr::null_mut::<yaml_char_t>();
-    string.pointer = string.end;
-    string.start = string.pointer;
+    STRING_DEL!(string);
     0_i32
 }
 
@@ -2448,10 +2442,7 @@ unsafe fn yaml_parser_scan_tag_handle(
             }
         }
     }
-    yaml_free(string.start as *mut libc::c_void);
-    string.end = ptr::null_mut::<yaml_char_t>();
-    string.pointer = string.end;
-    string.start = string.pointer;
+    STRING_DEL!(string);
     0_i32
 }
 
@@ -2478,10 +2469,7 @@ unsafe fn yaml_parser_scan_tag_uri(
     'c_21953: loop {
         match current_block {
             15265153392498847348 => {
-                yaml_free(string.start as *mut libc::c_void);
-                string.end = ptr::null_mut::<yaml_char_t>();
-                string.pointer = string.end;
-                string.start = string.pointer;
+                STRING_DEL!(string);
                 return 0_i32;
             }
             _ => {
@@ -3322,14 +3310,8 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                                             } else {
                                                                                                 YAML_FOLDED_SCALAR_STYLE
                                                                                             };
-                                                                                            yaml_free(leading_break.start as *mut libc::c_void);
-                                                                                            leading_break.end = ptr::null_mut::<yaml_char_t>();
-                                                                                            leading_break.pointer = leading_break.end;
-                                                                                            leading_break.start = leading_break.pointer;
-                                                                                            yaml_free(trailing_breaks.start as *mut libc::c_void);
-                                                                                            trailing_breaks.end = ptr::null_mut::<yaml_char_t>();
-                                                                                            trailing_breaks.pointer = trailing_breaks.end;
-                                                                                            trailing_breaks.start = trailing_breaks.pointer;
+                                                                                            STRING_DEL!(leading_break);
+                                                                                            STRING_DEL!(trailing_breaks);
                                                                                             return 1_i32;
                                                                                         }
                                                                                     }
@@ -3353,18 +3335,9 @@ unsafe fn yaml_parser_scan_block_scalar(
             }
         }
     }
-    yaml_free(string.start as *mut libc::c_void);
-    string.end = ptr::null_mut::<yaml_char_t>();
-    string.pointer = string.end;
-    string.start = string.pointer;
-    yaml_free(leading_break.start as *mut libc::c_void);
-    leading_break.end = ptr::null_mut::<yaml_char_t>();
-    leading_break.pointer = leading_break.end;
-    leading_break.start = leading_break.pointer;
-    yaml_free(trailing_breaks.start as *mut libc::c_void);
-    trailing_breaks.end = ptr::null_mut::<yaml_char_t>();
-    trailing_breaks.pointer = trailing_breaks.end;
-    trailing_breaks.start = trailing_breaks.pointer;
+    STRING_DEL!(string);
+    STRING_DEL!(leading_break);
+    STRING_DEL!(trailing_breaks);
     0_i32
 }
 
@@ -4208,18 +4181,9 @@ unsafe fn yaml_parser_scan_flow_scalar(
                             } else {
                                 YAML_DOUBLE_QUOTED_SCALAR_STYLE
                             };
-                            yaml_free(leading_break.start as *mut libc::c_void);
-                            leading_break.end = ptr::null_mut::<yaml_char_t>();
-                            leading_break.pointer = leading_break.end;
-                            leading_break.start = leading_break.pointer;
-                            yaml_free(trailing_breaks.start as *mut libc::c_void);
-                            trailing_breaks.end = ptr::null_mut::<yaml_char_t>();
-                            trailing_breaks.pointer = trailing_breaks.end;
-                            trailing_breaks.start = trailing_breaks.pointer;
-                            yaml_free(whitespaces.start as *mut libc::c_void);
-                            whitespaces.end = ptr::null_mut::<yaml_char_t>();
-                            whitespaces.pointer = whitespaces.end;
-                            whitespaces.start = whitespaces.pointer;
+                            STRING_DEL!(leading_break);
+                            STRING_DEL!(trailing_breaks);
+                            STRING_DEL!(whitespaces);
                             return 1_i32;
                         }
                     }
@@ -4227,22 +4191,10 @@ unsafe fn yaml_parser_scan_flow_scalar(
             }
         }
     }
-    yaml_free(string.start as *mut libc::c_void);
-    string.end = ptr::null_mut::<yaml_char_t>();
-    string.pointer = string.end;
-    string.start = string.pointer;
-    yaml_free(leading_break.start as *mut libc::c_void);
-    leading_break.end = ptr::null_mut::<yaml_char_t>();
-    leading_break.pointer = leading_break.end;
-    leading_break.start = leading_break.pointer;
-    yaml_free(trailing_breaks.start as *mut libc::c_void);
-    trailing_breaks.end = ptr::null_mut::<yaml_char_t>();
-    trailing_breaks.pointer = trailing_breaks.end;
-    trailing_breaks.start = trailing_breaks.pointer;
-    yaml_free(whitespaces.start as *mut libc::c_void);
-    whitespaces.end = ptr::null_mut::<yaml_char_t>();
-    whitespaces.pointer = whitespaces.end;
-    whitespaces.start = whitespaces.pointer;
+    STRING_DEL!(string);
+    STRING_DEL!(leading_break);
+    STRING_DEL!(trailing_breaks);
+    STRING_DEL!(whitespaces);
     0_i32
 }
 
@@ -4654,18 +4606,9 @@ unsafe fn yaml_parser_scan_plain_scalar(
                             if leading_blanks != 0 {
                                 (*parser).simple_key_allowed = 1_i32;
                             }
-                            yaml_free(leading_break.start as *mut libc::c_void);
-                            leading_break.end = ptr::null_mut::<yaml_char_t>();
-                            leading_break.pointer = leading_break.end;
-                            leading_break.start = leading_break.pointer;
-                            yaml_free(trailing_breaks.start as *mut libc::c_void);
-                            trailing_breaks.end = ptr::null_mut::<yaml_char_t>();
-                            trailing_breaks.pointer = trailing_breaks.end;
-                            trailing_breaks.start = trailing_breaks.pointer;
-                            yaml_free(whitespaces.start as *mut libc::c_void);
-                            whitespaces.end = ptr::null_mut::<yaml_char_t>();
-                            whitespaces.pointer = whitespaces.end;
-                            whitespaces.start = whitespaces.pointer;
+                            STRING_DEL!(leading_break);
+                            STRING_DEL!(trailing_breaks);
+                            STRING_DEL!(whitespaces);
                             return 1_i32;
                         }
                     }
@@ -4673,21 +4616,9 @@ unsafe fn yaml_parser_scan_plain_scalar(
             }
         }
     }
-    yaml_free(string.start as *mut libc::c_void);
-    string.end = ptr::null_mut::<yaml_char_t>();
-    string.pointer = string.end;
-    string.start = string.pointer;
-    yaml_free(leading_break.start as *mut libc::c_void);
-    leading_break.end = ptr::null_mut::<yaml_char_t>();
-    leading_break.pointer = leading_break.end;
-    leading_break.start = leading_break.pointer;
-    yaml_free(trailing_breaks.start as *mut libc::c_void);
-    trailing_breaks.end = ptr::null_mut::<yaml_char_t>();
-    trailing_breaks.pointer = trailing_breaks.end;
-    trailing_breaks.start = trailing_breaks.pointer;
-    yaml_free(whitespaces.start as *mut libc::c_void);
-    whitespaces.end = ptr::null_mut::<yaml_char_t>();
-    whitespaces.pointer = whitespaces.end;
-    whitespaces.start = whitespaces.pointer;
+    STRING_DEL!(string);
+    STRING_DEL!(leading_break);
+    STRING_DEL!(trailing_breaks);
+    STRING_DEL!(whitespaces);
     0_i32
 }

@@ -64,6 +64,15 @@ macro_rules! STRING_INIT {
     }};
 }
 
+macro_rules! STRING_DEL {
+    ($string:expr) => {{
+        yaml_free($string.start as *mut libc::c_void);
+        $string.end = ptr::null_mut::<yaml_char_t>();
+        $string.pointer = $string.end;
+        $string.start = $string.pointer;
+    }};
+}
+
 macro_rules! IS_BLANK_AT {
     ($string:expr, $offset:expr) => {
         *$string.pointer.wrapping_offset($offset as isize) as libc::c_int
