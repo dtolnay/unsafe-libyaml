@@ -470,7 +470,13 @@ macro_rules! QUEUE_INIT {
 }
 
 macro_rules! QUEUE_DEL {
-    () => {}; // TODO
+    ($queue:expr) => {
+        yaml_free($queue.start as *mut libc::c_void);
+        $queue.end = ptr::null_mut();
+        $queue.tail = ptr::null_mut();
+        $queue.head = ptr::null_mut();
+        $queue.start = ptr::null_mut();
+    };
 }
 
 macro_rules! QUEUE_EMPTY {
