@@ -318,8 +318,8 @@ pub unsafe fn yaml_parser_initialize(parser: *mut yaml_parser_t) -> libc::c_int 
             }
         }
     }
-    BUFFER_DEL!(parser, (*parser).raw_buffer);
-    BUFFER_DEL!(parser, (*parser).buffer);
+    BUFFER_DEL!((*parser).raw_buffer);
+    BUFFER_DEL!((*parser).buffer);
     yaml_free((*parser).tokens.start as *mut libc::c_void);
     let fresh33 = addr_of_mut!((*parser).tokens.end);
     *fresh33 = ptr::null_mut::<yaml_token_t>();
@@ -370,8 +370,8 @@ pub unsafe fn yaml_parser_initialize(parser: *mut yaml_parser_t) -> libc::c_int 
 /// Destroy a parser.
 pub unsafe fn yaml_parser_delete(parser: *mut yaml_parser_t) {
     __assert!(!parser.is_null());
-    BUFFER_DEL!(parser, (*parser).raw_buffer);
-    BUFFER_DEL!(parser, (*parser).buffer);
+    BUFFER_DEL!((*parser).raw_buffer);
+    BUFFER_DEL!((*parser).buffer);
     while !((*parser).tokens.head == (*parser).tokens.tail) {
         let fresh58 = addr_of_mut!((*parser).tokens.head);
         let fresh59 = *fresh58;
@@ -601,8 +601,8 @@ pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> libc:
             }
         }
     }
-    BUFFER_DEL!(emitter, (*emitter).buffer);
-    BUFFER_DEL!(emitter, (*emitter).raw_buffer);
+    BUFFER_DEL!((*emitter).buffer);
+    BUFFER_DEL!((*emitter).raw_buffer);
     yaml_free((*emitter).states.start as *mut libc::c_void);
     let fresh118 = addr_of_mut!((*emitter).states.end);
     *fresh118 = ptr::null_mut::<yaml_emitter_state_t>();
@@ -639,8 +639,8 @@ pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> libc:
 /// Destroy an emitter.
 pub unsafe fn yaml_emitter_delete(emitter: *mut yaml_emitter_t) {
     __assert!(!emitter.is_null());
-    BUFFER_DEL!(emitter, (*emitter).buffer);
-    BUFFER_DEL!(emitter, (*emitter).raw_buffer);
+    BUFFER_DEL!((*emitter).buffer);
+    BUFFER_DEL!((*emitter).raw_buffer);
     yaml_free((*emitter).states.start as *mut libc::c_void);
     let fresh137 = addr_of_mut!((*emitter).states.end);
     *fresh137 = ptr::null_mut::<yaml_emitter_state_t>();

@@ -18,10 +18,7 @@ macro_rules! BUFFER_INIT {
 }
 
 macro_rules! BUFFER_DEL {
-    ($context:expr, $buffer:expr) => {{
-        if false {
-            let _ = $context;
-        }
+    ($buffer:expr) => {{
         yaml_free($buffer.start as *mut libc::c_void);
         let end = addr_of_mut!($buffer.end);
         *end = ptr::null_mut::<yaml_char_t>();
