@@ -1,13 +1,3 @@
-macro_rules! NULL_STRING {
-    () => {
-        yaml_string_t {
-            start: ptr::null_mut::<yaml_char_t>(),
-            end: ptr::null_mut::<yaml_char_t>(),
-            pointer: ptr::null_mut::<yaml_char_t>(),
-        }
-    };
-}
-
 macro_rules! BUFFER_INIT {
     ($context:expr, $buffer:expr, $size:expr) => {{
         let start = addr_of_mut!($buffer.start);
@@ -40,6 +30,26 @@ macro_rules! BUFFER_DEL {
         let start = addr_of_mut!($buffer.start);
         *start = *pointer;
     }};
+}
+
+macro_rules! NULL_STRING {
+    () => {
+        yaml_string_t {
+            start: ptr::null_mut::<yaml_char_t>(),
+            end: ptr::null_mut::<yaml_char_t>(),
+            pointer: ptr::null_mut::<yaml_char_t>(),
+        }
+    };
+}
+
+macro_rules! STRING_ASSIGN {
+    ($string:expr, $length:expr) => {
+        yaml_string_t {
+            start: $string,
+            end: $string.wrapping_offset($length as isize),
+            pointer: $string,
+        }
+    };
 }
 
 macro_rules! IS_BLANK_AT {
