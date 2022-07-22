@@ -73,6 +73,23 @@ macro_rules! STRING_DEL {
     }};
 }
 
+macro_rules! STRING_EXTEND {
+    ($context:expr, $string:expr) => {
+        if $string.pointer.wrapping_add(5) < $string.end
+            || yaml_string_extend(
+                addr_of_mut!($string.start),
+                addr_of_mut!($string.pointer),
+                addr_of_mut!($string.end),
+            ) != 0
+        {
+            1_i32
+        } else {
+            (*$context).error = YAML_MEMORY_ERROR;
+            0_i32
+        }
+    };
+}
+
 macro_rules! IS_BLANK_AT {
     ($string:expr, $offset:expr) => {
         *$string.pointer.wrapping_offset($offset as isize) as libc::c_int

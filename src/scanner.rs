@@ -115,19 +115,7 @@ macro_rules! SKIP_LINE {
 
 macro_rules! READ {
     ($parser:expr, $string:expr) => {
-        if if $string.pointer.wrapping_offset(5_isize) < $string.end
-            || yaml_string_extend(
-                addr_of_mut!($string.start),
-                addr_of_mut!($string.pointer),
-                addr_of_mut!($string.end),
-            ) != 0
-        {
-            1_i32
-        } else {
-            (*$parser).error = YAML_MEMORY_ERROR;
-            0_i32
-        } != 0
-        {
+        if STRING_EXTEND!($parser, $string) != 0 {
             COPY!($string, (*$parser).buffer);
             let fresh160 = addr_of_mut!((*$parser).mark.index);
             *fresh160 = (*fresh160).wrapping_add(1);
@@ -144,19 +132,7 @@ macro_rules! READ {
 
 macro_rules! READ_LINE {
     ($parser:expr, $string:expr) => {
-        if if ($string.pointer).wrapping_offset(5_isize) < $string.end
-            || yaml_string_extend(
-                addr_of_mut!($string.start),
-                addr_of_mut!($string.pointer),
-                addr_of_mut!($string.end),
-            ) != 0
-        {
-            1_i32
-        } else {
-            (*$parser).error = YAML_MEMORY_ERROR;
-            0_i32
-        } != 0
-        {
+        if STRING_EXTEND!($parser, $string) != 0 {
             if *((*$parser).buffer.pointer) as libc::c_int
                 == '\r' as i32 as yaml_char_t as libc::c_int
                 && *((*$parser).buffer.pointer).wrapping_offset(1_isize) as libc::c_int
@@ -2559,19 +2535,7 @@ unsafe fn yaml_parser_scan_tag_uri(
                         if *((*parser).buffer.pointer) as libc::c_int
                             == '%' as i32 as yaml_char_t as libc::c_int
                         {
-                            if if string.pointer.wrapping_offset(5_isize) < string.end
-                                || yaml_string_extend(
-                                    addr_of_mut!(string.start),
-                                    addr_of_mut!(string.pointer),
-                                    addr_of_mut!(string.end),
-                                ) != 0
-                            {
-                                1_i32
-                            } else {
-                                (*parser).error = YAML_MEMORY_ERROR;
-                                0_i32
-                            } == 0
-                            {
+                            if STRING_EXTEND!(parser, string) == 0 {
                                 current_block = 15265153392498847348;
                                 continue 'c_21953;
                             }
@@ -2596,19 +2560,7 @@ unsafe fn yaml_parser_scan_tag_uri(
                         }
                     }
                     if length == 0 {
-                        if if string.pointer.wrapping_offset(5_isize) < string.end
-                            || yaml_string_extend(
-                                addr_of_mut!(string.start),
-                                addr_of_mut!(string.pointer),
-                                addr_of_mut!(string.end),
-                            ) != 0
-                        {
-                            1_i32
-                        } else {
-                            (*parser).error = YAML_MEMORY_ERROR;
-                            0_i32
-                        } == 0
-                        {
+                        if STRING_EXTEND!(parser, string) == 0 {
                             current_block = 15265153392498847348;
                             continue;
                         }
@@ -3084,20 +3036,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                             && leading_blank == 0 && trailing_blank == 0
                                                                         {
                                                                             if *trailing_breaks.start as libc::c_int == '\0' as i32 {
-                                                                                if if string.pointer.wrapping_offset(5_isize)
-                                                                                    < string.end
-                                                                                    || yaml_string_extend(
-                                                                                        addr_of_mut!(string.start),
-                                                                                        addr_of_mut!(string.pointer),
-                                                                                        addr_of_mut!(string.end),
-                                                                                    ) != 0
-                                                                                {
-                                                                                    1_i32
-                                                                                } else {
-                                                                                    (*parser).error = YAML_MEMORY_ERROR;
-                                                                                    0_i32
-                                                                                } == 0
-                                                                                {
+                                                                                if STRING_EXTEND!(parser, string) == 0 {
                                                                                     current_block = 14984465786483313892;
                                                                                     break;
                                                                                 }
@@ -3498,19 +3437,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                         as libc::c_int
                                         == '\'' as i32 as yaml_char_t as libc::c_int
                                 {
-                                    if if string.pointer.wrapping_offset(5_isize) < string.end
-                                        || yaml_string_extend(
-                                            addr_of_mut!(string.start),
-                                            addr_of_mut!(string.pointer),
-                                            addr_of_mut!(string.end),
-                                        ) != 0
-                                    {
-                                        1_i32
-                                    } else {
-                                        (*parser).error = YAML_MEMORY_ERROR;
-                                        0_i32
-                                    } == 0
-                                    {
+                                    if STRING_EXTEND!(parser, string) == 0 {
                                         current_block = 8114179180390253173;
                                         break 's_58;
                                     }
@@ -3579,19 +3506,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                             == '\\' as i32 as yaml_char_t as libc::c_int
                                     {
                                         let mut code_length: size_t = 0_u64;
-                                        if if string.pointer.wrapping_offset(5_isize) < string.end
-                                            || yaml_string_extend(
-                                                addr_of_mut!(string.start),
-                                                addr_of_mut!(string.pointer),
-                                                addr_of_mut!(string.end),
-                                            ) != 0
-                                        {
-                                            1_i32
-                                        } else {
-                                            (*parser).error = YAML_MEMORY_ERROR;
-                                            0_i32
-                                        } == 0
-                                        {
+                                        if STRING_EXTEND!(parser, string) == 0 {
                                             current_block = 8114179180390253173;
                                             break 's_58;
                                         }
@@ -4015,19 +3930,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                             if leading_blanks != 0 {
                                 if *leading_break.start as libc::c_int == '\n' as i32 {
                                     if *trailing_breaks.start as libc::c_int == '\0' as i32 {
-                                        if if string.pointer.wrapping_offset(5_isize) < string.end
-                                            || yaml_string_extend(
-                                                addr_of_mut!(string.start),
-                                                addr_of_mut!(string.pointer),
-                                                addr_of_mut!(string.end),
-                                            ) != 0
-                                        {
-                                            1_i32
-                                        } else {
-                                            (*parser).error = YAML_MEMORY_ERROR;
-                                            0_i32
-                                        } == 0
-                                        {
+                                        if STRING_EXTEND!(parser, string) == 0 {
                                             current_block = 8114179180390253173;
                                             break;
                                         }
@@ -4305,20 +4208,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                         if *leading_break.start as libc::c_int == '\n' as i32 {
                                             if *trailing_breaks.start as libc::c_int == '\0' as i32
                                             {
-                                                if if string.pointer.wrapping_offset(5_isize)
-                                                    < string.end
-                                                    || yaml_string_extend(
-                                                        addr_of_mut!(string.start),
-                                                        addr_of_mut!(string.pointer),
-                                                        addr_of_mut!(string.end),
-                                                    ) != 0
-                                                {
-                                                    1_i32
-                                                } else {
-                                                    (*parser).error = YAML_MEMORY_ERROR;
-                                                    0_i32
-                                                } == 0
-                                                {
+                                                if STRING_EXTEND!(parser, string) == 0 {
                                                     current_block = 16642808987012640029;
                                                     break 's_57;
                                                 }
