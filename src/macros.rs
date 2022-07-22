@@ -101,6 +101,26 @@ macro_rules! CLEAR {
     }};
 }
 
+macro_rules! JOIN {
+    ($context:expr, $string_a:expr, $string_b:expr) => {
+        if yaml_string_join(
+            addr_of_mut!($string_a.start),
+            addr_of_mut!($string_a.pointer),
+            addr_of_mut!($string_a.end),
+            addr_of_mut!($string_b.start),
+            addr_of_mut!($string_b.pointer),
+            addr_of_mut!($string_b.end),
+        ) != 0
+        {
+            $string_b.pointer = $string_b.start;
+            1_i32
+        } else {
+            (*$context).error = YAML_MEMORY_ERROR;
+            0_i32
+        }
+    };
+}
+
 macro_rules! IS_BLANK_AT {
     ($string:expr, $offset:expr) => {
         *$string.pointer.wrapping_offset($offset as isize) as libc::c_int

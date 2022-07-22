@@ -3046,43 +3046,13 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                             }
                                                                             CLEAR!(leading_break);
                                                                         } else {
-                                                                            if if yaml_string_join(
-                                                                                addr_of_mut!(string.start),
-                                                                                addr_of_mut!(string.pointer),
-                                                                                addr_of_mut!(string.end),
-                                                                                addr_of_mut!(leading_break.start),
-                                                                                addr_of_mut!(leading_break.pointer),
-                                                                                addr_of_mut!(leading_break.end),
-                                                                            ) != 0
-                                                                            {
-                                                                                leading_break.pointer = leading_break.start;
-                                                                                1_i32
-                                                                            } else {
-                                                                                (*parser).error = YAML_MEMORY_ERROR;
-                                                                                0_i32
-                                                                            } == 0
-                                                                            {
+                                                                            if JOIN!(parser, string, leading_break) == 0 {
                                                                                 current_block = 14984465786483313892;
                                                                                 break;
                                                                             }
                                                                             CLEAR!(leading_break);
                                                                         }
-                                                                        if if yaml_string_join(
-                                                                            addr_of_mut!(string.start),
-                                                                            addr_of_mut!(string.pointer),
-                                                                            addr_of_mut!(string.end),
-                                                                            addr_of_mut!(trailing_breaks.start),
-                                                                            addr_of_mut!(trailing_breaks.pointer),
-                                                                            addr_of_mut!(trailing_breaks.end),
-                                                                        ) != 0
-                                                                        {
-                                                                            trailing_breaks.pointer = trailing_breaks.start;
-                                                                            1_i32
-                                                                        } else {
-                                                                            (*parser).error = YAML_MEMORY_ERROR;
-                                                                            0_i32
-                                                                        } == 0
-                                                                        {
+                                                                        if JOIN!(parser, string, trailing_breaks) == 0 {
                                                                             current_block = 14984465786483313892;
                                                                             break;
                                                                         }
@@ -3155,22 +3125,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                         14984465786483313892 => {}
                                                                         _ => {
                                                                             if chomping != -1_i32 {
-                                                                                if if yaml_string_join(
-                                                                                    addr_of_mut!(string.start),
-                                                                                    addr_of_mut!(string.pointer),
-                                                                                    addr_of_mut!(string.end),
-                                                                                    addr_of_mut!(leading_break.start),
-                                                                                    addr_of_mut!(leading_break.pointer),
-                                                                                    addr_of_mut!(leading_break.end),
-                                                                                ) != 0
-                                                                                {
-                                                                                    leading_break.pointer = leading_break.start;
-                                                                                    1_i32
-                                                                                } else {
-                                                                                    (*parser).error = YAML_MEMORY_ERROR;
-                                                                                    0_i32
-                                                                                } == 0
-                                                                                {
+                                                                                if JOIN!(parser, string, leading_break) == 0 {
                                                                                     current_block = 14984465786483313892;
                                                                                 } else {
                                                                                     current_block = 17787701279558130514;
@@ -3182,22 +3137,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                                 14984465786483313892 => {}
                                                                                 _ => {
                                                                                     if chomping == 1_i32 {
-                                                                                        if if yaml_string_join(
-                                                                                            addr_of_mut!(string.start),
-                                                                                            addr_of_mut!(string.pointer),
-                                                                                            addr_of_mut!(string.end),
-                                                                                            addr_of_mut!(trailing_breaks.start),
-                                                                                            addr_of_mut!(trailing_breaks.pointer),
-                                                                                            addr_of_mut!(trailing_breaks.end),
-                                                                                        ) != 0
-                                                                                        {
-                                                                                            trailing_breaks.pointer = trailing_breaks.start;
-                                                                                            1_i32
-                                                                                        } else {
-                                                                                            (*parser).error = YAML_MEMORY_ERROR;
-                                                                                            0_i32
-                                                                                        } == 0
-                                                                                        {
+                                                                                        if JOIN!(parser, string, trailing_breaks) == 0 {
                                                                                             current_block = 14984465786483313892;
                                                                                         } else {
                                                                                             current_block = 14648606000749551097;
@@ -3913,22 +3853,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                         string.pointer = string.pointer.wrapping_offset(1);
                                         *fresh711 = ' ' as i32 as yaml_char_t;
                                     } else {
-                                        if if yaml_string_join(
-                                            addr_of_mut!(string.start),
-                                            addr_of_mut!(string.pointer),
-                                            addr_of_mut!(string.end),
-                                            addr_of_mut!(trailing_breaks.start),
-                                            addr_of_mut!(trailing_breaks.pointer),
-                                            addr_of_mut!(trailing_breaks.end),
-                                        ) != 0
-                                        {
-                                            trailing_breaks.pointer = trailing_breaks.start;
-                                            1_i32
-                                        } else {
-                                            (*parser).error = YAML_MEMORY_ERROR;
-                                            0_i32
-                                        } == 0
-                                        {
+                                        if JOIN!(parser, string, trailing_breaks) == 0 {
                                             current_block = 8114179180390253173;
                                             break;
                                         }
@@ -3936,41 +3861,11 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                     }
                                     CLEAR!(leading_break);
                                 } else {
-                                    if if yaml_string_join(
-                                        addr_of_mut!(string.start),
-                                        addr_of_mut!(string.pointer),
-                                        addr_of_mut!(string.end),
-                                        addr_of_mut!(leading_break.start),
-                                        addr_of_mut!(leading_break.pointer),
-                                        addr_of_mut!(leading_break.end),
-                                    ) != 0
-                                    {
-                                        leading_break.pointer = leading_break.start;
-                                        1_i32
-                                    } else {
-                                        (*parser).error = YAML_MEMORY_ERROR;
-                                        0_i32
-                                    } == 0
-                                    {
+                                    if JOIN!(parser, string, leading_break) == 0 {
                                         current_block = 8114179180390253173;
                                         break;
                                     }
-                                    if if yaml_string_join(
-                                        addr_of_mut!(string.start),
-                                        addr_of_mut!(string.pointer),
-                                        addr_of_mut!(string.end),
-                                        addr_of_mut!(trailing_breaks.start),
-                                        addr_of_mut!(trailing_breaks.pointer),
-                                        addr_of_mut!(trailing_breaks.end),
-                                    ) != 0
-                                    {
-                                        trailing_breaks.pointer = trailing_breaks.start;
-                                        1_i32
-                                    } else {
-                                        (*parser).error = YAML_MEMORY_ERROR;
-                                        0_i32
-                                    } == 0
-                                    {
+                                    if JOIN!(parser, string, trailing_breaks) == 0 {
                                         current_block = 8114179180390253173;
                                         break;
                                     }
@@ -3978,22 +3873,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                     CLEAR!(trailing_breaks);
                                 }
                             } else {
-                                if if yaml_string_join(
-                                    addr_of_mut!(string.start),
-                                    addr_of_mut!(string.pointer),
-                                    addr_of_mut!(string.end),
-                                    addr_of_mut!(whitespaces.start),
-                                    addr_of_mut!(whitespaces.pointer),
-                                    addr_of_mut!(whitespaces.end),
-                                ) != 0
-                                {
-                                    whitespaces.pointer = whitespaces.start;
-                                    1_i32
-                                } else {
-                                    (*parser).error = YAML_MEMORY_ERROR;
-                                    0_i32
-                                } == 0
-                                {
+                                if JOIN!(parser, string, whitespaces) == 0 {
                                     current_block = 8114179180390253173;
                                     break;
                                 }
@@ -4156,22 +4036,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                                 string.pointer = string.pointer.wrapping_offset(1);
                                                 *fresh717 = ' ' as i32 as yaml_char_t;
                                             } else {
-                                                if if yaml_string_join(
-                                                    addr_of_mut!(string.start),
-                                                    addr_of_mut!(string.pointer),
-                                                    addr_of_mut!(string.end),
-                                                    addr_of_mut!(trailing_breaks.start),
-                                                    addr_of_mut!(trailing_breaks.pointer),
-                                                    addr_of_mut!(trailing_breaks.end),
-                                                ) != 0
-                                                {
-                                                    trailing_breaks.pointer = trailing_breaks.start;
-                                                    1_i32
-                                                } else {
-                                                    (*parser).error = YAML_MEMORY_ERROR;
-                                                    0_i32
-                                                } == 0
-                                                {
+                                                if JOIN!(parser, string, trailing_breaks) == 0 {
                                                     current_block = 16642808987012640029;
                                                     break 's_57;
                                                 }
@@ -4179,41 +4044,11 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                             }
                                             CLEAR!(leading_break);
                                         } else {
-                                            if if yaml_string_join(
-                                                addr_of_mut!(string.start),
-                                                addr_of_mut!(string.pointer),
-                                                addr_of_mut!(string.end),
-                                                addr_of_mut!(leading_break.start),
-                                                addr_of_mut!(leading_break.pointer),
-                                                addr_of_mut!(leading_break.end),
-                                            ) != 0
-                                            {
-                                                leading_break.pointer = leading_break.start;
-                                                1_i32
-                                            } else {
-                                                (*parser).error = YAML_MEMORY_ERROR;
-                                                0_i32
-                                            } == 0
-                                            {
+                                            if JOIN!(parser, string, leading_break) == 0 {
                                                 current_block = 16642808987012640029;
                                                 break 's_57;
                                             }
-                                            if if yaml_string_join(
-                                                addr_of_mut!(string.start),
-                                                addr_of_mut!(string.pointer),
-                                                addr_of_mut!(string.end),
-                                                addr_of_mut!(trailing_breaks.start),
-                                                addr_of_mut!(trailing_breaks.pointer),
-                                                addr_of_mut!(trailing_breaks.end),
-                                            ) != 0
-                                            {
-                                                trailing_breaks.pointer = trailing_breaks.start;
-                                                1_i32
-                                            } else {
-                                                (*parser).error = YAML_MEMORY_ERROR;
-                                                0_i32
-                                            } == 0
-                                            {
+                                            if JOIN!(parser, string, trailing_breaks) == 0 {
                                                 current_block = 16642808987012640029;
                                                 break 's_57;
                                             }
@@ -4222,22 +4057,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                         }
                                         leading_blanks = 0_i32;
                                     } else {
-                                        if if yaml_string_join(
-                                            addr_of_mut!(string.start),
-                                            addr_of_mut!(string.pointer),
-                                            addr_of_mut!(string.end),
-                                            addr_of_mut!(whitespaces.start),
-                                            addr_of_mut!(whitespaces.pointer),
-                                            addr_of_mut!(whitespaces.end),
-                                        ) != 0
-                                        {
-                                            whitespaces.pointer = whitespaces.start;
-                                            1_i32
-                                        } else {
-                                            (*parser).error = YAML_MEMORY_ERROR;
-                                            0_i32
-                                        } == 0
-                                        {
+                                        if JOIN!(parser, string, whitespaces) == 0 {
                                             current_block = 16642808987012640029;
                                             break 's_57;
                                         }
