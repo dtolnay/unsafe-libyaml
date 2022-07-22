@@ -452,7 +452,29 @@ macro_rules! QUEUE_EMPTY {
 }
 
 macro_rules! ENQUEUE {
-    () => {}; // TODO
+    (do $context:expr, $queue:expr, $enqueue:expr) => {
+        if $queue.tail != $queue.end
+            || yaml_queue_extend(
+                addr_of_mut!($queue.start) as *mut *mut libc::c_void,
+                addr_of_mut!($queue.head) as *mut *mut libc::c_void,
+                addr_of_mut!($queue.tail) as *mut *mut libc::c_void,
+                addr_of_mut!($queue.end) as *mut *mut libc::c_void,
+            ) != 0
+        {
+            $enqueue;
+            $queue.tail = $queue.tail.wrapping_offset(1);
+            1_i32
+        } else {
+            (*$context).error = YAML_MEMORY_ERROR;
+            0_i32
+        }
+    };
+    ($context:expr, $queue:expr, *$value:expr) => {
+        ENQUEUE!(do $context, $queue, ptr::copy_nonoverlapping($value, $queue.tail, 1))
+    };
+    ($context:expr, $queue:expr, $value:expr) => {
+        ENQUEUE!(do $context, $queue, ptr::write($queue.tail, $value))
+    };
 }
 
 macro_rules! DEQUEUE {

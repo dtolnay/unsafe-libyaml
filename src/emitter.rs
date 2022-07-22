@@ -130,24 +130,7 @@ pub unsafe fn yaml_emitter_emit(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
 ) -> libc::c_int {
-    if if (*emitter).events.tail != (*emitter).events.end
-        || yaml_queue_extend(
-            addr_of_mut!((*emitter).events.start) as *mut *mut libc::c_void,
-            addr_of_mut!((*emitter).events.head) as *mut *mut libc::c_void,
-            addr_of_mut!((*emitter).events.tail) as *mut *mut libc::c_void,
-            addr_of_mut!((*emitter).events.end) as *mut *mut libc::c_void,
-        ) != 0
-    {
-        let fresh1 = addr_of_mut!((*emitter).events.tail);
-        let fresh2 = *fresh1;
-        *fresh1 = (*fresh1).wrapping_offset(1);
-        *fresh2 = *event;
-        1_i32
-    } else {
-        (*emitter).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0
-    {
+    if ENQUEUE!(emitter, (*emitter).events, *event) == 0 {
         yaml_event_delete(event);
         return 0_i32;
     }

@@ -594,24 +594,7 @@ unsafe fn yaml_parser_roll_indent(
         (*token).start_mark = mark;
         (*token).end_mark = mark;
         if number == -1_i64 {
-            if if (*parser).tokens.tail != (*parser).tokens.end
-                || yaml_queue_extend(
-                    addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-                    addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-                    addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-                    addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
-                ) != 0
-            {
-                let fresh12 = addr_of_mut!((*parser).tokens.tail);
-                let fresh13 = *fresh12;
-                *fresh12 = (*fresh12).wrapping_offset(1);
-                *fresh13 = *token;
-                1_i32
-            } else {
-                (*parser).error = YAML_MEMORY_ERROR;
-                0_i32
-            } == 0
-            {
+            if ENQUEUE!(parser, (*parser).tokens, *token) == 0 {
                 return 0_i32;
             }
         } else if QUEUE_INSERT!(
@@ -645,24 +628,7 @@ unsafe fn yaml_parser_unroll_indent(
         (*token).type_ = YAML_BLOCK_END_TOKEN;
         (*token).start_mark = (*parser).mark;
         (*token).end_mark = (*parser).mark;
-        if if (*parser).tokens.tail != (*parser).tokens.end
-            || yaml_queue_extend(
-                addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-                addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-                addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-                addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
-            ) != 0
-        {
-            let fresh15 = addr_of_mut!((*parser).tokens.tail);
-            let fresh16 = *fresh15;
-            *fresh15 = (*fresh15).wrapping_offset(1);
-            *fresh16 = *token;
-            1_i32
-        } else {
-            (*parser).error = YAML_MEMORY_ERROR;
-            0_i32
-        } == 0
-        {
+        if ENQUEUE!(parser, (*parser).tokens, *token) == 0 {
             return 0_i32;
         }
         let fresh17 = addr_of_mut!((*parser).indents.top);
@@ -700,24 +666,7 @@ unsafe fn yaml_parser_fetch_stream_start(mut parser: *mut yaml_parser_t) -> libc
     (*token).start_mark = (*parser).mark;
     (*token).end_mark = (*parser).mark;
     (*token).data.stream_start.encoding = (*parser).encoding;
-    if if (*parser).tokens.tail != (*parser).tokens.end
-        || yaml_queue_extend(
-            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
-        ) != 0
-    {
-        let fresh20 = addr_of_mut!((*parser).tokens.tail);
-        let fresh21 = *fresh20;
-        *fresh20 = (*fresh20).wrapping_offset(1);
-        *fresh21 = *token;
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0
-    {
+    if ENQUEUE!(parser, (*parser).tokens, *token) == 0 {
         return 0_i32;
     }
     1_i32
@@ -746,24 +695,7 @@ unsafe fn yaml_parser_fetch_stream_end(mut parser: *mut yaml_parser_t) -> libc::
     (*token).type_ = YAML_STREAM_END_TOKEN;
     (*token).start_mark = (*parser).mark;
     (*token).end_mark = (*parser).mark;
-    if if (*parser).tokens.tail != (*parser).tokens.end
-        || yaml_queue_extend(
-            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
-        ) != 0
-    {
-        let fresh23 = addr_of_mut!((*parser).tokens.tail);
-        let fresh24 = *fresh23;
-        *fresh23 = (*fresh23).wrapping_offset(1);
-        *fresh24 = *token;
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0
-    {
+    if ENQUEUE!(parser, (*parser).tokens, *token) == 0 {
         return 0_i32;
     }
     1_i32
@@ -782,24 +714,7 @@ unsafe fn yaml_parser_fetch_directive(mut parser: *mut yaml_parser_t) -> libc::c
     if yaml_parser_scan_directive(parser, token) == 0 {
         return 0_i32;
     }
-    if if (*parser).tokens.tail != (*parser).tokens.end
-        || yaml_queue_extend(
-            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
-        ) != 0
-    {
-        let fresh25 = addr_of_mut!((*parser).tokens.tail);
-        let fresh26 = *fresh25;
-        *fresh25 = (*fresh25).wrapping_offset(1);
-        ptr::copy_nonoverlapping(token, fresh26, 1);
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0
-    {
+    if ENQUEUE!(parser, (*parser).tokens, *token) == 0 {
         yaml_token_delete(token);
         return 0_i32;
     }
@@ -832,24 +747,7 @@ unsafe fn yaml_parser_fetch_document_indicator(
     (*token).type_ = type_;
     (*token).start_mark = start_mark;
     (*token).end_mark = end_mark;
-    if if (*parser).tokens.tail != (*parser).tokens.end
-        || yaml_queue_extend(
-            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
-        ) != 0
-    {
-        let fresh39 = addr_of_mut!((*parser).tokens.tail);
-        let fresh40 = *fresh39;
-        *fresh39 = (*fresh39).wrapping_offset(1);
-        *fresh40 = *token;
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0
-    {
+    if ENQUEUE!(parser, (*parser).tokens, *token) == 0 {
         return 0_i32;
     }
     1_i32
@@ -879,24 +777,7 @@ unsafe fn yaml_parser_fetch_flow_collection_start(
     (*token).type_ = type_;
     (*token).start_mark = start_mark;
     (*token).end_mark = end_mark;
-    if if (*parser).tokens.tail != (*parser).tokens.end
-        || yaml_queue_extend(
-            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
-        ) != 0
-    {
-        let fresh45 = addr_of_mut!((*parser).tokens.tail);
-        let fresh46 = *fresh45;
-        *fresh45 = (*fresh45).wrapping_offset(1);
-        *fresh46 = *token;
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0
-    {
+    if ENQUEUE!(parser, (*parser).tokens, *token) == 0 {
         return 0_i32;
     }
     1_i32
@@ -926,24 +807,7 @@ unsafe fn yaml_parser_fetch_flow_collection_end(
     (*token).type_ = type_;
     (*token).start_mark = start_mark;
     (*token).end_mark = end_mark;
-    if if (*parser).tokens.tail != (*parser).tokens.end
-        || yaml_queue_extend(
-            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
-        ) != 0
-    {
-        let fresh51 = addr_of_mut!((*parser).tokens.tail);
-        let fresh52 = *fresh51;
-        *fresh51 = (*fresh51).wrapping_offset(1);
-        *fresh52 = *token;
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0
-    {
+    if ENQUEUE!(parser, (*parser).tokens, *token) == 0 {
         return 0_i32;
     }
     1_i32
@@ -967,24 +831,7 @@ unsafe fn yaml_parser_fetch_flow_entry(mut parser: *mut yaml_parser_t) -> libc::
     (*token).type_ = YAML_FLOW_ENTRY_TOKEN;
     (*token).start_mark = start_mark;
     (*token).end_mark = end_mark;
-    if if (*parser).tokens.tail != (*parser).tokens.end
-        || yaml_queue_extend(
-            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
-        ) != 0
-    {
-        let fresh57 = addr_of_mut!((*parser).tokens.tail);
-        let fresh58 = *fresh57;
-        *fresh57 = (*fresh57).wrapping_offset(1);
-        *fresh58 = *token;
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0
-    {
+    if ENQUEUE!(parser, (*parser).tokens, *token) == 0 {
         return 0_i32;
     }
     1_i32
@@ -1029,24 +876,7 @@ unsafe fn yaml_parser_fetch_block_entry(mut parser: *mut yaml_parser_t) -> libc:
     (*token).type_ = YAML_BLOCK_ENTRY_TOKEN;
     (*token).start_mark = start_mark;
     (*token).end_mark = end_mark;
-    if if (*parser).tokens.tail != (*parser).tokens.end
-        || yaml_queue_extend(
-            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
-        ) != 0
-    {
-        let fresh63 = addr_of_mut!((*parser).tokens.tail);
-        let fresh64 = *fresh63;
-        *fresh63 = (*fresh63).wrapping_offset(1);
-        *fresh64 = *token;
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0
-    {
+    if ENQUEUE!(parser, (*parser).tokens, *token) == 0 {
         return 0_i32;
     }
     1_i32
@@ -1091,24 +921,7 @@ unsafe fn yaml_parser_fetch_key(mut parser: *mut yaml_parser_t) -> libc::c_int {
     (*token).type_ = YAML_KEY_TOKEN;
     (*token).start_mark = start_mark;
     (*token).end_mark = end_mark;
-    if if (*parser).tokens.tail != (*parser).tokens.end
-        || yaml_queue_extend(
-            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
-        ) != 0
-    {
-        let fresh69 = addr_of_mut!((*parser).tokens.tail);
-        let fresh70 = *fresh69;
-        *fresh69 = (*fresh69).wrapping_offset(1);
-        *fresh70 = *token;
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0
-    {
+    if ENQUEUE!(parser, (*parser).tokens, *token) == 0 {
         return 0_i32;
     }
     1_i32
@@ -1184,24 +997,7 @@ unsafe fn yaml_parser_fetch_value(mut parser: *mut yaml_parser_t) -> libc::c_int
     (*token).type_ = YAML_VALUE_TOKEN;
     (*token).start_mark = start_mark;
     (*token).end_mark = end_mark;
-    if if (*parser).tokens.tail != (*parser).tokens.end
-        || yaml_queue_extend(
-            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
-        ) != 0
-    {
-        let fresh76 = addr_of_mut!((*parser).tokens.tail);
-        let fresh77 = *fresh76;
-        *fresh76 = (*fresh76).wrapping_offset(1);
-        *fresh77 = *token;
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0
-    {
+    if ENQUEUE!(parser, (*parser).tokens, *token) == 0 {
         return 0_i32;
     }
     1_i32
@@ -1220,24 +1016,7 @@ unsafe fn yaml_parser_fetch_anchor(
     if yaml_parser_scan_anchor(parser, token, type_) == 0 {
         return 0_i32;
     }
-    if if (*parser).tokens.tail != (*parser).tokens.end
-        || yaml_queue_extend(
-            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
-        ) != 0
-    {
-        let fresh78 = addr_of_mut!((*parser).tokens.tail);
-        let fresh79 = *fresh78;
-        *fresh78 = (*fresh78).wrapping_offset(1);
-        ptr::copy_nonoverlapping(token, fresh79, 1);
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0
-    {
+    if ENQUEUE!(parser, (*parser).tokens, *token) == 0 {
         yaml_token_delete(token);
         return 0_i32;
     }
@@ -1254,24 +1033,7 @@ unsafe fn yaml_parser_fetch_tag(mut parser: *mut yaml_parser_t) -> libc::c_int {
     if yaml_parser_scan_tag(parser, token) == 0 {
         return 0_i32;
     }
-    if if (*parser).tokens.tail != (*parser).tokens.end
-        || yaml_queue_extend(
-            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
-        ) != 0
-    {
-        let fresh80 = addr_of_mut!((*parser).tokens.tail);
-        let fresh81 = *fresh80;
-        *fresh80 = (*fresh80).wrapping_offset(1);
-        ptr::copy_nonoverlapping(token, fresh81, 1);
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0
-    {
+    if ENQUEUE!(parser, (*parser).tokens, *token) == 0 {
         yaml_token_delete(token);
         return 0_i32;
     }
@@ -1291,24 +1053,7 @@ unsafe fn yaml_parser_fetch_block_scalar(
     if yaml_parser_scan_block_scalar(parser, token, literal) == 0 {
         return 0_i32;
     }
-    if if (*parser).tokens.tail != (*parser).tokens.end
-        || yaml_queue_extend(
-            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
-        ) != 0
-    {
-        let fresh82 = addr_of_mut!((*parser).tokens.tail);
-        let fresh83 = *fresh82;
-        *fresh82 = (*fresh82).wrapping_offset(1);
-        ptr::copy_nonoverlapping(token, fresh83, 1);
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0
-    {
+    if ENQUEUE!(parser, (*parser).tokens, *token) == 0 {
         yaml_token_delete(token);
         return 0_i32;
     }
@@ -1328,24 +1073,7 @@ unsafe fn yaml_parser_fetch_flow_scalar(
     if yaml_parser_scan_flow_scalar(parser, token, single) == 0 {
         return 0_i32;
     }
-    if if (*parser).tokens.tail != (*parser).tokens.end
-        || yaml_queue_extend(
-            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
-        ) != 0
-    {
-        let fresh84 = addr_of_mut!((*parser).tokens.tail);
-        let fresh85 = *fresh84;
-        *fresh84 = (*fresh84).wrapping_offset(1);
-        ptr::copy_nonoverlapping(token, fresh85, 1);
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0
-    {
+    if ENQUEUE!(parser, (*parser).tokens, *token) == 0 {
         yaml_token_delete(token);
         return 0_i32;
     }
@@ -1362,24 +1090,7 @@ unsafe fn yaml_parser_fetch_plain_scalar(mut parser: *mut yaml_parser_t) -> libc
     if yaml_parser_scan_plain_scalar(parser, token) == 0 {
         return 0_i32;
     }
-    if if (*parser).tokens.tail != (*parser).tokens.end
-        || yaml_queue_extend(
-            addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
-        ) != 0
-    {
-        let fresh86 = addr_of_mut!((*parser).tokens.tail);
-        let fresh87 = *fresh86;
-        *fresh86 = (*fresh86).wrapping_offset(1);
-        ptr::copy_nonoverlapping(token, fresh87, 1);
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0
-    {
+    if ENQUEUE!(parser, (*parser).tokens, *token) == 0 {
         yaml_token_delete(token);
         return 0_i32;
     }
