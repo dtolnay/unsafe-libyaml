@@ -542,23 +542,7 @@ unsafe fn yaml_parser_increase_flow_level(mut parser: *mut yaml_parser_t) -> lib
             column: 0_u64,
         },
     };
-    if if (*parser).simple_keys.top != (*parser).simple_keys.end
-        || yaml_stack_extend(
-            addr_of_mut!((*parser).simple_keys.start) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).simple_keys.top) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).simple_keys.end) as *mut *mut libc::c_void,
-        ) != 0
-    {
-        let fresh5 = addr_of_mut!((*parser).simple_keys.top);
-        let fresh6 = *fresh5;
-        *fresh5 = (*fresh5).wrapping_offset(1);
-        *fresh6 = empty_simple_key;
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0
-    {
+    if PUSH!(parser, (*parser).simple_keys, empty_simple_key) == 0 {
         return 0_i32;
     }
     if (*parser).flow_level == 2147483647_i32 {
@@ -593,23 +577,7 @@ unsafe fn yaml_parser_roll_indent(
         return 1_i32;
     }
     if ((*parser).indent as libc::c_long) < column {
-        if if (*parser).indents.top != (*parser).indents.end
-            || yaml_stack_extend(
-                addr_of_mut!((*parser).indents.start) as *mut *mut libc::c_void,
-                addr_of_mut!((*parser).indents.top) as *mut *mut libc::c_void,
-                addr_of_mut!((*parser).indents.end) as *mut *mut libc::c_void,
-            ) != 0
-        {
-            let fresh10 = addr_of_mut!((*parser).indents.top);
-            let fresh11 = *fresh10;
-            *fresh10 = (*fresh10).wrapping_offset(1);
-            *fresh11 = (*parser).indent;
-            1_i32
-        } else {
-            (*parser).error = YAML_MEMORY_ERROR;
-            0_i32
-        } == 0
-        {
+        if PUSH!(parser, (*parser).indents, (*parser).indent) == 0 {
             return 0_i32;
         }
         if column > 2147483647_i64 {
@@ -744,23 +712,7 @@ unsafe fn yaml_parser_fetch_stream_start(mut parser: *mut yaml_parser_t) -> libc
     let mut token = MaybeUninit::<yaml_token_t>::uninit();
     let token = token.as_mut_ptr();
     (*parser).indent = -1_i32;
-    if if (*parser).simple_keys.top != (*parser).simple_keys.end
-        || yaml_stack_extend(
-            addr_of_mut!((*parser).simple_keys.start) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).simple_keys.top) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).simple_keys.end) as *mut *mut libc::c_void,
-        ) != 0
-    {
-        let fresh18 = addr_of_mut!((*parser).simple_keys.top);
-        let fresh19 = *fresh18;
-        *fresh18 = (*fresh18).wrapping_offset(1);
-        *fresh19 = simple_key;
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0
-    {
+    if PUSH!(parser, (*parser).simple_keys, simple_key) == 0 {
         return 0_i32;
     }
     (*parser).simple_key_allowed = 1_i32;

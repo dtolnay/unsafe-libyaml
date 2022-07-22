@@ -411,7 +411,28 @@ macro_rules! STACK_LIMIT {
 }
 
 macro_rules! PUSH {
-    () => {}; // TODO
+    (do $context:expr, $stack:expr, $push:expr) => {
+        if $stack.top != $stack.end
+            || yaml_stack_extend(
+                addr_of_mut!($stack.start) as *mut *mut libc::c_void,
+                addr_of_mut!($stack.top) as *mut *mut libc::c_void,
+                addr_of_mut!($stack.end) as *mut *mut libc::c_void,
+            ) != 0
+        {
+            $push;
+            $stack.top = $stack.top.wrapping_offset(1);
+            1_i32
+        } else {
+            (*$context).error = YAML_MEMORY_ERROR;
+            0_i32
+        }
+    };
+    ($context:expr, $stack:expr, *$value:expr) => {
+        PUSH!(do $context, $stack, ptr::copy_nonoverlapping($value, $stack.top, 1))
+    };
+    ($context:expr, $stack:expr, $value:expr) => {
+        PUSH!(do $context, $stack, ptr::write($stack.top, $value))
+    };
 }
 
 macro_rules! POP {

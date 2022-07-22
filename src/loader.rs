@@ -304,23 +304,7 @@ unsafe fn yaml_parser_register_anchor(
         }
         alias_data = alias_data.wrapping_offset(1);
     }
-    if if (*parser).aliases.top != (*parser).aliases.end
-        || yaml_stack_extend(
-            addr_of_mut!((*parser).aliases.start) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).aliases.top) as *mut *mut libc::c_void,
-            addr_of_mut!((*parser).aliases.end) as *mut *mut libc::c_void,
-        ) != 0
-    {
-        let fresh19 = addr_of_mut!((*parser).aliases.top);
-        let fresh20 = *fresh19;
-        *fresh19 = (*fresh19).wrapping_offset(1);
-        ptr::copy_nonoverlapping(data, fresh20, 1);
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0
-    {
+    if PUSH!(parser, (*parser).aliases, *data) == 0 {
         yaml_free(anchor as *mut libc::c_void);
         return 0_i32;
     }
@@ -355,23 +339,7 @@ unsafe fn yaml_parser_load_node_add(
             {
                 return 0_i32;
             }
-            if if (*parent).data.sequence.items.top != (*parent).data.sequence.items.end
-                || yaml_stack_extend(
-                    addr_of_mut!((*parent).data.sequence.items.start) as *mut *mut libc::c_void,
-                    addr_of_mut!((*parent).data.sequence.items.top) as *mut *mut libc::c_void,
-                    addr_of_mut!((*parent).data.sequence.items.end) as *mut *mut libc::c_void,
-                ) != 0
-            {
-                let fresh21 = addr_of_mut!((*parent).data.sequence.items.top);
-                let fresh22 = *fresh21;
-                *fresh21 = (*fresh21).wrapping_offset(1);
-                *fresh22 = index;
-                1_i32
-            } else {
-                (*parser).error = YAML_MEMORY_ERROR;
-                0_i32
-            } == 0
-            {
+            if PUSH!(parser, (*parent).data.sequence.items, index) == 0 {
                 return 0_i32;
             }
         }
@@ -408,26 +376,7 @@ unsafe fn yaml_parser_load_node_add(
                     {
                         return 0_i32;
                     }
-                    if if (*parent).data.mapping.pairs.top != (*parent).data.mapping.pairs.end
-                        || yaml_stack_extend(
-                            addr_of_mut!((*parent).data.mapping.pairs.start)
-                                as *mut *mut libc::c_void,
-                            addr_of_mut!((*parent).data.mapping.pairs.top)
-                                as *mut *mut libc::c_void,
-                            addr_of_mut!((*parent).data.mapping.pairs.end)
-                                as *mut *mut libc::c_void,
-                        ) != 0
-                    {
-                        let fresh23 = addr_of_mut!((*parent).data.mapping.pairs.top);
-                        let fresh24 = *fresh23;
-                        *fresh23 = (*fresh23).wrapping_offset(1);
-                        ptr::copy_nonoverlapping(pair, fresh24, 1);
-                        1_i32
-                    } else {
-                        (*parser).error = YAML_MEMORY_ERROR;
-                        0_i32
-                    } == 0
-                    {
+                    if PUSH!(parser, (*parent).data.mapping.pairs, *pair) == 0 {
                         return 0_i32;
                     }
                 }
@@ -520,23 +469,7 @@ unsafe fn yaml_parser_load_scalar(
                 (*node).data.scalar.value = (*event).data.scalar.value;
                 (*node).data.scalar.length = (*event).data.scalar.length;
                 (*node).data.scalar.style = (*event).data.scalar.style;
-                if !(if (*(*parser).document).nodes.top != (*(*parser).document).nodes.end
-                    || yaml_stack_extend(
-                        addr_of_mut!((*(*parser).document).nodes.start) as *mut *mut libc::c_void,
-                        addr_of_mut!((*(*parser).document).nodes.top) as *mut *mut libc::c_void,
-                        addr_of_mut!((*(*parser).document).nodes.end) as *mut *mut libc::c_void,
-                    ) != 0
-                {
-                    let fresh25 = addr_of_mut!((*(*parser).document).nodes.top);
-                    let fresh26 = *fresh25;
-                    *fresh25 = (*fresh25).wrapping_offset(1);
-                    ptr::copy_nonoverlapping(node, fresh26, 1);
-                    1_i32
-                } else {
-                    (*parser).error = YAML_MEMORY_ERROR;
-                    0_i32
-                } == 0)
-                {
+                if !(PUSH!(parser, (*(*parser).document).nodes, *node) == 0) {
                     index = ((*(*parser).document).nodes.top)
                         .c_offset_from((*(*parser).document).nodes.start)
                         as libc::c_long as libc::c_int;
@@ -631,24 +564,7 @@ unsafe fn yaml_parser_load_sequence(
                     (*node).data.sequence.items.end = items.end;
                     (*node).data.sequence.items.top = items.start;
                     (*node).data.sequence.style = (*event).data.sequence_start.style;
-                    if !(if (*(*parser).document).nodes.top != (*(*parser).document).nodes.end
-                        || yaml_stack_extend(
-                            addr_of_mut!((*(*parser).document).nodes.start)
-                                as *mut *mut libc::c_void,
-                            addr_of_mut!((*(*parser).document).nodes.top) as *mut *mut libc::c_void,
-                            addr_of_mut!((*(*parser).document).nodes.end) as *mut *mut libc::c_void,
-                        ) != 0
-                    {
-                        let fresh27 = addr_of_mut!((*(*parser).document).nodes.top);
-                        let fresh28 = *fresh27;
-                        *fresh27 = (*fresh27).wrapping_offset(1);
-                        ptr::copy_nonoverlapping(node, fresh28, 1);
-                        1_i32
-                    } else {
-                        (*parser).error = YAML_MEMORY_ERROR;
-                        0_i32
-                    } == 0)
-                    {
+                    if !(PUSH!(parser, (*(*parser).document).nodes, *node) == 0) {
                         index = ((*(*parser).document).nodes.top)
                             .c_offset_from((*(*parser).document).nodes.start)
                             as libc::c_long as libc::c_int;
@@ -674,23 +590,7 @@ unsafe fn yaml_parser_load_sequence(
                         {
                             return 0_i32;
                         }
-                        if if (*ctx).top != (*ctx).end
-                            || yaml_stack_extend(
-                                addr_of_mut!((*ctx).start) as *mut *mut libc::c_void,
-                                addr_of_mut!((*ctx).top) as *mut *mut libc::c_void,
-                                addr_of_mut!((*ctx).end) as *mut *mut libc::c_void,
-                            ) != 0
-                        {
-                            let fresh29 = addr_of_mut!((*ctx).top);
-                            let fresh30 = *fresh29;
-                            *fresh29 = (*fresh29).wrapping_offset(1);
-                            *fresh30 = index;
-                            1_i32
-                        } else {
-                            (*parser).error = YAML_MEMORY_ERROR;
-                            0_i32
-                        } == 0
-                        {
+                        if PUSH!(parser, *ctx, index) == 0 {
                             return 0_i32;
                         }
                         return 1_i32;
@@ -799,24 +699,7 @@ unsafe fn yaml_parser_load_mapping(
                     (*node).data.mapping.pairs.end = pairs.end;
                     (*node).data.mapping.pairs.top = pairs.start;
                     (*node).data.mapping.style = (*event).data.mapping_start.style;
-                    if !(if (*(*parser).document).nodes.top != (*(*parser).document).nodes.end
-                        || yaml_stack_extend(
-                            addr_of_mut!((*(*parser).document).nodes.start)
-                                as *mut *mut libc::c_void,
-                            addr_of_mut!((*(*parser).document).nodes.top) as *mut *mut libc::c_void,
-                            addr_of_mut!((*(*parser).document).nodes.end) as *mut *mut libc::c_void,
-                        ) != 0
-                    {
-                        let fresh32 = addr_of_mut!((*(*parser).document).nodes.top);
-                        let fresh33 = *fresh32;
-                        *fresh32 = (*fresh32).wrapping_offset(1);
-                        ptr::copy_nonoverlapping(node, fresh33, 1);
-                        1_i32
-                    } else {
-                        (*parser).error = YAML_MEMORY_ERROR;
-                        0_i32
-                    } == 0)
-                    {
+                    if !(PUSH!(parser, (*(*parser).document).nodes, *node) == 0) {
                         index = ((*(*parser).document).nodes.top)
                             .c_offset_from((*(*parser).document).nodes.start)
                             as libc::c_long as libc::c_int;
@@ -842,23 +725,7 @@ unsafe fn yaml_parser_load_mapping(
                         {
                             return 0_i32;
                         }
-                        if if (*ctx).top != (*ctx).end
-                            || yaml_stack_extend(
-                                addr_of_mut!((*ctx).start) as *mut *mut libc::c_void,
-                                addr_of_mut!((*ctx).top) as *mut *mut libc::c_void,
-                                addr_of_mut!((*ctx).end) as *mut *mut libc::c_void,
-                            ) != 0
-                        {
-                            let fresh34 = addr_of_mut!((*ctx).top);
-                            let fresh35 = *fresh34;
-                            *fresh34 = (*fresh34).wrapping_offset(1);
-                            *fresh35 = index;
-                            1_i32
-                        } else {
-                            (*parser).error = YAML_MEMORY_ERROR;
-                            0_i32
-                        } == 0
-                        {
+                        if PUSH!(parser, *ctx, index) == 0 {
                             return 0_i32;
                         }
                         return 1_i32;

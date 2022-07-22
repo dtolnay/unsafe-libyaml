@@ -233,23 +233,7 @@ unsafe fn yaml_emitter_append_tag_directive(
     copy.prefix = yaml_strdup(value.prefix);
     if copy.handle.is_null() || copy.prefix.is_null() {
         (*emitter).error = YAML_MEMORY_ERROR;
-    } else if !(if (*emitter).tag_directives.top != (*emitter).tag_directives.end
-        || yaml_stack_extend(
-            addr_of_mut!((*emitter).tag_directives.start) as *mut *mut libc::c_void,
-            addr_of_mut!((*emitter).tag_directives.top) as *mut *mut libc::c_void,
-            addr_of_mut!((*emitter).tag_directives.end) as *mut *mut libc::c_void,
-        ) != 0
-    {
-        let fresh5 = addr_of_mut!((*emitter).tag_directives.top);
-        let fresh6 = *fresh5;
-        *fresh5 = (*fresh5).wrapping_offset(1);
-        *fresh6 = copy;
-        1_i32
-    } else {
-        (*emitter).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0)
-    {
+    } else if !(PUSH!(emitter, (*emitter).tag_directives, copy) == 0) {
         return 1_i32;
     }
     yaml_free(copy.handle as *mut libc::c_void);
@@ -262,23 +246,7 @@ unsafe fn yaml_emitter_increase_indent(
     flow: libc::c_int,
     indentless: libc::c_int,
 ) -> libc::c_int {
-    if if (*emitter).indents.top != (*emitter).indents.end
-        || yaml_stack_extend(
-            addr_of_mut!((*emitter).indents.start) as *mut *mut libc::c_void,
-            addr_of_mut!((*emitter).indents.top) as *mut *mut libc::c_void,
-            addr_of_mut!((*emitter).indents.end) as *mut *mut libc::c_void,
-        ) != 0
-    {
-        let fresh7 = addr_of_mut!((*emitter).indents.top);
-        let fresh8 = *fresh7;
-        *fresh7 = (*fresh7).wrapping_offset(1);
-        *fresh8 = (*emitter).indent;
-        1_i32
-    } else {
-        (*emitter).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0
-    {
+    if PUSH!(emitter, (*emitter).indents, (*emitter).indent) == 0 {
         return 0_i32;
     }
     if (*emitter).indent < 0_i32 {
@@ -600,23 +568,7 @@ unsafe fn yaml_emitter_emit_document_content(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
 ) -> libc::c_int {
-    if if (*emitter).states.top != (*emitter).states.end
-        || yaml_stack_extend(
-            addr_of_mut!((*emitter).states.start) as *mut *mut libc::c_void,
-            addr_of_mut!((*emitter).states.top) as *mut *mut libc::c_void,
-            addr_of_mut!((*emitter).states.end) as *mut *mut libc::c_void,
-        ) != 0
-    {
-        let fresh9 = addr_of_mut!((*emitter).states.top);
-        let fresh10 = *fresh9;
-        *fresh9 = (*fresh9).wrapping_offset(1);
-        *fresh10 = YAML_EMIT_DOCUMENT_END_STATE;
-        1_i32
-    } else {
-        (*emitter).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0
-    {
+    if PUSH!(emitter, (*emitter).states, YAML_EMIT_DOCUMENT_END_STATE) == 0 {
         return 0_i32;
     }
     yaml_emitter_emit_node(emitter, event, 1_i32, 0_i32, 0_i32, 0_i32)
@@ -742,22 +694,11 @@ unsafe fn yaml_emitter_emit_flow_sequence_item(
             return 0_i32;
         }
     }
-    if if (*emitter).states.top != (*emitter).states.end
-        || yaml_stack_extend(
-            addr_of_mut!((*emitter).states.start) as *mut *mut libc::c_void,
-            addr_of_mut!((*emitter).states.top) as *mut *mut libc::c_void,
-            addr_of_mut!((*emitter).states.end) as *mut *mut libc::c_void,
-        ) != 0
-    {
-        let fresh16 = addr_of_mut!((*emitter).states.top);
-        let fresh17 = *fresh16;
-        *fresh16 = (*fresh16).wrapping_offset(1);
-        *fresh17 = YAML_EMIT_FLOW_SEQUENCE_ITEM_STATE;
-        1_i32
-    } else {
-        (*emitter).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0
+    if PUSH!(
+        emitter,
+        (*emitter).states,
+        YAML_EMIT_FLOW_SEQUENCE_ITEM_STATE
+    ) == 0
     {
         return 0_i32;
     }
@@ -840,22 +781,11 @@ unsafe fn yaml_emitter_emit_flow_mapping_key(
         }
     }
     if (*emitter).canonical == 0 && yaml_emitter_check_simple_key(emitter) != 0 {
-        if if (*emitter).states.top != (*emitter).states.end
-            || yaml_stack_extend(
-                addr_of_mut!((*emitter).states.start) as *mut *mut libc::c_void,
-                addr_of_mut!((*emitter).states.top) as *mut *mut libc::c_void,
-                addr_of_mut!((*emitter).states.end) as *mut *mut libc::c_void,
-            ) != 0
-        {
-            let fresh22 = addr_of_mut!((*emitter).states.top);
-            let fresh23 = *fresh22;
-            *fresh22 = (*fresh22).wrapping_offset(1);
-            *fresh23 = YAML_EMIT_FLOW_MAPPING_SIMPLE_VALUE_STATE;
-            1_i32
-        } else {
-            (*emitter).error = YAML_MEMORY_ERROR;
-            0_i32
-        } == 0
+        if PUSH!(
+            emitter,
+            (*emitter).states,
+            YAML_EMIT_FLOW_MAPPING_SIMPLE_VALUE_STATE
+        ) == 0
         {
             return 0_i32;
         }
@@ -871,22 +801,11 @@ unsafe fn yaml_emitter_emit_flow_mapping_key(
         {
             return 0_i32;
         }
-        if if (*emitter).states.top != (*emitter).states.end
-            || yaml_stack_extend(
-                addr_of_mut!((*emitter).states.start) as *mut *mut libc::c_void,
-                addr_of_mut!((*emitter).states.top) as *mut *mut libc::c_void,
-                addr_of_mut!((*emitter).states.end) as *mut *mut libc::c_void,
-            ) != 0
-        {
-            let fresh24 = addr_of_mut!((*emitter).states.top);
-            let fresh25 = *fresh24;
-            *fresh24 = (*fresh24).wrapping_offset(1);
-            *fresh25 = YAML_EMIT_FLOW_MAPPING_VALUE_STATE;
-            1_i32
-        } else {
-            (*emitter).error = YAML_MEMORY_ERROR;
-            0_i32
-        } == 0
+        if PUSH!(
+            emitter,
+            (*emitter).states,
+            YAML_EMIT_FLOW_MAPPING_VALUE_STATE
+        ) == 0
         {
             return 0_i32;
         }
@@ -927,23 +846,7 @@ unsafe fn yaml_emitter_emit_flow_mapping_value(
             return 0_i32;
         }
     }
-    if if (*emitter).states.top != (*emitter).states.end
-        || yaml_stack_extend(
-            addr_of_mut!((*emitter).states.start) as *mut *mut libc::c_void,
-            addr_of_mut!((*emitter).states.top) as *mut *mut libc::c_void,
-            addr_of_mut!((*emitter).states.end) as *mut *mut libc::c_void,
-        ) != 0
-    {
-        let fresh26 = addr_of_mut!((*emitter).states.top);
-        let fresh27 = *fresh26;
-        *fresh26 = (*fresh26).wrapping_offset(1);
-        *fresh27 = YAML_EMIT_FLOW_MAPPING_KEY_STATE;
-        1_i32
-    } else {
-        (*emitter).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0
-    {
+    if PUSH!(emitter, (*emitter).states, YAML_EMIT_FLOW_MAPPING_KEY_STATE) == 0 {
         return 0_i32;
     }
     yaml_emitter_emit_node(emitter, event, 0_i32, 0_i32, 1_i32, 0_i32)
@@ -986,22 +889,11 @@ unsafe fn yaml_emitter_emit_block_sequence_item(
     {
         return 0_i32;
     }
-    if if (*emitter).states.top != (*emitter).states.end
-        || yaml_stack_extend(
-            addr_of_mut!((*emitter).states.start) as *mut *mut libc::c_void,
-            addr_of_mut!((*emitter).states.top) as *mut *mut libc::c_void,
-            addr_of_mut!((*emitter).states.end) as *mut *mut libc::c_void,
-        ) != 0
-    {
-        let fresh30 = addr_of_mut!((*emitter).states.top);
-        let fresh31 = *fresh30;
-        *fresh30 = (*fresh30).wrapping_offset(1);
-        *fresh31 = YAML_EMIT_BLOCK_SEQUENCE_ITEM_STATE;
-        1_i32
-    } else {
-        (*emitter).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0
+    if PUSH!(
+        emitter,
+        (*emitter).states,
+        YAML_EMIT_BLOCK_SEQUENCE_ITEM_STATE
+    ) == 0
     {
         return 0_i32;
     }
@@ -1031,22 +923,11 @@ unsafe fn yaml_emitter_emit_block_mapping_key(
         return 0_i32;
     }
     if yaml_emitter_check_simple_key(emitter) != 0 {
-        if if (*emitter).states.top != (*emitter).states.end
-            || yaml_stack_extend(
-                addr_of_mut!((*emitter).states.start) as *mut *mut libc::c_void,
-                addr_of_mut!((*emitter).states.top) as *mut *mut libc::c_void,
-                addr_of_mut!((*emitter).states.end) as *mut *mut libc::c_void,
-            ) != 0
-        {
-            let fresh34 = addr_of_mut!((*emitter).states.top);
-            let fresh35 = *fresh34;
-            *fresh34 = (*fresh34).wrapping_offset(1);
-            *fresh35 = YAML_EMIT_BLOCK_MAPPING_SIMPLE_VALUE_STATE;
-            1_i32
-        } else {
-            (*emitter).error = YAML_MEMORY_ERROR;
-            0_i32
-        } == 0
+        if PUSH!(
+            emitter,
+            (*emitter).states,
+            YAML_EMIT_BLOCK_MAPPING_SIMPLE_VALUE_STATE
+        ) == 0
         {
             return 0_i32;
         }
@@ -1062,22 +943,11 @@ unsafe fn yaml_emitter_emit_block_mapping_key(
         {
             return 0_i32;
         }
-        if if (*emitter).states.top != (*emitter).states.end
-            || yaml_stack_extend(
-                addr_of_mut!((*emitter).states.start) as *mut *mut libc::c_void,
-                addr_of_mut!((*emitter).states.top) as *mut *mut libc::c_void,
-                addr_of_mut!((*emitter).states.end) as *mut *mut libc::c_void,
-            ) != 0
-        {
-            let fresh36 = addr_of_mut!((*emitter).states.top);
-            let fresh37 = *fresh36;
-            *fresh36 = (*fresh36).wrapping_offset(1);
-            *fresh37 = YAML_EMIT_BLOCK_MAPPING_VALUE_STATE;
-            1_i32
-        } else {
-            (*emitter).error = YAML_MEMORY_ERROR;
-            0_i32
-        } == 0
+        if PUSH!(
+            emitter,
+            (*emitter).states,
+            YAML_EMIT_BLOCK_MAPPING_VALUE_STATE
+        ) == 0
         {
             return 0_i32;
         }
@@ -1116,22 +986,11 @@ unsafe fn yaml_emitter_emit_block_mapping_value(
             return 0_i32;
         }
     }
-    if if (*emitter).states.top != (*emitter).states.end
-        || yaml_stack_extend(
-            addr_of_mut!((*emitter).states.start) as *mut *mut libc::c_void,
-            addr_of_mut!((*emitter).states.top) as *mut *mut libc::c_void,
-            addr_of_mut!((*emitter).states.end) as *mut *mut libc::c_void,
-        ) != 0
-    {
-        let fresh38 = addr_of_mut!((*emitter).states.top);
-        let fresh39 = *fresh38;
-        *fresh38 = (*fresh38).wrapping_offset(1);
-        *fresh39 = YAML_EMIT_BLOCK_MAPPING_KEY_STATE;
-        1_i32
-    } else {
-        (*emitter).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0
+    if PUSH!(
+        emitter,
+        (*emitter).states,
+        YAML_EMIT_BLOCK_MAPPING_KEY_STATE
+    ) == 0
     {
         return 0_i32;
     }

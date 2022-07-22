@@ -1052,22 +1052,7 @@ pub unsafe fn yaml_document_start_event_initialize(
                             current_block = 14964981520188694172;
                             break;
                         }
-                        if if tag_directives_copy.top != tag_directives_copy.end
-                            || yaml_stack_extend(
-                                addr_of_mut!(tag_directives_copy.start) as *mut *mut libc::c_void,
-                                addr_of_mut!(tag_directives_copy.top) as *mut *mut libc::c_void,
-                                addr_of_mut!(tag_directives_copy.end) as *mut *mut libc::c_void,
-                            ) != 0
-                        {
-                            let fresh163 = tag_directives_copy.top;
-                            tag_directives_copy.top = tag_directives_copy.top.wrapping_offset(1);
-                            *fresh163 = value;
-                            1_i32
-                        } else {
-                            context.error = YAML_MEMORY_ERROR;
-                            0_i32
-                        } == 0
-                        {
+                        if PUSH!(addr_of_mut!(context), tag_directives_copy, value) == 0 {
                             current_block = 14964981520188694172;
                             break;
                         }
@@ -1668,24 +1653,7 @@ pub unsafe fn yaml_document_initialize(
                                 current_block = 8142820162064489797;
                                 break;
                             }
-                            if if tag_directives_copy.top != tag_directives_copy.end
-                                || yaml_stack_extend(
-                                    addr_of_mut!(tag_directives_copy.start)
-                                        as *mut *mut libc::c_void,
-                                    addr_of_mut!(tag_directives_copy.top) as *mut *mut libc::c_void,
-                                    addr_of_mut!(tag_directives_copy.end) as *mut *mut libc::c_void,
-                                ) != 0
-                            {
-                                let fresh175 = tag_directives_copy.top;
-                                tag_directives_copy.top =
-                                    tag_directives_copy.top.wrapping_offset(1);
-                                *fresh175 = value;
-                                1_i32
-                            } else {
-                                context.error = YAML_MEMORY_ERROR;
-                                0_i32
-                            } == 0
-                            {
+                            if PUSH!(addr_of_mut!(context), tag_directives_copy, value) == 0 {
                                 current_block = 8142820162064489797;
                                 break;
                             }
@@ -1895,23 +1863,7 @@ pub unsafe fn yaml_document_add_scalar(
                     (*node).data.scalar.value = value_copy;
                     (*node).data.scalar.length = length as size_t;
                     (*node).data.scalar.style = style;
-                    if !(if (*document).nodes.top != (*document).nodes.end
-                        || yaml_stack_extend(
-                            addr_of_mut!((*document).nodes.start) as *mut *mut libc::c_void,
-                            addr_of_mut!((*document).nodes.top) as *mut *mut libc::c_void,
-                            addr_of_mut!((*document).nodes.end) as *mut *mut libc::c_void,
-                        ) != 0
-                    {
-                        let fresh186 = addr_of_mut!((*document).nodes.top);
-                        let fresh187 = *fresh186;
-                        *fresh186 = (*fresh186).wrapping_offset(1);
-                        ptr::copy_nonoverlapping(node, fresh187, 1);
-                        1_i32
-                    } else {
-                        context.error = YAML_MEMORY_ERROR;
-                        0_i32
-                    } == 0)
-                    {
+                    if !(PUSH!(addr_of_mut!(context), (*document).nodes, *node) == 0) {
                         return ((*document).nodes.top).c_offset_from((*document).nodes.start)
                             as libc::c_long as libc::c_int;
                     }
@@ -1988,23 +1940,7 @@ pub unsafe fn yaml_document_add_sequence(
                 (*node).data.sequence.items.end = items.end;
                 (*node).data.sequence.items.top = items.start;
                 (*node).data.sequence.style = style;
-                if !(if (*document).nodes.top != (*document).nodes.end
-                    || yaml_stack_extend(
-                        addr_of_mut!((*document).nodes.start) as *mut *mut libc::c_void,
-                        addr_of_mut!((*document).nodes.top) as *mut *mut libc::c_void,
-                        addr_of_mut!((*document).nodes.end) as *mut *mut libc::c_void,
-                    ) != 0
-                {
-                    let fresh188 = addr_of_mut!((*document).nodes.top);
-                    let fresh189 = *fresh188;
-                    *fresh188 = (*fresh188).wrapping_offset(1);
-                    ptr::copy_nonoverlapping(node, fresh189, 1);
-                    1_i32
-                } else {
-                    context.error = YAML_MEMORY_ERROR;
-                    0_i32
-                } == 0)
-                {
+                if !(PUSH!(addr_of_mut!(context), (*document).nodes, *node) == 0) {
                     return ((*document).nodes.top).c_offset_from((*document).nodes.start)
                         as libc::c_long as libc::c_int;
                 }
@@ -2083,23 +2019,7 @@ pub unsafe fn yaml_document_add_mapping(
                 (*node).data.mapping.pairs.end = pairs.end;
                 (*node).data.mapping.pairs.top = pairs.start;
                 (*node).data.mapping.style = style;
-                if !(if (*document).nodes.top != (*document).nodes.end
-                    || yaml_stack_extend(
-                        addr_of_mut!((*document).nodes.start) as *mut *mut libc::c_void,
-                        addr_of_mut!((*document).nodes.top) as *mut *mut libc::c_void,
-                        addr_of_mut!((*document).nodes.end) as *mut *mut libc::c_void,
-                    ) != 0
-                {
-                    let fresh190 = addr_of_mut!((*document).nodes.top);
-                    let fresh191 = *fresh190;
-                    *fresh190 = (*fresh190).wrapping_offset(1);
-                    ptr::copy_nonoverlapping(node, fresh191, 1);
-                    1_i32
-                } else {
-                    context.error = YAML_MEMORY_ERROR;
-                    0_i32
-                } == 0)
-                {
+                if !(PUSH!(addr_of_mut!(context), (*document).nodes, *node) == 0) {
                     return ((*document).nodes.top).c_offset_from((*document).nodes.start)
                         as libc::c_long as libc::c_int;
                 }
@@ -2141,55 +2061,14 @@ pub unsafe fn yaml_document_append_sequence_item(
         item > 0_i32
             && ((*document).nodes.start).wrapping_offset(item as isize) <= (*document).nodes.top
     );
-    if if (*((*document).nodes.start).wrapping_offset((sequence - 1_i32) as isize))
-        .data
-        .sequence
-        .items
-        .top
-        != (*((*document).nodes.start).wrapping_offset((sequence - 1_i32) as isize))
+    if PUSH!(
+        addr_of_mut!(context),
+        (*((*document).nodes.start).wrapping_offset((sequence - 1) as isize))
             .data
             .sequence
-            .items
-            .end
-        || yaml_stack_extend(
-            addr_of_mut!(
-                (*((*document).nodes.start).wrapping_offset((sequence - 1_i32) as isize))
-                    .data
-                    .sequence
-                    .items
-                    .start
-            ) as *mut *mut libc::c_void,
-            addr_of_mut!(
-                (*((*document).nodes.start).wrapping_offset((sequence - 1_i32) as isize))
-                    .data
-                    .sequence
-                    .items
-                    .top
-            ) as *mut *mut libc::c_void,
-            addr_of_mut!(
-                (*((*document).nodes.start).wrapping_offset((sequence - 1_i32) as isize))
-                    .data
-                    .sequence
-                    .items
-                    .end
-            ) as *mut *mut libc::c_void,
-        ) != 0
-    {
-        let fresh192 = addr_of_mut!(
-            (*((*document).nodes.start).wrapping_offset((sequence - 1_i32) as isize))
-                .data
-                .sequence
-                .items
-                .top
-        );
-        let fresh193 = *fresh192;
-        *fresh192 = (*fresh192).wrapping_offset(1);
-        *fresh193 = item;
-        1_i32
-    } else {
-        context.error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0
+            .items,
+        item
+    ) == 0
     {
         return 0_i32;
     }
@@ -2228,55 +2107,14 @@ pub unsafe fn yaml_document_append_mapping_pair(
             && ((*document).nodes.start).wrapping_offset(value as isize) <= (*document).nodes.top
     );
     let pair = yaml_node_pair_t { key, value };
-    if if (*((*document).nodes.start).wrapping_offset((mapping - 1_i32) as isize))
-        .data
-        .mapping
-        .pairs
-        .top
-        != (*((*document).nodes.start).wrapping_offset((mapping - 1_i32) as isize))
+    if PUSH!(
+        addr_of_mut!(context),
+        (*((*document).nodes.start).wrapping_offset((mapping - 1_i32) as isize))
             .data
             .mapping
-            .pairs
-            .end
-        || yaml_stack_extend(
-            addr_of_mut!(
-                (*((*document).nodes.start).wrapping_offset((mapping - 1_i32) as isize))
-                    .data
-                    .mapping
-                    .pairs
-                    .start
-            ) as *mut *mut libc::c_void,
-            addr_of_mut!(
-                (*((*document).nodes.start).wrapping_offset((mapping - 1_i32) as isize))
-                    .data
-                    .mapping
-                    .pairs
-                    .top
-            ) as *mut *mut libc::c_void,
-            addr_of_mut!(
-                (*((*document).nodes.start).wrapping_offset((mapping - 1_i32) as isize))
-                    .data
-                    .mapping
-                    .pairs
-                    .end
-            ) as *mut *mut libc::c_void,
-        ) != 0
-    {
-        let fresh194 = addr_of_mut!(
-            (*((*document).nodes.start).wrapping_offset((mapping - 1_i32) as isize))
-                .data
-                .mapping
-                .pairs
-                .top
-        );
-        let fresh195 = *fresh194;
-        *fresh194 = (*fresh194).wrapping_offset(1);
-        *fresh195 = pair;
-        1_i32
-    } else {
-        context.error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0
+            .pairs,
+        pair
+    ) == 0
     {
         return 0_i32;
     }
