@@ -8,6 +8,25 @@ macro_rules! NULL_STRING {
     };
 }
 
+macro_rules! BUFFER_INIT {
+    ($context:expr, $buffer:expr, $size:expr) => {{
+        let start = addr_of_mut!($buffer.start);
+        *start = yaml_malloc($size as size_t) as *mut yaml_char_t;
+        if !(*start).is_null() {
+            let pointer = addr_of_mut!($buffer.pointer);
+            *pointer = $buffer.start;
+            let last = addr_of_mut!($buffer.last);
+            *last = *pointer;
+            let end = addr_of_mut!($buffer.end);
+            *end = $buffer.start.wrapping_add($size as usize);
+            1_i32
+        } else {
+            (*$context).error = YAML_MEMORY_ERROR;
+            0_i32
+        }
+    }};
+}
+
 macro_rules! IS_BLANK_AT {
     ($string:expr, $offset:expr) => {
         *$string.pointer.wrapping_offset($offset as isize) as libc::c_int

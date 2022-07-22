@@ -212,36 +212,8 @@ pub unsafe fn yaml_parser_initialize(parser: *mut yaml_parser_t) -> libc::c_int 
         0_i32,
         size_of::<yaml_parser_t>() as libc::c_ulong,
     );
-    let fresh0 = addr_of_mut!((*parser).raw_buffer.start);
-    *fresh0 = yaml_malloc(INPUT_RAW_BUFFER_SIZE as size_t) as *mut yaml_char_t;
-    if !(if !(*fresh0).is_null() {
-        let fresh1 = addr_of_mut!((*parser).raw_buffer.pointer);
-        *fresh1 = (*parser).raw_buffer.start;
-        let fresh2 = addr_of_mut!((*parser).raw_buffer.last);
-        *fresh2 = *fresh1;
-        let fresh3 = addr_of_mut!((*parser).raw_buffer.end);
-        *fresh3 = ((*parser).raw_buffer.start).wrapping_add(INPUT_RAW_BUFFER_SIZE);
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0)
-    {
-        let fresh4 = addr_of_mut!((*parser).buffer.start);
-        *fresh4 = yaml_malloc(INPUT_BUFFER_SIZE as size_t) as *mut yaml_char_t;
-        if !(if !(*fresh4).is_null() {
-            let fresh5 = addr_of_mut!((*parser).buffer.pointer);
-            *fresh5 = (*parser).buffer.start;
-            let fresh6 = addr_of_mut!((*parser).buffer.last);
-            *fresh6 = *fresh5;
-            let fresh7 = addr_of_mut!((*parser).buffer.end);
-            *fresh7 = ((*parser).buffer.start).wrapping_add(INPUT_BUFFER_SIZE);
-            1_i32
-        } else {
-            (*parser).error = YAML_MEMORY_ERROR;
-            0_i32
-        } == 0)
-        {
+    if !(BUFFER_INIT!(parser, (*parser).raw_buffer, INPUT_RAW_BUFFER_SIZE) == 0) {
+        if !(BUFFER_INIT!(parser, (*parser).buffer, INPUT_BUFFER_SIZE) == 0) {
             let fresh8 = addr_of_mut!((*parser).tokens.start);
             *fresh8 = yaml_malloc((16_u64).wrapping_mul(size_of::<yaml_token_t>() as libc::c_ulong))
                 as *mut yaml_token_t;
@@ -581,36 +553,8 @@ pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> libc:
         0_i32,
         size_of::<yaml_emitter_t>() as libc::c_ulong,
     );
-    let fresh91 = addr_of_mut!((*emitter).buffer.start);
-    *fresh91 = yaml_malloc(OUTPUT_BUFFER_SIZE as size_t) as *mut yaml_char_t;
-    if !(if !(*fresh91).is_null() {
-        let fresh92 = addr_of_mut!((*emitter).buffer.pointer);
-        *fresh92 = (*emitter).buffer.start;
-        let fresh93 = addr_of_mut!((*emitter).buffer.last);
-        *fresh93 = *fresh92;
-        let fresh94 = addr_of_mut!((*emitter).buffer.end);
-        *fresh94 = ((*emitter).buffer.start).wrapping_add(OUTPUT_BUFFER_SIZE);
-        1_i32
-    } else {
-        (*emitter).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0)
-    {
-        let fresh95 = addr_of_mut!((*emitter).raw_buffer.start);
-        *fresh95 = yaml_malloc(OUTPUT_RAW_BUFFER_SIZE as size_t) as *mut yaml_char_t;
-        if !(if !(*fresh95).is_null() {
-            let fresh96 = addr_of_mut!((*emitter).raw_buffer.pointer);
-            *fresh96 = (*emitter).raw_buffer.start;
-            let fresh97 = addr_of_mut!((*emitter).raw_buffer.last);
-            *fresh97 = *fresh96;
-            let fresh98 = addr_of_mut!((*emitter).raw_buffer.end);
-            *fresh98 = ((*emitter).raw_buffer.start).wrapping_add(OUTPUT_RAW_BUFFER_SIZE);
-            1_i32
-        } else {
-            (*emitter).error = YAML_MEMORY_ERROR;
-            0_i32
-        } == 0)
-        {
+    if !(BUFFER_INIT!(emitter, (*emitter).buffer, OUTPUT_BUFFER_SIZE) == 0) {
+        if !(BUFFER_INIT!(emitter, (*emitter).raw_buffer, OUTPUT_RAW_BUFFER_SIZE) == 0) {
             let fresh99 = addr_of_mut!((*emitter).states.start);
             *fresh99 = yaml_malloc(
                 (16_u64).wrapping_mul(size_of::<yaml_emitter_state_t>() as libc::c_ulong),
