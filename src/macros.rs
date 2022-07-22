@@ -460,5 +460,31 @@ macro_rules! DEQUEUE {
 }
 
 macro_rules! QUEUE_INSERT {
-    () => {}; // TODO
+    ($context:expr, $queue:expr, $index:expr, $value:expr) => {
+        if $queue.tail != $queue.end
+            || yaml_queue_extend(
+                addr_of_mut!($queue.start) as *mut *mut libc::c_void,
+                addr_of_mut!($queue.head) as *mut *mut libc::c_void,
+                addr_of_mut!($queue.tail) as *mut *mut libc::c_void,
+                addr_of_mut!($queue.end) as *mut *mut libc::c_void,
+            ) != 0
+        {
+            memmove(
+                ($queue.head)
+                    .wrapping_offset($index as isize)
+                    .wrapping_offset(1_isize) as *mut libc::c_void,
+                ($queue.head).wrapping_offset($index as isize) as *const libc::c_void,
+                (($queue.tail).c_offset_from($queue.head) as libc::c_long as libc::c_ulong)
+                    .wrapping_sub($index)
+                    .wrapping_mul(size_of::<yaml_token_t>() as libc::c_ulong),
+            );
+            *($queue.head).wrapping_offset($index as isize) = $value;
+            let fresh14 = addr_of_mut!($queue.tail);
+            *fresh14 = (*fresh14).wrapping_offset(1);
+            1_i32
+        } else {
+            (*$context).error = YAML_MEMORY_ERROR;
+            0_i32
+        }
+    };
 }

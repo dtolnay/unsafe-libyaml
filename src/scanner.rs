@@ -614,38 +614,12 @@ unsafe fn yaml_parser_roll_indent(
             {
                 return 0_i32;
             }
-        } else if if (*parser).tokens.tail != (*parser).tokens.end
-            || yaml_queue_extend(
-                addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-                addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-                addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-                addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
-            ) != 0
-        {
-            memmove(
-                ((*parser).tokens.head)
-                    .wrapping_offset(
-                        (number as libc::c_ulong).wrapping_sub((*parser).tokens_parsed) as isize,
-                    )
-                    .wrapping_offset(1_isize) as *mut libc::c_void,
-                ((*parser).tokens.head).wrapping_offset(
-                    (number as libc::c_ulong).wrapping_sub((*parser).tokens_parsed) as isize,
-                ) as *const libc::c_void,
-                (((*parser).tokens.tail).c_offset_from((*parser).tokens.head) as libc::c_long
-                    as libc::c_ulong)
-                    .wrapping_sub((number as libc::c_ulong).wrapping_sub((*parser).tokens_parsed))
-                    .wrapping_mul(size_of::<yaml_token_t>() as libc::c_ulong),
-            );
-            *((*parser).tokens.head).wrapping_offset(
-                (number as libc::c_ulong).wrapping_sub((*parser).tokens_parsed) as isize,
-            ) = *token;
-            let fresh14 = addr_of_mut!((*parser).tokens.tail);
-            *fresh14 = (*fresh14).wrapping_offset(1);
-            1_i32
-        } else {
-            (*parser).error = YAML_MEMORY_ERROR;
-            0_i32
-        } == 0
+        } else if QUEUE_INSERT!(
+            parser,
+            (*parser).tokens,
+            (number as libc::c_ulong).wrapping_sub((*parser).tokens_parsed),
+            *token
+        ) == 0
         {
             return 0_i32;
         }
@@ -1154,40 +1128,12 @@ unsafe fn yaml_parser_fetch_value(mut parser: *mut yaml_parser_t) -> libc::c_int
         (*token).type_ = YAML_KEY_TOKEN;
         (*token).start_mark = (*simple_key).mark;
         (*token).end_mark = (*simple_key).mark;
-        if if (*parser).tokens.tail != (*parser).tokens.end
-            || yaml_queue_extend(
-                addr_of_mut!((*parser).tokens.start) as *mut *mut libc::c_void,
-                addr_of_mut!((*parser).tokens.head) as *mut *mut libc::c_void,
-                addr_of_mut!((*parser).tokens.tail) as *mut *mut libc::c_void,
-                addr_of_mut!((*parser).tokens.end) as *mut *mut libc::c_void,
-            ) != 0
-        {
-            memmove(
-                ((*parser).tokens.head)
-                    .wrapping_offset(
-                        ((*simple_key).token_number).wrapping_sub((*parser).tokens_parsed) as isize,
-                    )
-                    .wrapping_offset(1_isize) as *mut libc::c_void,
-                ((*parser).tokens.head).wrapping_offset(
-                    ((*simple_key).token_number).wrapping_sub((*parser).tokens_parsed) as isize,
-                ) as *const libc::c_void,
-                (((*parser).tokens.tail).c_offset_from((*parser).tokens.head) as libc::c_long
-                    as libc::c_ulong)
-                    .wrapping_sub(
-                        ((*simple_key).token_number).wrapping_sub((*parser).tokens_parsed),
-                    )
-                    .wrapping_mul(size_of::<yaml_token_t>() as libc::c_ulong),
-            );
-            *((*parser).tokens.head).wrapping_offset(
-                ((*simple_key).token_number).wrapping_sub((*parser).tokens_parsed) as isize,
-            ) = *token;
-            let fresh71 = addr_of_mut!((*parser).tokens.tail);
-            *fresh71 = (*fresh71).wrapping_offset(1);
-            1_i32
-        } else {
-            (*parser).error = YAML_MEMORY_ERROR;
-            0_i32
-        } == 0
+        if QUEUE_INSERT!(
+            parser,
+            (*parser).tokens,
+            ((*simple_key).token_number).wrapping_sub((*parser).tokens_parsed),
+            *token
+        ) == 0
         {
             return 0_i32;
         }
