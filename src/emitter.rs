@@ -1599,24 +1599,7 @@ unsafe fn yaml_emitter_analyze_scalar(
                 block_indicators = 1_i32;
             }
         }
-        if !(*string.pointer as libc::c_int == 0xa_i32
-            || *string.pointer as libc::c_int >= 0x20_i32
-                && *string.pointer as libc::c_int <= 0x7e_i32
-            || *string.pointer as libc::c_int == 0xc2_i32
-                && *string.pointer.wrapping_offset(1_isize) as libc::c_int >= 0xa0_i32
-            || *string.pointer as libc::c_int > 0xc2_i32
-                && (*string.pointer as libc::c_int) < 0xed_i32
-            || *string.pointer as libc::c_int == 0xed_i32
-                && (*string.pointer.wrapping_offset(1_isize) as libc::c_int) < 0xa0_i32
-            || *string.pointer as libc::c_int == 0xee_i32
-            || *string.pointer as libc::c_int == 0xef_i32
-                && !(*string.pointer.wrapping_offset(1_isize) as libc::c_int == 0xbb_i32
-                    && *string.pointer.wrapping_offset(2_isize) as libc::c_int == 0xbf_i32)
-                && !(*string.pointer.wrapping_offset(1_isize) as libc::c_int == 0xbf_i32
-                    && (*string.pointer.wrapping_offset(2_isize) as libc::c_int == 0xbe_i32
-                        || *string.pointer.wrapping_offset(2_isize) as libc::c_int == 0xbf_i32)))
-            || !IS_ASCII!(string) && (*emitter).unicode == 0
-        {
+        if !IS_PRINTABLE!(string) || !IS_ASCII!(string) && (*emitter).unicode == 0 {
             special_characters = 1_i32;
         }
         if *string.pointer as libc::c_int == '\r' as i32 as yaml_char_t as libc::c_int
@@ -2245,22 +2228,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
         return 0_i32;
     }
     while string.pointer != string.end {
-        if !(*string.pointer as libc::c_int == 0xa_i32
-            || *string.pointer as libc::c_int >= 0x20_i32
-                && *string.pointer as libc::c_int <= 0x7e_i32
-            || *string.pointer as libc::c_int == 0xc2_i32
-                && *string.pointer.wrapping_offset(1_isize) as libc::c_int >= 0xa0_i32
-            || *string.pointer as libc::c_int > 0xc2_i32
-                && (*string.pointer as libc::c_int) < 0xed_i32
-            || *string.pointer as libc::c_int == 0xed_i32
-                && (*string.pointer.wrapping_offset(1_isize) as libc::c_int) < 0xa0_i32
-            || *string.pointer as libc::c_int == 0xee_i32
-            || *string.pointer as libc::c_int == 0xef_i32
-                && !(*string.pointer.wrapping_offset(1_isize) as libc::c_int == 0xbb_i32
-                    && *string.pointer.wrapping_offset(2_isize) as libc::c_int == 0xbf_i32)
-                && !(*string.pointer.wrapping_offset(1_isize) as libc::c_int == 0xbf_i32
-                    && (*string.pointer.wrapping_offset(2_isize) as libc::c_int == 0xbe_i32
-                        || *string.pointer.wrapping_offset(2_isize) as libc::c_int == 0xbf_i32)))
+        if !IS_PRINTABLE!(string)
             || (*emitter).unicode == 0 && !IS_ASCII!(string)
             || *string.pointer as libc::c_int == -17i32 as yaml_char_t as libc::c_int
                 && *string.pointer.wrapping_offset(1_isize) as libc::c_int

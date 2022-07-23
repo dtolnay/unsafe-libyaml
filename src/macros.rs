@@ -208,7 +208,22 @@ macro_rules! IS_PRINTABLE_AT {
 }
 
 macro_rules! IS_PRINTABLE {
-    () => {}; // TODO
+    ($string:expr) => {
+        (*$string.pointer as libc::c_int == 0xa
+            || *$string.pointer as libc::c_int >= 0x20 && *$string.pointer as libc::c_int <= 0x7e
+            || *$string.pointer as libc::c_int == 0xc2
+                && *$string.pointer.wrapping_offset(1) as libc::c_int >= 0xa0
+            || *$string.pointer as libc::c_int > 0xc2 && (*$string.pointer as libc::c_int) < 0xed
+            || *$string.pointer as libc::c_int == 0xed
+                && (*$string.pointer.wrapping_offset(1) as libc::c_int) < 0xa0
+            || *$string.pointer as libc::c_int == 0xee
+            || *$string.pointer as libc::c_int == 0xef
+                && !(*$string.pointer.wrapping_offset(1) as libc::c_int == 0xbb
+                    && *$string.pointer.wrapping_offset(2) as libc::c_int == 0xbf)
+                && !(*$string.pointer.wrapping_offset(1) as libc::c_int == 0xbf
+                    && (*$string.pointer.wrapping_offset(2) as libc::c_int == 0xbe
+                        || *$string.pointer.wrapping_offset(2) as libc::c_int == 0xbf)))
+    };
 }
 
 macro_rules! IS_Z_AT {
