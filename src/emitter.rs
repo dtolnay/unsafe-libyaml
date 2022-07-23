@@ -124,7 +124,6 @@ unsafe fn yaml_emitter_set_emitter_error(
 /// The emitter takes the responsibility for the event object and destroys its
 /// content after it is emitted. The event object is destroyed even if the
 /// function fails.
-#[must_use]
 pub unsafe fn yaml_emitter_emit(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,

@@ -16,7 +16,6 @@ unsafe fn yaml_emitter_set_writer_error(
 }
 
 /// Flush the accumulated characters to the output.
-#[must_use]
 pub unsafe fn yaml_emitter_flush(emitter: *mut yaml_emitter_t) -> Success {
     __assert!(!emitter.is_null());
     __assert!(((*emitter).write_handler).is_some());

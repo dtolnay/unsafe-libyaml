@@ -33,7 +33,6 @@ struct loader_ctx {
 /// An application must not alternate the calls of yaml_parser_load() with the
 /// calls of yaml_parser_scan() or yaml_parser_parse(). Doing this will break
 /// the parser.
-#[must_use]
 pub unsafe fn yaml_parser_load(
     mut parser: *mut yaml_parser_t,
     document: *mut yaml_document_t,

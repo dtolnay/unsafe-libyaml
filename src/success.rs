@@ -1,6 +1,7 @@
 pub const OK: Success = Success { ok: true };
 pub const FAIL: Success = Success { ok: false };
 
+#[must_use]
 pub struct Success {
     pub ok: bool,
 }

@@ -16,7 +16,6 @@ use core::ptr::{self, addr_of_mut};
 /// Start a YAML stream.
 ///
 /// This function should be used before yaml_emitter_dump() is called.
-#[must_use]
 pub unsafe fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> Success {
     let mut event = MaybeUninit::<yaml_event_t>::uninit();
     let event = event.as_mut_ptr();
@@ -46,7 +45,6 @@ pub unsafe fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> Success {
 /// Finish a YAML stream.
 ///
 /// This function should be used after yaml_emitter_dump() is called.
-#[must_use]
 pub unsafe fn yaml_emitter_close(mut emitter: *mut yaml_emitter_t) -> Success {
     let mut event = MaybeUninit::<yaml_event_t>::uninit();
     let event = event.as_mut_ptr();
@@ -81,7 +79,6 @@ pub unsafe fn yaml_emitter_close(mut emitter: *mut yaml_emitter_t) -> Success {
 /// the yaml_document_initialize() function. The emitter takes the
 /// responsibility for the document object and destroys its content after it is
 /// emitted. The document object is destroyed even if the function fails.
-#[must_use]
 pub unsafe fn yaml_emitter_dump(
     emitter: *mut yaml_emitter_t,
     document: *mut yaml_document_t,
