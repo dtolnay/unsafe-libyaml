@@ -38,41 +38,37 @@ unsafe fn PUT(emitter: *mut yaml_emitter_t, value: u8) -> bool {
     }
 }
 
-macro_rules! PUT_BREAK {
-    ($emitter:expr) => {
-        FLUSH($emitter) && {
-            if (*$emitter).line_break as libc::c_uint
-                == YAML_CR_BREAK as libc::c_int as libc::c_uint
-            {
-                let fresh62 = addr_of_mut!((*$emitter).buffer.pointer);
-                let fresh63 = *fresh62;
-                *fresh62 = (*fresh62).wrapping_offset(1);
-                *fresh63 = b'\r';
-            } else if (*$emitter).line_break as libc::c_uint
-                == YAML_LN_BREAK as libc::c_int as libc::c_uint
-            {
-                let fresh64 = addr_of_mut!((*$emitter).buffer.pointer);
-                let fresh65 = *fresh64;
-                *fresh64 = (*fresh64).wrapping_offset(1);
-                *fresh65 = b'\n';
-            } else if (*$emitter).line_break as libc::c_uint
-                == YAML_CRLN_BREAK as libc::c_int as libc::c_uint
-            {
-                let fresh66 = addr_of_mut!((*$emitter).buffer.pointer);
-                let fresh67 = *fresh66;
-                *fresh66 = (*fresh66).wrapping_offset(1);
-                *fresh67 = b'\r';
-                let fresh68 = addr_of_mut!((*$emitter).buffer.pointer);
-                let fresh69 = *fresh68;
-                *fresh68 = (*fresh68).wrapping_offset(1);
-                *fresh69 = b'\n';
-            };
-            (*$emitter).column = 0_i32;
-            let fresh70 = addr_of_mut!((*$emitter).line);
-            *fresh70 += 1;
-            true
-        }
-    };
+unsafe fn PUT_BREAK(emitter: *mut yaml_emitter_t) -> bool {
+    FLUSH(emitter) && {
+        if (*emitter).line_break as libc::c_uint == YAML_CR_BREAK as libc::c_int as libc::c_uint {
+            let fresh62 = addr_of_mut!((*emitter).buffer.pointer);
+            let fresh63 = *fresh62;
+            *fresh62 = (*fresh62).wrapping_offset(1);
+            *fresh63 = b'\r';
+        } else if (*emitter).line_break as libc::c_uint
+            == YAML_LN_BREAK as libc::c_int as libc::c_uint
+        {
+            let fresh64 = addr_of_mut!((*emitter).buffer.pointer);
+            let fresh65 = *fresh64;
+            *fresh64 = (*fresh64).wrapping_offset(1);
+            *fresh65 = b'\n';
+        } else if (*emitter).line_break as libc::c_uint
+            == YAML_CRLN_BREAK as libc::c_int as libc::c_uint
+        {
+            let fresh66 = addr_of_mut!((*emitter).buffer.pointer);
+            let fresh67 = *fresh66;
+            *fresh66 = (*fresh66).wrapping_offset(1);
+            *fresh67 = b'\r';
+            let fresh68 = addr_of_mut!((*emitter).buffer.pointer);
+            let fresh69 = *fresh68;
+            *fresh68 = (*fresh68).wrapping_offset(1);
+            *fresh69 = b'\n';
+        };
+        (*emitter).column = 0_i32;
+        let fresh70 = addr_of_mut!((*emitter).line);
+        *fresh70 += 1;
+        true
+    }
 }
 
 macro_rules! WRITE {
@@ -90,7 +86,7 @@ macro_rules! WRITE_BREAK {
     ($emitter:expr, $string:expr) => {
         FLUSH($emitter)
             && if CHECK!($string, b'\n') {
-                let _ = PUT_BREAK!($emitter);
+                let _ = PUT_BREAK($emitter);
                 $string.pointer = $string.pointer.wrapping_offset(1);
                 1_i32
             } else {
@@ -1759,7 +1755,7 @@ unsafe fn yaml_emitter_write_indent(mut emitter: *mut yaml_emitter_t) -> libc::c
         || (*emitter).column > indent
         || (*emitter).column == indent && (*emitter).whitespace == 0
     {
-        if !(PUT_BREAK!(emitter)) {
+        if !(PUT_BREAK(emitter)) {
             return 0_i32;
         }
     }
@@ -1936,7 +1932,7 @@ unsafe fn yaml_emitter_write_plain_scalar(
             spaces = 1_i32;
         } else if IS_BREAK!(string) {
             if breaks == 0 && CHECK!(string, b'\n') {
-                if !(PUT_BREAK!(emitter)) {
+                if !(PUT_BREAK(emitter)) {
                     return 0_i32;
                 }
             }
@@ -2002,7 +1998,7 @@ unsafe fn yaml_emitter_write_single_quoted_scalar(
             spaces = 1_i32;
         } else if IS_BREAK!(string) {
             if breaks == 0 && CHECK!(string, b'\n') {
-                if !(PUT_BREAK!(emitter)) {
+                if !(PUT_BREAK(emitter)) {
                     return 0_i32;
                 }
             }
@@ -2334,7 +2330,7 @@ unsafe fn yaml_emitter_write_literal_scalar(
     if yaml_emitter_write_block_scalar_hints(emitter, string) == 0 {
         return 0_i32;
     }
-    if !(PUT_BREAK!(emitter)) {
+    if !(PUT_BREAK(emitter)) {
         return 0_i32;
     }
     (*emitter).indention = 1_i32;
@@ -2383,7 +2379,7 @@ unsafe fn yaml_emitter_write_folded_scalar(
     if yaml_emitter_write_block_scalar_hints(emitter, string) == 0 {
         return 0_i32;
     }
-    if !(PUT_BREAK!(emitter)) {
+    if !(PUT_BREAK(emitter)) {
         return 0_i32;
     }
     (*emitter).indention = 1_i32;
@@ -2396,7 +2392,7 @@ unsafe fn yaml_emitter_write_folded_scalar(
                     k += WIDTH_AT!(string, k as isize);
                 }
                 if !IS_BLANKZ_AT!(string, k) {
-                    if !(PUT_BREAK!(emitter)) {
+                    if !(PUT_BREAK(emitter)) {
                         return 0_i32;
                     }
                 }
