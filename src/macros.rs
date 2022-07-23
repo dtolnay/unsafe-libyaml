@@ -129,12 +129,17 @@ macro_rules! CHECK {
     () => {}; // TODO
 }
 
-macro_rules! IS_ALPHA_AT {
-    () => {}; // TODO
-}
-
 macro_rules! IS_ALPHA {
-    () => {}; // TODO
+    ($string:expr) => {
+        *$string.pointer as libc::c_int >= '0' as i32 as yaml_char_t as libc::c_int
+            && *$string.pointer as libc::c_int <= '9' as i32 as yaml_char_t as libc::c_int
+            || *$string.pointer as libc::c_int >= 'A' as i32 as yaml_char_t as libc::c_int
+                && *$string.pointer as libc::c_int <= 'Z' as i32 as yaml_char_t as libc::c_int
+            || *$string.pointer as libc::c_int >= 'a' as i32 as yaml_char_t as libc::c_int
+                && *$string.pointer as libc::c_int <= 'z' as i32 as yaml_char_t as libc::c_int
+            || *$string.pointer as libc::c_int == '_' as i32
+            || *$string.pointer as libc::c_int == '-' as i32
+    };
 }
 
 macro_rules! IS_DIGIT_AT {

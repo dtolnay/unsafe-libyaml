@@ -1433,21 +1433,7 @@ unsafe fn yaml_parser_scan_directive_name(
     if !(STRING_INIT!(parser, string) == 0) {
         if !(CACHE!(parser, 1_u64) == 0) {
             loop {
-                if !(*((*parser).buffer.pointer) as libc::c_int
-                    >= '0' as i32 as yaml_char_t as libc::c_int
-                    && *((*parser).buffer.pointer) as libc::c_int
-                        <= '9' as i32 as yaml_char_t as libc::c_int
-                    || *((*parser).buffer.pointer) as libc::c_int
-                        >= 'A' as i32 as yaml_char_t as libc::c_int
-                        && *((*parser).buffer.pointer) as libc::c_int
-                            <= 'Z' as i32 as yaml_char_t as libc::c_int
-                    || *((*parser).buffer.pointer) as libc::c_int
-                        >= 'a' as i32 as yaml_char_t as libc::c_int
-                        && *((*parser).buffer.pointer) as libc::c_int
-                            <= 'z' as i32 as yaml_char_t as libc::c_int
-                    || *((*parser).buffer.pointer) as libc::c_int == '_' as i32
-                    || *((*parser).buffer.pointer) as libc::c_int == '-' as i32)
-                {
+                if !IS_ALPHA!((*parser).buffer) {
                     current_block = 10879442775620481940;
                     break;
                 }
@@ -1683,21 +1669,7 @@ unsafe fn yaml_parser_scan_anchor(
         SKIP!(parser);
         if !(CACHE!(parser, 1_u64) == 0) {
             loop {
-                if !(*((*parser).buffer.pointer) as libc::c_int
-                    >= '0' as i32 as yaml_char_t as libc::c_int
-                    && *((*parser).buffer.pointer) as libc::c_int
-                        <= '9' as i32 as yaml_char_t as libc::c_int
-                    || *((*parser).buffer.pointer) as libc::c_int
-                        >= 'A' as i32 as yaml_char_t as libc::c_int
-                        && *((*parser).buffer.pointer) as libc::c_int
-                            <= 'Z' as i32 as yaml_char_t as libc::c_int
-                    || *((*parser).buffer.pointer) as libc::c_int
-                        >= 'a' as i32 as yaml_char_t as libc::c_int
-                        && *((*parser).buffer.pointer) as libc::c_int
-                            <= 'z' as i32 as yaml_char_t as libc::c_int
-                    || *((*parser).buffer.pointer) as libc::c_int == '_' as i32
-                    || *((*parser).buffer.pointer) as libc::c_int == '-' as i32)
-                {
+                if !IS_ALPHA!((*parser).buffer) {
                     current_block = 2868539653012386629;
                     break;
                 }
@@ -1953,21 +1925,7 @@ unsafe fn yaml_parser_scan_tag_handle(
             } else if !(READ!(parser, string) == 0) {
                 if !(CACHE!(parser, 1_u64) == 0) {
                     loop {
-                        if !(*((*parser).buffer.pointer) as libc::c_int
-                            >= '0' as i32 as yaml_char_t as libc::c_int
-                            && *((*parser).buffer.pointer) as libc::c_int
-                                <= '9' as i32 as yaml_char_t as libc::c_int
-                            || *((*parser).buffer.pointer) as libc::c_int
-                                >= 'A' as i32 as yaml_char_t as libc::c_int
-                                && *((*parser).buffer.pointer) as libc::c_int
-                                    <= 'Z' as i32 as yaml_char_t as libc::c_int
-                            || *((*parser).buffer.pointer) as libc::c_int
-                                >= 'a' as i32 as yaml_char_t as libc::c_int
-                                && *((*parser).buffer.pointer) as libc::c_int
-                                    <= 'z' as i32 as yaml_char_t as libc::c_int
-                            || *((*parser).buffer.pointer) as libc::c_int == '_' as i32
-                            || *((*parser).buffer.pointer) as libc::c_int == '-' as i32)
-                        {
+                        if !IS_ALPHA!((*parser).buffer) {
                             current_block = 7651349459974463963;
                             break;
                         }
@@ -2079,20 +2037,7 @@ unsafe fn yaml_parser_scan_tag_uri(
                         current_block = 15265153392498847348;
                         continue;
                     }
-                    while *((*parser).buffer.pointer) as libc::c_int
-                        >= '0' as i32 as yaml_char_t as libc::c_int
-                        && *((*parser).buffer.pointer) as libc::c_int
-                            <= '9' as i32 as yaml_char_t as libc::c_int
-                        || *((*parser).buffer.pointer) as libc::c_int
-                            >= 'A' as i32 as yaml_char_t as libc::c_int
-                            && *((*parser).buffer.pointer) as libc::c_int
-                                <= 'Z' as i32 as yaml_char_t as libc::c_int
-                        || *((*parser).buffer.pointer) as libc::c_int
-                            >= 'a' as i32 as yaml_char_t as libc::c_int
-                            && *((*parser).buffer.pointer) as libc::c_int
-                                <= 'z' as i32 as yaml_char_t as libc::c_int
-                        || *((*parser).buffer.pointer) as libc::c_int == '_' as i32
-                        || *((*parser).buffer.pointer) as libc::c_int == '-' as i32
+                    while IS_ALPHA!((*parser).buffer)
                         || *((*parser).buffer.pointer) as libc::c_int
                             == ';' as i32 as yaml_char_t as libc::c_int
                         || *((*parser).buffer.pointer) as libc::c_int

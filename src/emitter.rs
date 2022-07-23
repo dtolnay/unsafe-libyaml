@@ -1379,15 +1379,7 @@ unsafe fn yaml_emitter_analyze_tag_directive(
     }
     handle.pointer = handle.pointer.wrapping_offset(1);
     while handle.pointer < handle.end.wrapping_offset(-(1_isize)) {
-        if !(*handle.pointer as libc::c_int >= '0' as i32 as yaml_char_t as libc::c_int
-            && *handle.pointer as libc::c_int <= '9' as i32 as yaml_char_t as libc::c_int
-            || *handle.pointer as libc::c_int >= 'A' as i32 as yaml_char_t as libc::c_int
-                && *handle.pointer as libc::c_int <= 'Z' as i32 as yaml_char_t as libc::c_int
-            || *handle.pointer as libc::c_int >= 'a' as i32 as yaml_char_t as libc::c_int
-                && *handle.pointer as libc::c_int <= 'z' as i32 as yaml_char_t as libc::c_int
-            || *handle.pointer as libc::c_int == '_' as i32
-            || *handle.pointer as libc::c_int == '-' as i32)
-        {
+        if !IS_ALPHA!(handle) {
             return yaml_emitter_set_emitter_error(
                 emitter,
                 b"tag handle must contain alphanumerical characters only\0" as *const u8
@@ -1423,15 +1415,7 @@ unsafe fn yaml_emitter_analyze_anchor(
         );
     }
     while string.pointer != string.end {
-        if !(*string.pointer as libc::c_int >= '0' as i32 as yaml_char_t as libc::c_int
-            && *string.pointer as libc::c_int <= '9' as i32 as yaml_char_t as libc::c_int
-            || *string.pointer as libc::c_int >= 'A' as i32 as yaml_char_t as libc::c_int
-                && *string.pointer as libc::c_int <= 'Z' as i32 as yaml_char_t as libc::c_int
-            || *string.pointer as libc::c_int >= 'a' as i32 as yaml_char_t as libc::c_int
-                && *string.pointer as libc::c_int <= 'z' as i32 as yaml_char_t as libc::c_int
-            || *string.pointer as libc::c_int == '_' as i32
-            || *string.pointer as libc::c_int == '-' as i32)
-        {
+        if !IS_ALPHA!(string) {
             return yaml_emitter_set_emitter_error(
                 emitter,
                 if alias != 0 {
@@ -1981,14 +1965,7 @@ unsafe fn yaml_emitter_write_tag_content(
         }
     }
     while string.pointer != string.end {
-        if *string.pointer as libc::c_int >= '0' as i32 as yaml_char_t as libc::c_int
-            && *string.pointer as libc::c_int <= '9' as i32 as yaml_char_t as libc::c_int
-            || *string.pointer as libc::c_int >= 'A' as i32 as yaml_char_t as libc::c_int
-                && *string.pointer as libc::c_int <= 'Z' as i32 as yaml_char_t as libc::c_int
-            || *string.pointer as libc::c_int >= 'a' as i32 as yaml_char_t as libc::c_int
-                && *string.pointer as libc::c_int <= 'z' as i32 as yaml_char_t as libc::c_int
-            || *string.pointer as libc::c_int == '_' as i32
-            || *string.pointer as libc::c_int == '-' as i32
+        if IS_ALPHA!(string)
             || *string.pointer as libc::c_int == ';' as i32 as yaml_char_t as libc::c_int
             || *string.pointer as libc::c_int == '/' as i32 as yaml_char_t as libc::c_int
             || *string.pointer as libc::c_int == '?' as i32 as yaml_char_t as libc::c_int
