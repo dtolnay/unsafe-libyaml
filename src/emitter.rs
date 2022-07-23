@@ -21,16 +21,14 @@ use crate::{
 };
 use core::ptr::{self, addr_of_mut};
 
-macro_rules! FLUSH {
-    ($emitter:expr) => {
-        ((*$emitter).buffer.pointer).wrapping_offset(5_isize) < (*$emitter).buffer.end
-            || yaml_emitter_flush($emitter) != 0
-    };
+unsafe fn FLUSH(emitter: *mut yaml_emitter_t) -> bool {
+    ((*emitter).buffer.pointer).wrapping_offset(5_isize) < (*emitter).buffer.end
+        || yaml_emitter_flush(emitter) != 0
 }
 
 macro_rules! PUT {
     ($emitter:expr, $value:expr) => {
-        FLUSH!($emitter) && {
+        FLUSH($emitter) && {
             let fresh40 = addr_of_mut!((*$emitter).buffer.pointer);
             let fresh41 = *fresh40;
             *fresh40 = (*fresh40).wrapping_offset(1);
@@ -44,7 +42,7 @@ macro_rules! PUT {
 
 macro_rules! PUT_BREAK {
     ($emitter:expr) => {
-        FLUSH!($emitter) && {
+        FLUSH($emitter) && {
             if (*$emitter).line_break as libc::c_uint
                 == YAML_CR_BREAK as libc::c_int as libc::c_uint
             {
@@ -81,7 +79,7 @@ macro_rules! PUT_BREAK {
 
 macro_rules! WRITE {
     ($emitter:expr, $string:expr) => {
-        FLUSH!($emitter) && {
+        FLUSH($emitter) && {
             COPY!((*$emitter).buffer, $string);
             let fresh107 = addr_of_mut!((*$emitter).column);
             *fresh107 += 1;
@@ -92,7 +90,7 @@ macro_rules! WRITE {
 
 macro_rules! WRITE_BREAK {
     ($emitter:expr, $string:expr) => {
-        FLUSH!($emitter)
+        FLUSH($emitter)
             && if CHECK!($string, b'\n') {
                 let _ = PUT_BREAK!($emitter);
                 $string.pointer = $string.pointer.wrapping_offset(1);
@@ -1735,7 +1733,7 @@ unsafe fn yaml_emitter_analyze_event(
 }
 
 unsafe fn yaml_emitter_write_bom(emitter: *mut yaml_emitter_t) -> libc::c_int {
-    if !FLUSH!(emitter) {
+    if !FLUSH(emitter) {
         return 0_i32;
     }
     let fresh56 = addr_of_mut!((*emitter).buffer.pointer);
