@@ -84,12 +84,11 @@ unsafe fn yaml_parser_set_parser_error(
     mut parser: *mut yaml_parser_t,
     problem: *const libc::c_char,
     problem_mark: yaml_mark_t,
-) -> Success {
+) {
     (*parser).error = YAML_PARSER_ERROR;
     let fresh0 = addr_of_mut!((*parser).problem);
     *fresh0 = problem;
     (*parser).problem_mark = problem_mark;
-    FAIL
 }
 
 unsafe fn yaml_parser_set_parser_error_context(
@@ -98,7 +97,7 @@ unsafe fn yaml_parser_set_parser_error_context(
     context_mark: yaml_mark_t,
     problem: *const libc::c_char,
     problem_mark: yaml_mark_t,
-) -> Success {
+) {
     (*parser).error = YAML_PARSER_ERROR;
     let fresh1 = addr_of_mut!((*parser).context);
     *fresh1 = context;
@@ -106,7 +105,6 @@ unsafe fn yaml_parser_set_parser_error_context(
     let fresh2 = addr_of_mut!((*parser).problem);
     *fresh2 = problem;
     (*parser).problem_mark = problem_mark;
-    FAIL
 }
 
 unsafe fn yaml_parser_state_machine(
@@ -169,11 +167,12 @@ unsafe fn yaml_parser_parse_stream_start(
         return FAIL;
     }
     if (*token).type_ as libc::c_uint != YAML_STREAM_START_TOKEN as libc::c_int as libc::c_uint {
-        return yaml_parser_set_parser_error(
+        yaml_parser_set_parser_error(
             parser,
             b"did not find expected <stream-start>\0" as *const u8 as *const libc::c_char,
             (*token).start_mark,
         );
+        return FAIL;
     }
     (*parser).state = YAML_PARSE_IMPLICIT_DOCUMENT_START_STATE;
     memset(
@@ -275,7 +274,7 @@ unsafe fn yaml_parser_parse_document_start(
             if (*token).type_ as libc::c_uint
                 != YAML_DOCUMENT_START_TOKEN as libc::c_int as libc::c_uint
             {
-                let _ = yaml_parser_set_parser_error(
+                yaml_parser_set_parser_error(
                     parser,
                     b"did not find expected <document start>\0" as *const u8 as *const libc::c_char,
                     (*token).start_mark,
@@ -540,7 +539,7 @@ unsafe fn yaml_parser_parse_node(
                             17786380918591080555 => {}
                             _ => {
                                 if tag.is_null() {
-                                    let _ = yaml_parser_set_parser_error_context(
+                                    yaml_parser_set_parser_error_context(
                                         parser,
                                         b"while parsing a node\0" as *const u8
                                             as *const libc::c_char,
@@ -734,7 +733,7 @@ unsafe fn yaml_parser_parse_node(
                                 return OK;
                             }
                         } else {
-                            let _ = yaml_parser_set_parser_error_context(
+                            yaml_parser_set_parser_error_context(
                                 parser,
                                 if block != 0 {
                                     b"while parsing a block node\0" as *const u8
@@ -823,7 +822,8 @@ unsafe fn yaml_parser_parse_block_sequence_entry(
             POP!((*parser).marks),
             b"did not find expected '-' indicator\0" as *const u8 as *const libc::c_char,
             (*token).start_mark,
-        )
+        );
+        FAIL
     }
 }
 
@@ -937,7 +937,8 @@ unsafe fn yaml_parser_parse_block_mapping_key(
             POP!((*parser).marks),
             b"did not find expected key\0" as *const u8 as *const libc::c_char,
             (*token).start_mark,
-        )
+        );
+        FAIL
     }
 }
 
@@ -1004,13 +1005,14 @@ unsafe fn yaml_parser_parse_flow_sequence_entry(
                     return FAIL;
                 }
             } else {
-                return yaml_parser_set_parser_error_context(
+                yaml_parser_set_parser_error_context(
                     parser,
                     b"while parsing a flow sequence\0" as *const u8 as *const libc::c_char,
                     POP!((*parser).marks),
                     b"did not find expected ',' or ']'\0" as *const u8 as *const libc::c_char,
                     (*token).start_mark,
                 );
+                return FAIL;
             }
         }
         if (*token).type_ as libc::c_uint == YAML_KEY_TOKEN as libc::c_int as libc::c_uint {
@@ -1172,13 +1174,14 @@ unsafe fn yaml_parser_parse_flow_mapping_key(
                     return FAIL;
                 }
             } else {
-                return yaml_parser_set_parser_error_context(
+                yaml_parser_set_parser_error_context(
                     parser,
                     b"while parsing a flow mapping\0" as *const u8 as *const libc::c_char,
                     POP!((*parser).marks),
                     b"did not find expected ',' or '}'\0" as *const u8 as *const libc::c_char,
                     (*token).start_mark,
                 );
+                return FAIL;
             }
         }
         if (*token).type_ as libc::c_uint == YAML_KEY_TOKEN as libc::c_int as libc::c_uint {
@@ -1351,7 +1354,7 @@ unsafe fn yaml_parser_process_directives(
                     == YAML_VERSION_DIRECTIVE_TOKEN as libc::c_int as libc::c_uint
                 {
                     if !version_directive.is_null() {
-                        let _ = yaml_parser_set_parser_error(
+                        yaml_parser_set_parser_error(
                             parser,
                             b"found duplicate %YAML directive\0" as *const u8
                                 as *const libc::c_char,
@@ -1363,7 +1366,7 @@ unsafe fn yaml_parser_process_directives(
                         || (*token).data.version_directive.minor != 1_i32
                             && (*token).data.version_directive.minor != 2_i32
                     {
-                        let _ = yaml_parser_set_parser_error(
+                        yaml_parser_set_parser_error(
                             parser,
                             b"found incompatible YAML document\0" as *const u8
                                 as *const libc::c_char,
@@ -1490,11 +1493,12 @@ unsafe fn yaml_parser_append_tag_directive(
             if allow_duplicates != 0 {
                 return OK;
             }
-            return yaml_parser_set_parser_error(
+            yaml_parser_set_parser_error(
                 parser,
                 b"found duplicate %TAG directive\0" as *const u8 as *const libc::c_char,
                 mark,
             );
+            return FAIL;
         }
         tag_directive = tag_directive.wrapping_offset(1);
     }
