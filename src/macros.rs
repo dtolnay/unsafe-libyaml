@@ -128,7 +128,9 @@ macro_rules! CHECK_AT {
 }
 
 macro_rules! CHECK {
-    () => {}; // TODO
+    ($string:expr, $octet:expr) => {
+        *$string.pointer == $octet as yaml_char_t
+    };
 }
 
 macro_rules! IS_ALPHA {
