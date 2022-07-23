@@ -1,6 +1,6 @@
 use crate::libc;
 use core::ops::Deref;
-use core::ptr::addr_of;
+use core::ptr::{self, addr_of};
 
 pub use self::{
     yaml_break_t::*, yaml_emitter_state_t::*, yaml_encoding_t::*, yaml_error_type_t::*,
@@ -1221,6 +1221,12 @@ pub(crate) struct yaml_string_t {
     pub end: *mut yaml_char_t,
     pub pointer: *mut yaml_char_t,
 }
+
+pub(crate) const NULL_STRING: yaml_string_t = yaml_string_t {
+    start: ptr::null_mut::<yaml_char_t>(),
+    end: ptr::null_mut::<yaml_char_t>(),
+    pointer: ptr::null_mut::<yaml_char_t>(),
+};
 
 #[repr(C)]
 pub(crate) struct yaml_buffer_t<T> {

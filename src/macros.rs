@@ -29,16 +29,6 @@ macro_rules! BUFFER_DEL {
     }};
 }
 
-macro_rules! NULL_STRING {
-    () => {
-        yaml_string_t {
-            start: ptr::null_mut::<yaml_char_t>(),
-            end: ptr::null_mut::<yaml_char_t>(),
-            pointer: ptr::null_mut::<yaml_char_t>(),
-        }
-    };
-}
-
 macro_rules! STRING_ASSIGN {
     ($string:expr, $length:expr) => {
         yaml_string_t {

@@ -4,7 +4,7 @@ use crate::api::{
 };
 use crate::externs::{memcpy, memmove, memset, strcmp, strlen};
 use crate::reader::yaml_parser_update_buffer;
-use crate::yaml::{ptrdiff_t, size_t, yaml_char_t, yaml_string_t};
+use crate::yaml::{ptrdiff_t, size_t, yaml_char_t, yaml_string_t, NULL_STRING};
 use crate::{
     libc, yaml_mark_t, yaml_parser_t, yaml_simple_key_t, yaml_token_delete, yaml_token_t,
     yaml_token_type_t, PointerExt, YAML_ALIAS_TOKEN, YAML_ANCHOR_TOKEN, YAML_BLOCK_END_TOKEN,
@@ -1225,7 +1225,7 @@ unsafe fn yaml_parser_scan_directive_name(
     name: *mut *mut yaml_char_t,
 ) -> libc::c_int {
     let current_block: u64;
-    let mut string = NULL_STRING!();
+    let mut string = NULL_STRING;
     if !(STRING_INIT!(parser, string) == 0) {
         if !(CACHE!(parser, 1_u64) == 0) {
             loop {
@@ -1455,7 +1455,7 @@ unsafe fn yaml_parser_scan_anchor(
     let mut length: libc::c_int = 0_i32;
     let start_mark: yaml_mark_t;
     let end_mark: yaml_mark_t;
-    let mut string = NULL_STRING!();
+    let mut string = NULL_STRING;
     if !(STRING_INIT!(parser, string) == 0) {
         start_mark = (*parser).mark;
         SKIP!(parser);
@@ -1683,7 +1683,7 @@ unsafe fn yaml_parser_scan_tag_handle(
     handle: *mut *mut yaml_char_t,
 ) -> libc::c_int {
     let mut current_block: u64;
-    let mut string = NULL_STRING!();
+    let mut string = NULL_STRING;
     if !(STRING_INIT!(parser, string) == 0) {
         if !(CACHE!(parser, 1_u64) == 0) {
             if !CHECK!((*parser).buffer, b'!') {
@@ -1770,7 +1770,7 @@ unsafe fn yaml_parser_scan_tag_uri(
     } else {
         0_u64
     };
-    let mut string = NULL_STRING!();
+    let mut string = NULL_STRING;
     if STRING_INIT!(parser, string) == 0 {
         current_block = 15265153392498847348;
     } else {
@@ -1972,9 +1972,9 @@ unsafe fn yaml_parser_scan_block_scalar(
     let mut current_block: u64;
     let start_mark: yaml_mark_t;
     let mut end_mark: yaml_mark_t;
-    let mut string = NULL_STRING!();
-    let mut leading_break = NULL_STRING!();
-    let mut trailing_breaks = NULL_STRING!();
+    let mut string = NULL_STRING;
+    let mut leading_break = NULL_STRING;
+    let mut trailing_breaks = NULL_STRING;
     let mut chomping: libc::c_int = 0_i32;
     let mut increment: libc::c_int = 0_i32;
     let mut indent: libc::c_int = 0_i32;
@@ -2335,10 +2335,10 @@ unsafe fn yaml_parser_scan_flow_scalar(
     let current_block: u64;
     let start_mark: yaml_mark_t;
     let end_mark: yaml_mark_t;
-    let mut string = NULL_STRING!();
-    let mut leading_break = NULL_STRING!();
-    let mut trailing_breaks = NULL_STRING!();
-    let mut whitespaces = NULL_STRING!();
+    let mut string = NULL_STRING;
+    let mut leading_break = NULL_STRING;
+    let mut trailing_breaks = NULL_STRING;
+    let mut whitespaces = NULL_STRING;
     let mut leading_blanks: libc::c_int;
     if !(STRING_INIT!(parser, string) == 0) {
         if !(STRING_INIT!(parser, leading_break) == 0) {
@@ -2827,10 +2827,10 @@ unsafe fn yaml_parser_scan_plain_scalar(
     let current_block: u64;
     let start_mark: yaml_mark_t;
     let mut end_mark: yaml_mark_t;
-    let mut string = NULL_STRING!();
-    let mut leading_break = NULL_STRING!();
-    let mut trailing_breaks = NULL_STRING!();
-    let mut whitespaces = NULL_STRING!();
+    let mut string = NULL_STRING;
+    let mut leading_break = NULL_STRING;
+    let mut trailing_breaks = NULL_STRING;
+    let mut whitespaces = NULL_STRING;
     let mut leading_blanks: libc::c_int = 0_i32;
     let indent: libc::c_int = (*parser).indent + 1_i32;
     if !(STRING_INIT!(parser, string) == 0) {
