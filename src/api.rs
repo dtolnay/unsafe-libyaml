@@ -24,26 +24,6 @@ const INPUT_BUFFER_SIZE: usize = INPUT_RAW_BUFFER_SIZE * 3;
 const OUTPUT_BUFFER_SIZE: usize = 16384;
 const OUTPUT_RAW_BUFFER_SIZE: usize = OUTPUT_BUFFER_SIZE * 2 + 2;
 
-/// Get the libyaml version as a string.
-///
-/// Returns the pointer to a static string of the form `"X.Y.Z"`, where `X` is
-/// the major version number, `Y` is a minor version number, and `Z` is the
-/// patch version number.
-pub fn yaml_get_version_string() -> *const libc::c_char {
-    b"0.2.5\0" as *const u8 as *const libc::c_char
-}
-
-/// Get the libyaml version numbers.
-pub unsafe fn yaml_get_version(
-    major: *mut libc::c_int,
-    minor: *mut libc::c_int,
-    patch: *mut libc::c_int,
-) {
-    *major = 0;
-    *minor = 2;
-    *patch = 5;
-}
-
 pub(crate) unsafe fn yaml_malloc(size: size_t) -> *mut libc::c_void {
     malloc(size)
 }
