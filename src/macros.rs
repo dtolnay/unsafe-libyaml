@@ -251,19 +251,23 @@ macro_rules! IS_SPACE {
 }
 
 macro_rules! IS_TAB_AT {
-    () => {}; // TODO
+    ($string:expr, $offset:expr) => {
+        *$string.pointer.wrapping_offset($offset as isize) as libc::c_int
+            == '\t' as i32 as yaml_char_t as libc::c_int
+    };
 }
 
 macro_rules! IS_TAB {
-    () => {}; // TODO
+    ($string:expr) => {
+        IS_TAB_AT!($string, 0)
+    };
 }
 
 macro_rules! IS_BLANK_AT {
     ($string:expr, $offset:expr) => {
         *$string.pointer.wrapping_offset($offset as isize) as libc::c_int
             == ' ' as i32 as yaml_char_t as libc::c_int
-            || *$string.pointer.wrapping_offset($offset as isize) as libc::c_int
-                == '\t' as i32 as yaml_char_t as libc::c_int
+            || IS_TAB_AT!($string, $offset)
     };
 }
 

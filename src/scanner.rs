@@ -2416,8 +2416,7 @@ unsafe fn yaml_parser_scan_block_scalar_breaks(
             max_indent = (*parser).mark.column as libc::c_int;
         }
         if (*indent == 0 || ((*parser).mark.column as libc::c_int) < *indent)
-            && *((*parser).buffer.pointer) as libc::c_int
-                == '\t' as i32 as yaml_char_t as libc::c_int
+            && IS_TAB!((*parser).buffer)
         {
             return yaml_parser_set_scanner_error(
                 parser,
@@ -3132,8 +3131,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
                             if IS_BLANK!((*parser).buffer) {
                                 if leading_blanks != 0
                                     && ((*parser).mark.column as libc::c_int) < indent
-                                    && *((*parser).buffer.pointer) as libc::c_int
-                                        == '\t' as i32 as yaml_char_t as libc::c_int
+                                    && IS_TAB!((*parser).buffer)
                                 {
                                     yaml_parser_set_scanner_error(
                                         parser,
