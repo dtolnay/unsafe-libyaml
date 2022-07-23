@@ -17,7 +17,7 @@ unsafe fn fuzz_target(mut data: &[u8]) {
     let mut parser = MaybeUninit::<yaml_parser_t>::uninit();
     let parser = parser.as_mut_ptr();
     assert!(yaml_parser_initialize(parser).ok);
-    yaml_parser_set_input(parser, Some(read_from_slice), addr_of_mut!(data).cast());
+    yaml_parser_set_input(parser, read_from_slice, addr_of_mut!(data).cast());
 
     let mut token = MaybeUninit::<yaml_token_t>::uninit();
     let token = token.as_mut_ptr();

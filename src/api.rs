@@ -316,14 +316,13 @@ pub unsafe fn yaml_parser_set_input_string(
 /// Set a generic input handler.
 pub unsafe fn yaml_parser_set_input(
     parser: *mut yaml_parser_t,
-    handler: Option<yaml_read_handler_t>,
+    handler: yaml_read_handler_t,
     data: *mut libc::c_void,
 ) {
     __assert!(!parser.is_null());
     __assert!(((*parser).read_handler).is_none());
-    __assert!(handler.is_some());
     let fresh89 = addr_of_mut!((*parser).read_handler);
-    *fresh89 = handler;
+    *fresh89 = Some(handler);
     let fresh90 = addr_of_mut!((*parser).read_handler_data);
     *fresh90 = data;
 }
@@ -472,14 +471,13 @@ pub unsafe fn yaml_emitter_set_output_string(
 /// Set a generic output handler.
 pub unsafe fn yaml_emitter_set_output(
     emitter: *mut yaml_emitter_t,
-    handler: Option<yaml_write_handler_t>,
+    handler: yaml_write_handler_t,
     data: *mut libc::c_void,
 ) {
     __assert!(!emitter.is_null());
     __assert!(((*emitter).write_handler).is_none());
-    __assert!(handler.is_some());
     let fresh161 = addr_of_mut!((*emitter).write_handler);
-    *fresh161 = handler;
+    *fresh161 = Some(handler);
     let fresh162 = addr_of_mut!((*emitter).write_handler_data);
     *fresh162 = data;
 }
