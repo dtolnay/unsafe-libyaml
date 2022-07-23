@@ -23,99 +23,83 @@ use crate::{
 use core::ptr::{self, addr_of_mut};
 
 unsafe fn FLUSH(emitter: *mut yaml_emitter_t) -> Success {
-    if (*emitter).buffer.pointer.wrapping_offset(5_isize) < (*emitter).buffer.end
-        || yaml_emitter_flush(emitter).ok
-    {
+    if (*emitter).buffer.pointer.wrapping_offset(5_isize) < (*emitter).buffer.end {
         OK
     } else {
-        FAIL
+        yaml_emitter_flush(emitter)
     }
 }
 
 unsafe fn PUT(emitter: *mut yaml_emitter_t, value: u8) -> Success {
-    if FLUSH(emitter).ok && {
-        let fresh40 = addr_of_mut!((*emitter).buffer.pointer);
-        let fresh41 = *fresh40;
-        *fresh40 = (*fresh40).wrapping_offset(1);
-        *fresh41 = value;
-        let fresh42 = addr_of_mut!((*emitter).column);
-        *fresh42 += 1;
-        true
-    } {
-        OK
-    } else {
-        FAIL
+    if FLUSH(emitter).fail {
+        return FAIL;
     }
+    let fresh40 = addr_of_mut!((*emitter).buffer.pointer);
+    let fresh41 = *fresh40;
+    *fresh40 = (*fresh40).wrapping_offset(1);
+    *fresh41 = value;
+    let fresh42 = addr_of_mut!((*emitter).column);
+    *fresh42 += 1;
+    OK
 }
 
 unsafe fn PUT_BREAK(emitter: *mut yaml_emitter_t) -> Success {
-    if FLUSH(emitter).ok && {
-        if (*emitter).line_break as libc::c_uint == YAML_CR_BREAK as libc::c_int as libc::c_uint {
-            let fresh62 = addr_of_mut!((*emitter).buffer.pointer);
-            let fresh63 = *fresh62;
-            *fresh62 = (*fresh62).wrapping_offset(1);
-            *fresh63 = b'\r';
-        } else if (*emitter).line_break as libc::c_uint
-            == YAML_LN_BREAK as libc::c_int as libc::c_uint
-        {
-            let fresh64 = addr_of_mut!((*emitter).buffer.pointer);
-            let fresh65 = *fresh64;
-            *fresh64 = (*fresh64).wrapping_offset(1);
-            *fresh65 = b'\n';
-        } else if (*emitter).line_break as libc::c_uint
-            == YAML_CRLN_BREAK as libc::c_int as libc::c_uint
-        {
-            let fresh66 = addr_of_mut!((*emitter).buffer.pointer);
-            let fresh67 = *fresh66;
-            *fresh66 = (*fresh66).wrapping_offset(1);
-            *fresh67 = b'\r';
-            let fresh68 = addr_of_mut!((*emitter).buffer.pointer);
-            let fresh69 = *fresh68;
-            *fresh68 = (*fresh68).wrapping_offset(1);
-            *fresh69 = b'\n';
-        };
-        (*emitter).column = 0_i32;
-        let fresh70 = addr_of_mut!((*emitter).line);
-        *fresh70 += 1;
-        true
-    } {
-        OK
-    } else {
-        FAIL
+    if FLUSH(emitter).fail {
+        return FAIL;
     }
+    if (*emitter).line_break as libc::c_uint == YAML_CR_BREAK as libc::c_int as libc::c_uint {
+        let fresh62 = addr_of_mut!((*emitter).buffer.pointer);
+        let fresh63 = *fresh62;
+        *fresh62 = (*fresh62).wrapping_offset(1);
+        *fresh63 = b'\r';
+    } else if (*emitter).line_break as libc::c_uint == YAML_LN_BREAK as libc::c_int as libc::c_uint
+    {
+        let fresh64 = addr_of_mut!((*emitter).buffer.pointer);
+        let fresh65 = *fresh64;
+        *fresh64 = (*fresh64).wrapping_offset(1);
+        *fresh65 = b'\n';
+    } else if (*emitter).line_break as libc::c_uint
+        == YAML_CRLN_BREAK as libc::c_int as libc::c_uint
+    {
+        let fresh66 = addr_of_mut!((*emitter).buffer.pointer);
+        let fresh67 = *fresh66;
+        *fresh66 = (*fresh66).wrapping_offset(1);
+        *fresh67 = b'\r';
+        let fresh68 = addr_of_mut!((*emitter).buffer.pointer);
+        let fresh69 = *fresh68;
+        *fresh68 = (*fresh68).wrapping_offset(1);
+        *fresh69 = b'\n';
+    };
+    (*emitter).column = 0_i32;
+    let fresh70 = addr_of_mut!((*emitter).line);
+    *fresh70 += 1;
+    OK
 }
 
 unsafe fn WRITE(emitter: *mut yaml_emitter_t, string: *mut yaml_string_t) -> Success {
-    if FLUSH(emitter).ok && {
-        COPY!((*emitter).buffer, *string);
-        let fresh107 = addr_of_mut!((*emitter).column);
-        *fresh107 += 1;
-        true
-    } {
-        OK
-    } else {
-        FAIL
+    if FLUSH(emitter).fail {
+        return FAIL;
     }
+    COPY!((*emitter).buffer, *string);
+    let fresh107 = addr_of_mut!((*emitter).column);
+    *fresh107 += 1;
+    OK
 }
 
 unsafe fn WRITE_BREAK(emitter: *mut yaml_emitter_t, string: *mut yaml_string_t) -> Success {
-    if FLUSH(emitter).ok
-        && if CHECK!(*string, b'\n') {
-            let _ = PUT_BREAK(emitter);
-            (*string).pointer = (*string).pointer.wrapping_offset(1);
-            1_i32
-        } else {
-            COPY!((*emitter).buffer, *string);
-            (*emitter).column = 0_i32;
-            let fresh300 = addr_of_mut!((*emitter).line);
-            *fresh300 += 1;
-            1_i32
-        } != 0
-    {
-        OK
-    } else {
-        FAIL
+    if FLUSH(emitter).fail {
+        return FAIL;
     }
+    if CHECK!(*string, b'\n') {
+        let _ = PUT_BREAK(emitter);
+        (*string).pointer = (*string).pointer.wrapping_offset(1);
+    } else {
+        COPY!((*emitter).buffer, *string);
+        (*emitter).column = 0_i32;
+        let fresh300 = addr_of_mut!((*emitter).line);
+        *fresh300 += 1;
+    }
+    OK
 }
 
 macro_rules! WRITE {
