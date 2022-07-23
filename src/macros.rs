@@ -424,7 +424,14 @@ macro_rules! STACK_EMPTY {
 }
 
 macro_rules! STACK_LIMIT {
-    () => {}; // TODO
+    ($context:expr, $stack:expr) => {
+        if $stack.top.c_offset_from($stack.start) < libc::c_int::MAX as isize - 1 {
+            1_i32
+        } else {
+            (*$context).error = YAML_MEMORY_ERROR;
+            0_i32
+        }
+    };
 }
 
 macro_rules! PUSH {

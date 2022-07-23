@@ -275,17 +275,7 @@ unsafe fn yaml_parser_load_node_add(
     let current_block_17: u64;
     match (*parent).type_ as libc::c_uint {
         2 => {
-            if if (((*parent).data.sequence.items.top)
-                .c_offset_from((*parent).data.sequence.items.start)
-                as libc::c_long)
-                < (2147483647_i32 - 1_i32) as libc::c_long
-            {
-                1_i32
-            } else {
-                (*parser).error = YAML_MEMORY_ERROR;
-                0_i32
-            } == 0
-            {
+            if STACK_LIMIT!(parser, (*parent).data.sequence.items) == 0 {
                 return 0_i32;
             }
             if PUSH!(parser, (*parent).data.sequence.items, index) == 0 {
@@ -312,17 +302,7 @@ unsafe fn yaml_parser_load_node_add(
                 _ => {
                     (*pair).key = index;
                     (*pair).value = 0_i32;
-                    if if (((*parent).data.mapping.pairs.top)
-                        .c_offset_from((*parent).data.mapping.pairs.start)
-                        as libc::c_long)
-                        < (2147483647_i32 - 1_i32) as libc::c_long
-                    {
-                        1_i32
-                    } else {
-                        (*parser).error = YAML_MEMORY_ERROR;
-                        0_i32
-                    } == 0
-                    {
+                    if STACK_LIMIT!(parser, (*parent).data.mapping.pairs) == 0 {
                         return 0_i32;
                     }
                     if PUSH!(parser, (*parent).data.mapping.pairs, *pair) == 0 {
@@ -375,16 +355,7 @@ unsafe fn yaml_parser_load_scalar(
     let node = node.as_mut_ptr();
     let index: libc::c_int;
     let mut tag: *mut yaml_char_t = (*event).data.scalar.tag;
-    if !(if (((*(*parser).document).nodes.top).c_offset_from((*(*parser).document).nodes.start)
-        as libc::c_long)
-        < (2147483647_i32 - 1_i32) as libc::c_long
-    {
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0)
-    {
+    if !(STACK_LIMIT!(parser, (*(*parser).document).nodes) == 0) {
         if tag.is_null()
             || strcmp(
                 tag as *mut libc::c_char,
@@ -457,16 +428,7 @@ unsafe fn yaml_parser_load_sequence(
     };
     let index: libc::c_int;
     let mut tag: *mut yaml_char_t = (*event).data.sequence_start.tag;
-    if !(if (((*(*parser).document).nodes.top).c_offset_from((*(*parser).document).nodes.start)
-        as libc::c_long)
-        < (2147483647_i32 - 1_i32) as libc::c_long
-    {
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0)
-    {
+    if !(STACK_LIMIT!(parser, (*(*parser).document).nodes) == 0) {
         if tag.is_null()
             || strcmp(
                 tag as *mut libc::c_char,
@@ -517,15 +479,7 @@ unsafe fn yaml_parser_load_sequence(
                         if yaml_parser_load_node_add(parser, ctx, index) == 0 {
                             return 0_i32;
                         }
-                        if if (((*ctx).top).c_offset_from((*ctx).start) as libc::c_long)
-                            < (2147483647_i32 - 1_i32) as libc::c_long
-                        {
-                            1_i32
-                        } else {
-                            (*parser).error = YAML_MEMORY_ERROR;
-                            0_i32
-                        } == 0
-                        {
+                        if STACK_LIMIT!(parser, *ctx) == 0 {
                             return 0_i32;
                         }
                         if PUSH!(parser, *ctx, index) == 0 {
@@ -580,16 +534,7 @@ unsafe fn yaml_parser_load_mapping(
     };
     let index: libc::c_int;
     let mut tag: *mut yaml_char_t = (*event).data.mapping_start.tag;
-    if !(if (((*(*parser).document).nodes.top).c_offset_from((*(*parser).document).nodes.start)
-        as libc::c_long)
-        < (2147483647_i32 - 1_i32) as libc::c_long
-    {
-        1_i32
-    } else {
-        (*parser).error = YAML_MEMORY_ERROR;
-        0_i32
-    } == 0)
-    {
+    if !(STACK_LIMIT!(parser, (*(*parser).document).nodes) == 0) {
         if tag.is_null()
             || strcmp(
                 tag as *mut libc::c_char,
@@ -640,15 +585,7 @@ unsafe fn yaml_parser_load_mapping(
                         if yaml_parser_load_node_add(parser, ctx, index) == 0 {
                             return 0_i32;
                         }
-                        if if (((*ctx).top).c_offset_from((*ctx).start) as libc::c_long)
-                            < (2147483647_i32 - 1_i32) as libc::c_long
-                        {
-                            1_i32
-                        } else {
-                            (*parser).error = YAML_MEMORY_ERROR;
-                            0_i32
-                        } == 0
-                        {
+                        if STACK_LIMIT!(parser, *ctx) == 0 {
                             return 0_i32;
                         }
                         if PUSH!(parser, *ctx, index) == 0 {
