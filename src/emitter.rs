@@ -1526,20 +1526,7 @@ unsafe fn yaml_emitter_analyze_scalar(
         flow_indicators = 1_i32;
     }
     preceded_by_whitespace = 1_i32;
-    followed_by_whitespace = IS_BLANKZ_AT!(
-        string,
-        if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-            1_i32
-        } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-            2_i32
-        } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-            3_i32
-        } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-            4_i32
-        } else {
-            0_i32
-        }
-    ) as libc::c_int;
+    followed_by_whitespace = IS_BLANKZ_AT!(string, WIDTH!(string)) as libc::c_int;
     while string.pointer != string.end {
         if string.start == string.pointer {
             if *string.pointer as libc::c_int == '#' as i32 as yaml_char_t as libc::c_int
@@ -1609,20 +1596,7 @@ unsafe fn yaml_emitter_analyze_scalar(
             if string.start == string.pointer {
                 leading_space = 1_i32;
             }
-            if string.pointer.wrapping_offset(
-                (if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                    1_i32
-                } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                    2_i32
-                } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                    3_i32
-                } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                    4_i32
-                } else {
-                    0_i32
-                }) as isize,
-            ) == string.end
-            {
+            if string.pointer.wrapping_offset(WIDTH!(string) as isize) == string.end {
                 trailing_space = 1_i32;
             }
             if previous_break != 0 {
@@ -1634,20 +1608,7 @@ unsafe fn yaml_emitter_analyze_scalar(
             if string.start == string.pointer {
                 leading_break = 1_i32;
             }
-            if string.pointer.wrapping_offset(
-                (if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                    1_i32
-                } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                    2_i32
-                } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                    3_i32
-                } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                    4_i32
-                } else {
-                    0_i32
-                }) as isize,
-            ) == string.end
-            {
+            if string.pointer.wrapping_offset(WIDTH!(string) as isize) == string.end {
                 trailing_break = 1_i32;
             }
             if previous_space != 0 {
@@ -1662,20 +1623,7 @@ unsafe fn yaml_emitter_analyze_scalar(
         preceded_by_whitespace = IS_BLANKZ!(string) as libc::c_int;
         MOVE!(string);
         if string.pointer != string.end {
-            followed_by_whitespace = IS_BLANKZ_AT!(
-                string,
-                if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                    1_i32
-                } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                    2_i32
-                } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                    3_i32
-                } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                    4_i32
-                } else {
-                    0_i32
-                }
-            ) as libc::c_int;
+            followed_by_whitespace = IS_BLANKZ_AT!(string, WIDTH!(string)) as libc::c_int;
         }
     }
     (*emitter).scalar_data.multiline = line_breaks;
@@ -1942,17 +1890,7 @@ unsafe fn yaml_emitter_write_tag_content(
                 return 0_i32;
             }
         } else {
-            let mut width: libc::c_int = if *string.pointer as libc::c_int & 0x80_i32 == 0_i32 {
-                1_i32
-            } else if *string.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                2_i32
-            } else if *string.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                3_i32
-            } else if *string.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                4_i32
-            } else {
-                0_i32
-            };
+            let mut width = WIDTH!(string);
             let mut value_0: libc::c_uint;
             loop {
                 let fresh207 = width;

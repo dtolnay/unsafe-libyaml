@@ -373,7 +373,9 @@ macro_rules! WIDTH_AT {
 }
 
 macro_rules! WIDTH {
-    () => {}; // TODO
+    ($string:expr) => {
+        WIDTH_AT!($string, 0)
+    };
 }
 
 macro_rules! MOVE {

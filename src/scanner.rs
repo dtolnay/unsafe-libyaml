@@ -39,19 +39,7 @@ macro_rules! SKIP {
         let unread = addr_of_mut!((*$parser).unread);
         *unread = (*unread).wrapping_sub(1);
         let pointer = addr_of_mut!((*$parser).buffer.pointer);
-        *pointer = (*pointer).wrapping_offset(
-            (if *((*$parser).buffer.pointer) as libc::c_int & 0x80_i32 == 0_i32 {
-                1_i32
-            } else if *((*$parser).buffer.pointer) as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                2_i32
-            } else if *((*$parser).buffer.pointer) as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                3_i32
-            } else if *((*$parser).buffer.pointer) as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                4_i32
-            } else {
-                0_i32
-            }) as isize,
-        );
+        *pointer = (*pointer).wrapping_offset(WIDTH!((*$parser).buffer) as isize);
     };
 }
 
@@ -76,19 +64,7 @@ macro_rules! SKIP_LINE {
             let unread = addr_of_mut!((*$parser).unread);
             *unread = (*unread).wrapping_sub(1);
             let pointer = addr_of_mut!((*$parser).buffer.pointer);
-            *pointer = (*pointer).wrapping_offset(
-                (if *((*$parser).buffer.pointer) as libc::c_int & 0x80_i32 == 0_i32 {
-                    1_i32
-                } else if *((*$parser).buffer.pointer) as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                    2_i32
-                } else if *((*$parser).buffer.pointer) as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                    3_i32
-                } else if *((*$parser).buffer.pointer) as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                    4_i32
-                } else {
-                    0_i32
-                }) as isize,
-            );
+            *pointer = (*pointer).wrapping_offset(WIDTH!((*$parser).buffer) as isize);
         };
     };
 }
