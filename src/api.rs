@@ -1,4 +1,5 @@
 use crate::externs::{free, malloc, memcpy, memmove, memset, realloc, strdup, strlen};
+use crate::success::{Success, FAIL, OK};
 use crate::yaml::{size_t, yaml_char_t};
 use crate::{
     libc, yaml_break_t, yaml_document_t, yaml_emitter_state_t, yaml_emitter_t, yaml_encoding_t,
@@ -72,13 +73,13 @@ pub(crate) unsafe fn yaml_string_extend(
     start: *mut *mut yaml_char_t,
     pointer: *mut *mut yaml_char_t,
     end: *mut *mut yaml_char_t,
-) -> libc::c_int {
+) -> Success {
     let new_start: *mut yaml_char_t = yaml_realloc(
         *start as *mut libc::c_void,
         ((*end).c_offset_from(*start) as libc::c_long * 2_i64) as size_t,
     ) as *mut yaml_char_t;
     if new_start.is_null() {
-        return 0_i32;
+        return FAIL;
     }
     memset(
         new_start.wrapping_offset((*end).c_offset_from(*start) as libc::c_long as isize)
@@ -90,7 +91,7 @@ pub(crate) unsafe fn yaml_string_extend(
     *end =
         new_start.wrapping_offset(((*end).c_offset_from(*start) as libc::c_long * 2_i64) as isize);
     *start = new_start;
-    1_i32
+    OK
 }
 
 pub(crate) unsafe fn yaml_string_join(
@@ -100,15 +101,15 @@ pub(crate) unsafe fn yaml_string_join(
     b_start: *mut *mut yaml_char_t,
     b_pointer: *mut *mut yaml_char_t,
     _b_end: *mut *mut yaml_char_t,
-) -> libc::c_int {
+) -> Success {
     if *b_start == *b_pointer {
-        return 1_i32;
+        return OK;
     }
     while (*a_end).c_offset_from(*a_pointer) as libc::c_long
         <= (*b_pointer).c_offset_from(*b_start) as libc::c_long
     {
         if yaml_string_extend(a_start, a_pointer, a_end) == 0 {
-            return 0_i32;
+            return FAIL;
         }
     }
     memcpy(
@@ -118,18 +119,18 @@ pub(crate) unsafe fn yaml_string_join(
     );
     *a_pointer =
         (*a_pointer).wrapping_offset((*b_pointer).c_offset_from(*b_start) as libc::c_long as isize);
-    1_i32
+    OK
 }
 
 pub(crate) unsafe fn yaml_stack_extend(
     start: *mut *mut libc::c_void,
     top: *mut *mut libc::c_void,
     end: *mut *mut libc::c_void,
-) -> libc::c_int {
+) -> Success {
     if (*end as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
         >= (2147483647_i32 / 2_i32) as libc::c_long
     {
-        return 0_i32;
+        return FAIL;
     }
     let new_start: *mut libc::c_void = yaml_realloc(
         *start,
@@ -137,7 +138,7 @@ pub(crate) unsafe fn yaml_stack_extend(
             * 2_i64) as size_t,
     );
     if new_start.is_null() {
-        return 0_i32;
+        return FAIL;
     }
     *top = (new_start as *mut libc::c_char).wrapping_offset(
         (*top as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
@@ -148,7 +149,7 @@ pub(crate) unsafe fn yaml_stack_extend(
             * 2_i64) as isize,
     ) as *mut libc::c_void;
     *start = new_start;
-    1_i32
+    OK
 }
 
 pub(crate) unsafe fn yaml_queue_extend(
@@ -156,7 +157,7 @@ pub(crate) unsafe fn yaml_queue_extend(
     head: *mut *mut libc::c_void,
     tail: *mut *mut libc::c_void,
     end: *mut *mut libc::c_void,
-) -> libc::c_int {
+) -> Success {
     if *start == *head && *tail == *end {
         let new_start: *mut libc::c_void = yaml_realloc(
             *start,
@@ -164,7 +165,7 @@ pub(crate) unsafe fn yaml_queue_extend(
                 * 2_i64) as size_t,
         );
         if new_start.is_null() {
-            return 0_i32;
+            return FAIL;
         }
         *head = (new_start as *mut libc::c_char).wrapping_offset(
             (*head as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
@@ -195,17 +196,15 @@ pub(crate) unsafe fn yaml_queue_extend(
         ) as *mut libc::c_void;
         *head = *start;
     }
-    1_i32
+    OK
 }
 
 /// Initialize a parser.
 ///
 /// This function creates a new parser object. An application is responsible
 /// for destroying the object using the yaml_parser_delete() function.
-///
-/// Returns 1 if the function succeeded, 0 on error.
 #[must_use]
-pub unsafe fn yaml_parser_initialize(parser: *mut yaml_parser_t) -> libc::c_int {
+pub unsafe fn yaml_parser_initialize(parser: *mut yaml_parser_t) -> Success {
     __assert!(!parser.is_null());
     memset(
         parser as *mut libc::c_void,
@@ -225,7 +224,7 @@ pub unsafe fn yaml_parser_initialize(parser: *mut yaml_parser_t) -> libc::c_int 
                                     yaml_tag_directive_t
                                 ) == 0)
                                 {
-                                    return 1_i32;
+                                    return OK;
                                 }
                             }
                         }
@@ -242,7 +241,7 @@ pub unsafe fn yaml_parser_initialize(parser: *mut yaml_parser_t) -> libc::c_int 
     STACK_DEL!((*parser).states);
     STACK_DEL!((*parser).marks);
     STACK_DEL!((*parser).tag_directives);
-    0_i32
+    FAIL
 }
 
 /// Destroy a parser.
@@ -354,10 +353,8 @@ pub unsafe fn yaml_parser_set_encoding(mut parser: *mut yaml_parser_t, encoding:
 ///
 /// This function creates a new emitter object. An application is responsible
 /// for destroying the object using the yaml_emitter_delete() function.
-///
-/// Returns 1 if the function succeeded, 0 on error.
 #[must_use]
-pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> libc::c_int {
+pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> Success {
     __assert!(!emitter.is_null());
     memset(
         emitter as *mut libc::c_void,
@@ -372,7 +369,7 @@ pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> libc:
                         if !(STACK_INIT!(emitter, (*emitter).tag_directives, yaml_tag_directive_t)
                             == 0)
                         {
-                            return 1_i32;
+                            return OK;
                         }
                     }
                 }
@@ -385,7 +382,7 @@ pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> libc:
     QUEUE_DEL!((*emitter).events);
     STACK_DEL!((*emitter).indents);
     STACK_DEL!((*emitter).tag_directives);
-    0_i32
+    FAIL
 }
 
 /// Destroy an emitter.
@@ -562,7 +559,7 @@ pub unsafe fn yaml_token_delete(token: *mut yaml_token_t) {
     );
 }
 
-unsafe fn yaml_check_utf8(start: *const yaml_char_t, length: size_t) -> libc::c_int {
+unsafe fn yaml_check_utf8(start: *const yaml_char_t, length: size_t) -> Success {
     let end: *const yaml_char_t = start.wrapping_offset(length as isize);
     let mut pointer: *const yaml_char_t = start;
     while pointer < end {
@@ -593,16 +590,16 @@ unsafe fn yaml_check_utf8(start: *const yaml_char_t, length: size_t) -> libc::c_
             0_i32
         }) as libc::c_uint;
         if width == 0 {
-            return 0_i32;
+            return FAIL;
         }
         if pointer.wrapping_offset(width as isize) > end {
-            return 0_i32;
+            return FAIL;
         }
         k = 1_u64;
         while k < width as libc::c_ulong {
             octet = *pointer.wrapping_offset(k as isize);
             if octet as libc::c_int & 0xc0_i32 != 0x80_i32 {
-                return 0_i32;
+                return FAIL;
             }
             value =
                 (value << 6_i32).wrapping_add((octet as libc::c_int & 0x3f_i32) as libc::c_uint);
@@ -613,21 +610,19 @@ unsafe fn yaml_check_utf8(start: *const yaml_char_t, length: size_t) -> libc::c_
             || width == 3_u32 && value >= 0x800_i32 as libc::c_uint
             || width == 4_u32 && value >= 0x10000_i32 as libc::c_uint)
         {
-            return 0_i32;
+            return FAIL;
         }
         pointer = pointer.wrapping_offset(width as isize);
     }
-    1_i32
+    OK
 }
 
 /// Create the STREAM-START event.
-///
-/// Returns 1 if the function succeeded, 0 on error.
 #[must_use]
 pub unsafe fn yaml_stream_start_event_initialize(
     mut event: *mut yaml_event_t,
     encoding: yaml_encoding_t,
-) -> libc::c_int {
+) -> Success {
     let mark = yaml_mark_t {
         index: 0_u64,
         line: 0_u64,
@@ -643,14 +638,12 @@ pub unsafe fn yaml_stream_start_event_initialize(
     (*event).start_mark = mark;
     (*event).end_mark = mark;
     (*event).data.stream_start.encoding = encoding;
-    1_i32
+    OK
 }
 
 /// Create the STREAM-END event.
-///
-/// Returns 1 if the function succeeded, 0 on error.
 #[must_use]
-pub unsafe fn yaml_stream_end_event_initialize(mut event: *mut yaml_event_t) -> libc::c_int {
+pub unsafe fn yaml_stream_end_event_initialize(mut event: *mut yaml_event_t) -> Success {
     let mark = yaml_mark_t {
         index: 0_u64,
         line: 0_u64,
@@ -665,15 +658,13 @@ pub unsafe fn yaml_stream_end_event_initialize(mut event: *mut yaml_event_t) -> 
     (*event).type_ = YAML_STREAM_END_EVENT;
     (*event).start_mark = mark;
     (*event).end_mark = mark;
-    1_i32
+    OK
 }
 
 /// Create the DOCUMENT-START event.
 ///
 /// The `implicit` argument is considered as a stylistic parameter and may be
 /// ignored by the emitter.
-///
-/// Returns 1 if the function succeeded, 0 on error.
 #[must_use]
 pub unsafe fn yaml_document_start_event_initialize(
     mut event: *mut yaml_event_t,
@@ -681,7 +672,7 @@ pub unsafe fn yaml_document_start_event_initialize(
     tag_directives_start: *mut yaml_tag_directive_t,
     tag_directives_end: *mut yaml_tag_directive_t,
     implicit: libc::c_int,
-) -> libc::c_int {
+) -> Success {
     let mut current_block: u64;
     let mut context = api_context {
         error: YAML_NO_ERROR,
@@ -797,7 +788,7 @@ pub unsafe fn yaml_document_start_event_initialize(
                     let fresh166 = addr_of_mut!((*event).data.document_start.tag_directives.end);
                     *fresh166 = tag_directives_copy.top;
                     (*event).data.document_start.implicit = implicit;
-                    return 1_i32;
+                    return OK;
                 }
             }
         }
@@ -812,20 +803,18 @@ pub unsafe fn yaml_document_start_event_initialize(
     STACK_DEL!(tag_directives_copy);
     yaml_free(value.handle as *mut libc::c_void);
     yaml_free(value.prefix as *mut libc::c_void);
-    0_i32
+    FAIL
 }
 
 /// Create the DOCUMENT-END event.
 ///
 /// The `implicit` argument is considered as a stylistic parameter and may be
 /// ignored by the emitter.
-///
-/// Returns 1 if the function succeeded, 0 on error.
 #[must_use]
 pub unsafe fn yaml_document_end_event_initialize(
     mut event: *mut yaml_event_t,
     implicit: libc::c_int,
-) -> libc::c_int {
+) -> Success {
     let mark = yaml_mark_t {
         index: 0_u64,
         line: 0_u64,
@@ -841,17 +830,15 @@ pub unsafe fn yaml_document_end_event_initialize(
     (*event).start_mark = mark;
     (*event).end_mark = mark;
     (*event).data.document_end.implicit = implicit;
-    1_i32
+    OK
 }
 
 /// Create an ALIAS event.
-///
-/// Returns 1 if the function succeeded, 0 on error.
 #[must_use]
 pub unsafe fn yaml_alias_event_initialize(
     mut event: *mut yaml_event_t,
     anchor: *const yaml_char_t,
-) -> libc::c_int {
+) -> Success {
     let mark = yaml_mark_t {
         index: 0_u64,
         line: 0_u64,
@@ -860,11 +847,11 @@ pub unsafe fn yaml_alias_event_initialize(
     __assert!(!event.is_null());
     __assert!(!anchor.is_null());
     if yaml_check_utf8(anchor, strlen(anchor as *mut libc::c_char)) == 0 {
-        return 0_i32;
+        return FAIL;
     }
     let anchor_copy: *mut yaml_char_t = yaml_strdup(anchor);
     if anchor_copy.is_null() {
-        return 0_i32;
+        return FAIL;
     }
     memset(
         event as *mut libc::c_void,
@@ -876,7 +863,7 @@ pub unsafe fn yaml_alias_event_initialize(
     (*event).end_mark = mark;
     let fresh167 = addr_of_mut!((*event).data.alias.anchor);
     *fresh167 = anchor_copy;
-    1_i32
+    OK
 }
 
 /// Create a SCALAR event.
@@ -886,8 +873,6 @@ pub unsafe fn yaml_alias_event_initialize(
 /// Either the `tag` attribute or one of the `plain_implicit` and
 /// `quoted_implicit` flags must be set.
 ///
-/// Returns 1 if the function succeeded, 0 on error.
-#[must_use]
 pub unsafe fn yaml_scalar_event_initialize(
     mut event: *mut yaml_event_t,
     anchor: *const yaml_char_t,
@@ -897,7 +882,7 @@ pub unsafe fn yaml_scalar_event_initialize(
     plain_implicit: libc::c_int,
     quoted_implicit: libc::c_int,
     style: yaml_scalar_style_t,
-) -> libc::c_int {
+) -> Success {
     let mut current_block: u64;
     let mark = yaml_mark_t {
         index: 0_u64,
@@ -972,7 +957,7 @@ pub unsafe fn yaml_scalar_event_initialize(
                             (*event).data.scalar.plain_implicit = plain_implicit;
                             (*event).data.scalar.quoted_implicit = quoted_implicit;
                             (*event).data.scalar.style = style;
-                            return 1_i32;
+                            return OK;
                         }
                     }
                 }
@@ -983,7 +968,7 @@ pub unsafe fn yaml_scalar_event_initialize(
     yaml_free(anchor_copy as *mut libc::c_void);
     yaml_free(tag_copy as *mut libc::c_void);
     yaml_free(value_copy as *mut libc::c_void);
-    0_i32
+    FAIL
 }
 
 /// Create a SEQUENCE-START event.
@@ -991,8 +976,6 @@ pub unsafe fn yaml_scalar_event_initialize(
 /// The `style` argument may be ignored by the emitter.
 ///
 /// Either the `tag` attribute or the `implicit` flag must be set.
-///
-/// Returns 1 if the function succeeded, 0 on error.
 #[must_use]
 pub unsafe fn yaml_sequence_start_event_initialize(
     mut event: *mut yaml_event_t,
@@ -1000,7 +983,7 @@ pub unsafe fn yaml_sequence_start_event_initialize(
     tag: *const yaml_char_t,
     implicit: libc::c_int,
     style: yaml_sequence_style_t,
-) -> libc::c_int {
+) -> Success {
     let mut current_block: u64;
     let mark = yaml_mark_t {
         index: 0_u64,
@@ -1057,7 +1040,7 @@ pub unsafe fn yaml_sequence_start_event_initialize(
                     *fresh172 = tag_copy;
                     (*event).data.sequence_start.implicit = implicit;
                     (*event).data.sequence_start.style = style;
-                    return 1_i32;
+                    return OK;
                 }
             }
         }
@@ -1065,14 +1048,12 @@ pub unsafe fn yaml_sequence_start_event_initialize(
     }
     yaml_free(anchor_copy as *mut libc::c_void);
     yaml_free(tag_copy as *mut libc::c_void);
-    0_i32
+    FAIL
 }
 
 /// Create a SEQUENCE-END event.
-///
-/// Returns 1 if the function succeeded, 0 on error.
 #[must_use]
-pub unsafe fn yaml_sequence_end_event_initialize(mut event: *mut yaml_event_t) -> libc::c_int {
+pub unsafe fn yaml_sequence_end_event_initialize(mut event: *mut yaml_event_t) -> Success {
     let mark = yaml_mark_t {
         index: 0_u64,
         line: 0_u64,
@@ -1087,7 +1068,7 @@ pub unsafe fn yaml_sequence_end_event_initialize(mut event: *mut yaml_event_t) -
     (*event).type_ = YAML_SEQUENCE_END_EVENT;
     (*event).start_mark = mark;
     (*event).end_mark = mark;
-    1_i32
+    OK
 }
 
 /// Create a MAPPING-START event.
@@ -1095,8 +1076,6 @@ pub unsafe fn yaml_sequence_end_event_initialize(mut event: *mut yaml_event_t) -
 /// The `style` argument may be ignored by the emitter.
 ///
 /// Either the `tag` attribute or the `implicit` flag must be set.
-///
-/// Returns 1 if the function succeeded, 0 on error.
 #[must_use]
 pub unsafe fn yaml_mapping_start_event_initialize(
     mut event: *mut yaml_event_t,
@@ -1104,7 +1083,7 @@ pub unsafe fn yaml_mapping_start_event_initialize(
     tag: *const yaml_char_t,
     implicit: libc::c_int,
     style: yaml_mapping_style_t,
-) -> libc::c_int {
+) -> Success {
     let mut current_block: u64;
     let mark = yaml_mark_t {
         index: 0_u64,
@@ -1161,7 +1140,7 @@ pub unsafe fn yaml_mapping_start_event_initialize(
                     *fresh174 = tag_copy;
                     (*event).data.mapping_start.implicit = implicit;
                     (*event).data.mapping_start.style = style;
-                    return 1_i32;
+                    return OK;
                 }
             }
         }
@@ -1169,14 +1148,12 @@ pub unsafe fn yaml_mapping_start_event_initialize(
     }
     yaml_free(anchor_copy as *mut libc::c_void);
     yaml_free(tag_copy as *mut libc::c_void);
-    0_i32
+    FAIL
 }
 
 /// Create a MAPPING-END event.
-///
-/// Returns 1 if the function succeeded, 0 on error.
 #[must_use]
-pub unsafe fn yaml_mapping_end_event_initialize(mut event: *mut yaml_event_t) -> libc::c_int {
+pub unsafe fn yaml_mapping_end_event_initialize(mut event: *mut yaml_event_t) -> Success {
     let mark = yaml_mark_t {
         index: 0_u64,
         line: 0_u64,
@@ -1191,7 +1168,7 @@ pub unsafe fn yaml_mapping_end_event_initialize(mut event: *mut yaml_event_t) ->
     (*event).type_ = YAML_MAPPING_END_EVENT;
     (*event).start_mark = mark;
     (*event).end_mark = mark;
-    1_i32
+    OK
 }
 
 /// Free any memory allocated for an event object.
@@ -1235,8 +1212,6 @@ pub unsafe fn yaml_event_delete(event: *mut yaml_event_t) {
 }
 
 /// Create a YAML document.
-///
-/// Returns 1 if the function succeeded, 0 on error.
 #[must_use]
 pub unsafe fn yaml_document_initialize(
     mut document: *mut yaml_document_t,
@@ -1245,7 +1220,7 @@ pub unsafe fn yaml_document_initialize(
     tag_directives_end: *mut yaml_tag_directive_t,
     start_implicit: libc::c_int,
     end_implicit: libc::c_int,
-) -> libc::c_int {
+) -> Success {
     let mut current_block: u64;
     let mut context = api_context {
         error: YAML_NO_ERROR,
@@ -1380,7 +1355,7 @@ pub unsafe fn yaml_document_initialize(
                         (*document).end_implicit = end_implicit;
                         (*document).start_mark = mark;
                         (*document).end_mark = mark;
-                        return 1_i32;
+                        return OK;
                     }
                 }
             }
@@ -1396,7 +1371,7 @@ pub unsafe fn yaml_document_initialize(
     STACK_DEL!(tag_directives_copy);
     yaml_free(value.handle as *mut libc::c_void);
     yaml_free(value.prefix as *mut libc::c_void);
-    0_i32
+    FAIL
 }
 
 /// Delete a YAML document and all its nodes.
@@ -1677,14 +1652,12 @@ pub unsafe fn yaml_document_add_mapping(
 }
 
 /// Add an item to a SEQUENCE node.
-///
-/// Returns 1 if the function succeeded, 0 on error.
 #[must_use]
 pub unsafe fn yaml_document_append_sequence_item(
     document: *mut yaml_document_t,
     sequence: libc::c_int,
     item: libc::c_int,
-) -> libc::c_int {
+) -> Success {
     let mut context = api_context {
         error: YAML_NO_ERROR,
     };
@@ -1712,21 +1685,19 @@ pub unsafe fn yaml_document_append_sequence_item(
         item
     ) == 0
     {
-        return 0_i32;
+        return FAIL;
     }
-    1_i32
+    OK
 }
 
 /// Add a pair of a key and a value to a MAPPING node.
-///
-/// Returns 1 if the function succeeded, 0 on error.
 #[must_use]
 pub unsafe fn yaml_document_append_mapping_pair(
     document: *mut yaml_document_t,
     mapping: libc::c_int,
     key: libc::c_int,
     value: libc::c_int,
-) -> libc::c_int {
+) -> Success {
     let mut context = api_context {
         error: YAML_NO_ERROR,
     };
@@ -1758,7 +1729,7 @@ pub unsafe fn yaml_document_append_mapping_pair(
         pair
     ) == 0
     {
-        return 0_i32;
+        return FAIL;
     }
-    1_i32
+    OK
 }

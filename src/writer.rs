@@ -1,3 +1,4 @@
+use crate::success::{Success, FAIL, OK};
 use crate::yaml::size_t;
 use crate::{
     libc, yaml_emitter_t, PointerExt, YAML_UTF16LE_ENCODING, YAML_UTF8_ENCODING, YAML_WRITER_ERROR,
@@ -7,18 +8,16 @@ use core::ptr::addr_of_mut;
 unsafe fn yaml_emitter_set_writer_error(
     mut emitter: *mut yaml_emitter_t,
     problem: *const libc::c_char,
-) -> libc::c_int {
+) -> Success {
     (*emitter).error = YAML_WRITER_ERROR;
     let fresh0 = addr_of_mut!((*emitter).problem);
     *fresh0 = problem;
-    0_i32
+    FAIL
 }
 
 /// Flush the accumulated characters to the output.
-///
-/// Returns 1 if the function succeeded, 0 on error.
 #[must_use]
-pub unsafe fn yaml_emitter_flush(emitter: *mut yaml_emitter_t) -> libc::c_int {
+pub unsafe fn yaml_emitter_flush(emitter: *mut yaml_emitter_t) -> Success {
     __assert!(!emitter.is_null());
     __assert!(((*emitter).write_handler).is_some());
     __assert!((*emitter).encoding as u64 != 0);
@@ -27,7 +26,7 @@ pub unsafe fn yaml_emitter_flush(emitter: *mut yaml_emitter_t) -> libc::c_int {
     let fresh2 = addr_of_mut!((*emitter).buffer.pointer);
     *fresh2 = (*emitter).buffer.start;
     if (*emitter).buffer.start == (*emitter).buffer.last {
-        return 1_i32;
+        return OK;
     }
     if (*emitter).encoding as libc::c_uint == YAML_UTF8_ENCODING as libc::c_int as libc::c_uint {
         if ((*emitter).write_handler).expect("non-null function pointer")(
@@ -41,7 +40,7 @@ pub unsafe fn yaml_emitter_flush(emitter: *mut yaml_emitter_t) -> libc::c_int {
             *fresh3 = (*emitter).buffer.start;
             let fresh4 = addr_of_mut!((*emitter).buffer.pointer);
             *fresh4 = (*emitter).buffer.start;
-            return 1_i32;
+            return OK;
         } else {
             return yaml_emitter_set_writer_error(
                 emitter,
@@ -136,7 +135,7 @@ pub unsafe fn yaml_emitter_flush(emitter: *mut yaml_emitter_t) -> libc::c_int {
         *fresh10 = (*emitter).raw_buffer.start;
         let fresh11 = addr_of_mut!((*emitter).raw_buffer.pointer);
         *fresh11 = (*emitter).raw_buffer.start;
-        1_i32
+        OK
     } else {
         yaml_emitter_set_writer_error(
             emitter,
