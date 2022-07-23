@@ -1,4 +1,5 @@
 use crate::externs::{memcmp, memmove};
+use crate::success::{Success, FAIL, OK};
 use crate::yaml::{size_t, yaml_char_t};
 use crate::{
     libc, yaml_parser_t, PointerExt, YAML_READER_ERROR, YAML_UTF16BE_ENCODING,
@@ -11,26 +12,26 @@ unsafe fn yaml_parser_set_reader_error(
     problem: *const libc::c_char,
     offset: size_t,
     value: libc::c_int,
-) -> libc::c_int {
+) -> Success {
     (*parser).error = YAML_READER_ERROR;
     let fresh0 = addr_of_mut!((*parser).problem);
     *fresh0 = problem;
     (*parser).problem_offset = offset;
     (*parser).problem_value = value;
-    0_i32
+    FAIL
 }
 
 const BOM_UTF8: *const libc::c_char = b"\xEF\xBB\xBF\0" as *const u8 as *const libc::c_char;
 const BOM_UTF16LE: *const libc::c_char = b"\xFF\xFE\0" as *const u8 as *const libc::c_char;
 const BOM_UTF16BE: *const libc::c_char = b"\xFE\xFF\0" as *const u8 as *const libc::c_char;
 
-unsafe fn yaml_parser_determine_encoding(mut parser: *mut yaml_parser_t) -> libc::c_int {
+unsafe fn yaml_parser_determine_encoding(mut parser: *mut yaml_parser_t) -> Success {
     while (*parser).eof == 0
         && (((*parser).raw_buffer.last).c_offset_from((*parser).raw_buffer.pointer) as libc::c_long)
             < 3_i64
     {
         if yaml_parser_update_raw_buffer(parser) == 0 {
-            return 0_i32;
+            return FAIL;
         }
     }
     if ((*parser).raw_buffer.last).c_offset_from((*parser).raw_buffer.pointer) as libc::c_long
@@ -77,18 +78,18 @@ unsafe fn yaml_parser_determine_encoding(mut parser: *mut yaml_parser_t) -> libc
     } else {
         (*parser).encoding = YAML_UTF8_ENCODING;
     }
-    1_i32
+    OK
 }
 
-unsafe fn yaml_parser_update_raw_buffer(mut parser: *mut yaml_parser_t) -> libc::c_int {
+unsafe fn yaml_parser_update_raw_buffer(mut parser: *mut yaml_parser_t) -> Success {
     let mut size_read: size_t = 0_u64;
     if (*parser).raw_buffer.start == (*parser).raw_buffer.pointer
         && (*parser).raw_buffer.last == (*parser).raw_buffer.end
     {
-        return 1_i32;
+        return OK;
     }
     if (*parser).eof != 0 {
-        return 1_i32;
+        return OK;
     }
     if (*parser).raw_buffer.start < (*parser).raw_buffer.pointer
         && (*parser).raw_buffer.pointer < (*parser).raw_buffer.last
@@ -127,24 +128,24 @@ unsafe fn yaml_parser_update_raw_buffer(mut parser: *mut yaml_parser_t) -> libc:
     if size_read == 0 {
         (*parser).eof = 1_i32;
     }
-    1_i32
+    OK
 }
 
 pub(crate) unsafe fn yaml_parser_update_buffer(
     parser: *mut yaml_parser_t,
     length: size_t,
-) -> libc::c_int {
+) -> Success {
     let mut first: libc::c_int = 1_i32;
     __assert!(((*parser).read_handler).is_some());
     if (*parser).eof != 0 && (*parser).raw_buffer.pointer == (*parser).raw_buffer.last {
-        return 1_i32;
+        return OK;
     }
     if (*parser).unread >= length {
-        return 1_i32;
+        return OK;
     }
     if (*parser).encoding as u64 == 0 {
         if yaml_parser_determine_encoding(parser) == 0 {
-            return 0_i32;
+            return FAIL;
         }
     }
     if (*parser).buffer.start < (*parser).buffer.pointer
@@ -170,7 +171,7 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
     while (*parser).unread < length {
         if first == 0 || (*parser).raw_buffer.pointer == (*parser).raw_buffer.last {
             if yaml_parser_update_raw_buffer(parser) == 0 {
-                return 0_i32;
+                return FAIL;
             }
         }
         first = 0_i32;
@@ -445,7 +446,7 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
             *fresh38 = b'\0';
             let fresh39 = addr_of_mut!((*parser).unread);
             *fresh39 = (*fresh39).wrapping_add(1);
-            return 1_i32;
+            return OK;
         }
     }
     if (*parser).offset >= (!(0_u64)).wrapping_div(2_u64) {
@@ -456,5 +457,5 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
             -1_i32,
         );
     }
-    1_i32
+    OK
 }
