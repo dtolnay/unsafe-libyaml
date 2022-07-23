@@ -325,7 +325,7 @@ unsafe fn yaml_parser_fetch_next_token(parser: *mut yaml_parser_t) -> libc::c_in
     if CACHE!(parser, 4_u64) == 0 {
         return 0_i32;
     }
-    if *((*parser).buffer.pointer) as libc::c_int == '\0' as i32 as yaml_char_t as libc::c_int {
+    if IS_Z!((*parser).buffer) {
         return yaml_parser_fetch_stream_end(parser);
     }
     if (*parser).mark.column == 0_u64
@@ -2238,9 +2238,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                 if !(CACHE!(parser, 1_u64) == 0) {
                                                                     's_281: loop {
                                                                         if !((*parser).mark.column as libc::c_int == indent
-                                                                            && !(*((*parser).buffer.pointer)
-                                                                                 as libc::c_int
-                                                                                == '\0' as i32 as yaml_char_t as libc::c_int))
+                                                                            && !IS_Z!((*parser).buffer))
                                                                         {
                                                                             current_block = 5793491756164225964;
                                                                             break;
@@ -2496,9 +2494,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                             );
                             current_block = 8114179180390253173;
                             break;
-                        } else if *((*parser).buffer.pointer) as libc::c_int
-                            == '\0' as i32 as yaml_char_t as libc::c_int
-                        {
+                        } else if IS_Z!((*parser).buffer) {
                             yaml_parser_set_scanner_error(
                                 parser,
                                 b"while scanning a quoted scalar\0" as *const u8

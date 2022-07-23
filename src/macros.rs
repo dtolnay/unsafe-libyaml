@@ -227,11 +227,16 @@ macro_rules! IS_PRINTABLE {
 }
 
 macro_rules! IS_Z_AT {
-    () => {}; // TODO
+    ($string:expr, $offset:expr) => {
+        *$string.pointer.wrapping_offset($offset as isize) as libc::c_int
+            == '\0' as i32 as yaml_char_t as libc::c_int
+    };
 }
 
 macro_rules! IS_Z {
-    () => {}; // TODO
+    ($string:expr) => {
+        IS_Z_AT!($string, 0)
+    };
 }
 
 macro_rules! IS_BOM {
@@ -320,9 +325,7 @@ macro_rules! IS_CRLF {
 
 macro_rules! IS_BREAKZ_AT {
     ($string:expr, $offset:expr) => {
-        IS_BREAK_AT!($string, $offset)
-            || *$string.pointer.wrapping_offset($offset as isize) as libc::c_int
-                == '\0' as i32 as yaml_char_t as libc::c_int
+        IS_BREAK_AT!($string, $offset) || IS_Z_AT!($string, $offset)
     };
 }
 
