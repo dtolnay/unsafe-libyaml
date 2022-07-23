@@ -16,6 +16,7 @@
     clippy::cast_sign_loss,
     clippy::collapsible_if,
     clippy::doc_markdown,
+    clippy::fn_params_excessive_bools,
     clippy::if_not_else,
     clippy::items_after_statements,
     clippy::let_underscore_drop,

@@ -89,13 +89,13 @@ pub(crate) unsafe fn unsafe_main(
             let _ = writeln!(stdout, "-STR");
         } else if type_ == YAML_DOCUMENT_START_EVENT {
             let _ = write!(stdout, "+DOC");
-            if (*event).data.document_start.implicit == 0 {
+            if !(*event).data.document_start.implicit {
                 let _ = write!(stdout, " ---");
             }
             let _ = writeln!(stdout);
         } else if type_ == YAML_DOCUMENT_END_EVENT {
             let _ = write!(stdout, "-DOC");
-            if (*event).data.document_end.implicit == 0 {
+            if !(*event).data.document_end.implicit {
                 let _ = write!(stdout, " ...");
             }
             let _ = writeln!(stdout);

@@ -61,8 +61,8 @@ pub(crate) unsafe fn unsafe_main(
     }
 
     yaml_emitter_set_output(emitter, Some(write_to_stdio), addr_of_mut!(stdout).cast());
-    yaml_emitter_set_canonical(emitter, 0);
-    yaml_emitter_set_unicode(emitter, 0);
+    yaml_emitter_set_canonical(emitter, false);
+    yaml_emitter_set_unicode(emitter, false);
 
     let mut buf = ReadBuf::new();
     let mut event = MaybeUninit::<yaml_event_t>::uninit();
@@ -80,7 +80,7 @@ pub(crate) unsafe fn unsafe_main(
         } else if line.starts_with(b"-STR") {
             yaml_stream_end_event_initialize(event)
         } else if line.starts_with(b"+DOC") {
-            let implicit = !line[4..].starts_with(b" ---") as i32;
+            let implicit = !line[4..].starts_with(b" ---");
             yaml_document_start_event_initialize(
                 event,
                 ptr::null_mut::<yaml_version_directive_t>(),
@@ -89,14 +89,14 @@ pub(crate) unsafe fn unsafe_main(
                 implicit,
             )
         } else if line.starts_with(b"-DOC") {
-            let implicit = !line[4..].starts_with(b" ...") as i32;
+            let implicit = !line[4..].starts_with(b" ...");
             yaml_document_end_event_initialize(event, implicit)
         } else if line.starts_with(b"+MAP") {
             yaml_mapping_start_event_initialize(
                 event,
                 get_anchor(b'&', line, anchor.as_mut_ptr()),
                 get_tag(line, tag.as_mut_ptr()),
-                0,
+                false,
                 YAML_BLOCK_MAPPING_STYLE,
             )
         } else if line.starts_with(b"-MAP") {
@@ -106,7 +106,7 @@ pub(crate) unsafe fn unsafe_main(
                 event,
                 get_anchor(b'&', line, anchor.as_mut_ptr()),
                 get_tag(line, tag.as_mut_ptr()),
-                0,
+                false,
                 YAML_BLOCK_SEQUENCE_STYLE,
             )
         } else if line.starts_with(b"-SEQ") {
@@ -115,7 +115,7 @@ pub(crate) unsafe fn unsafe_main(
             let mut value = [0i8; 1024];
             let mut style = YAML_ANY_SCALAR_STYLE;
             get_value(line, value.as_mut_ptr(), &mut style);
-            let implicit = get_tag(line, tag.as_mut_ptr()).is_null() as i32;
+            let implicit = get_tag(line, tag.as_mut_ptr()).is_null();
             yaml_scalar_event_initialize(
                 event,
                 get_anchor(b'&', line, anchor.as_mut_ptr()),

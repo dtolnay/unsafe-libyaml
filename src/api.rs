@@ -516,9 +516,9 @@ pub unsafe fn yaml_emitter_set_encoding(
 
 /// Set if the output should be in the "canonical" format as in the YAML
 /// specification.
-pub unsafe fn yaml_emitter_set_canonical(mut emitter: *mut yaml_emitter_t, canonical: libc::c_int) {
+pub unsafe fn yaml_emitter_set_canonical(mut emitter: *mut yaml_emitter_t, canonical: bool) {
     __assert!(!emitter.is_null());
-    (*emitter).canonical = (canonical != 0) as libc::c_int;
+    (*emitter).canonical = canonical;
 }
 
 /// Set the indentation increment.
@@ -534,9 +534,9 @@ pub unsafe fn yaml_emitter_set_width(mut emitter: *mut yaml_emitter_t, width: li
 }
 
 /// Set if unescaped non-ASCII characters are allowed.
-pub unsafe fn yaml_emitter_set_unicode(mut emitter: *mut yaml_emitter_t, unicode: libc::c_int) {
+pub unsafe fn yaml_emitter_set_unicode(mut emitter: *mut yaml_emitter_t, unicode: bool) {
     __assert!(!emitter.is_null());
-    (*emitter).unicode = (unicode != 0) as libc::c_int;
+    (*emitter).unicode = unicode;
 }
 
 /// Set the preferred line break.
@@ -683,7 +683,7 @@ pub unsafe fn yaml_document_start_event_initialize(
     version_directive: *mut yaml_version_directive_t,
     tag_directives_start: *mut yaml_tag_directive_t,
     tag_directives_end: *mut yaml_tag_directive_t,
-    implicit: libc::c_int,
+    implicit: bool,
 ) -> Success {
     let mut current_block: u64;
     let mut context = api_context {
@@ -827,7 +827,7 @@ pub unsafe fn yaml_document_start_event_initialize(
 /// ignored by the emitter.
 pub unsafe fn yaml_document_end_event_initialize(
     mut event: *mut yaml_event_t,
-    implicit: libc::c_int,
+    implicit: bool,
 ) -> Success {
     let mark = yaml_mark_t {
         index: 0_u64,
@@ -892,8 +892,8 @@ pub unsafe fn yaml_scalar_event_initialize(
     tag: *const yaml_char_t,
     value: *const yaml_char_t,
     mut length: libc::c_int,
-    plain_implicit: libc::c_int,
-    quoted_implicit: libc::c_int,
+    plain_implicit: bool,
+    quoted_implicit: bool,
     style: yaml_scalar_style_t,
 ) -> Success {
     let mut current_block: u64;
@@ -993,7 +993,7 @@ pub unsafe fn yaml_sequence_start_event_initialize(
     mut event: *mut yaml_event_t,
     anchor: *const yaml_char_t,
     tag: *const yaml_char_t,
-    implicit: libc::c_int,
+    implicit: bool,
     style: yaml_sequence_style_t,
 ) -> Success {
     let mut current_block: u64;
@@ -1091,7 +1091,7 @@ pub unsafe fn yaml_mapping_start_event_initialize(
     mut event: *mut yaml_event_t,
     anchor: *const yaml_char_t,
     tag: *const yaml_char_t,
-    implicit: libc::c_int,
+    implicit: bool,
     style: yaml_mapping_style_t,
 ) -> Success {
     let mut current_block: u64;
@@ -1226,8 +1226,8 @@ pub unsafe fn yaml_document_initialize(
     version_directive: *mut yaml_version_directive_t,
     tag_directives_start: *mut yaml_tag_directive_t,
     tag_directives_end: *mut yaml_tag_directive_t,
-    start_implicit: libc::c_int,
-    end_implicit: libc::c_int,
+    start_implicit: bool,
+    end_implicit: bool,
 ) -> Success {
     let mut current_block: u64;
     let mut context = api_context {
