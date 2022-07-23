@@ -1,6 +1,6 @@
 use crate::api::{yaml_free, yaml_malloc, yaml_stack_extend, yaml_strdup};
 use crate::externs::{memset, strcmp};
-use crate::success::{Success, Zero, FAIL, OK};
+use crate::success::{Success, FAIL, OK};
 use crate::yaml::yaml_char_t;
 use crate::{
     libc, yaml_alias_data_t, yaml_document_delete, yaml_document_t, yaml_event_t, yaml_mark_t,
@@ -47,9 +47,9 @@ pub unsafe fn yaml_parser_load(
         0_i32,
         size_of::<yaml_document_t>() as libc::c_ulong,
     );
-    if !(STACK_INIT!(parser, (*document).nodes, yaml_node_t) == Zero) {
+    if !(STACK_INIT!(parser, (*document).nodes, yaml_node_t).fail) {
         if (*parser).stream_start_produced == 0 {
-            if yaml_parser_parse(parser, event) == Zero {
+            if yaml_parser_parse(parser, event).fail {
                 current_block = 6234624449317607669;
             } else {
                 __assert!(
@@ -67,16 +67,16 @@ pub unsafe fn yaml_parser_load(
                 if (*parser).stream_end_produced != 0 {
                     return OK;
                 }
-                if !(yaml_parser_parse(parser, event) == Zero) {
+                if !(yaml_parser_parse(parser, event).fail) {
                     if (*event).type_ as libc::c_uint
                         == YAML_STREAM_END_EVENT as libc::c_int as libc::c_uint
                     {
                         return OK;
                     }
-                    if !(STACK_INIT!(parser, (*parser).aliases, yaml_alias_data_t) == Zero) {
+                    if !(STACK_INIT!(parser, (*parser).aliases, yaml_alias_data_t).fail) {
                         let fresh6 = addr_of_mut!((*parser).document);
                         *fresh6 = document;
-                        if !(yaml_parser_load_document(parser, event) == Zero) {
+                        if !(yaml_parser_load_document(parser, event).fail) {
                             yaml_parser_delete_aliases(parser);
                             let fresh7 = addr_of_mut!((*parser).document);
                             *fresh7 = ptr::null_mut::<yaml_document_t>();
@@ -150,10 +150,10 @@ unsafe fn yaml_parser_load_document(
     *fresh18 = (*event).data.document_start.tag_directives.end;
     (*(*parser).document).start_implicit = (*event).data.document_start.implicit;
     (*(*parser).document).start_mark = (*event).start_mark;
-    if STACK_INIT!(parser, ctx, libc::c_int) == Zero {
+    if STACK_INIT!(parser, ctx, libc::c_int).fail {
         return FAIL;
     }
-    if yaml_parser_load_nodes(parser, addr_of_mut!(ctx)) == Zero {
+    if yaml_parser_load_nodes(parser, addr_of_mut!(ctx)).fail {
         STACK_DEL!(ctx);
         return FAIL;
     }
@@ -165,37 +165,37 @@ unsafe fn yaml_parser_load_nodes(mut parser: *mut yaml_parser_t, ctx: *mut loade
     let mut event = MaybeUninit::<yaml_event_t>::uninit();
     let event = event.as_mut_ptr();
     loop {
-        if yaml_parser_parse(parser, event) == Zero {
+        if yaml_parser_parse(parser, event).fail {
             return FAIL;
         }
         match (*event).type_ as libc::c_uint {
             5 => {
-                if yaml_parser_load_alias(parser, event, ctx) == Zero {
+                if yaml_parser_load_alias(parser, event, ctx).fail {
                     return FAIL;
                 }
             }
             6 => {
-                if yaml_parser_load_scalar(parser, event, ctx) == Zero {
+                if yaml_parser_load_scalar(parser, event, ctx).fail {
                     return FAIL;
                 }
             }
             7 => {
-                if yaml_parser_load_sequence(parser, event, ctx) == Zero {
+                if yaml_parser_load_sequence(parser, event, ctx).fail {
                     return FAIL;
                 }
             }
             8 => {
-                if yaml_parser_load_sequence_end(parser, event, ctx) == Zero {
+                if yaml_parser_load_sequence_end(parser, event, ctx).fail {
                     return FAIL;
                 }
             }
             9 => {
-                if yaml_parser_load_mapping(parser, event, ctx) == Zero {
+                if yaml_parser_load_mapping(parser, event, ctx).fail {
                     return FAIL;
                 }
             }
             10 => {
-                if yaml_parser_load_mapping_end(parser, event, ctx) == Zero {
+                if yaml_parser_load_mapping_end(parser, event, ctx).fail {
                     return FAIL;
                 }
             }
@@ -248,7 +248,7 @@ unsafe fn yaml_parser_register_anchor(
         }
         alias_data = alias_data.wrapping_offset(1);
     }
-    if PUSH!(parser, (*parser).aliases, *data) == Zero {
+    if PUSH!(parser, (*parser).aliases, *data).fail {
         yaml_free(anchor as *mut libc::c_void);
         return FAIL;
     }
@@ -270,10 +270,10 @@ unsafe fn yaml_parser_load_node_add(
     let current_block_17: u64;
     match (*parent).type_ as libc::c_uint {
         2 => {
-            if STACK_LIMIT!(parser, (*parent).data.sequence.items) == Zero {
+            if STACK_LIMIT!(parser, (*parent).data.sequence.items).fail {
                 return FAIL;
             }
-            if PUSH!(parser, (*parent).data.sequence.items, index) == Zero {
+            if PUSH!(parser, (*parent).data.sequence.items, index).fail {
                 return FAIL;
             }
         }
@@ -297,10 +297,10 @@ unsafe fn yaml_parser_load_node_add(
                 _ => {
                     (*pair).key = index;
                     (*pair).value = 0_i32;
-                    if STACK_LIMIT!(parser, (*parent).data.mapping.pairs) == Zero {
+                    if STACK_LIMIT!(parser, (*parent).data.mapping.pairs).fail {
                         return FAIL;
                     }
-                    if PUSH!(parser, (*parent).data.mapping.pairs, *pair) == Zero {
+                    if PUSH!(parser, (*parent).data.mapping.pairs, *pair).fail {
                         return FAIL;
                     }
                 }
@@ -350,7 +350,7 @@ unsafe fn yaml_parser_load_scalar(
     let node = node.as_mut_ptr();
     let index: libc::c_int;
     let mut tag: *mut yaml_char_t = (*event).data.scalar.tag;
-    if !(STACK_LIMIT!(parser, (*(*parser).document).nodes) == Zero) {
+    if !(STACK_LIMIT!(parser, (*(*parser).document).nodes).fail) {
         if tag.is_null()
             || strcmp(
                 tag as *mut libc::c_char,
@@ -384,12 +384,11 @@ unsafe fn yaml_parser_load_scalar(
                 (*node).data.scalar.value = (*event).data.scalar.value;
                 (*node).data.scalar.length = (*event).data.scalar.length;
                 (*node).data.scalar.style = (*event).data.scalar.style;
-                if !(PUSH!(parser, (*(*parser).document).nodes, *node) == Zero) {
+                if !(PUSH!(parser, (*(*parser).document).nodes, *node).fail) {
                     index = ((*(*parser).document).nodes.top)
                         .c_offset_from((*(*parser).document).nodes.start)
                         as libc::c_long as libc::c_int;
-                    if yaml_parser_register_anchor(parser, index, (*event).data.scalar.anchor)
-                        == Zero
+                    if yaml_parser_register_anchor(parser, index, (*event).data.scalar.anchor).fail
                     {
                         return FAIL;
                     }
@@ -424,7 +423,7 @@ unsafe fn yaml_parser_load_sequence(
     };
     let index: libc::c_int;
     let mut tag: *mut yaml_char_t = (*event).data.sequence_start.tag;
-    if !(STACK_LIMIT!(parser, (*(*parser).document).nodes) == Zero) {
+    if !(STACK_LIMIT!(parser, (*(*parser).document).nodes).fail) {
         if tag.is_null()
             || strcmp(
                 tag as *mut libc::c_char,
@@ -446,7 +445,7 @@ unsafe fn yaml_parser_load_sequence(
         match current_block {
             13474536459355229096 => {}
             _ => {
-                if !(STACK_INIT!(parser, items, yaml_node_item_t) == Zero) {
+                if !(STACK_INIT!(parser, items, yaml_node_item_t).fail) {
                     memset(
                         node as *mut libc::c_void,
                         0_i32,
@@ -460,7 +459,7 @@ unsafe fn yaml_parser_load_sequence(
                     (*node).data.sequence.items.end = items.end;
                     (*node).data.sequence.items.top = items.start;
                     (*node).data.sequence.style = (*event).data.sequence_start.style;
-                    if !(PUSH!(parser, (*(*parser).document).nodes, *node) == Zero) {
+                    if !(PUSH!(parser, (*(*parser).document).nodes, *node).fail) {
                         index = ((*(*parser).document).nodes.top)
                             .c_offset_from((*(*parser).document).nodes.start)
                             as libc::c_long as libc::c_int;
@@ -468,17 +467,18 @@ unsafe fn yaml_parser_load_sequence(
                             parser,
                             index,
                             (*event).data.sequence_start.anchor,
-                        ) == Zero
+                        )
+                        .fail
                         {
                             return FAIL;
                         }
-                        if yaml_parser_load_node_add(parser, ctx, index) == Zero {
+                        if yaml_parser_load_node_add(parser, ctx, index).fail {
                             return FAIL;
                         }
-                        if STACK_LIMIT!(parser, *ctx) == Zero {
+                        if STACK_LIMIT!(parser, *ctx).fail {
                             return FAIL;
                         }
-                        if PUSH!(parser, *ctx, index) == Zero {
+                        if PUSH!(parser, *ctx, index).fail {
                             return FAIL;
                         }
                         return OK;
@@ -530,7 +530,7 @@ unsafe fn yaml_parser_load_mapping(
     };
     let index: libc::c_int;
     let mut tag: *mut yaml_char_t = (*event).data.mapping_start.tag;
-    if !(STACK_LIMIT!(parser, (*(*parser).document).nodes) == Zero) {
+    if !(STACK_LIMIT!(parser, (*(*parser).document).nodes).fail) {
         if tag.is_null()
             || strcmp(
                 tag as *mut libc::c_char,
@@ -552,7 +552,7 @@ unsafe fn yaml_parser_load_mapping(
         match current_block {
             13635467803606088781 => {}
             _ => {
-                if !(STACK_INIT!(parser, pairs, yaml_node_pair_t) == Zero) {
+                if !(STACK_INIT!(parser, pairs, yaml_node_pair_t).fail) {
                     memset(
                         node as *mut libc::c_void,
                         0_i32,
@@ -566,7 +566,7 @@ unsafe fn yaml_parser_load_mapping(
                     (*node).data.mapping.pairs.end = pairs.end;
                     (*node).data.mapping.pairs.top = pairs.start;
                     (*node).data.mapping.style = (*event).data.mapping_start.style;
-                    if !(PUSH!(parser, (*(*parser).document).nodes, *node) == Zero) {
+                    if !(PUSH!(parser, (*(*parser).document).nodes, *node).fail) {
                         index = ((*(*parser).document).nodes.top)
                             .c_offset_from((*(*parser).document).nodes.start)
                             as libc::c_long as libc::c_int;
@@ -574,17 +574,18 @@ unsafe fn yaml_parser_load_mapping(
                             parser,
                             index,
                             (*event).data.mapping_start.anchor,
-                        ) == Zero
+                        )
+                        .fail
                         {
                             return FAIL;
                         }
-                        if yaml_parser_load_node_add(parser, ctx, index) == Zero {
+                        if yaml_parser_load_node_add(parser, ctx, index).fail {
                             return FAIL;
                         }
-                        if STACK_LIMIT!(parser, *ctx) == Zero {
+                        if STACK_LIMIT!(parser, *ctx).fail {
                             return FAIL;
                         }
-                        if PUSH!(parser, *ctx, index) == Zero {
+                        if PUSH!(parser, *ctx, index).fail {
                             return FAIL;
                         }
                         return OK;

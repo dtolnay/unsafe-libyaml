@@ -1,7 +1,7 @@
 use crate::api::{yaml_free, yaml_malloc};
 use crate::externs::{memset, strcmp};
 use crate::fmt::WriteToPtr;
-use crate::success::{Success, Zero, FAIL, OK};
+use crate::success::{Success, FAIL, OK};
 use crate::yaml::{
     yaml_anchors_t, yaml_char_t, yaml_document_t, yaml_emitter_t, yaml_event_t, yaml_mark_t,
     yaml_node_item_t, yaml_node_pair_t, yaml_node_t, YAML_ALIAS_EVENT, YAML_ANY_ENCODING,
@@ -35,7 +35,7 @@ pub unsafe fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> Success {
     (*event).start_mark = mark;
     (*event).end_mark = mark;
     (*event).data.stream_start.encoding = YAML_ANY_ENCODING;
-    if yaml_emitter_emit(emitter, event) == Zero {
+    if yaml_emitter_emit(emitter, event).fail {
         return FAIL;
     }
     (*emitter).opened = 1_i32;
@@ -66,7 +66,7 @@ pub unsafe fn yaml_emitter_close(mut emitter: *mut yaml_emitter_t) -> Success {
     (*event).type_ = YAML_STREAM_END_EVENT;
     (*event).start_mark = mark;
     (*event).end_mark = mark;
-    if yaml_emitter_emit(emitter, event) == Zero {
+    if yaml_emitter_emit(emitter, event).fail {
         return FAIL;
     }
     (*emitter).closed = 1_i32;
@@ -96,7 +96,7 @@ pub unsafe fn yaml_emitter_dump(
     let fresh0 = addr_of_mut!((*emitter).document);
     *fresh0 = document;
     if (*emitter).opened == 0 {
-        if yaml_emitter_open(emitter) == Zero {
+        if yaml_emitter_open(emitter).fail {
             current_block = 5018439318894558507;
         } else {
             current_block = 15619007995458559411;
@@ -107,7 +107,7 @@ pub unsafe fn yaml_emitter_dump(
     match current_block {
         15619007995458559411 => {
             if STACK_EMPTY!((*document).nodes) {
-                if !(yaml_emitter_close(emitter) == Zero) {
+                if !(yaml_emitter_close(emitter).fail) {
                     yaml_emitter_delete_document_and_anchors(emitter);
                     return OK;
                 }
@@ -141,9 +141,9 @@ pub unsafe fn yaml_emitter_dump(
                     (*event).data.document_start.tag_directives.end =
                         (*document).tag_directives.end;
                     (*event).data.document_start.implicit = (*document).start_implicit;
-                    if !(yaml_emitter_emit(emitter, event) == Zero) {
+                    if !(yaml_emitter_emit(emitter, event).fail) {
                         yaml_emitter_anchor_node(emitter, 1_i32);
-                        if !(yaml_emitter_dump_node(emitter, 1_i32) == Zero) {
+                        if !(yaml_emitter_dump_node(emitter, 1_i32).fail) {
                             memset(
                                 event as *mut libc::c_void,
                                 0_i32,
@@ -153,7 +153,7 @@ pub unsafe fn yaml_emitter_dump(
                             (*event).start_mark = mark;
                             (*event).end_mark = mark;
                             (*event).data.document_end.implicit = (*document).end_implicit;
-                            if !(yaml_emitter_emit(emitter, event) == Zero) {
+                            if !(yaml_emitter_emit(emitter, event).fail) {
                                 yaml_emitter_delete_document_and_anchors(emitter);
                                 return OK;
                             }
@@ -368,12 +368,12 @@ unsafe fn yaml_emitter_dump_sequence(
     (*event).data.sequence_start.tag = (*node).tag;
     (*event).data.sequence_start.implicit = implicit;
     (*event).data.sequence_start.style = (*node).data.sequence.style;
-    if yaml_emitter_emit(emitter, event) == Zero {
+    if yaml_emitter_emit(emitter, event).fail {
         return FAIL;
     }
     item = (*node).data.sequence.items.start;
     while item < (*node).data.sequence.items.top {
-        if yaml_emitter_dump_node(emitter, *item) == Zero {
+        if yaml_emitter_dump_node(emitter, *item).fail {
             return FAIL;
         }
         item = item.wrapping_offset(1);
@@ -386,7 +386,7 @@ unsafe fn yaml_emitter_dump_sequence(
     (*event).type_ = YAML_SEQUENCE_END_EVENT;
     (*event).start_mark = mark;
     (*event).end_mark = mark;
-    if yaml_emitter_emit(emitter, event) == Zero {
+    if yaml_emitter_emit(emitter, event).fail {
         return FAIL;
     }
     OK
@@ -421,15 +421,15 @@ unsafe fn yaml_emitter_dump_mapping(
     (*event).data.mapping_start.tag = (*node).tag;
     (*event).data.mapping_start.implicit = implicit;
     (*event).data.mapping_start.style = (*node).data.mapping.style;
-    if yaml_emitter_emit(emitter, event) == Zero {
+    if yaml_emitter_emit(emitter, event).fail {
         return FAIL;
     }
     pair = (*node).data.mapping.pairs.start;
     while pair < (*node).data.mapping.pairs.top {
-        if yaml_emitter_dump_node(emitter, (*pair).key) == Zero {
+        if yaml_emitter_dump_node(emitter, (*pair).key).fail {
             return FAIL;
         }
-        if yaml_emitter_dump_node(emitter, (*pair).value) == Zero {
+        if yaml_emitter_dump_node(emitter, (*pair).value).fail {
             return FAIL;
         }
         pair = pair.wrapping_offset(1);
@@ -442,7 +442,7 @@ unsafe fn yaml_emitter_dump_mapping(
     (*event).type_ = YAML_MAPPING_END_EVENT;
     (*event).start_mark = mark;
     (*event).end_mark = mark;
-    if yaml_emitter_emit(emitter, event) == Zero {
+    if yaml_emitter_emit(emitter, event).fail {
         return FAIL;
     }
     OK

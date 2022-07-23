@@ -23,11 +23,3 @@ impl Deref for Success {
         }
     }
 }
-
-pub struct Zero;
-
-impl PartialEq<Zero> for Success {
-    fn eq(&self, _zero: &Zero) -> bool {
-        !self.ok
-    }
-}

@@ -1,6 +1,6 @@
 use crate::api::{yaml_free, yaml_queue_extend, yaml_stack_extend, yaml_strdup};
 use crate::externs::{strcmp, strlen, strncmp};
-use crate::success::{Success, Zero, FAIL, OK};
+use crate::success::{Success, FAIL, OK};
 use crate::yaml::{size_t, yaml_char_t, yaml_string_t};
 use crate::{
     libc, yaml_emitter_flush, yaml_emitter_t, yaml_event_delete, yaml_event_t, yaml_scalar_style_t,
@@ -24,7 +24,7 @@ use core::ptr::{self, addr_of_mut};
 
 unsafe fn FLUSH(emitter: *mut yaml_emitter_t) -> Success {
     if ((*emitter).buffer.pointer).wrapping_offset(5_isize) < (*emitter).buffer.end
-        || yaml_emitter_flush(emitter) != Zero
+        || yaml_emitter_flush(emitter).ok
     {
         OK
     } else {
@@ -150,15 +150,15 @@ pub unsafe fn yaml_emitter_emit(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
 ) -> Success {
-    if ENQUEUE!(emitter, (*emitter).events, *event) == Zero {
+    if ENQUEUE!(emitter, (*emitter).events, *event).fail {
         yaml_event_delete(event);
         return FAIL;
     }
-    while yaml_emitter_need_more_events(emitter) == Zero {
-        if yaml_emitter_analyze_event(emitter, (*emitter).events.head) == Zero {
+    while yaml_emitter_need_more_events(emitter).fail {
+        if yaml_emitter_analyze_event(emitter, (*emitter).events.head).fail {
             return FAIL;
         }
-        if yaml_emitter_state_machine(emitter, (*emitter).events.head) == Zero {
+        if yaml_emitter_state_machine(emitter, (*emitter).events.head).fail {
             return FAIL;
         }
         yaml_event_delete(addr_of_mut!(DEQUEUE!((*emitter).events)));
@@ -233,7 +233,7 @@ unsafe fn yaml_emitter_append_tag_directive(
     copy.prefix = yaml_strdup(value.prefix);
     if copy.handle.is_null() || copy.prefix.is_null() {
         (*emitter).error = YAML_MEMORY_ERROR;
-    } else if !(PUSH!(emitter, (*emitter).tag_directives, copy) == Zero) {
+    } else if !(PUSH!(emitter, (*emitter).tag_directives, copy).fail) {
         return OK;
     }
     yaml_free(copy.handle as *mut libc::c_void);
@@ -246,7 +246,7 @@ unsafe fn yaml_emitter_increase_indent(
     flow: libc::c_int,
     indentless: libc::c_int,
 ) -> Success {
-    if PUSH!(emitter, (*emitter).indents, (*emitter).indent) == Zero {
+    if PUSH!(emitter, (*emitter).indents, (*emitter).indent).fail {
         return FAIL;
     }
     if (*emitter).indent < 0_i32 {
@@ -346,7 +346,7 @@ unsafe fn yaml_emitter_emit_stream_start(
         (*emitter).indention = 1_i32;
         if (*emitter).encoding as libc::c_uint != YAML_UTF8_ENCODING as libc::c_int as libc::c_uint
         {
-            if yaml_emitter_write_bom(emitter) == Zero {
+            if yaml_emitter_write_bom(emitter).fail {
                 return FAIL;
             }
         }
@@ -386,24 +386,25 @@ unsafe fn yaml_emitter_emit_document_start(
             if yaml_emitter_analyze_version_directive(
                 emitter,
                 *(*event).data.document_start.version_directive,
-            ) == Zero
+            )
+            .fail
             {
                 return FAIL;
             }
         }
         tag_directive = (*event).data.document_start.tag_directives.start;
         while tag_directive != (*event).data.document_start.tag_directives.end {
-            if yaml_emitter_analyze_tag_directive(emitter, *tag_directive) == Zero {
+            if yaml_emitter_analyze_tag_directive(emitter, *tag_directive).fail {
                 return FAIL;
             }
-            if yaml_emitter_append_tag_directive(emitter, *tag_directive, 0_i32) == Zero {
+            if yaml_emitter_append_tag_directive(emitter, *tag_directive, 0_i32).fail {
                 return FAIL;
             }
             tag_directive = tag_directive.wrapping_offset(1);
         }
         tag_directive = default_tag_directives.as_mut_ptr();
         while !((*tag_directive).handle).is_null() {
-            if yaml_emitter_append_tag_directive(emitter, *tag_directive, 1_i32) == Zero {
+            if yaml_emitter_append_tag_directive(emitter, *tag_directive, 1_i32).fail {
                 return FAIL;
             }
             tag_directive = tag_directive.wrapping_offset(1);
@@ -423,11 +424,12 @@ unsafe fn yaml_emitter_emit_document_start(
                 1_i32,
                 0_i32,
                 0_i32,
-            ) == Zero
+            )
+            .fail
             {
                 return FAIL;
             }
-            if yaml_emitter_write_indent(emitter) == Zero {
+            if yaml_emitter_write_indent(emitter).fail {
                 return FAIL;
             }
         }
@@ -440,7 +442,8 @@ unsafe fn yaml_emitter_emit_document_start(
                 1_i32,
                 0_i32,
                 0_i32,
-            ) == Zero
+            )
+            .fail
             {
                 return FAIL;
             }
@@ -451,7 +454,8 @@ unsafe fn yaml_emitter_emit_document_start(
                     1_i32,
                     0_i32,
                     0_i32,
-                ) == Zero
+                )
+                .fail
                 {
                     return FAIL;
                 }
@@ -461,11 +465,12 @@ unsafe fn yaml_emitter_emit_document_start(
                 1_i32,
                 0_i32,
                 0_i32,
-            ) == Zero
+            )
+            .fail
             {
                 return FAIL;
             }
-            if yaml_emitter_write_indent(emitter) == Zero {
+            if yaml_emitter_write_indent(emitter).fail {
                 return FAIL;
             }
         }
@@ -481,7 +486,8 @@ unsafe fn yaml_emitter_emit_document_start(
                     1_i32,
                     0_i32,
                     0_i32,
-                ) == Zero
+                )
+                .fail
                 {
                     return FAIL;
                 }
@@ -489,7 +495,8 @@ unsafe fn yaml_emitter_emit_document_start(
                     emitter,
                     (*tag_directive).handle,
                     strlen((*tag_directive).handle as *mut libc::c_char),
-                ) == Zero
+                )
+                .fail
                 {
                     return FAIL;
                 }
@@ -498,11 +505,12 @@ unsafe fn yaml_emitter_emit_document_start(
                     (*tag_directive).prefix,
                     strlen((*tag_directive).prefix as *mut libc::c_char),
                     1_i32,
-                ) == Zero
+                )
+                .fail
                 {
                     return FAIL;
                 }
-                if yaml_emitter_write_indent(emitter) == Zero {
+                if yaml_emitter_write_indent(emitter).fail {
                     return FAIL;
                 }
                 tag_directive = tag_directive.wrapping_offset(1);
@@ -512,7 +520,7 @@ unsafe fn yaml_emitter_emit_document_start(
             implicit = 0_i32;
         }
         if implicit == 0 {
-            if yaml_emitter_write_indent(emitter) == Zero {
+            if yaml_emitter_write_indent(emitter).fail {
                 return FAIL;
             }
             if yaml_emitter_write_indicator(
@@ -521,12 +529,13 @@ unsafe fn yaml_emitter_emit_document_start(
                 1_i32,
                 0_i32,
                 0_i32,
-            ) == Zero
+            )
+            .fail
             {
                 return FAIL;
             }
             if (*emitter).canonical != 0 {
-                if yaml_emitter_write_indent(emitter) == Zero {
+                if yaml_emitter_write_indent(emitter).fail {
                     return FAIL;
                 }
             }
@@ -543,16 +552,17 @@ unsafe fn yaml_emitter_emit_document_start(
                 1_i32,
                 0_i32,
                 0_i32,
-            ) == Zero
+            )
+            .fail
             {
                 return FAIL;
             }
             (*emitter).open_ended = 0_i32;
-            if yaml_emitter_write_indent(emitter) == Zero {
+            if yaml_emitter_write_indent(emitter).fail {
                 return FAIL;
             }
         }
-        if yaml_emitter_flush(emitter) == Zero {
+        if yaml_emitter_flush(emitter).fail {
             return FAIL;
         }
         (*emitter).state = YAML_EMIT_END_STATE;
@@ -568,7 +578,7 @@ unsafe fn yaml_emitter_emit_document_content(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
 ) -> Success {
-    if PUSH!(emitter, (*emitter).states, YAML_EMIT_DOCUMENT_END_STATE) == Zero {
+    if PUSH!(emitter, (*emitter).states, YAML_EMIT_DOCUMENT_END_STATE).fail {
         return FAIL;
     }
     yaml_emitter_emit_node(emitter, event, 1_i32, 0_i32, 0_i32, 0_i32)
@@ -579,7 +589,7 @@ unsafe fn yaml_emitter_emit_document_end(
     event: *mut yaml_event_t,
 ) -> Success {
     if (*event).type_ as libc::c_uint == YAML_DOCUMENT_END_EVENT as libc::c_int as libc::c_uint {
-        if yaml_emitter_write_indent(emitter) == Zero {
+        if yaml_emitter_write_indent(emitter).fail {
             return FAIL;
         }
         if (*event).data.document_end.implicit == 0 {
@@ -589,18 +599,19 @@ unsafe fn yaml_emitter_emit_document_end(
                 1_i32,
                 0_i32,
                 0_i32,
-            ) == Zero
+            )
+            .fail
             {
                 return FAIL;
             }
             (*emitter).open_ended = 0_i32;
-            if yaml_emitter_write_indent(emitter) == Zero {
+            if yaml_emitter_write_indent(emitter).fail {
                 return FAIL;
             }
         } else if (*emitter).open_ended == 0 {
             (*emitter).open_ended = 1_i32;
         }
-        if yaml_emitter_flush(emitter) == Zero {
+        if yaml_emitter_flush(emitter).fail {
             return FAIL;
         }
         (*emitter).state = YAML_EMIT_DOCUMENT_START_STATE;
@@ -629,11 +640,12 @@ unsafe fn yaml_emitter_emit_flow_sequence_item(
             1_i32,
             1_i32,
             0_i32,
-        ) == Zero
+        )
+        .fail
         {
             return FAIL;
         }
-        if yaml_emitter_increase_indent(emitter, 1_i32, 0_i32) == Zero {
+        if yaml_emitter_increase_indent(emitter, 1_i32, 0_i32).fail {
             return FAIL;
         }
         let fresh12 = addr_of_mut!((*emitter).flow_level);
@@ -650,11 +662,12 @@ unsafe fn yaml_emitter_emit_flow_sequence_item(
                 0_i32,
                 0_i32,
                 0_i32,
-            ) == Zero
+            )
+            .fail
             {
                 return FAIL;
             }
-            if yaml_emitter_write_indent(emitter) == Zero {
+            if yaml_emitter_write_indent(emitter).fail {
                 return FAIL;
             }
         }
@@ -664,7 +677,8 @@ unsafe fn yaml_emitter_emit_flow_sequence_item(
             0_i32,
             0_i32,
             0_i32,
-        ) == Zero
+        )
+        .fail
         {
             return FAIL;
         }
@@ -678,13 +692,14 @@ unsafe fn yaml_emitter_emit_flow_sequence_item(
             0_i32,
             0_i32,
             0_i32,
-        ) == Zero
+        )
+        .fail
         {
             return FAIL;
         }
     }
     if (*emitter).canonical != 0 || (*emitter).column > (*emitter).best_width {
-        if yaml_emitter_write_indent(emitter) == Zero {
+        if yaml_emitter_write_indent(emitter).fail {
             return FAIL;
         }
     }
@@ -692,7 +707,8 @@ unsafe fn yaml_emitter_emit_flow_sequence_item(
         emitter,
         (*emitter).states,
         YAML_EMIT_FLOW_SEQUENCE_ITEM_STATE
-    ) == Zero
+    )
+    .fail
     {
         return FAIL;
     }
@@ -711,11 +727,12 @@ unsafe fn yaml_emitter_emit_flow_mapping_key(
             1_i32,
             1_i32,
             0_i32,
-        ) == Zero
+        )
+        .fail
         {
             return FAIL;
         }
-        if yaml_emitter_increase_indent(emitter, 1_i32, 0_i32) == Zero {
+        if yaml_emitter_increase_indent(emitter, 1_i32, 0_i32).fail {
             return FAIL;
         }
         let fresh18 = addr_of_mut!((*emitter).flow_level);
@@ -732,11 +749,12 @@ unsafe fn yaml_emitter_emit_flow_mapping_key(
                 0_i32,
                 0_i32,
                 0_i32,
-            ) == Zero
+            )
+            .fail
             {
                 return FAIL;
             }
-            if yaml_emitter_write_indent(emitter) == Zero {
+            if yaml_emitter_write_indent(emitter).fail {
                 return FAIL;
             }
         }
@@ -746,7 +764,8 @@ unsafe fn yaml_emitter_emit_flow_mapping_key(
             0_i32,
             0_i32,
             0_i32,
-        ) == Zero
+        )
+        .fail
         {
             return FAIL;
         }
@@ -760,13 +779,14 @@ unsafe fn yaml_emitter_emit_flow_mapping_key(
             0_i32,
             0_i32,
             0_i32,
-        ) == Zero
+        )
+        .fail
         {
             return FAIL;
         }
     }
     if (*emitter).canonical != 0 || (*emitter).column > (*emitter).best_width {
-        if yaml_emitter_write_indent(emitter) == Zero {
+        if yaml_emitter_write_indent(emitter).fail {
             return FAIL;
         }
     }
@@ -775,7 +795,8 @@ unsafe fn yaml_emitter_emit_flow_mapping_key(
             emitter,
             (*emitter).states,
             YAML_EMIT_FLOW_MAPPING_SIMPLE_VALUE_STATE
-        ) == Zero
+        )
+        .fail
         {
             return FAIL;
         }
@@ -787,7 +808,8 @@ unsafe fn yaml_emitter_emit_flow_mapping_key(
             1_i32,
             0_i32,
             0_i32,
-        ) == Zero
+        )
+        .fail
         {
             return FAIL;
         }
@@ -795,7 +817,8 @@ unsafe fn yaml_emitter_emit_flow_mapping_key(
             emitter,
             (*emitter).states,
             YAML_EMIT_FLOW_MAPPING_VALUE_STATE
-        ) == Zero
+        )
+        .fail
         {
             return FAIL;
         }
@@ -815,13 +838,14 @@ unsafe fn yaml_emitter_emit_flow_mapping_value(
             0_i32,
             0_i32,
             0_i32,
-        ) == Zero
+        )
+        .fail
         {
             return FAIL;
         }
     } else {
         if (*emitter).canonical != 0 || (*emitter).column > (*emitter).best_width {
-            if yaml_emitter_write_indent(emitter) == Zero {
+            if yaml_emitter_write_indent(emitter).fail {
                 return FAIL;
             }
         }
@@ -831,12 +855,13 @@ unsafe fn yaml_emitter_emit_flow_mapping_value(
             1_i32,
             0_i32,
             0_i32,
-        ) == Zero
+        )
+        .fail
         {
             return FAIL;
         }
     }
-    if PUSH!(emitter, (*emitter).states, YAML_EMIT_FLOW_MAPPING_KEY_STATE) == Zero {
+    if PUSH!(emitter, (*emitter).states, YAML_EMIT_FLOW_MAPPING_KEY_STATE).fail {
         return FAIL;
     }
     yaml_emitter_emit_node(emitter, event, 0_i32, 0_i32, 1_i32, 0_i32)
@@ -852,7 +877,8 @@ unsafe fn yaml_emitter_emit_block_sequence_item(
             emitter,
             0_i32,
             ((*emitter).mapping_context != 0 && (*emitter).indention == 0) as libc::c_int,
-        ) == Zero
+        )
+        .fail
         {
             return FAIL;
         }
@@ -862,7 +888,7 @@ unsafe fn yaml_emitter_emit_block_sequence_item(
         (*emitter).state = POP!((*emitter).states);
         return OK;
     }
-    if yaml_emitter_write_indent(emitter) == Zero {
+    if yaml_emitter_write_indent(emitter).fail {
         return FAIL;
     }
     if yaml_emitter_write_indicator(
@@ -871,7 +897,8 @@ unsafe fn yaml_emitter_emit_block_sequence_item(
         1_i32,
         0_i32,
         1_i32,
-    ) == Zero
+    )
+    .fail
     {
         return FAIL;
     }
@@ -879,7 +906,8 @@ unsafe fn yaml_emitter_emit_block_sequence_item(
         emitter,
         (*emitter).states,
         YAML_EMIT_BLOCK_SEQUENCE_ITEM_STATE
-    ) == Zero
+    )
+    .fail
     {
         return FAIL;
     }
@@ -892,7 +920,7 @@ unsafe fn yaml_emitter_emit_block_mapping_key(
     first: libc::c_int,
 ) -> Success {
     if first != 0 {
-        if yaml_emitter_increase_indent(emitter, 0_i32, 0_i32) == Zero {
+        if yaml_emitter_increase_indent(emitter, 0_i32, 0_i32).fail {
             return FAIL;
         }
     }
@@ -901,7 +929,7 @@ unsafe fn yaml_emitter_emit_block_mapping_key(
         (*emitter).state = POP!((*emitter).states);
         return OK;
     }
-    if yaml_emitter_write_indent(emitter) == Zero {
+    if yaml_emitter_write_indent(emitter).fail {
         return FAIL;
     }
     if yaml_emitter_check_simple_key(emitter) {
@@ -909,7 +937,8 @@ unsafe fn yaml_emitter_emit_block_mapping_key(
             emitter,
             (*emitter).states,
             YAML_EMIT_BLOCK_MAPPING_SIMPLE_VALUE_STATE
-        ) == Zero
+        )
+        .fail
         {
             return FAIL;
         }
@@ -921,7 +950,8 @@ unsafe fn yaml_emitter_emit_block_mapping_key(
             1_i32,
             0_i32,
             1_i32,
-        ) == Zero
+        )
+        .fail
         {
             return FAIL;
         }
@@ -929,7 +959,8 @@ unsafe fn yaml_emitter_emit_block_mapping_key(
             emitter,
             (*emitter).states,
             YAML_EMIT_BLOCK_MAPPING_VALUE_STATE
-        ) == Zero
+        )
+        .fail
         {
             return FAIL;
         }
@@ -949,12 +980,13 @@ unsafe fn yaml_emitter_emit_block_mapping_value(
             0_i32,
             0_i32,
             0_i32,
-        ) == Zero
+        )
+        .fail
         {
             return FAIL;
         }
     } else {
-        if yaml_emitter_write_indent(emitter) == Zero {
+        if yaml_emitter_write_indent(emitter).fail {
             return FAIL;
         }
         if yaml_emitter_write_indicator(
@@ -963,7 +995,8 @@ unsafe fn yaml_emitter_emit_block_mapping_value(
             1_i32,
             0_i32,
             1_i32,
-        ) == Zero
+        )
+        .fail
         {
             return FAIL;
         }
@@ -972,7 +1005,8 @@ unsafe fn yaml_emitter_emit_block_mapping_value(
         emitter,
         (*emitter).states,
         YAML_EMIT_BLOCK_MAPPING_KEY_STATE
-    ) == Zero
+    )
+    .fail
     {
         return FAIL;
     }
@@ -1008,7 +1042,7 @@ unsafe fn yaml_emitter_emit_alias(
     mut emitter: *mut yaml_emitter_t,
     _event: *mut yaml_event_t,
 ) -> Success {
-    if yaml_emitter_process_anchor(emitter) == Zero {
+    if yaml_emitter_process_anchor(emitter).fail {
         return FAIL;
     }
     if (*emitter).simple_key_context != 0 {
@@ -1024,19 +1058,19 @@ unsafe fn yaml_emitter_emit_scalar(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
 ) -> Success {
-    if yaml_emitter_select_scalar_style(emitter, event) == Zero {
+    if yaml_emitter_select_scalar_style(emitter, event).fail {
         return FAIL;
     }
-    if yaml_emitter_process_anchor(emitter) == Zero {
+    if yaml_emitter_process_anchor(emitter).fail {
         return FAIL;
     }
-    if yaml_emitter_process_tag(emitter) == Zero {
+    if yaml_emitter_process_tag(emitter).fail {
         return FAIL;
     }
-    if yaml_emitter_increase_indent(emitter, 1_i32, 0_i32) == Zero {
+    if yaml_emitter_increase_indent(emitter, 1_i32, 0_i32).fail {
         return FAIL;
     }
-    if yaml_emitter_process_scalar(emitter) == Zero {
+    if yaml_emitter_process_scalar(emitter).fail {
         return FAIL;
     }
     (*emitter).indent = POP!((*emitter).indents);
@@ -1048,10 +1082,10 @@ unsafe fn yaml_emitter_emit_sequence_start(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
 ) -> Success {
-    if yaml_emitter_process_anchor(emitter) == Zero {
+    if yaml_emitter_process_anchor(emitter).fail {
         return FAIL;
     }
-    if yaml_emitter_process_tag(emitter) == Zero {
+    if yaml_emitter_process_tag(emitter).fail {
         return FAIL;
     }
     if (*emitter).flow_level != 0
@@ -1071,10 +1105,10 @@ unsafe fn yaml_emitter_emit_mapping_start(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
 ) -> Success {
-    if yaml_emitter_process_anchor(emitter) == Zero {
+    if yaml_emitter_process_anchor(emitter).fail {
         return FAIL;
     }
-    if yaml_emitter_process_tag(emitter) == Zero {
+    if yaml_emitter_process_tag(emitter).fail {
         return FAIL;
     }
     if (*emitter).flow_level != 0
@@ -1242,7 +1276,8 @@ unsafe fn yaml_emitter_process_anchor(emitter: *mut yaml_emitter_t) -> Success {
         1_i32,
         0_i32,
         0_i32,
-    ) == Zero
+    )
+    .fail
     {
         return FAIL;
     }
@@ -1262,7 +1297,8 @@ unsafe fn yaml_emitter_process_tag(emitter: *mut yaml_emitter_t) -> Success {
             emitter,
             (*emitter).tag_data.handle,
             (*emitter).tag_data.handle_length,
-        ) == Zero
+        )
+        .fail
         {
             return FAIL;
         }
@@ -1272,7 +1308,8 @@ unsafe fn yaml_emitter_process_tag(emitter: *mut yaml_emitter_t) -> Success {
                 (*emitter).tag_data.suffix,
                 (*emitter).tag_data.suffix_length,
                 0_i32,
-            ) == Zero
+            )
+            .fail
             {
                 return FAIL;
             }
@@ -1284,7 +1321,8 @@ unsafe fn yaml_emitter_process_tag(emitter: *mut yaml_emitter_t) -> Success {
             1_i32,
             0_i32,
             0_i32,
-        ) == Zero
+        )
+        .fail
         {
             return FAIL;
         }
@@ -1293,7 +1331,8 @@ unsafe fn yaml_emitter_process_tag(emitter: *mut yaml_emitter_t) -> Success {
             (*emitter).tag_data.suffix,
             (*emitter).tag_data.suffix_length,
             0_i32,
-        ) == Zero
+        )
+        .fail
         {
             return FAIL;
         }
@@ -1303,7 +1342,8 @@ unsafe fn yaml_emitter_process_tag(emitter: *mut yaml_emitter_t) -> Success {
             0_i32,
             0_i32,
             0_i32,
-        ) == Zero
+        )
+        .fail
         {
             return FAIL;
         }
@@ -1686,15 +1726,14 @@ unsafe fn yaml_emitter_analyze_event(
     (*emitter).scalar_data.length = 0_u64;
     match (*event).type_ as libc::c_uint {
         5 => {
-            if yaml_emitter_analyze_anchor(emitter, (*event).data.alias.anchor, 1_i32) == Zero {
+            if yaml_emitter_analyze_anchor(emitter, (*event).data.alias.anchor, 1_i32).fail {
                 return FAIL;
             }
             OK
         }
         6 => {
             if !((*event).data.scalar.anchor).is_null() {
-                if yaml_emitter_analyze_anchor(emitter, (*event).data.scalar.anchor, 0_i32) == Zero
-                {
+                if yaml_emitter_analyze_anchor(emitter, (*event).data.scalar.anchor, 0_i32).fail {
                     return FAIL;
                 }
             }
@@ -1703,7 +1742,7 @@ unsafe fn yaml_emitter_analyze_event(
                     || (*event).data.scalar.plain_implicit == 0
                         && (*event).data.scalar.quoted_implicit == 0)
             {
-                if yaml_emitter_analyze_tag(emitter, (*event).data.scalar.tag) == Zero {
+                if yaml_emitter_analyze_tag(emitter, (*event).data.scalar.tag).fail {
                     return FAIL;
                 }
             }
@@ -1711,7 +1750,8 @@ unsafe fn yaml_emitter_analyze_event(
                 emitter,
                 (*event).data.scalar.value,
                 (*event).data.scalar.length,
-            ) == Zero
+            )
+            .fail
             {
                 return FAIL;
             }
@@ -1720,7 +1760,7 @@ unsafe fn yaml_emitter_analyze_event(
         7 => {
             if !((*event).data.sequence_start.anchor).is_null() {
                 if yaml_emitter_analyze_anchor(emitter, (*event).data.sequence_start.anchor, 0_i32)
-                    == Zero
+                    .fail
                 {
                     return FAIL;
                 }
@@ -1728,7 +1768,7 @@ unsafe fn yaml_emitter_analyze_event(
             if !((*event).data.sequence_start.tag).is_null()
                 && ((*emitter).canonical != 0 || (*event).data.sequence_start.implicit == 0)
             {
-                if yaml_emitter_analyze_tag(emitter, (*event).data.sequence_start.tag) == Zero {
+                if yaml_emitter_analyze_tag(emitter, (*event).data.sequence_start.tag).fail {
                     return FAIL;
                 }
             }
@@ -1737,7 +1777,7 @@ unsafe fn yaml_emitter_analyze_event(
         9 => {
             if !((*event).data.mapping_start.anchor).is_null() {
                 if yaml_emitter_analyze_anchor(emitter, (*event).data.mapping_start.anchor, 0_i32)
-                    == Zero
+                    .fail
                 {
                     return FAIL;
                 }
@@ -1745,7 +1785,7 @@ unsafe fn yaml_emitter_analyze_event(
             if !((*event).data.mapping_start.tag).is_null()
                 && ((*emitter).canonical != 0 || (*event).data.mapping_start.implicit == 0)
             {
-                if yaml_emitter_analyze_tag(emitter, (*event).data.mapping_start.tag) == Zero {
+                if yaml_emitter_analyze_tag(emitter, (*event).data.mapping_start.tag).fail {
                     return FAIL;
                 }
             }
@@ -1955,7 +1995,7 @@ unsafe fn yaml_emitter_write_plain_scalar(
                 && (*emitter).column > (*emitter).best_width
                 && !IS_SPACE_AT!(string, 1)
             {
-                if yaml_emitter_write_indent(emitter) == Zero {
+                if yaml_emitter_write_indent(emitter).fail {
                     return FAIL;
                 }
                 MOVE!(string);
@@ -1976,7 +2016,7 @@ unsafe fn yaml_emitter_write_plain_scalar(
             breaks = 1_i32;
         } else {
             if breaks != 0 {
-                if yaml_emitter_write_indent(emitter) == Zero {
+                if yaml_emitter_write_indent(emitter).fail {
                     return FAIL;
                 }
             }
@@ -2008,7 +2048,8 @@ unsafe fn yaml_emitter_write_single_quoted_scalar(
         1_i32,
         0_i32,
         0_i32,
-    ) == Zero
+    )
+    .fail
     {
         return FAIL;
     }
@@ -2021,7 +2062,7 @@ unsafe fn yaml_emitter_write_single_quoted_scalar(
                 && string.pointer != string.end.wrapping_offset(-(1_isize))
                 && !IS_SPACE_AT!(string, 1)
             {
-                if yaml_emitter_write_indent(emitter) == Zero {
+                if yaml_emitter_write_indent(emitter).fail {
                     return FAIL;
                 }
                 MOVE!(string);
@@ -2042,7 +2083,7 @@ unsafe fn yaml_emitter_write_single_quoted_scalar(
             breaks = 1_i32;
         } else {
             if breaks != 0 {
-                if yaml_emitter_write_indent(emitter) == Zero {
+                if yaml_emitter_write_indent(emitter).fail {
                     return FAIL;
                 }
             }
@@ -2060,7 +2101,7 @@ unsafe fn yaml_emitter_write_single_quoted_scalar(
         }
     }
     if breaks != 0 {
-        if yaml_emitter_write_indent(emitter) == Zero {
+        if yaml_emitter_write_indent(emitter).fail {
             return FAIL;
         }
     }
@@ -2070,7 +2111,8 @@ unsafe fn yaml_emitter_write_single_quoted_scalar(
         0_i32,
         0_i32,
         0_i32,
-    ) == Zero
+    )
+    .fail
     {
         return FAIL;
     }
@@ -2093,7 +2135,8 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
         1_i32,
         0_i32,
         0_i32,
-    ) == Zero
+    )
+    .fail
     {
         return FAIL;
     }
@@ -2258,7 +2301,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                 && string.pointer != string.start
                 && string.pointer != string.end.wrapping_offset(-(1_isize))
             {
-                if yaml_emitter_write_indent(emitter) == Zero {
+                if yaml_emitter_write_indent(emitter).fail {
                     return FAIL;
                 }
                 if IS_SPACE_AT!(string, 1) {
@@ -2284,7 +2327,8 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
         0_i32,
         0_i32,
         0_i32,
-    ) == Zero
+    )
+    .fail
     {
         return FAIL;
     }
@@ -2303,8 +2347,7 @@ unsafe fn yaml_emitter_write_block_scalar_hints(
         indent_hint[0_usize] =
             ('0' as i32 + (*emitter).best_indent as libc::c_char as libc::c_int) as libc::c_char;
         indent_hint[1_usize] = '\0' as libc::c_char;
-        if yaml_emitter_write_indicator(emitter, indent_hint.as_mut_ptr(), 0_i32, 0_i32, 0_i32)
-            == Zero
+        if yaml_emitter_write_indicator(emitter, indent_hint.as_mut_ptr(), 0_i32, 0_i32, 0_i32).fail
         {
             return FAIL;
         }
@@ -2339,7 +2382,7 @@ unsafe fn yaml_emitter_write_block_scalar_hints(
         }
     }
     if !chomp_hint.is_null() {
-        if yaml_emitter_write_indicator(emitter, chomp_hint, 0_i32, 0_i32, 0_i32) == Zero {
+        if yaml_emitter_write_indicator(emitter, chomp_hint, 0_i32, 0_i32, 0_i32).fail {
             return FAIL;
         }
     }
@@ -2359,11 +2402,12 @@ unsafe fn yaml_emitter_write_literal_scalar(
         1_i32,
         0_i32,
         0_i32,
-    ) == Zero
+    )
+    .fail
     {
         return FAIL;
     }
-    if yaml_emitter_write_block_scalar_hints(emitter, string) == Zero {
+    if yaml_emitter_write_block_scalar_hints(emitter, string).fail {
         return FAIL;
     }
     if !PUT_BREAK(emitter).ok {
@@ -2380,7 +2424,7 @@ unsafe fn yaml_emitter_write_literal_scalar(
             breaks = 1_i32;
         } else {
             if breaks != 0 {
-                if yaml_emitter_write_indent(emitter) == Zero {
+                if yaml_emitter_write_indent(emitter).fail {
                     return FAIL;
                 }
             }
@@ -2408,11 +2452,12 @@ unsafe fn yaml_emitter_write_folded_scalar(
         1_i32,
         0_i32,
         0_i32,
-    ) == Zero
+    )
+    .fail
     {
         return FAIL;
     }
-    if yaml_emitter_write_block_scalar_hints(emitter, string) == Zero {
+    if yaml_emitter_write_block_scalar_hints(emitter, string).fail {
         return FAIL;
     }
     if !PUT_BREAK(emitter).ok {
@@ -2440,7 +2485,7 @@ unsafe fn yaml_emitter_write_folded_scalar(
             breaks = 1_i32;
         } else {
             if breaks != 0 {
-                if yaml_emitter_write_indent(emitter) == Zero {
+                if yaml_emitter_write_indent(emitter).fail {
                     return FAIL;
                 }
                 leading_spaces = IS_BLANK!(string) as libc::c_int;
@@ -2450,7 +2495,7 @@ unsafe fn yaml_emitter_write_folded_scalar(
                 && !IS_SPACE_AT!(string, 1)
                 && (*emitter).column > (*emitter).best_width
             {
-                if yaml_emitter_write_indent(emitter) == Zero {
+                if yaml_emitter_write_indent(emitter).fail {
                     return FAIL;
                 }
                 MOVE!(string);

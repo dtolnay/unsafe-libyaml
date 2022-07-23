@@ -1,5 +1,5 @@
 use crate::externs::{free, malloc, memcpy, memmove, memset, realloc, strdup, strlen};
-use crate::success::{Success, Zero, FAIL, OK};
+use crate::success::{Success, FAIL, OK};
 use crate::yaml::{size_t, yaml_char_t};
 use crate::{
     libc, yaml_break_t, yaml_document_t, yaml_emitter_state_t, yaml_emitter_t, yaml_encoding_t,
@@ -108,7 +108,7 @@ pub(crate) unsafe fn yaml_string_join(
     while (*a_end).c_offset_from(*a_pointer) as libc::c_long
         <= (*b_pointer).c_offset_from(*b_start) as libc::c_long
     {
-        if yaml_string_extend(a_start, a_pointer, a_end) == Zero {
+        if yaml_string_extend(a_start, a_pointer, a_end).fail {
             return FAIL;
         }
     }
@@ -210,18 +210,19 @@ pub unsafe fn yaml_parser_initialize(parser: *mut yaml_parser_t) -> Success {
         0_i32,
         size_of::<yaml_parser_t>() as libc::c_ulong,
     );
-    if !(BUFFER_INIT!(parser, (*parser).raw_buffer, INPUT_RAW_BUFFER_SIZE) == Zero) {
-        if !(BUFFER_INIT!(parser, (*parser).buffer, INPUT_BUFFER_SIZE) == Zero) {
-            if !(QUEUE_INIT!(parser, (*parser).tokens, yaml_token_t) == Zero) {
-                if !(STACK_INIT!(parser, (*parser).indents, libc::c_int) == Zero) {
-                    if !(STACK_INIT!(parser, (*parser).simple_keys, yaml_simple_key_t) == Zero) {
-                        if !(STACK_INIT!(parser, (*parser).states, yaml_parser_state_t) == Zero) {
-                            if !(STACK_INIT!(parser, (*parser).marks, yaml_mark_t) == Zero) {
+    if !(BUFFER_INIT!(parser, (*parser).raw_buffer, INPUT_RAW_BUFFER_SIZE).fail) {
+        if !(BUFFER_INIT!(parser, (*parser).buffer, INPUT_BUFFER_SIZE).fail) {
+            if !(QUEUE_INIT!(parser, (*parser).tokens, yaml_token_t).fail) {
+                if !(STACK_INIT!(parser, (*parser).indents, libc::c_int).fail) {
+                    if !(STACK_INIT!(parser, (*parser).simple_keys, yaml_simple_key_t).fail) {
+                        if !(STACK_INIT!(parser, (*parser).states, yaml_parser_state_t).fail) {
+                            if !(STACK_INIT!(parser, (*parser).marks, yaml_mark_t).fail) {
                                 if !(STACK_INIT!(
                                     parser,
                                     (*parser).tag_directives,
                                     yaml_tag_directive_t
-                                ) == Zero)
+                                )
+                                .fail)
                                 {
                                     return OK;
                                 }
@@ -359,13 +360,13 @@ pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> Succe
         0_i32,
         size_of::<yaml_emitter_t>() as libc::c_ulong,
     );
-    if !(BUFFER_INIT!(emitter, (*emitter).buffer, OUTPUT_BUFFER_SIZE) == Zero) {
-        if !(BUFFER_INIT!(emitter, (*emitter).raw_buffer, OUTPUT_RAW_BUFFER_SIZE) == Zero) {
-            if !(STACK_INIT!(emitter, (*emitter).states, yaml_emitter_state_t) == Zero) {
-                if !(QUEUE_INIT!(emitter, (*emitter).events, yaml_event_t) == Zero) {
-                    if !(STACK_INIT!(emitter, (*emitter).indents, libc::c_int) == Zero) {
+    if !(BUFFER_INIT!(emitter, (*emitter).buffer, OUTPUT_BUFFER_SIZE).fail) {
+        if !(BUFFER_INIT!(emitter, (*emitter).raw_buffer, OUTPUT_RAW_BUFFER_SIZE).fail) {
+            if !(STACK_INIT!(emitter, (*emitter).states, yaml_emitter_state_t).fail) {
+                if !(QUEUE_INIT!(emitter, (*emitter).events, yaml_event_t).fail) {
+                    if !(STACK_INIT!(emitter, (*emitter).indents, libc::c_int).fail) {
                         if !(STACK_INIT!(emitter, (*emitter).tag_directives, yaml_tag_directive_t)
-                            == Zero)
+                            .fail)
                         {
                             return OK;
                         }
@@ -719,7 +720,8 @@ pub unsafe fn yaml_document_start_event_initialize(
                     addr_of_mut!(context),
                     tag_directives_copy,
                     yaml_tag_directive_t
-                ) == Zero
+                )
+                .fail
                 {
                     current_block = 14964981520188694172;
                 } else {
@@ -734,7 +736,8 @@ pub unsafe fn yaml_document_start_event_initialize(
                         if yaml_check_utf8(
                             (*tag_directive).handle,
                             strlen((*tag_directive).handle as *mut libc::c_char),
-                        ) == Zero
+                        )
+                        .fail
                         {
                             current_block = 14964981520188694172;
                             break;
@@ -742,7 +745,8 @@ pub unsafe fn yaml_document_start_event_initialize(
                         if yaml_check_utf8(
                             (*tag_directive).prefix,
                             strlen((*tag_directive).prefix as *mut libc::c_char),
-                        ) == Zero
+                        )
+                        .fail
                         {
                             current_block = 14964981520188694172;
                             break;
@@ -753,7 +757,7 @@ pub unsafe fn yaml_document_start_event_initialize(
                             current_block = 14964981520188694172;
                             break;
                         }
-                        if PUSH!(addr_of_mut!(context), tag_directives_copy, value) == Zero {
+                        if PUSH!(addr_of_mut!(context), tag_directives_copy, value).fail {
                             current_block = 14964981520188694172;
                             break;
                         }
@@ -839,7 +843,7 @@ pub unsafe fn yaml_alias_event_initialize(
     };
     __assert!(!event.is_null());
     __assert!(!anchor.is_null());
-    if yaml_check_utf8(anchor, strlen(anchor as *mut libc::c_char)) == Zero {
+    if yaml_check_utf8(anchor, strlen(anchor as *mut libc::c_char)).fail {
         return FAIL;
     }
     let anchor_copy: *mut yaml_char_t = yaml_strdup(anchor);
@@ -888,7 +892,7 @@ pub unsafe fn yaml_scalar_event_initialize(
     __assert!(!event.is_null());
     __assert!(!value.is_null());
     if !anchor.is_null() {
-        if yaml_check_utf8(anchor, strlen(anchor as *mut libc::c_char)) == Zero {
+        if yaml_check_utf8(anchor, strlen(anchor as *mut libc::c_char)).fail {
             current_block = 16285396129609901221;
         } else {
             anchor_copy = yaml_strdup(anchor);
@@ -904,7 +908,7 @@ pub unsafe fn yaml_scalar_event_initialize(
     match current_block {
         8515828400728868193 => {
             if !tag.is_null() {
-                if yaml_check_utf8(tag, strlen(tag as *mut libc::c_char)) == Zero {
+                if yaml_check_utf8(tag, strlen(tag as *mut libc::c_char)).fail {
                     current_block = 16285396129609901221;
                 } else {
                     tag_copy = yaml_strdup(tag);
@@ -923,7 +927,7 @@ pub unsafe fn yaml_scalar_event_initialize(
                     if length < 0_i32 {
                         length = strlen(value as *mut libc::c_char) as libc::c_int;
                     }
-                    if !(yaml_check_utf8(value, length as size_t) == Zero) {
+                    if !(yaml_check_utf8(value, length as size_t).fail) {
                         value_copy = yaml_malloc((length + 1_i32) as size_t) as *mut yaml_char_t;
                         if !value_copy.is_null() {
                             memcpy(
@@ -986,7 +990,7 @@ pub unsafe fn yaml_sequence_start_event_initialize(
     let mut tag_copy: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
     __assert!(!event.is_null());
     if !anchor.is_null() {
-        if yaml_check_utf8(anchor, strlen(anchor as *mut libc::c_char)) == Zero {
+        if yaml_check_utf8(anchor, strlen(anchor as *mut libc::c_char)).fail {
             current_block = 8817775685815971442;
         } else {
             anchor_copy = yaml_strdup(anchor);
@@ -1002,7 +1006,7 @@ pub unsafe fn yaml_sequence_start_event_initialize(
     match current_block {
         11006700562992250127 => {
             if !tag.is_null() {
-                if yaml_check_utf8(tag, strlen(tag as *mut libc::c_char)) == Zero {
+                if yaml_check_utf8(tag, strlen(tag as *mut libc::c_char)).fail {
                     current_block = 8817775685815971442;
                 } else {
                     tag_copy = yaml_strdup(tag);
@@ -1084,7 +1088,7 @@ pub unsafe fn yaml_mapping_start_event_initialize(
     let mut tag_copy: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
     __assert!(!event.is_null());
     if !anchor.is_null() {
-        if yaml_check_utf8(anchor, strlen(anchor as *mut libc::c_char)) == Zero {
+        if yaml_check_utf8(anchor, strlen(anchor as *mut libc::c_char)).fail {
             current_block = 14748279734549812740;
         } else {
             anchor_copy = yaml_strdup(anchor);
@@ -1100,7 +1104,7 @@ pub unsafe fn yaml_mapping_start_event_initialize(
     match current_block {
         11006700562992250127 => {
             if !tag.is_null() {
-                if yaml_check_utf8(tag, strlen(tag as *mut libc::c_char)) == Zero {
+                if yaml_check_utf8(tag, strlen(tag as *mut libc::c_char)).fail {
                     current_block = 14748279734549812740;
                 } else {
                     tag_copy = yaml_strdup(tag);
@@ -1249,7 +1253,7 @@ pub unsafe fn yaml_document_initialize(
         !tag_directives_start.is_null() && !tag_directives_end.is_null()
             || tag_directives_start == tag_directives_end
     );
-    if !(STACK_INIT!(addr_of_mut!(context), nodes, yaml_node_t) == Zero) {
+    if !(STACK_INIT!(addr_of_mut!(context), nodes, yaml_node_t).fail) {
         if !version_directive.is_null() {
             version_directive_copy =
                 yaml_malloc(size_of::<yaml_version_directive_t>() as libc::c_ulong)
@@ -1273,7 +1277,8 @@ pub unsafe fn yaml_document_initialize(
                         addr_of_mut!(context),
                         tag_directives_copy,
                         yaml_tag_directive_t
-                    ) == Zero
+                    )
+                    .fail
                     {
                         current_block = 8142820162064489797;
                     } else {
@@ -1288,7 +1293,8 @@ pub unsafe fn yaml_document_initialize(
                             if yaml_check_utf8(
                                 (*tag_directive).handle,
                                 strlen((*tag_directive).handle as *mut libc::c_char),
-                            ) == Zero
+                            )
+                            .fail
                             {
                                 current_block = 8142820162064489797;
                                 break;
@@ -1296,7 +1302,8 @@ pub unsafe fn yaml_document_initialize(
                             if yaml_check_utf8(
                                 (*tag_directive).prefix,
                                 strlen((*tag_directive).prefix as *mut libc::c_char),
-                            ) == Zero
+                            )
+                            .fail
                             {
                                 current_block = 8142820162064489797;
                                 break;
@@ -1307,7 +1314,7 @@ pub unsafe fn yaml_document_initialize(
                                 current_block = 8142820162064489797;
                                 break;
                             }
-                            if PUSH!(addr_of_mut!(context), tag_directives_copy, value) == Zero {
+                            if PUSH!(addr_of_mut!(context), tag_directives_copy, value).fail {
                                 current_block = 8142820162064489797;
                                 break;
                             }
@@ -1469,13 +1476,13 @@ pub unsafe fn yaml_document_add_scalar(
     if tag.is_null() {
         tag = b"tag:yaml.org,2002:str\0" as *const u8 as *const libc::c_char as *mut yaml_char_t;
     }
-    if !(yaml_check_utf8(tag, strlen(tag as *mut libc::c_char)) == Zero) {
+    if !(yaml_check_utf8(tag, strlen(tag as *mut libc::c_char)).fail) {
         tag_copy = yaml_strdup(tag);
         if !tag_copy.is_null() {
             if length < 0_i32 {
                 length = strlen(value as *mut libc::c_char) as libc::c_int;
             }
-            if !(yaml_check_utf8(value, length as size_t) == Zero) {
+            if !(yaml_check_utf8(value, length as size_t).fail) {
                 value_copy = yaml_malloc((length + 1_i32) as size_t) as *mut yaml_char_t;
                 if !value_copy.is_null() {
                     memcpy(
@@ -1496,7 +1503,7 @@ pub unsafe fn yaml_document_add_scalar(
                     (*node).data.scalar.value = value_copy;
                     (*node).data.scalar.length = length as size_t;
                     (*node).data.scalar.style = style;
-                    if !(PUSH!(addr_of_mut!(context), (*document).nodes, *node) == Zero) {
+                    if !(PUSH!(addr_of_mut!(context), (*document).nodes, *node).fail) {
                         return ((*document).nodes.top).c_offset_from((*document).nodes.start)
                             as libc::c_long as libc::c_int;
                     }
@@ -1545,10 +1552,10 @@ pub unsafe fn yaml_document_add_sequence(
     if tag.is_null() {
         tag = b"tag:yaml.org,2002:seq\0" as *const u8 as *const libc::c_char as *mut yaml_char_t;
     }
-    if !(yaml_check_utf8(tag, strlen(tag as *mut libc::c_char)) == Zero) {
+    if !(yaml_check_utf8(tag, strlen(tag as *mut libc::c_char)).fail) {
         tag_copy = yaml_strdup(tag);
         if !tag_copy.is_null() {
-            if !(STACK_INIT!(addr_of_mut!(context), items, yaml_node_item_t) == Zero) {
+            if !(STACK_INIT!(addr_of_mut!(context), items, yaml_node_item_t).fail) {
                 memset(
                     node as *mut libc::c_void,
                     0_i32,
@@ -1562,7 +1569,7 @@ pub unsafe fn yaml_document_add_sequence(
                 (*node).data.sequence.items.end = items.end;
                 (*node).data.sequence.items.top = items.start;
                 (*node).data.sequence.style = style;
-                if !(PUSH!(addr_of_mut!(context), (*document).nodes, *node) == Zero) {
+                if !(PUSH!(addr_of_mut!(context), (*document).nodes, *node).fail) {
                     return ((*document).nodes.top).c_offset_from((*document).nodes.start)
                         as libc::c_long as libc::c_int;
                 }
@@ -1610,10 +1617,10 @@ pub unsafe fn yaml_document_add_mapping(
     if tag.is_null() {
         tag = b"tag:yaml.org,2002:map\0" as *const u8 as *const libc::c_char as *mut yaml_char_t;
     }
-    if !(yaml_check_utf8(tag, strlen(tag as *mut libc::c_char)) == Zero) {
+    if !(yaml_check_utf8(tag, strlen(tag as *mut libc::c_char)).fail) {
         tag_copy = yaml_strdup(tag);
         if !tag_copy.is_null() {
-            if !(STACK_INIT!(addr_of_mut!(context), pairs, yaml_node_pair_t) == Zero) {
+            if !(STACK_INIT!(addr_of_mut!(context), pairs, yaml_node_pair_t).fail) {
                 memset(
                     node as *mut libc::c_void,
                     0_i32,
@@ -1627,7 +1634,7 @@ pub unsafe fn yaml_document_add_mapping(
                 (*node).data.mapping.pairs.end = pairs.end;
                 (*node).data.mapping.pairs.top = pairs.start;
                 (*node).data.mapping.style = style;
-                if !(PUSH!(addr_of_mut!(context), (*document).nodes, *node) == Zero) {
+                if !(PUSH!(addr_of_mut!(context), (*document).nodes, *node).fail) {
                     return ((*document).nodes.top).c_offset_from((*document).nodes.start)
                         as libc::c_long as libc::c_int;
                 }
@@ -1670,7 +1677,8 @@ pub unsafe fn yaml_document_append_sequence_item(
             .sequence
             .items,
         item
-    ) == Zero
+    )
+    .fail
     {
         return FAIL;
     }
@@ -1713,7 +1721,8 @@ pub unsafe fn yaml_document_append_mapping_pair(
             .mapping
             .pairs,
         pair
-    ) == Zero
+    )
+    .fail
     {
         return FAIL;
     }
