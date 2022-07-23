@@ -2206,23 +2206,23 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                     }
                 }
                 _ => {
-                    if value_0 <= 0xFF_u32 {
+                    if value_0 <= 0xFF {
                         if PUT(emitter, b'x').fail {
                             return FAIL;
                         }
-                        width = 2_u32;
-                    } else if value_0 <= 0xFFFF_u32 {
+                        width = 2;
+                    } else if value_0 <= 0xFFFF {
                         if PUT(emitter, b'u').fail {
                             return FAIL;
                         }
-                        width = 4_u32;
+                        width = 4;
                     } else {
                         if PUT(emitter, b'U').fail {
                             return FAIL;
                         }
-                        width = 8_u32;
+                        width = 8;
                     }
-                    k = width.wrapping_sub(1_u32).wrapping_mul(4_u32) as libc::c_int;
+                    k = width.wrapping_sub(1).wrapping_mul(4) as libc::c_int;
                     while k >= 0 {
                         let digit: libc::c_int = (value_0 >> k & 0x0F) as libc::c_int;
                         if PUT(

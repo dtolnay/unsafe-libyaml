@@ -620,10 +620,10 @@ unsafe fn yaml_check_utf8(start: *const yaml_char_t, length: size_t) -> Success 
             value = (value << 6).wrapping_add((octet as libc::c_int & 0x3F) as libc::c_uint);
             k = k.wrapping_add(1);
         }
-        if !(width == 1_u32
-            || width == 2_u32 && value >= 0x80_u32
-            || width == 3_u32 && value >= 0x800_u32
-            || width == 4_u32 && value >= 0x10000_u32)
+        if !(width == 1
+            || width == 2 && value >= 0x80
+            || width == 3 && value >= 0x800
+            || width == 4 && value >= 0x10000)
         {
             return FAIL;
         }

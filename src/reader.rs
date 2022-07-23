@@ -196,11 +196,11 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
         }
         first = 0;
         while (*parser).raw_buffer.pointer != (*parser).raw_buffer.last {
-            let mut value: libc::c_uint = 0_u32;
+            let mut value: libc::c_uint = 0;
             let value2: libc::c_uint;
             let mut incomplete: libc::c_int = 0;
             let mut octet: libc::c_uchar;
-            let mut width: libc::c_uint = 0_u32;
+            let mut width: libc::c_uint = 0;
             let low: libc::c_int;
             let high: libc::c_int;
             let mut k: size_t;
@@ -270,10 +270,10 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
                                 .wrapping_add((octet as libc::c_int & 0x3F) as libc::c_uint);
                             k = k.wrapping_add(1);
                         }
-                        if !(width == 1_u32
-                            || width == 2_u32 && value >= 0x80_u32
-                            || width == 3_u32 && value >= 0x800_u32
-                            || width == 4_u32 && value >= 0x10000_u32)
+                        if !(width == 1
+                            || width == 2 && value >= 0x80
+                            || width == 3 && value >= 0x800
+                            || width == 4 && value >= 0x10000)
                         {
                             return yaml_parser_set_reader_error(
                                 parser,
@@ -283,7 +283,7 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
                                 -1,
                             );
                         }
-                        if value >= 0xD800_u32 && value <= 0xDFFF_u32 || value > 0x10FFFF_u32 {
+                        if value >= 0xD800 && value <= 0xDFFF || value > 0x10FFFF {
                             return yaml_parser_set_reader_error(
                                 parser,
                                 b"invalid Unicode character\0" as *const u8 as *const libc::c_char,
@@ -325,7 +325,7 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
                             + ((*(*parser).raw_buffer.pointer.wrapping_offset(high as isize)
                                 as libc::c_int)
                                 << 8)) as libc::c_uint;
-                        if value & 0xFC00_u32 == 0xDC00_u32 {
+                        if value & 0xFC00 == 0xDC00 {
                             return yaml_parser_set_reader_error(
                                 parser,
                                 b"unexpected low surrogate area\0" as *const u8
@@ -334,8 +334,8 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
                                 value as libc::c_int,
                             );
                         }
-                        if value & 0xFC00_u32 == 0xD800_u32 {
-                            width = 4_u32;
+                        if value & 0xFC00 == 0xD800 {
+                            width = 4;
                             if raw_unread < 4_u64 {
                                 if (*parser).eof != 0 {
                                     return yaml_parser_set_reader_error(
@@ -360,7 +360,7 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
                                         as libc::c_int)
                                         << 8))
                                     as libc::c_uint;
-                                if value2 & 0xFC00_u32 != 0xDC00_u32 {
+                                if value2 & 0xFC00 != 0xDC00 {
                                     return yaml_parser_set_reader_error(
                                         parser,
                                         b"expected low surrogate area\0" as *const u8
@@ -370,11 +370,11 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
                                     );
                                 }
                                 value = 0x10000_u32
-                                    .wrapping_add((value & 0x3FF_u32) << 10)
-                                    .wrapping_add(value2 & 0x3FF_u32);
+                                    .wrapping_add((value & 0x3FF) << 10)
+                                    .wrapping_add(value2 & 0x3FF);
                             }
                         } else {
-                            width = 2_u32;
+                            width = 2;
                         }
                     }
                 }
@@ -383,14 +383,14 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
             if incomplete != 0 {
                 break;
             }
-            if !(value == 0x9_u32
-                || value == 0xA_u32
-                || value == 0xD_u32
-                || value >= 0x20_u32 && value <= 0x7E_u32
-                || value == 0x85_u32
-                || value >= 0xA0_u32 && value <= 0xD7FF_u32
-                || value >= 0xE000_u32 && value <= 0xFFFD_u32
-                || value >= 0x10000_u32 && value <= 0x10FFFF_u32)
+            if !(value == 0x9
+                || value == 0xA
+                || value == 0xD
+                || value >= 0x20 && value <= 0x7E
+                || value == 0x85
+                || value >= 0xA0 && value <= 0xD7FF
+                || value >= 0xE000 && value <= 0xFFFD
+                || value >= 0x10000 && value <= 0x10FFFF)
             {
                 return yaml_parser_set_reader_error(
                     parser,
@@ -404,12 +404,12 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
             let fresh15 = addr_of_mut!((*parser).offset);
             *fresh15 = (*fresh15 as libc::c_ulong).wrapping_add(width as libc::c_ulong) as size_t
                 as size_t;
-            if value <= 0x7F_u32 {
+            if value <= 0x7F {
                 let fresh16 = addr_of_mut!((*parser).buffer.last);
                 let fresh17 = *fresh16;
                 *fresh16 = (*fresh16).wrapping_offset(1);
                 *fresh17 = value as yaml_char_t;
-            } else if value <= 0x7FF_u32 {
+            } else if value <= 0x7FF {
                 let fresh18 = addr_of_mut!((*parser).buffer.last);
                 let fresh19 = *fresh18;
                 *fresh18 = (*fresh18).wrapping_offset(1);
@@ -417,8 +417,8 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
                 let fresh20 = addr_of_mut!((*parser).buffer.last);
                 let fresh21 = *fresh20;
                 *fresh20 = (*fresh20).wrapping_offset(1);
-                *fresh21 = 0x80_u32.wrapping_add(value & 0x3F_u32) as yaml_char_t;
-            } else if value <= 0xFFFF_u32 {
+                *fresh21 = 0x80_u32.wrapping_add(value & 0x3F) as yaml_char_t;
+            } else if value <= 0xFFFF {
                 let fresh22 = addr_of_mut!((*parser).buffer.last);
                 let fresh23 = *fresh22;
                 *fresh22 = (*fresh22).wrapping_offset(1);
@@ -426,11 +426,11 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
                 let fresh24 = addr_of_mut!((*parser).buffer.last);
                 let fresh25 = *fresh24;
                 *fresh24 = (*fresh24).wrapping_offset(1);
-                *fresh25 = 0x80_u32.wrapping_add(value >> 6 & 0x3F_u32) as yaml_char_t;
+                *fresh25 = 0x80_u32.wrapping_add(value >> 6 & 0x3F) as yaml_char_t;
                 let fresh26 = addr_of_mut!((*parser).buffer.last);
                 let fresh27 = *fresh26;
                 *fresh26 = (*fresh26).wrapping_offset(1);
-                *fresh27 = 0x80_u32.wrapping_add(value & 0x3F_u32) as yaml_char_t;
+                *fresh27 = 0x80_u32.wrapping_add(value & 0x3F) as yaml_char_t;
             } else {
                 let fresh28 = addr_of_mut!((*parser).buffer.last);
                 let fresh29 = *fresh28;
@@ -439,15 +439,15 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
                 let fresh30 = addr_of_mut!((*parser).buffer.last);
                 let fresh31 = *fresh30;
                 *fresh30 = (*fresh30).wrapping_offset(1);
-                *fresh31 = 0x80_u32.wrapping_add(value >> 12 & 0x3F_u32) as yaml_char_t;
+                *fresh31 = 0x80_u32.wrapping_add(value >> 12 & 0x3F) as yaml_char_t;
                 let fresh32 = addr_of_mut!((*parser).buffer.last);
                 let fresh33 = *fresh32;
                 *fresh32 = (*fresh32).wrapping_offset(1);
-                *fresh33 = 0x80_u32.wrapping_add(value >> 6 & 0x3F_u32) as yaml_char_t;
+                *fresh33 = 0x80_u32.wrapping_add(value >> 6 & 0x3F) as yaml_char_t;
                 let fresh34 = addr_of_mut!((*parser).buffer.last);
                 let fresh35 = *fresh34;
                 *fresh34 = (*fresh34).wrapping_offset(1);
-                *fresh35 = 0x80_u32.wrapping_add(value & 0x3F_u32) as yaml_char_t;
+                *fresh35 = 0x80_u32.wrapping_add(value & 0x3F) as yaml_char_t;
             }
             let fresh36 = addr_of_mut!((*parser).unread);
             *fresh36 = (*fresh36).wrapping_add(1);

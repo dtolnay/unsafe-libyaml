@@ -2578,7 +2578,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                         SKIP(parser);
                                         SKIP(parser);
                                         if code_length != 0 {
-                                            let mut value: libc::c_uint = 0_u32;
+                                            let mut value: libc::c_uint = 0;
                                             let mut k: size_t;
                                             if CACHE(parser, code_length).fail {
                                                 current_block = 8114179180390253173;
@@ -2608,8 +2608,8 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                     k = k.wrapping_add(1);
                                                 }
                                             }
-                                            if value >= 0xD800_u32 && value <= 0xDFFF_u32
-                                                || value > 0x10FFFF_u32
+                                            if value >= 0xD800 && value <= 0xDFFF
+                                                || value > 0x10FFFF
                                             {
                                                 yaml_parser_set_scanner_error(
                                                     parser,
@@ -2623,12 +2623,12 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                 current_block = 8114179180390253173;
                                                 break 's_58;
                                             } else {
-                                                if value <= 0x7F_u32 {
+                                                if value <= 0x7F {
                                                     let fresh573 = string.pointer;
                                                     string.pointer =
                                                         string.pointer.wrapping_offset(1);
                                                     *fresh573 = value as yaml_char_t;
-                                                } else if value <= 0x7FF_u32 {
+                                                } else if value <= 0x7FF {
                                                     let fresh574 = string.pointer;
                                                     string.pointer =
                                                         string.pointer.wrapping_offset(1);
@@ -2637,10 +2637,9 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                     let fresh575 = string.pointer;
                                                     string.pointer =
                                                         string.pointer.wrapping_offset(1);
-                                                    *fresh575 = 0x80_u32
-                                                        .wrapping_add(value & 0x3F_u32)
+                                                    *fresh575 = 0x80_u32.wrapping_add(value & 0x3F)
                                                         as yaml_char_t;
-                                                } else if value <= 0xFFFF_u32 {
+                                                } else if value <= 0xFFFF {
                                                     let fresh576 = string.pointer;
                                                     string.pointer =
                                                         string.pointer.wrapping_offset(1);
@@ -2650,13 +2649,12 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                     string.pointer =
                                                         string.pointer.wrapping_offset(1);
                                                     *fresh577 = 0x80_u32
-                                                        .wrapping_add(value >> 6 & 0x3F_u32)
+                                                        .wrapping_add(value >> 6 & 0x3F)
                                                         as yaml_char_t;
                                                     let fresh578 = string.pointer;
                                                     string.pointer =
                                                         string.pointer.wrapping_offset(1);
-                                                    *fresh578 = 0x80_u32
-                                                        .wrapping_add(value & 0x3F_u32)
+                                                    *fresh578 = 0x80_u32.wrapping_add(value & 0x3F)
                                                         as yaml_char_t;
                                                 } else {
                                                     let fresh579 = string.pointer;
@@ -2668,19 +2666,18 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                     string.pointer =
                                                         string.pointer.wrapping_offset(1);
                                                     *fresh580 = 0x80_u32
-                                                        .wrapping_add(value >> 12 & 0x3F_u32)
+                                                        .wrapping_add(value >> 12 & 0x3F)
                                                         as yaml_char_t;
                                                     let fresh581 = string.pointer;
                                                     string.pointer =
                                                         string.pointer.wrapping_offset(1);
                                                     *fresh581 = 0x80_u32
-                                                        .wrapping_add(value >> 6 & 0x3F_u32)
+                                                        .wrapping_add(value >> 6 & 0x3F)
                                                         as yaml_char_t;
                                                     let fresh582 = string.pointer;
                                                     string.pointer =
                                                         string.pointer.wrapping_offset(1);
-                                                    *fresh582 = 0x80_u32
-                                                        .wrapping_add(value & 0x3F_u32)
+                                                    *fresh582 = 0x80_u32.wrapping_add(value & 0x3F)
                                                         as yaml_char_t;
                                                 }
                                                 k = 0_u64;
