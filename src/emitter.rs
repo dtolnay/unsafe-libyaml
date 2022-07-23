@@ -584,7 +584,7 @@ unsafe fn yaml_emitter_emit_document_end(
             return 0_i32;
         }
         (*emitter).state = YAML_EMIT_DOCUMENT_START_STATE;
-        while !((*emitter).tag_directives.start == (*emitter).tag_directives.top) {
+        while !STACK_EMPTY!((*emitter).tag_directives) {
             let tag_directive = POP!((*emitter).tag_directives);
             yaml_free(tag_directive.handle as *mut libc::c_void);
             yaml_free(tag_directive.prefix as *mut libc::c_void);

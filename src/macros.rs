@@ -418,7 +418,9 @@ macro_rules! STACK_DEL {
 }
 
 macro_rules! STACK_EMPTY {
-    () => {}; // TODO
+    ($stack:expr) => {
+        $stack.start == $stack.top
+    };
 }
 
 macro_rules! STACK_LIMIT {

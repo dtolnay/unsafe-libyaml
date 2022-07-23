@@ -114,7 +114,7 @@ pub unsafe fn yaml_emitter_dump(
     }
     match current_block {
         15619007995458559411 => {
-            if (*document).nodes.start == (*document).nodes.top {
+            if STACK_EMPTY!((*document).nodes) {
                 if !(yaml_emitter_close(emitter) == 0) {
                     yaml_emitter_delete_document_and_anchors(emitter);
                     return 1_i32;

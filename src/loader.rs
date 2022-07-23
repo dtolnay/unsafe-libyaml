@@ -126,7 +126,7 @@ unsafe fn yaml_parser_set_composer_error_context(
 }
 
 unsafe fn yaml_parser_delete_aliases(parser: *mut yaml_parser_t) {
-    while !((*parser).aliases.start == (*parser).aliases.top) {
+    while !STACK_EMPTY!((*parser).aliases) {
         yaml_free(POP!((*parser).aliases).anchor as *mut libc::c_void);
     }
     STACK_DEL!((*parser).aliases);
@@ -265,7 +265,7 @@ unsafe fn yaml_parser_load_node_add(
     ctx: *mut loader_ctx,
     index: libc::c_int,
 ) -> libc::c_int {
-    if (*ctx).start == (*ctx).top {
+    if STACK_EMPTY!(*ctx) {
         return 1_i32;
     }
     let parent_index: libc::c_int = *((*ctx).top).wrapping_offset(-(1_isize));
@@ -295,7 +295,7 @@ unsafe fn yaml_parser_load_node_add(
         3 => {
             let mut pair = MaybeUninit::<yaml_node_pair_t>::uninit();
             let pair = pair.as_mut_ptr();
-            if !((*parent).data.mapping.pairs.start == (*parent).data.mapping.pairs.top) {
+            if !STACK_EMPTY!((*parent).data.mapping.pairs) {
                 let mut p: *mut yaml_node_pair_t =
                     ((*parent).data.mapping.pairs.top).wrapping_offset(-(1_isize));
                 if (*p).key != 0_i32 && (*p).value == 0_i32 {

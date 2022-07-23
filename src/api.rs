@@ -258,7 +258,7 @@ pub unsafe fn yaml_parser_delete(parser: *mut yaml_parser_t) {
     STACK_DEL!((*parser).simple_keys);
     STACK_DEL!((*parser).states);
     STACK_DEL!((*parser).marks);
-    while !((*parser).tag_directives.start == (*parser).tag_directives.top) {
+    while !STACK_EMPTY!((*parser).tag_directives) {
         let tag_directive = POP!((*parser).tag_directives);
         yaml_free(tag_directive.handle as *mut libc::c_void);
         yaml_free(tag_directive.prefix as *mut libc::c_void);
@@ -399,7 +399,7 @@ pub unsafe fn yaml_emitter_delete(emitter: *mut yaml_emitter_t) {
     }
     QUEUE_DEL!((*emitter).events);
     STACK_DEL!((*emitter).indents);
-    while !((*emitter).tag_directives.start == (*emitter).tag_directives.top) {
+    while !STACK_EMPTY!((*emitter).tag_directives) {
         let tag_directive = POP!((*emitter).tag_directives);
         yaml_free(tag_directive.handle as *mut libc::c_void);
         yaml_free(tag_directive.prefix as *mut libc::c_void);
@@ -804,7 +804,7 @@ pub unsafe fn yaml_document_start_event_initialize(
         _ => {}
     }
     yaml_free(version_directive_copy as *mut libc::c_void);
-    while !(tag_directives_copy.start == tag_directives_copy.top) {
+    while !STACK_EMPTY!(tag_directives_copy) {
         let value = POP!(tag_directives_copy);
         yaml_free(value.handle as *mut libc::c_void);
         yaml_free(value.prefix as *mut libc::c_void);
@@ -1389,7 +1389,7 @@ pub unsafe fn yaml_document_initialize(
     }
     STACK_DEL!(nodes);
     yaml_free(version_directive_copy as *mut libc::c_void);
-    while !(tag_directives_copy.start == tag_directives_copy.top) {
+    while !STACK_EMPTY!(tag_directives_copy) {
         let value = POP!(tag_directives_copy);
         yaml_free(value.handle as *mut libc::c_void);
         yaml_free(value.prefix as *mut libc::c_void);
@@ -1404,7 +1404,7 @@ pub unsafe fn yaml_document_initialize(
 pub unsafe fn yaml_document_delete(document: *mut yaml_document_t) {
     let mut tag_directive: *mut yaml_tag_directive_t;
     __assert!(!document.is_null());
-    while !((*document).nodes.start == (*document).nodes.top) {
+    while !STACK_EMPTY!((*document).nodes) {
         let mut node = POP!((*document).nodes);
         yaml_free(node.tag as *mut libc::c_void);
         match node.type_ as libc::c_uint {
