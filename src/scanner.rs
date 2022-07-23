@@ -29,13 +29,11 @@ unsafe fn CACHE(parser: *mut yaml_parser_t, length: size_t) -> i32 {
 }
 
 unsafe fn SKIP(parser: *mut yaml_parser_t) {
-    (*parser).mark.index = (*parser).mark.index.wrapping_add(1);
+    let width = WIDTH!((*parser).buffer);
+    (*parser).mark.index = (*parser).mark.index.wrapping_add(width as u64);
     (*parser).mark.column = (*parser).mark.column.wrapping_add(1);
     (*parser).unread = (*parser).unread.wrapping_sub(1);
-    (*parser).buffer.pointer = (*parser)
-        .buffer
-        .pointer
-        .wrapping_offset(WIDTH!((*parser).buffer) as isize);
+    (*parser).buffer.pointer = (*parser).buffer.pointer.wrapping_offset(width as isize);
 }
 
 unsafe fn SKIP_LINE(parser: *mut yaml_parser_t) {
@@ -46,21 +44,20 @@ unsafe fn SKIP_LINE(parser: *mut yaml_parser_t) {
         (*parser).unread = (*parser).unread.wrapping_sub(2);
         (*parser).buffer.pointer = (*parser).buffer.pointer.wrapping_offset(2);
     } else if IS_BREAK!((*parser).buffer) {
-        (*parser).mark.index = (*parser).mark.index.wrapping_add(1);
+        let width = WIDTH!((*parser).buffer);
+        (*parser).mark.index = (*parser).mark.index.wrapping_add(width as u64);
         (*parser).mark.column = 0;
         (*parser).mark.line = (*parser).mark.line.wrapping_add(1);
         (*parser).unread = (*parser).unread.wrapping_sub(1);
-        (*parser).buffer.pointer = (*parser)
-            .buffer
-            .pointer
-            .wrapping_offset(WIDTH!((*parser).buffer) as isize);
+        (*parser).buffer.pointer = (*parser).buffer.pointer.wrapping_offset(width as isize);
     };
 }
 
 unsafe fn READ(parser: *mut yaml_parser_t, string: *mut yaml_string_t) -> i32 {
     if STRING_EXTEND!(parser, *string) != 0 {
+        let width = WIDTH!((*parser).buffer);
         COPY!(*string, (*parser).buffer);
-        (*parser).mark.index = (*parser).mark.index.wrapping_add(1);
+        (*parser).mark.index = (*parser).mark.index.wrapping_add(width as u64);
         (*parser).mark.column = (*parser).mark.column.wrapping_add(1);
         (*parser).unread = (*parser).unread.wrapping_sub(1);
         1_i32
@@ -92,7 +89,7 @@ unsafe fn READ_LINE(parser: *mut yaml_parser_t, string: *mut yaml_string_t) -> i
             *(*string).pointer = b'\n';
             (*string).pointer = (*string).pointer.wrapping_offset(1);
             (*parser).buffer.pointer = (*parser).buffer.pointer.wrapping_offset(2);
-            (*parser).mark.index = (*parser).mark.index.wrapping_add(1);
+            (*parser).mark.index = (*parser).mark.index.wrapping_add(2);
             (*parser).mark.column = 0;
             (*parser).mark.line = (*parser).mark.line.wrapping_add(1);
             (*parser).unread = (*parser).unread.wrapping_sub(1);
@@ -109,7 +106,7 @@ unsafe fn READ_LINE(parser: *mut yaml_parser_t, string: *mut yaml_string_t) -> i
             *(*string).pointer = *(*parser).buffer.pointer;
             (*string).pointer = (*string).pointer.wrapping_offset(1);
             (*parser).buffer.pointer = (*parser).buffer.pointer.wrapping_offset(1);
-            (*parser).mark.index = (*parser).mark.index.wrapping_add(1);
+            (*parser).mark.index = (*parser).mark.index.wrapping_add(3);
             (*parser).mark.column = 0;
             (*parser).mark.line = (*parser).mark.line.wrapping_add(1);
             (*parser).unread = (*parser).unread.wrapping_sub(1);
