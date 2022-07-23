@@ -61,7 +61,7 @@ pub(crate) unsafe fn unsafe_main(
         }
     }
 
-    yaml_parser_set_input(parser, Some(read_from_stdio), addr_of_mut!(stdin).cast());
+    yaml_parser_set_input(parser, read_from_stdio, addr_of_mut!(stdin).cast());
 
     let mut event = MaybeUninit::<yaml_event_t>::uninit();
     let event = event.as_mut_ptr();

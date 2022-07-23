@@ -60,7 +60,7 @@ pub(crate) unsafe fn unsafe_main(
         }
     }
 
-    yaml_emitter_set_output(emitter, Some(write_to_stdio), addr_of_mut!(stdout).cast());
+    yaml_emitter_set_output(emitter, write_to_stdio, addr_of_mut!(stdout).cast());
     yaml_emitter_set_canonical(emitter, false);
     yaml_emitter_set_unicode(emitter, false);
 
