@@ -104,13 +104,13 @@ unsafe fn WRITE_BREAK(emitter: *mut yaml_emitter_t, string: *mut yaml_string_t) 
 
 macro_rules! WRITE {
     ($emitter:expr, $string:expr) => {
-        WRITE($emitter, addr_of_mut!($string)).ok
+        WRITE($emitter, addr_of_mut!($string))
     };
 }
 
 macro_rules! WRITE_BREAK {
     ($emitter:expr, $string:expr) => {
-        WRITE_BREAK($emitter, addr_of_mut!($string)).ok
+        WRITE_BREAK($emitter, addr_of_mut!($string))
     };
 }
 
@@ -1843,7 +1843,7 @@ unsafe fn yaml_emitter_write_indicator(
         }
     }
     while string.pointer != string.end {
-        if !WRITE!(emitter, string) {
+        if WRITE!(emitter, string).fail {
             return FAIL;
         }
     }
@@ -1859,7 +1859,7 @@ unsafe fn yaml_emitter_write_anchor(
 ) -> Success {
     let mut string = STRING_ASSIGN!(value, length);
     while string.pointer != string.end {
-        if !WRITE!(emitter, string) {
+        if WRITE!(emitter, string).fail {
             return FAIL;
         }
     }
@@ -1880,7 +1880,7 @@ unsafe fn yaml_emitter_write_tag_handle(
         }
     }
     while string.pointer != string.end {
-        if !WRITE!(emitter, string) {
+        if WRITE!(emitter, string).fail {
             return FAIL;
         }
     }
@@ -1923,7 +1923,7 @@ unsafe fn yaml_emitter_write_tag_content(
             || CHECK!(string, b'[')
             || CHECK!(string, b']')
         {
-            if !WRITE!(emitter, string) {
+            if WRITE!(emitter, string).fail {
                 return FAIL;
             }
         } else {
@@ -1989,7 +1989,7 @@ unsafe fn yaml_emitter_write_plain_scalar(
                     return FAIL;
                 }
                 MOVE!(string);
-            } else if !WRITE!(emitter, string) {
+            } else if WRITE!(emitter, string).fail {
                 return FAIL;
             }
             spaces = 1_i32;
@@ -1999,7 +1999,7 @@ unsafe fn yaml_emitter_write_plain_scalar(
                     return FAIL;
                 }
             }
-            if !WRITE_BREAK!(emitter, string) {
+            if WRITE_BREAK!(emitter, string).fail {
                 return FAIL;
             }
             (*emitter).indention = 1_i32;
@@ -2010,7 +2010,7 @@ unsafe fn yaml_emitter_write_plain_scalar(
                     return FAIL;
                 }
             }
-            if !WRITE!(emitter, string) {
+            if WRITE!(emitter, string).fail {
                 return FAIL;
             }
             (*emitter).indention = 0_i32;
@@ -2056,7 +2056,7 @@ unsafe fn yaml_emitter_write_single_quoted_scalar(
                     return FAIL;
                 }
                 MOVE!(string);
-            } else if !WRITE!(emitter, string) {
+            } else if WRITE!(emitter, string).fail {
                 return FAIL;
             }
             spaces = 1_i32;
@@ -2066,7 +2066,7 @@ unsafe fn yaml_emitter_write_single_quoted_scalar(
                     return FAIL;
                 }
             }
-            if !WRITE_BREAK!(emitter, string) {
+            if WRITE_BREAK!(emitter, string).fail {
                 return FAIL;
             }
             (*emitter).indention = 1_i32;
@@ -2082,7 +2082,7 @@ unsafe fn yaml_emitter_write_single_quoted_scalar(
                     return FAIL;
                 }
             }
-            if !WRITE!(emitter, string) {
+            if WRITE!(emitter, string).fail {
                 return FAIL;
             }
             (*emitter).indention = 0_i32;
@@ -2300,12 +2300,12 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                     }
                 }
                 MOVE!(string);
-            } else if !WRITE!(emitter, string) {
+            } else if WRITE!(emitter, string).fail {
                 return FAIL;
             }
             spaces = 1_i32;
         } else {
-            if !WRITE!(emitter, string) {
+            if WRITE!(emitter, string).fail {
                 return FAIL;
             }
             spaces = 0_i32;
@@ -2407,7 +2407,7 @@ unsafe fn yaml_emitter_write_literal_scalar(
     (*emitter).whitespace = 1_i32;
     while string.pointer != string.end {
         if IS_BREAK!(string) {
-            if !WRITE_BREAK!(emitter, string) {
+            if WRITE_BREAK!(emitter, string).fail {
                 return FAIL;
             }
             (*emitter).indention = 1_i32;
@@ -2418,7 +2418,7 @@ unsafe fn yaml_emitter_write_literal_scalar(
                     return FAIL;
                 }
             }
-            if !WRITE!(emitter, string) {
+            if WRITE!(emitter, string).fail {
                 return FAIL;
             }
             (*emitter).indention = 0_i32;
@@ -2468,7 +2468,7 @@ unsafe fn yaml_emitter_write_folded_scalar(
                     }
                 }
             }
-            if !WRITE_BREAK!(emitter, string) {
+            if WRITE_BREAK!(emitter, string).fail {
                 return FAIL;
             }
             (*emitter).indention = 1_i32;
@@ -2489,7 +2489,7 @@ unsafe fn yaml_emitter_write_folded_scalar(
                     return FAIL;
                 }
                 MOVE!(string);
-            } else if !WRITE!(emitter, string) {
+            } else if WRITE!(emitter, string).fail {
                 return FAIL;
             }
             (*emitter).indention = 0_i32;
