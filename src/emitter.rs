@@ -2206,12 +2206,12 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                     }
                 }
                 _ => {
-                    if value_0 <= 0xff as libc::c_uint {
+                    if value_0 <= 0xff_u32 {
                         if PUT(emitter, b'x').fail {
                             return FAIL;
                         }
                         width = 2_u32;
-                    } else if value_0 <= 0xffff as libc::c_uint {
+                    } else if value_0 <= 0xffff_u32 {
                         if PUT(emitter, b'u').fail {
                             return FAIL;
                         }

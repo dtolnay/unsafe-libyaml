@@ -98,30 +98,28 @@ pub unsafe fn yaml_emitter_flush(emitter: *mut yaml_emitter_t) -> Success {
         }
         let fresh5 = addr_of_mut!((*emitter).buffer.pointer);
         *fresh5 = (*fresh5).wrapping_offset(width as isize);
-        if value < 0x10000 as libc::c_uint {
+        if value < 0x10000_u32 {
             *(*emitter).raw_buffer.last.wrapping_offset(high as isize) =
                 (value >> 8) as libc::c_uchar;
             *(*emitter).raw_buffer.last.wrapping_offset(low as isize) =
-                (value & 0xff as libc::c_uint) as libc::c_uchar;
+                (value & 0xff_u32) as libc::c_uchar;
             let fresh6 = addr_of_mut!((*emitter).raw_buffer.last);
             *fresh6 = (*fresh6).wrapping_offset(2_isize);
         } else {
-            value = value.wrapping_sub(0x10000 as libc::c_uint);
+            value = value.wrapping_sub(0x10000_u32);
             *(*emitter).raw_buffer.last.wrapping_offset(high as isize) =
-                (0xd8 as libc::c_uint).wrapping_add(value >> 18) as libc::c_uchar;
+                0xd8_u32.wrapping_add(value >> 18) as libc::c_uchar;
             *(*emitter).raw_buffer.last.wrapping_offset(low as isize) =
-                (value >> 10 & 0xff as libc::c_uint) as libc::c_uchar;
+                (value >> 10 & 0xff_u32) as libc::c_uchar;
             *(*emitter)
                 .raw_buffer
                 .last
-                .wrapping_offset((high + 2) as isize) = (0xdc as libc::c_uint)
-                .wrapping_add(value >> 8 & 0xff as libc::c_uint)
-                as libc::c_uchar;
+                .wrapping_offset((high + 2) as isize) =
+                0xdc_u32.wrapping_add(value >> 8 & 0xff_u32) as libc::c_uchar;
             *(*emitter)
                 .raw_buffer
                 .last
-                .wrapping_offset((low + 2) as isize) =
-                (value & 0xff as libc::c_uint) as libc::c_uchar;
+                .wrapping_offset((low + 2) as isize) = (value & 0xff_u32) as libc::c_uchar;
             let fresh7 = addr_of_mut!((*emitter).raw_buffer.last);
             *fresh7 = (*fresh7).wrapping_offset(4_isize);
         }

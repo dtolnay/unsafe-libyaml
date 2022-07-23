@@ -2608,9 +2608,8 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                     k = k.wrapping_add(1);
                                                 }
                                             }
-                                            if value >= 0xd800 as libc::c_uint
-                                                && value <= 0xdfff as libc::c_uint
-                                                || value > 0x10ffff as libc::c_uint
+                                            if value >= 0xd800_u32 && value <= 0xdfff_u32
+                                                || value > 0x10ffff_u32
                                             {
                                                 yaml_parser_set_scanner_error(
                                                     parser,
@@ -2624,70 +2623,64 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                 current_block = 8114179180390253173;
                                                 break 's_58;
                                             } else {
-                                                if value <= 0x7f as libc::c_uint {
+                                                if value <= 0x7f_u32 {
                                                     let fresh573 = string.pointer;
                                                     string.pointer =
                                                         string.pointer.wrapping_offset(1);
                                                     *fresh573 = value as yaml_char_t;
-                                                } else if value <= 0x7ff as libc::c_uint {
+                                                } else if value <= 0x7ff_u32 {
                                                     let fresh574 = string.pointer;
                                                     string.pointer =
                                                         string.pointer.wrapping_offset(1);
-                                                    *fresh574 = (0xc0 as libc::c_uint)
-                                                        .wrapping_add(value >> 6)
+                                                    *fresh574 = 0xc0_u32.wrapping_add(value >> 6)
                                                         as yaml_char_t;
                                                     let fresh575 = string.pointer;
                                                     string.pointer =
                                                         string.pointer.wrapping_offset(1);
-                                                    *fresh575 = (0x80 as libc::c_uint)
-                                                        .wrapping_add(value & 0x3f as libc::c_uint)
+                                                    *fresh575 = 0x80_u32
+                                                        .wrapping_add(value & 0x3f_u32)
                                                         as yaml_char_t;
-                                                } else if value <= 0xffff as libc::c_uint {
+                                                } else if value <= 0xffff_u32 {
                                                     let fresh576 = string.pointer;
                                                     string.pointer =
                                                         string.pointer.wrapping_offset(1);
-                                                    *fresh576 = (0xe0 as libc::c_uint)
-                                                        .wrapping_add(value >> 12)
+                                                    *fresh576 = 0xe0_u32.wrapping_add(value >> 12)
                                                         as yaml_char_t;
                                                     let fresh577 = string.pointer;
                                                     string.pointer =
                                                         string.pointer.wrapping_offset(1);
-                                                    *fresh577 = (0x80 as libc::c_uint).wrapping_add(
-                                                        value >> 6 & 0x3f as libc::c_uint,
-                                                    )
+                                                    *fresh577 = 0x80_u32
+                                                        .wrapping_add(value >> 6 & 0x3f_u32)
                                                         as yaml_char_t;
                                                     let fresh578 = string.pointer;
                                                     string.pointer =
                                                         string.pointer.wrapping_offset(1);
-                                                    *fresh578 = (0x80 as libc::c_uint)
-                                                        .wrapping_add(value & 0x3f as libc::c_uint)
+                                                    *fresh578 = 0x80_u32
+                                                        .wrapping_add(value & 0x3f_u32)
                                                         as yaml_char_t;
                                                 } else {
                                                     let fresh579 = string.pointer;
                                                     string.pointer =
                                                         string.pointer.wrapping_offset(1);
-                                                    *fresh579 = (0xf0 as libc::c_uint)
-                                                        .wrapping_add(value >> 18)
+                                                    *fresh579 = 0xf0_u32.wrapping_add(value >> 18)
                                                         as yaml_char_t;
                                                     let fresh580 = string.pointer;
                                                     string.pointer =
                                                         string.pointer.wrapping_offset(1);
-                                                    *fresh580 = (0x80 as libc::c_uint).wrapping_add(
-                                                        value >> 12 & 0x3f as libc::c_uint,
-                                                    )
+                                                    *fresh580 = 0x80_u32
+                                                        .wrapping_add(value >> 12 & 0x3f_u32)
                                                         as yaml_char_t;
                                                     let fresh581 = string.pointer;
                                                     string.pointer =
                                                         string.pointer.wrapping_offset(1);
-                                                    *fresh581 = (0x80 as libc::c_uint).wrapping_add(
-                                                        value >> 6 & 0x3f as libc::c_uint,
-                                                    )
+                                                    *fresh581 = 0x80_u32
+                                                        .wrapping_add(value >> 6 & 0x3f_u32)
                                                         as yaml_char_t;
                                                     let fresh582 = string.pointer;
                                                     string.pointer =
                                                         string.pointer.wrapping_offset(1);
-                                                    *fresh582 = (0x80 as libc::c_uint)
-                                                        .wrapping_add(value & 0x3f as libc::c_uint)
+                                                    *fresh582 = 0x80_u32
+                                                        .wrapping_add(value & 0x3f_u32)
                                                         as yaml_char_t;
                                                 }
                                                 k = 0_u64;

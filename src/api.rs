@@ -621,9 +621,9 @@ unsafe fn yaml_check_utf8(start: *const yaml_char_t, length: size_t) -> Success 
             k = k.wrapping_add(1);
         }
         if !(width == 1_u32
-            || width == 2_u32 && value >= 0x80 as libc::c_uint
-            || width == 3_u32 && value >= 0x800 as libc::c_uint
-            || width == 4_u32 && value >= 0x10000 as libc::c_uint)
+            || width == 2_u32 && value >= 0x80_u32
+            || width == 3_u32 && value >= 0x800_u32
+            || width == 4_u32 && value >= 0x10000_u32)
         {
             return FAIL;
         }
