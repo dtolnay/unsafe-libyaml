@@ -1615,8 +1615,7 @@ unsafe fn yaml_emitter_analyze_scalar(
                 && !(*string.pointer.wrapping_offset(1_isize) as libc::c_int == 0xbf_i32
                     && (*string.pointer.wrapping_offset(2_isize) as libc::c_int == 0xbe_i32
                         || *string.pointer.wrapping_offset(2_isize) as libc::c_int == 0xbf_i32)))
-            || !(*string.pointer as libc::c_int <= '\u{7f}' as i32 as yaml_char_t as libc::c_int)
-                && (*emitter).unicode == 0
+            || !IS_ASCII!(string) && (*emitter).unicode == 0
         {
             special_characters = 1_i32;
         }
@@ -2262,9 +2261,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                 && !(*string.pointer.wrapping_offset(1_isize) as libc::c_int == 0xbf_i32
                     && (*string.pointer.wrapping_offset(2_isize) as libc::c_int == 0xbe_i32
                         || *string.pointer.wrapping_offset(2_isize) as libc::c_int == 0xbf_i32)))
-            || (*emitter).unicode == 0
-                && !(*string.pointer as libc::c_int
-                    <= '\u{7f}' as i32 as yaml_char_t as libc::c_int)
+            || (*emitter).unicode == 0 && !IS_ASCII!(string)
             || *string.pointer as libc::c_int == -17i32 as yaml_char_t as libc::c_int
                 && *string.pointer.wrapping_offset(1_isize) as libc::c_int
                     == -69i32 as yaml_char_t as libc::c_int

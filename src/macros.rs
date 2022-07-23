@@ -197,12 +197,10 @@ macro_rules! AS_HEX_AT {
     };
 }
 
-macro_rules! IS_ASCII_AT {
-    () => {}; // TODO
-}
-
 macro_rules! IS_ASCII {
-    () => {}; // TODO
+    ($string:expr) => {
+        *$string.pointer as libc::c_int <= '\u{7f}' as i32 as yaml_char_t as libc::c_int
+    };
 }
 
 macro_rules! IS_PRINTABLE_AT {
