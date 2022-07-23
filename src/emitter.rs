@@ -2017,8 +2017,7 @@ unsafe fn yaml_emitter_write_plain_scalar(
             if allow_breaks != 0
                 && spaces == 0
                 && (*emitter).column > (*emitter).best_width
-                && !(*string.pointer.wrapping_offset(1_isize) as libc::c_int
-                    == ' ' as i32 as yaml_char_t as libc::c_int)
+                && !IS_SPACE_AT!(string, 1)
             {
                 if yaml_emitter_write_indent(emitter) == 0 {
                     return 0_i32;
@@ -2086,8 +2085,7 @@ unsafe fn yaml_emitter_write_single_quoted_scalar(
                 && (*emitter).column > (*emitter).best_width
                 && string.pointer != string.start
                 && string.pointer != string.end.wrapping_offset(-(1_isize))
-                && !(*string.pointer.wrapping_offset(1_isize) as libc::c_int
-                    == ' ' as i32 as yaml_char_t as libc::c_int)
+                && !IS_SPACE_AT!(string, 1)
             {
                 if yaml_emitter_write_indent(emitter) == 0 {
                     return 0_i32;
@@ -2336,9 +2334,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                 if yaml_emitter_write_indent(emitter) == 0 {
                     return 0_i32;
                 }
-                if *string.pointer.wrapping_offset(1_isize) as libc::c_int
-                    == ' ' as i32 as yaml_char_t as libc::c_int
-                {
+                if IS_SPACE_AT!(string, 1) {
                     if !(PUT!(emitter, '\\')) {
                         return 0_i32;
                     }
@@ -2544,8 +2540,7 @@ unsafe fn yaml_emitter_write_folded_scalar(
             }
             if breaks == 0
                 && IS_SPACE!(string)
-                && !(*string.pointer.wrapping_offset(1_isize) as libc::c_int
-                    == ' ' as i32 as yaml_char_t as libc::c_int)
+                && !IS_SPACE_AT!(string, 1)
                 && (*emitter).column > (*emitter).best_width
             {
                 if yaml_emitter_write_indent(emitter) == 0 {
