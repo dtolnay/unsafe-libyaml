@@ -32,7 +32,7 @@ macro_rules! PUT {
             let fresh40 = addr_of_mut!((*$emitter).buffer.pointer);
             let fresh41 = *fresh40;
             *fresh40 = (*fresh40).wrapping_offset(1);
-            *fresh41 = $value as yaml_char_t;
+            *fresh41 = $value;
             let fresh42 = addr_of_mut!((*$emitter).column);
             *fresh42 += 1;
             true
@@ -990,7 +990,7 @@ unsafe fn yaml_emitter_emit_alias(
         return 0_i32;
     }
     if (*emitter).simple_key_context != 0 {
-        if !(PUT!(emitter, ' ')) {
+        if !(PUT!(emitter, b' ')) {
             return 0_i32;
         }
     }
@@ -1766,7 +1766,7 @@ unsafe fn yaml_emitter_write_indent(mut emitter: *mut yaml_emitter_t) -> libc::c
         }
     }
     while (*emitter).column < indent {
-        if !(PUT!(emitter, ' ')) {
+        if !(PUT!(emitter, b' ')) {
             return 0_i32;
         }
     }
@@ -1785,7 +1785,7 @@ unsafe fn yaml_emitter_write_indicator(
     let indicator_length: size_t = strlen(indicator);
     let mut string = STRING_ASSIGN!(indicator as *mut yaml_char_t, indicator_length);
     if need_whitespace != 0 && (*emitter).whitespace == 0 {
-        if !(PUT!(emitter, ' ')) {
+        if !(PUT!(emitter, b' ')) {
             return 0_i32;
         }
     }
@@ -1822,7 +1822,7 @@ unsafe fn yaml_emitter_write_tag_handle(
 ) -> libc::c_int {
     let mut string = STRING_ASSIGN!(value, length);
     if (*emitter).whitespace == 0 {
-        if !(PUT!(emitter, ' ')) {
+        if !(PUT!(emitter, b' ')) {
             return 0_i32;
         }
     }
@@ -1844,7 +1844,7 @@ unsafe fn yaml_emitter_write_tag_content(
 ) -> libc::c_int {
     let mut string = STRING_ASSIGN!(value, length);
     if need_whitespace != 0 && (*emitter).whitespace == 0 {
-        if !(PUT!(emitter, ' ')) {
+        if !(PUT!(emitter, b' ')) {
             return 0_i32;
         }
     }
@@ -1875,7 +1875,6 @@ unsafe fn yaml_emitter_write_tag_content(
             }
         } else {
             let mut width = WIDTH!(string);
-            let mut value_0: libc::c_uint;
             loop {
                 let fresh207 = width;
                 width -= 1;
@@ -1884,31 +1883,19 @@ unsafe fn yaml_emitter_write_tag_content(
                 }
                 let fresh208 = string.pointer;
                 string.pointer = string.pointer.wrapping_offset(1);
-                value_0 = *fresh208 as libc::c_uint;
-                if !(PUT!(emitter, '%')) {
+                let value = *fresh208;
+                if !(PUT!(emitter, b'%')) {
                     return 0_i32;
                 }
                 if !(PUT!(
                     emitter,
-                    (value_0 >> 4_i32).wrapping_add(if (value_0 >> 4_i32) < 10_u32 {
-                        '0' as i32
-                    } else {
-                        'A' as i32 - 10_i32
-                    } as libc::c_uint)
+                    (value >> 4).wrapping_add(if (value >> 4) < 10 { b'0' } else { b'A' - 10 })
                 )) {
                     return 0_i32;
                 }
                 if !(PUT!(
                     emitter,
-                    (value_0 & 0xf_i32 as libc::c_uint).wrapping_add(if (value_0
-                        & 0xf_i32 as libc::c_uint)
-                        < 10_u32
-                    {
-                        '0' as i32
-                    } else {
-                        'A' as i32 - 10_i32
-                    }
-                        as libc::c_uint)
+                    (value & 0x0F).wrapping_add(if (value & 0x0F) < 10 { b'0' } else { b'A' - 10 })
                 )) {
                     return 0_i32;
                 }
@@ -1930,7 +1917,7 @@ unsafe fn yaml_emitter_write_plain_scalar(
     let mut breaks: libc::c_int = 0_i32;
     let mut string = STRING_ASSIGN!(value, length);
     if (*emitter).whitespace == 0 && (length != 0 || (*emitter).flow_level != 0) {
-        if !(PUT!(emitter, ' ')) {
+        if !(PUT!(emitter, b' ')) {
             return 0_i32;
         }
     }
@@ -2096,144 +2083,137 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
             let mut value_0: libc::c_uint;
             let mut k: libc::c_int;
             octet = *string.pointer;
-            width = (if octet as libc::c_int & 0x80_i32 == 0_i32 {
-                1_i32
-            } else if octet as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                2_i32
-            } else if octet as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                3_i32
-            } else if octet as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                4_i32
+            width = if octet & 0x80 == 0x00 {
+                1
+            } else if octet & 0xE0 == 0xC0 {
+                2
+            } else if octet & 0xF0 == 0xE0 {
+                3
+            } else if octet & 0xF8 == 0xF0 {
+                4
             } else {
-                0_i32
-            }) as libc::c_uint;
-            value_0 = (if octet as libc::c_int & 0x80_i32 == 0_i32 {
-                octet as libc::c_int & 0x7f_i32
-            } else if octet as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-                octet as libc::c_int & 0x1f_i32
-            } else if octet as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-                octet as libc::c_int & 0xf_i32
-            } else if octet as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-                octet as libc::c_int & 0x7_i32
+                0
+            };
+            value_0 = if octet & 0x80 == 0 {
+                octet & 0x7F
+            } else if octet & 0xE0 == 0xC0 {
+                octet & 0x1F
+            } else if octet & 0xF0 == 0xE0 {
+                octet & 0x0F
+            } else if octet & 0xF8 == 0xF0 {
+                octet & 0x07
             } else {
-                0_i32
-            }) as libc::c_uint;
-            k = 1_i32;
+                0
+            } as libc::c_uint;
+            k = 1;
             while k < width as libc::c_int {
                 octet = *string.pointer.wrapping_offset(k as isize);
-                value_0 = (value_0 << 6_i32)
-                    .wrapping_add((octet as libc::c_int & 0x3f_i32) as libc::c_uint);
+                value_0 = (value_0 << 6).wrapping_add((octet & 0x3F) as libc::c_uint);
                 k += 1;
             }
             string.pointer = string.pointer.wrapping_offset(width as isize);
-            if !(PUT!(emitter, '\\')) {
+            if !(PUT!(emitter, b'\\')) {
                 return 0_i32;
             }
             match value_0 {
                 0 => {
-                    if !(PUT!(emitter, '0')) {
+                    if !(PUT!(emitter, b'0')) {
                         return 0_i32;
                     }
                 }
                 7 => {
-                    if !(PUT!(emitter, 'a')) {
+                    if !(PUT!(emitter, b'a')) {
                         return 0_i32;
                     }
                 }
                 8 => {
-                    if !(PUT!(emitter, 'b')) {
+                    if !(PUT!(emitter, b'b')) {
                         return 0_i32;
                     }
                 }
                 9 => {
-                    if !(PUT!(emitter, 't')) {
+                    if !(PUT!(emitter, b't')) {
                         return 0_i32;
                     }
                 }
                 10 => {
-                    if !(PUT!(emitter, 'n')) {
+                    if !(PUT!(emitter, b'n')) {
                         return 0_i32;
                     }
                 }
                 11 => {
-                    if !(PUT!(emitter, 'v')) {
+                    if !(PUT!(emitter, b'v')) {
                         return 0_i32;
                     }
                 }
                 12 => {
-                    if !(PUT!(emitter, 'f')) {
+                    if !(PUT!(emitter, b'f')) {
                         return 0_i32;
                     }
                 }
                 13 => {
-                    if !(PUT!(emitter, 'r')) {
+                    if !(PUT!(emitter, b'r')) {
                         return 0_i32;
                     }
                 }
                 27 => {
-                    if !(PUT!(emitter, 'e')) {
+                    if !(PUT!(emitter, b'e')) {
                         return 0_i32;
                     }
                 }
                 34 => {
-                    if !(PUT!(emitter, '"')) {
+                    if !(PUT!(emitter, b'"')) {
                         return 0_i32;
                     }
                 }
                 92 => {
-                    if !(PUT!(emitter, '\\')) {
+                    if !(PUT!(emitter, b'\\')) {
                         return 0_i32;
                     }
                 }
                 133 => {
-                    if !(PUT!(emitter, 'N')) {
+                    if !(PUT!(emitter, b'N')) {
                         return 0_i32;
                     }
                 }
                 160 => {
-                    if !(PUT!(emitter, '_')) {
+                    if !(PUT!(emitter, b'_')) {
                         return 0_i32;
                     }
                 }
                 8232 => {
-                    if !(PUT!(emitter, 'L')) {
+                    if !(PUT!(emitter, b'L')) {
                         return 0_i32;
                     }
                 }
                 8233 => {
-                    if !(PUT!(emitter, 'P')) {
+                    if !(PUT!(emitter, b'P')) {
                         return 0_i32;
                     }
                 }
                 _ => {
                     if value_0 <= 0xff_i32 as libc::c_uint {
-                        if !(PUT!(emitter, 'x')) {
+                        if !(PUT!(emitter, b'x')) {
                             return 0_i32;
                         }
                         width = 2_u32;
                     } else if value_0 <= 0xffff_i32 as libc::c_uint {
-                        if !(PUT!(emitter, 'u')) {
+                        if !(PUT!(emitter, b'u')) {
                             return 0_i32;
                         }
                         width = 4_u32;
                     } else {
-                        if !(PUT!(emitter, 'U')) {
+                        if !(PUT!(emitter, b'U')) {
                             return 0_i32;
                         }
                         width = 8_u32;
                     }
                     k = width.wrapping_sub(1_u32).wrapping_mul(4_u32) as libc::c_int;
-                    while k >= 0_i32 {
-                        let digit: libc::c_int =
-                            (value_0 >> k & 0xf_i32 as libc::c_uint) as libc::c_int;
+                    while k >= 0 {
+                        let digit: libc::c_int = (value_0 >> k & 0x0F) as libc::c_int;
                         if !(PUT!(
                             emitter,
-                            digit
-                                + if digit < 10_i32 {
-                                    '0' as i32
-                                } else {
-                                    'A' as i32 - 10_i32
-                                }
+                            (digit + if digit < 10 { b'0' } else { b'A' - 10 } as i32) as u8
                         )) {
                             return 0_i32;
                         }
@@ -2253,7 +2233,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                     return 0_i32;
                 }
                 if IS_SPACE_AT!(string, 1) {
-                    if !(PUT!(emitter, '\\')) {
+                    if !(PUT!(emitter, b'\\')) {
                         return 0_i32;
                     }
                 }
