@@ -149,12 +149,10 @@ macro_rules! IS_DIGIT {
     };
 }
 
-macro_rules! AS_DIGIT_AT {
-    () => {}; // TODO
-}
-
 macro_rules! AS_DIGIT {
-    () => {}; // TODO
+    ($string:expr) => {
+        *$string.pointer as libc::c_int - '0' as i32 as yaml_char_t as libc::c_int
+    };
 }
 
 macro_rules! IS_HEX_AT {

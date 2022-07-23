@@ -1532,9 +1532,7 @@ unsafe fn yaml_parser_scan_version_directive_number(
                 b"found extremely long version number\0" as *const u8 as *const libc::c_char,
             );
         }
-        value = value * 10_i32
-            + (*((*parser).buffer.pointer) as libc::c_int
-                - '0' as i32 as yaml_char_t as libc::c_int);
+        value = value * 10_i32 + AS_DIGIT!((*parser).buffer);
         SKIP!(parser);
         if CACHE!(parser, 1_u64) == 0 {
             return 0_i32;
@@ -2323,8 +2321,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                                 );
                                 current_block = 14984465786483313892;
                             } else {
-                                increment = *((*parser).buffer.pointer) as libc::c_int
-                                    - '0' as i32 as yaml_char_t as libc::c_int;
+                                increment = AS_DIGIT!((*parser).buffer);
                                 SKIP!(parser);
                                 current_block = 11913429853522160501;
                             }
@@ -2345,8 +2342,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                             );
                             current_block = 14984465786483313892;
                         } else {
-                            increment = *((*parser).buffer.pointer) as libc::c_int
-                                - '0' as i32 as yaml_char_t as libc::c_int;
+                            increment = AS_DIGIT!((*parser).buffer);
                             SKIP!(parser);
                             if CACHE!(parser, 1_u64) == 0 {
                                 current_block = 14984465786483313892;
