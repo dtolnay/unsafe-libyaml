@@ -41,29 +41,27 @@ unsafe fn SKIP(parser: *mut yaml_parser_t) {
     *pointer = (*pointer).wrapping_offset(WIDTH!((*parser).buffer) as isize);
 }
 
-macro_rules! SKIP_LINE {
-    ($parser:expr) => {
-        if IS_CRLF!((*$parser).buffer) {
-            let index = addr_of_mut!((*$parser).mark.index);
-            *index = (*index as libc::c_ulong).wrapping_add(2_u64) as size_t as size_t;
-            (*$parser).mark.column = 0_u64;
-            let line = addr_of_mut!((*$parser).mark.line);
-            *line = (*line).wrapping_add(1);
-            let unread = addr_of_mut!((*$parser).unread);
-            *unread = (*unread as libc::c_ulong).wrapping_sub(2_u64) as size_t as size_t;
-            let pointer = addr_of_mut!((*$parser).buffer.pointer);
-            *pointer = (*pointer).wrapping_offset(2_isize);
-        } else if IS_BREAK!((*$parser).buffer) {
-            let index = addr_of_mut!((*$parser).mark.index);
-            *index = (*index).wrapping_add(1);
-            (*$parser).mark.column = 0_u64;
-            let line = addr_of_mut!((*$parser).mark.line);
-            *line = (*line).wrapping_add(1);
-            let unread = addr_of_mut!((*$parser).unread);
-            *unread = (*unread).wrapping_sub(1);
-            let pointer = addr_of_mut!((*$parser).buffer.pointer);
-            *pointer = (*pointer).wrapping_offset(WIDTH!((*$parser).buffer) as isize);
-        };
+unsafe fn SKIP_LINE(parser: *mut yaml_parser_t) {
+    if IS_CRLF!((*parser).buffer) {
+        let index = addr_of_mut!((*parser).mark.index);
+        *index = (*index as libc::c_ulong).wrapping_add(2_u64) as size_t as size_t;
+        (*parser).mark.column = 0_u64;
+        let line = addr_of_mut!((*parser).mark.line);
+        *line = (*line).wrapping_add(1);
+        let unread = addr_of_mut!((*parser).unread);
+        *unread = (*unread as libc::c_ulong).wrapping_sub(2_u64) as size_t as size_t;
+        let pointer = addr_of_mut!((*parser).buffer.pointer);
+        *pointer = (*pointer).wrapping_offset(2_isize);
+    } else if IS_BREAK!((*parser).buffer) {
+        let index = addr_of_mut!((*parser).mark.index);
+        *index = (*index).wrapping_add(1);
+        (*parser).mark.column = 0_u64;
+        let line = addr_of_mut!((*parser).mark.line);
+        *line = (*line).wrapping_add(1);
+        let unread = addr_of_mut!((*parser).unread);
+        *unread = (*unread).wrapping_sub(1);
+        let pointer = addr_of_mut!((*parser).buffer.pointer);
+        *pointer = (*pointer).wrapping_offset(WIDTH!((*parser).buffer) as isize);
     };
 }
 
@@ -1051,7 +1049,7 @@ unsafe fn yaml_parser_scan_to_next_token(mut parser: *mut yaml_parser_t) -> libc
         if CACHE!(parser, 2_u64) == 0 {
             return 0_i32;
         }
-        SKIP_LINE!(parser);
+        SKIP_LINE(parser);
         if (*parser).flow_level == 0 {
             (*parser).simple_key_allowed = 1_i32;
         }
@@ -1060,7 +1058,7 @@ unsafe fn yaml_parser_scan_to_next_token(mut parser: *mut yaml_parser_t) -> libc
 }
 
 unsafe fn yaml_parser_scan_directive(
-    mut parser: *mut yaml_parser_t,
+    parser: *mut yaml_parser_t,
     mut token: *mut yaml_token_t,
 ) -> libc::c_int {
     let mut current_block: u64;
@@ -1189,7 +1187,7 @@ unsafe fn yaml_parser_scan_directive(
                                             if CACHE!(parser, 2_u64) == 0 {
                                                 current_block = 11397968426844348457;
                                             } else {
-                                                SKIP_LINE!(parser);
+                                                SKIP_LINE(parser);
                                                 current_block = 652864300344834934;
                                             }
                                         } else {
@@ -2094,7 +2092,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                         if CACHE!(parser, 2_u64) == 0 {
                                                             current_block = 14984465786483313892;
                                                         } else {
-                                                            SKIP_LINE!(parser);
+                                                            SKIP_LINE(parser);
                                                             current_block = 13619784596304402172;
                                                         }
                                                     } else {
@@ -2415,7 +2413,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                             break 's_58;
                                         }
                                         SKIP(parser);
-                                        SKIP_LINE!(parser);
+                                        SKIP_LINE(parser);
                                         leading_blanks = 1_i32;
                                         break;
                                     } else if single == 0 && CHECK!((*parser).buffer, b'\\') {
