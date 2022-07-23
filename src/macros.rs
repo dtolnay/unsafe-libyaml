@@ -156,11 +156,20 @@ macro_rules! AS_DIGIT {
 }
 
 macro_rules! IS_HEX_AT {
-    () => {}; // TODO
-}
-
-macro_rules! IS_HEX {
-    () => {}; // TODO
+    ($string:expr, $offset:expr) => {
+        *$string.pointer.wrapping_offset($offset) as libc::c_int
+            >= '0' as i32 as yaml_char_t as libc::c_int
+            && *$string.pointer.wrapping_offset($offset) as libc::c_int
+                <= '9' as i32 as yaml_char_t as libc::c_int
+            || *$string.pointer.wrapping_offset($offset) as libc::c_int
+                >= 'A' as i32 as yaml_char_t as libc::c_int
+                && *$string.pointer.wrapping_offset($offset) as libc::c_int
+                    <= 'F' as i32 as yaml_char_t as libc::c_int
+            || *$string.pointer.wrapping_offset($offset) as libc::c_int
+                >= 'a' as i32 as yaml_char_t as libc::c_int
+                && *$string.pointer.wrapping_offset($offset) as libc::c_int
+                    <= 'f' as i32 as yaml_char_t as libc::c_int
+    };
 }
 
 macro_rules! AS_HEX_AT {

@@ -2142,30 +2142,8 @@ unsafe fn yaml_parser_scan_uri_escapes(
             return 0_i32;
         }
         if !(*((*parser).buffer.pointer) as libc::c_int == '%' as i32 as yaml_char_t as libc::c_int
-            && (*((*parser).buffer.pointer).wrapping_offset(1_isize) as libc::c_int
-                >= '0' as i32 as yaml_char_t as libc::c_int
-                && *((*parser).buffer.pointer).wrapping_offset(1_isize) as libc::c_int
-                    <= '9' as i32 as yaml_char_t as libc::c_int
-                || *((*parser).buffer.pointer).wrapping_offset(1_isize) as libc::c_int
-                    >= 'A' as i32 as yaml_char_t as libc::c_int
-                    && *((*parser).buffer.pointer).wrapping_offset(1_isize) as libc::c_int
-                        <= 'F' as i32 as yaml_char_t as libc::c_int
-                || *((*parser).buffer.pointer).wrapping_offset(1_isize) as libc::c_int
-                    >= 'a' as i32 as yaml_char_t as libc::c_int
-                    && *((*parser).buffer.pointer).wrapping_offset(1_isize) as libc::c_int
-                        <= 'f' as i32 as yaml_char_t as libc::c_int)
-            && (*((*parser).buffer.pointer).wrapping_offset(2_isize) as libc::c_int
-                >= '0' as i32 as yaml_char_t as libc::c_int
-                && *((*parser).buffer.pointer).wrapping_offset(2_isize) as libc::c_int
-                    <= '9' as i32 as yaml_char_t as libc::c_int
-                || *((*parser).buffer.pointer).wrapping_offset(2_isize) as libc::c_int
-                    >= 'A' as i32 as yaml_char_t as libc::c_int
-                    && *((*parser).buffer.pointer).wrapping_offset(2_isize) as libc::c_int
-                        <= 'F' as i32 as yaml_char_t as libc::c_int
-                || *((*parser).buffer.pointer).wrapping_offset(2_isize) as libc::c_int
-                    >= 'a' as i32 as yaml_char_t as libc::c_int
-                    && *((*parser).buffer.pointer).wrapping_offset(2_isize) as libc::c_int
-                        <= 'f' as i32 as yaml_char_t as libc::c_int))
+            && IS_HEX_AT!((*parser).buffer, 1)
+            && IS_HEX_AT!((*parser).buffer, 2))
         {
             return yaml_parser_set_scanner_error(
                 parser,
@@ -3105,33 +3083,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                             }
                                             k = 0_u64;
                                             while k < code_length {
-                                                if !(*((*parser).buffer.pointer)
-                                                    .wrapping_offset(k as isize)
-                                                    as libc::c_int
-                                                    >= '0' as i32 as yaml_char_t as libc::c_int
-                                                    && *((*parser).buffer.pointer)
-                                                        .wrapping_offset(k as isize)
-                                                        as libc::c_int
-                                                        <= '9' as i32 as yaml_char_t as libc::c_int
-                                                    || *((*parser).buffer.pointer)
-                                                        .wrapping_offset(k as isize)
-                                                        as libc::c_int
-                                                        >= 'A' as i32 as yaml_char_t as libc::c_int
-                                                        && *((*parser).buffer.pointer)
-                                                            .wrapping_offset(k as isize)
-                                                            as libc::c_int
-                                                            <= 'F' as i32 as yaml_char_t
-                                                                as libc::c_int
-                                                    || *((*parser).buffer.pointer)
-                                                        .wrapping_offset(k as isize)
-                                                        as libc::c_int
-                                                        >= 'a' as i32 as yaml_char_t as libc::c_int
-                                                        && *((*parser).buffer.pointer)
-                                                            .wrapping_offset(k as isize)
-                                                            as libc::c_int
-                                                            <= 'f' as i32 as yaml_char_t
-                                                                as libc::c_int)
-                                                {
+                                                if !IS_HEX_AT!((*parser).buffer, k as isize) {
                                                     yaml_parser_set_scanner_error(
                                                         parser,
                                                         b"while parsing a quoted scalar\0"
