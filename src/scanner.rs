@@ -1076,13 +1076,7 @@ unsafe fn yaml_parser_scan_to_next_token(mut parser: *mut yaml_parser_t) -> libc
         if CACHE!(parser, 1_u64) == 0 {
             return 0_i32;
         }
-        if (*parser).mark.column == 0_u64
-            && (*((*parser).buffer.pointer) as libc::c_int == -17i32 as yaml_char_t as libc::c_int
-                && *((*parser).buffer.pointer).wrapping_offset(1_isize) as libc::c_int
-                    == -69i32 as yaml_char_t as libc::c_int
-                && *((*parser).buffer.pointer).wrapping_offset(2_isize) as libc::c_int
-                    == -65i32 as yaml_char_t as libc::c_int)
-        {
+        if (*parser).mark.column == 0_u64 && IS_BOM!((*parser).buffer) {
             SKIP!(parser);
         }
         if CACHE!(parser, 1_u64) == 0 {

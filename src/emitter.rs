@@ -2170,11 +2170,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
     while string.pointer != string.end {
         if !IS_PRINTABLE!(string)
             || (*emitter).unicode == 0 && !IS_ASCII!(string)
-            || *string.pointer as libc::c_int == -17i32 as yaml_char_t as libc::c_int
-                && *string.pointer.wrapping_offset(1_isize) as libc::c_int
-                    == -69i32 as yaml_char_t as libc::c_int
-                && *string.pointer.wrapping_offset(2_isize) as libc::c_int
-                    == -65i32 as yaml_char_t as libc::c_int
+            || IS_BOM!(string)
             || IS_BREAK!(string)
             || *string.pointer as libc::c_int == '"' as i32 as yaml_char_t as libc::c_int
             || *string.pointer as libc::c_int == '\\' as i32 as yaml_char_t as libc::c_int

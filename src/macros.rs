@@ -234,12 +234,14 @@ macro_rules! IS_Z {
     () => {}; // TODO
 }
 
-macro_rules! IS_BOM_AT {
-    () => {}; // TODO
-}
-
 macro_rules! IS_BOM {
-    () => {}; // TODO
+    ($string:expr) => {
+        *$string.pointer as libc::c_int == -17i32 as yaml_char_t as libc::c_int
+            && *$string.pointer.wrapping_offset(1) as libc::c_int
+                == -69i32 as yaml_char_t as libc::c_int
+            && *$string.pointer.wrapping_offset(2) as libc::c_int
+                == -65i32 as yaml_char_t as libc::c_int
+    };
 }
 
 macro_rules! IS_SPACE_AT {
