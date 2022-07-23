@@ -54,20 +54,20 @@ unsafe fn SKIP_LINE(parser: *mut yaml_parser_t) {
     };
 }
 
-unsafe fn READ(parser: *mut yaml_parser_t, string: *mut yaml_string_t) -> i32 {
+unsafe fn READ(parser: *mut yaml_parser_t, string: *mut yaml_string_t) -> Success {
     if STRING_EXTEND!(parser, *string) != 0 {
         let width = WIDTH!((*parser).buffer);
         COPY!(*string, (*parser).buffer);
         (*parser).mark.index = (*parser).mark.index.wrapping_add(width as u64);
         (*parser).mark.column = (*parser).mark.column.wrapping_add(1);
         (*parser).unread = (*parser).unread.wrapping_sub(1);
-        1_i32
+        OK
     } else {
-        0_i32
+        FAIL
     }
 }
 
-unsafe fn READ_LINE(parser: *mut yaml_parser_t, string: *mut yaml_string_t) -> i32 {
+unsafe fn READ_LINE(parser: *mut yaml_parser_t, string: *mut yaml_string_t) -> Success {
     if STRING_EXTEND!(parser, *string) != 0 {
         if CHECK_AT!((*parser).buffer, b'\r', 0) && CHECK_AT!((*parser).buffer, b'\n', 1) {
             *(*string).pointer = b'\n';
@@ -112,9 +112,9 @@ unsafe fn READ_LINE(parser: *mut yaml_parser_t, string: *mut yaml_string_t) -> i
             (*parser).mark.line = (*parser).mark.line.wrapping_add(1);
             (*parser).unread = (*parser).unread.wrapping_sub(1);
         };
-        1_i32
+        OK
     } else {
-        0_i32
+        FAIL
     }
 }
 
