@@ -71,31 +71,39 @@ unsafe fn PUT_BREAK(emitter: *mut yaml_emitter_t) -> bool {
     }
 }
 
+unsafe fn WRITE(emitter: *mut yaml_emitter_t, string: *mut yaml_string_t) -> bool {
+    FLUSH(emitter) && {
+        COPY!((*emitter).buffer, *string);
+        let fresh107 = addr_of_mut!((*emitter).column);
+        *fresh107 += 1;
+        true
+    }
+}
+
+unsafe fn WRITE_BREAK(emitter: *mut yaml_emitter_t, string: *mut yaml_string_t) -> bool {
+    FLUSH(emitter)
+        && if CHECK!(*string, b'\n') {
+            let _ = PUT_BREAK(emitter);
+            (*string).pointer = (*string).pointer.wrapping_offset(1);
+            1_i32
+        } else {
+            COPY!((*emitter).buffer, *string);
+            (*emitter).column = 0_i32;
+            let fresh300 = addr_of_mut!((*emitter).line);
+            *fresh300 += 1;
+            1_i32
+        } != 0
+}
+
 macro_rules! WRITE {
     ($emitter:expr, $string:expr) => {
-        FLUSH($emitter) && {
-            COPY!((*$emitter).buffer, $string);
-            let fresh107 = addr_of_mut!((*$emitter).column);
-            *fresh107 += 1;
-            true
-        }
+        WRITE($emitter, addr_of_mut!($string))
     };
 }
 
 macro_rules! WRITE_BREAK {
     ($emitter:expr, $string:expr) => {
-        FLUSH($emitter)
-            && if CHECK!($string, b'\n') {
-                let _ = PUT_BREAK($emitter);
-                $string.pointer = $string.pointer.wrapping_offset(1);
-                1_i32
-            } else {
-                COPY!((*$emitter).buffer, $string);
-                (*$emitter).column = 0_i32;
-                let fresh300 = addr_of_mut!((*$emitter).line);
-                *fresh300 += 1;
-                1_i32
-            } != 0
+        WRITE_BREAK($emitter, addr_of_mut!($string))
     };
 }
 
