@@ -40,7 +40,7 @@ pub(crate) unsafe fn unsafe_main(
 ) -> Result<(), Box<dyn Error>> {
     let mut parser = MaybeUninit::<yaml_parser_t>::uninit();
     let parser = parser.as_mut_ptr();
-    if !yaml_parser_initialize(parser).ok {
+    if yaml_parser_initialize(parser).fail {
         return Err("Could not initialize the parser object".into());
     }
 
@@ -66,7 +66,7 @@ pub(crate) unsafe fn unsafe_main(
     let mut event = MaybeUninit::<yaml_event_t>::uninit();
     let event = event.as_mut_ptr();
     loop {
-        if !yaml_parser_parse(parser, event).ok {
+        if yaml_parser_parse(parser, event).fail {
             let mut error = format!("Parse error: {}", CStr::from_ptr((*parser).problem));
             if (*parser).problem_mark.line != 0 || (*parser).problem_mark.column != 0 {
                 let _ = write!(
