@@ -1522,9 +1522,7 @@ unsafe fn yaml_parser_scan_version_directive_number(
     if CACHE!(parser, 1_u64) == 0 {
         return 0_i32;
     }
-    while *((*parser).buffer.pointer) as libc::c_int >= '0' as i32 as yaml_char_t as libc::c_int
-        && *((*parser).buffer.pointer) as libc::c_int <= '9' as i32 as yaml_char_t as libc::c_int
-    {
+    while IS_DIGIT!((*parser).buffer) {
         length = length.wrapping_add(1);
         if length > MAX_NUMBER_LENGTH {
             return yaml_parser_set_scanner_error(
@@ -2311,11 +2309,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                         SKIP!(parser);
                         if CACHE!(parser, 1_u64) == 0 {
                             current_block = 14984465786483313892;
-                        } else if *((*parser).buffer.pointer) as libc::c_int
-                            >= '0' as i32 as yaml_char_t as libc::c_int
-                            && *((*parser).buffer.pointer) as libc::c_int
-                                <= '9' as i32 as yaml_char_t as libc::c_int
-                        {
+                        } else if IS_DIGIT!((*parser).buffer) {
                             if *((*parser).buffer.pointer) as libc::c_int
                                 == '0' as i32 as yaml_char_t as libc::c_int
                             {
@@ -2337,11 +2331,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                         } else {
                             current_block = 11913429853522160501;
                         }
-                    } else if *((*parser).buffer.pointer) as libc::c_int
-                        >= '0' as i32 as yaml_char_t as libc::c_int
-                        && *((*parser).buffer.pointer) as libc::c_int
-                            <= '9' as i32 as yaml_char_t as libc::c_int
-                    {
+                    } else if IS_DIGIT!((*parser).buffer) {
                         if *((*parser).buffer.pointer) as libc::c_int
                             == '0' as i32 as yaml_char_t as libc::c_int
                         {

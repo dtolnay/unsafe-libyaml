@@ -142,12 +142,11 @@ macro_rules! IS_ALPHA {
     };
 }
 
-macro_rules! IS_DIGIT_AT {
-    () => {}; // TODO
-}
-
 macro_rules! IS_DIGIT {
-    () => {}; // TODO
+    ($string:expr) => {
+        *$string.pointer as libc::c_int >= '0' as i32 as yaml_char_t as libc::c_int
+            && *$string.pointer as libc::c_int <= '9' as i32 as yaml_char_t as libc::c_int
+    };
 }
 
 macro_rules! AS_DIGIT_AT {
