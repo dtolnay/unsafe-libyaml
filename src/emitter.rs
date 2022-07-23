@@ -149,7 +149,7 @@ pub unsafe fn yaml_emitter_emit(
 unsafe fn yaml_emitter_need_more_events(emitter: *mut yaml_emitter_t) -> libc::c_int {
     let mut level: libc::c_int = 0_i32;
     let mut event: *mut yaml_event_t;
-    if (*emitter).events.head == (*emitter).events.tail {
+    if QUEUE_EMPTY!((*emitter).events) {
         return 1_i32;
     }
     let accumulate = match (*(*emitter).events.head).type_ as libc::c_uint {

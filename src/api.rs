@@ -250,7 +250,7 @@ pub unsafe fn yaml_parser_delete(parser: *mut yaml_parser_t) {
     __assert!(!parser.is_null());
     BUFFER_DEL!((*parser).raw_buffer);
     BUFFER_DEL!((*parser).buffer);
-    while !((*parser).tokens.head == (*parser).tokens.tail) {
+    while !QUEUE_EMPTY!((*parser).tokens) {
         yaml_token_delete(addr_of_mut!(DEQUEUE!((*parser).tokens)));
     }
     QUEUE_DEL!((*parser).tokens);
@@ -394,7 +394,7 @@ pub unsafe fn yaml_emitter_delete(emitter: *mut yaml_emitter_t) {
     BUFFER_DEL!((*emitter).buffer);
     BUFFER_DEL!((*emitter).raw_buffer);
     STACK_DEL!((*emitter).states);
-    while !((*emitter).events.head == (*emitter).events.tail) {
+    while !QUEUE_EMPTY!((*emitter).events) {
         yaml_event_delete(addr_of_mut!(DEQUEUE!((*emitter).events)));
     }
     QUEUE_DEL!((*emitter).events);

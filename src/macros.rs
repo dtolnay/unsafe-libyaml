@@ -485,7 +485,9 @@ macro_rules! QUEUE_DEL {
 }
 
 macro_rules! QUEUE_EMPTY {
-    () => {}; // TODO
+    ($queue:expr) => {
+        $queue.head == $queue.tail
+    };
 }
 
 macro_rules! ENQUEUE {
