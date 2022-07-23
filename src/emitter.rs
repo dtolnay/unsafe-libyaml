@@ -22,13 +22,18 @@ use crate::{
 };
 use core::ptr::{self, addr_of_mut};
 
-unsafe fn FLUSH(emitter: *mut yaml_emitter_t) -> bool {
-    ((*emitter).buffer.pointer).wrapping_offset(5_isize) < (*emitter).buffer.end
+unsafe fn FLUSH(emitter: *mut yaml_emitter_t) -> Success {
+    if ((*emitter).buffer.pointer).wrapping_offset(5_isize) < (*emitter).buffer.end
         || yaml_emitter_flush(emitter) != 0
+    {
+        OK
+    } else {
+        FAIL
+    }
 }
 
-unsafe fn PUT(emitter: *mut yaml_emitter_t, value: u8) -> bool {
-    FLUSH(emitter) && {
+unsafe fn PUT(emitter: *mut yaml_emitter_t, value: u8) -> Success {
+    if FLUSH(emitter).ok && {
         let fresh40 = addr_of_mut!((*emitter).buffer.pointer);
         let fresh41 = *fresh40;
         *fresh40 = (*fresh40).wrapping_offset(1);
@@ -36,11 +41,15 @@ unsafe fn PUT(emitter: *mut yaml_emitter_t, value: u8) -> bool {
         let fresh42 = addr_of_mut!((*emitter).column);
         *fresh42 += 1;
         true
+    } {
+        OK
+    } else {
+        FAIL
     }
 }
 
-unsafe fn PUT_BREAK(emitter: *mut yaml_emitter_t) -> bool {
-    FLUSH(emitter) && {
+unsafe fn PUT_BREAK(emitter: *mut yaml_emitter_t) -> Success {
+    if FLUSH(emitter).ok && {
         if (*emitter).line_break as libc::c_uint == YAML_CR_BREAK as libc::c_int as libc::c_uint {
             let fresh62 = addr_of_mut!((*emitter).buffer.pointer);
             let fresh63 = *fresh62;
@@ -69,20 +78,28 @@ unsafe fn PUT_BREAK(emitter: *mut yaml_emitter_t) -> bool {
         let fresh70 = addr_of_mut!((*emitter).line);
         *fresh70 += 1;
         true
+    } {
+        OK
+    } else {
+        FAIL
     }
 }
 
-unsafe fn WRITE(emitter: *mut yaml_emitter_t, string: *mut yaml_string_t) -> bool {
-    FLUSH(emitter) && {
+unsafe fn WRITE(emitter: *mut yaml_emitter_t, string: *mut yaml_string_t) -> Success {
+    if FLUSH(emitter).ok && {
         COPY!((*emitter).buffer, *string);
         let fresh107 = addr_of_mut!((*emitter).column);
         *fresh107 += 1;
         true
+    } {
+        OK
+    } else {
+        FAIL
     }
 }
 
-unsafe fn WRITE_BREAK(emitter: *mut yaml_emitter_t, string: *mut yaml_string_t) -> bool {
-    FLUSH(emitter)
+unsafe fn WRITE_BREAK(emitter: *mut yaml_emitter_t, string: *mut yaml_string_t) -> Success {
+    if FLUSH(emitter).ok
         && if CHECK!(*string, b'\n') {
             let _ = PUT_BREAK(emitter);
             (*string).pointer = (*string).pointer.wrapping_offset(1);
@@ -94,17 +111,22 @@ unsafe fn WRITE_BREAK(emitter: *mut yaml_emitter_t, string: *mut yaml_string_t) 
             *fresh300 += 1;
             1_i32
         } != 0
+    {
+        OK
+    } else {
+        FAIL
+    }
 }
 
 macro_rules! WRITE {
     ($emitter:expr, $string:expr) => {
-        WRITE($emitter, addr_of_mut!($string))
+        WRITE($emitter, addr_of_mut!($string)).ok
     };
 }
 
 macro_rules! WRITE_BREAK {
     ($emitter:expr, $string:expr) => {
-        WRITE_BREAK($emitter, addr_of_mut!($string))
+        WRITE_BREAK($emitter, addr_of_mut!($string)).ok
     };
 }
 
@@ -990,7 +1012,7 @@ unsafe fn yaml_emitter_emit_alias(
         return FAIL;
     }
     if (*emitter).simple_key_context != 0 {
-        if !(PUT(emitter, b' ')) {
+        if !PUT(emitter, b' ').ok {
             return FAIL;
         }
     }
@@ -1733,7 +1755,7 @@ unsafe fn yaml_emitter_analyze_event(
 }
 
 unsafe fn yaml_emitter_write_bom(emitter: *mut yaml_emitter_t) -> Success {
-    if !FLUSH(emitter) {
+    if !FLUSH(emitter).ok {
         return FAIL;
     }
     let fresh56 = addr_of_mut!((*emitter).buffer.pointer);
@@ -1761,12 +1783,12 @@ unsafe fn yaml_emitter_write_indent(mut emitter: *mut yaml_emitter_t) -> Success
         || (*emitter).column > indent
         || (*emitter).column == indent && (*emitter).whitespace == 0
     {
-        if !(PUT_BREAK(emitter)) {
+        if !PUT_BREAK(emitter).ok {
             return FAIL;
         }
     }
     while (*emitter).column < indent {
-        if !(PUT(emitter, b' ')) {
+        if !PUT(emitter, b' ').ok {
             return FAIL;
         }
     }
@@ -1785,7 +1807,7 @@ unsafe fn yaml_emitter_write_indicator(
     let indicator_length: size_t = strlen(indicator);
     let mut string = STRING_ASSIGN!(indicator as *mut yaml_char_t, indicator_length);
     if need_whitespace != 0 && (*emitter).whitespace == 0 {
-        if !(PUT(emitter, b' ')) {
+        if !PUT(emitter, b' ').ok {
             return FAIL;
         }
     }
@@ -1822,7 +1844,7 @@ unsafe fn yaml_emitter_write_tag_handle(
 ) -> Success {
     let mut string = STRING_ASSIGN!(value, length);
     if (*emitter).whitespace == 0 {
-        if !(PUT(emitter, b' ')) {
+        if !PUT(emitter, b' ').ok {
             return FAIL;
         }
     }
@@ -1844,7 +1866,7 @@ unsafe fn yaml_emitter_write_tag_content(
 ) -> Success {
     let mut string = STRING_ASSIGN!(value, length);
     if need_whitespace != 0 && (*emitter).whitespace == 0 {
-        if !(PUT(emitter, b' ')) {
+        if !PUT(emitter, b' ').ok {
             return FAIL;
         }
     }
@@ -1884,19 +1906,23 @@ unsafe fn yaml_emitter_write_tag_content(
                 let fresh208 = string.pointer;
                 string.pointer = string.pointer.wrapping_offset(1);
                 let value = *fresh208;
-                if !(PUT(emitter, b'%')) {
+                if !PUT(emitter, b'%').ok {
                     return FAIL;
                 }
-                if !(PUT(
+                if !PUT(
                     emitter,
                     (value >> 4).wrapping_add(if (value >> 4) < 10 { b'0' } else { b'A' - 10 }),
-                )) {
+                )
+                .ok
+                {
                     return FAIL;
                 }
-                if !(PUT(
+                if !PUT(
                     emitter,
                     (value & 0x0F).wrapping_add(if (value & 0x0F) < 10 { b'0' } else { b'A' - 10 }),
-                )) {
+                )
+                .ok
+                {
                     return FAIL;
                 }
             }
@@ -1917,7 +1943,7 @@ unsafe fn yaml_emitter_write_plain_scalar(
     let mut breaks: libc::c_int = 0_i32;
     let mut string = STRING_ASSIGN!(value, length);
     if (*emitter).whitespace == 0 && (length != 0 || (*emitter).flow_level != 0) {
-        if !(PUT(emitter, b' ')) {
+        if !PUT(emitter, b' ').ok {
             return FAIL;
         }
     }
@@ -1938,7 +1964,7 @@ unsafe fn yaml_emitter_write_plain_scalar(
             spaces = 1_i32;
         } else if IS_BREAK!(string) {
             if breaks == 0 && CHECK!(string, b'\n') {
-                if !(PUT_BREAK(emitter)) {
+                if !PUT_BREAK(emitter).ok {
                     return FAIL;
                 }
             }
@@ -2004,7 +2030,7 @@ unsafe fn yaml_emitter_write_single_quoted_scalar(
             spaces = 1_i32;
         } else if IS_BREAK!(string) {
             if breaks == 0 && CHECK!(string, b'\n') {
-                if !(PUT_BREAK(emitter)) {
+                if !PUT_BREAK(emitter).ok {
                     return FAIL;
                 }
             }
@@ -2020,7 +2046,7 @@ unsafe fn yaml_emitter_write_single_quoted_scalar(
                 }
             }
             if CHECK!(string, b'\'') {
-                if !(PUT(emitter, b'\'')) {
+                if !PUT(emitter, b'\'').ok {
                     return FAIL;
                 }
             }
@@ -2112,98 +2138,98 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                 k += 1;
             }
             string.pointer = string.pointer.wrapping_offset(width as isize);
-            if !(PUT(emitter, b'\\')) {
+            if !PUT(emitter, b'\\').ok {
                 return FAIL;
             }
             match value_0 {
                 0 => {
-                    if !(PUT(emitter, b'0')) {
+                    if !PUT(emitter, b'0').ok {
                         return FAIL;
                     }
                 }
                 7 => {
-                    if !(PUT(emitter, b'a')) {
+                    if !PUT(emitter, b'a').ok {
                         return FAIL;
                     }
                 }
                 8 => {
-                    if !(PUT(emitter, b'b')) {
+                    if !PUT(emitter, b'b').ok {
                         return FAIL;
                     }
                 }
                 9 => {
-                    if !(PUT(emitter, b't')) {
+                    if !PUT(emitter, b't').ok {
                         return FAIL;
                     }
                 }
                 10 => {
-                    if !(PUT(emitter, b'n')) {
+                    if !PUT(emitter, b'n').ok {
                         return FAIL;
                     }
                 }
                 11 => {
-                    if !(PUT(emitter, b'v')) {
+                    if !PUT(emitter, b'v').ok {
                         return FAIL;
                     }
                 }
                 12 => {
-                    if !(PUT(emitter, b'f')) {
+                    if !PUT(emitter, b'f').ok {
                         return FAIL;
                     }
                 }
                 13 => {
-                    if !(PUT(emitter, b'r')) {
+                    if !PUT(emitter, b'r').ok {
                         return FAIL;
                     }
                 }
                 27 => {
-                    if !(PUT(emitter, b'e')) {
+                    if !PUT(emitter, b'e').ok {
                         return FAIL;
                     }
                 }
                 34 => {
-                    if !(PUT(emitter, b'"')) {
+                    if !PUT(emitter, b'"').ok {
                         return FAIL;
                     }
                 }
                 92 => {
-                    if !(PUT(emitter, b'\\')) {
+                    if !PUT(emitter, b'\\').ok {
                         return FAIL;
                     }
                 }
                 133 => {
-                    if !(PUT(emitter, b'N')) {
+                    if !PUT(emitter, b'N').ok {
                         return FAIL;
                     }
                 }
                 160 => {
-                    if !(PUT(emitter, b'_')) {
+                    if !PUT(emitter, b'_').ok {
                         return FAIL;
                     }
                 }
                 8232 => {
-                    if !(PUT(emitter, b'L')) {
+                    if !PUT(emitter, b'L').ok {
                         return FAIL;
                     }
                 }
                 8233 => {
-                    if !(PUT(emitter, b'P')) {
+                    if !PUT(emitter, b'P').ok {
                         return FAIL;
                     }
                 }
                 _ => {
                     if value_0 <= 0xff_i32 as libc::c_uint {
-                        if !(PUT(emitter, b'x')) {
+                        if !PUT(emitter, b'x').ok {
                             return FAIL;
                         }
                         width = 2_u32;
                     } else if value_0 <= 0xffff_i32 as libc::c_uint {
-                        if !(PUT(emitter, b'u')) {
+                        if !PUT(emitter, b'u').ok {
                             return FAIL;
                         }
                         width = 4_u32;
                     } else {
-                        if !(PUT(emitter, b'U')) {
+                        if !PUT(emitter, b'U').ok {
                             return FAIL;
                         }
                         width = 8_u32;
@@ -2211,10 +2237,12 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                     k = width.wrapping_sub(1_u32).wrapping_mul(4_u32) as libc::c_int;
                     while k >= 0 {
                         let digit: libc::c_int = (value_0 >> k & 0x0F) as libc::c_int;
-                        if !(PUT(
+                        if !PUT(
                             emitter,
                             (digit + if digit < 10 { b'0' } else { b'A' - 10 } as i32) as u8,
-                        )) {
+                        )
+                        .ok
+                        {
                             return FAIL;
                         }
                         k -= 4_i32;
@@ -2233,7 +2261,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                     return FAIL;
                 }
                 if IS_SPACE_AT!(string, 1) {
-                    if !(PUT(emitter, b'\\')) {
+                    if !PUT(emitter, b'\\').ok {
                         return FAIL;
                     }
                 }
@@ -2336,7 +2364,7 @@ unsafe fn yaml_emitter_write_literal_scalar(
     if yaml_emitter_write_block_scalar_hints(emitter, string) == 0 {
         return FAIL;
     }
-    if !(PUT_BREAK(emitter)) {
+    if !PUT_BREAK(emitter).ok {
         return FAIL;
     }
     (*emitter).indention = 1_i32;
@@ -2385,7 +2413,7 @@ unsafe fn yaml_emitter_write_folded_scalar(
     if yaml_emitter_write_block_scalar_hints(emitter, string) == 0 {
         return FAIL;
     }
-    if !(PUT_BREAK(emitter)) {
+    if !PUT_BREAK(emitter).ok {
         return FAIL;
     }
     (*emitter).indention = 1_i32;
@@ -2398,7 +2426,7 @@ unsafe fn yaml_emitter_write_folded_scalar(
                     k += WIDTH_AT!(string, k as isize);
                 }
                 if !IS_BLANKZ_AT!(string, k) {
-                    if !(PUT_BREAK(emitter)) {
+                    if !PUT_BREAK(emitter).ok {
                         return FAIL;
                     }
                 }
