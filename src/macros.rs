@@ -122,7 +122,9 @@ macro_rules! JOIN {
 }
 
 macro_rules! CHECK_AT {
-    () => {}; // TODO
+    ($string:expr, $octet:expr, $offset:expr) => {
+        *$string.pointer.offset($offset as isize) == $octet as yaml_char_t
+    };
 }
 
 macro_rules! CHECK {
@@ -228,8 +230,7 @@ macro_rules! IS_PRINTABLE {
 
 macro_rules! IS_Z_AT {
     ($string:expr, $offset:expr) => {
-        *$string.pointer.wrapping_offset($offset as isize) as libc::c_int
-            == '\0' as i32 as yaml_char_t as libc::c_int
+        CHECK_AT!($string, '\0', $offset)
     };
 }
 
@@ -241,18 +242,15 @@ macro_rules! IS_Z {
 
 macro_rules! IS_BOM {
     ($string:expr) => {
-        *$string.pointer as libc::c_int == -17i32 as yaml_char_t as libc::c_int
-            && *$string.pointer.wrapping_offset(1) as libc::c_int
-                == -69i32 as yaml_char_t as libc::c_int
-            && *$string.pointer.wrapping_offset(2) as libc::c_int
-                == -65i32 as yaml_char_t as libc::c_int
+        CHECK_AT!($string, b'\xEF', 0)
+            && CHECK_AT!($string, b'\xBB', 1)
+            && CHECK_AT!($string, b'\xBF', 2)
     };
 }
 
 macro_rules! IS_SPACE_AT {
     ($string:expr, $offset:expr) => {
-        *$string.pointer.wrapping_offset($offset as isize) as libc::c_int
-            == ' ' as i32 as yaml_char_t as libc::c_int
+        CHECK_AT!($string, ' ', $offset)
     };
 }
 
@@ -264,8 +262,7 @@ macro_rules! IS_SPACE {
 
 macro_rules! IS_TAB_AT {
     ($string:expr, $offset:expr) => {
-        *$string.pointer.wrapping_offset($offset as isize) as libc::c_int
-            == '\t' as i32 as yaml_char_t as libc::c_int
+        CHECK_AT!($string, '\t', $offset)
     };
 }
 
@@ -289,26 +286,15 @@ macro_rules! IS_BLANK {
 
 macro_rules! IS_BREAK_AT {
     ($string:expr, $offset:expr) => {
-        *$string.pointer.wrapping_offset($offset as isize) as libc::c_int
-            == '\r' as i32 as yaml_char_t as libc::c_int
-            || *$string.pointer.wrapping_offset($offset as isize) as libc::c_int
-                == '\n' as i32 as yaml_char_t as libc::c_int
-            || *$string.pointer.wrapping_offset($offset as isize) as libc::c_int
-                == -62i32 as yaml_char_t as libc::c_int
-                && *$string.pointer.wrapping_offset($offset as isize + 1) as libc::c_int
-                    == -123i32 as yaml_char_t as libc::c_int
-            || *$string.pointer.wrapping_offset($offset as isize) as libc::c_int
-                == -30i32 as yaml_char_t as libc::c_int
-                && *$string.pointer.wrapping_offset($offset as isize + 1) as libc::c_int
-                    == -128i32 as yaml_char_t as libc::c_int
-                && *$string.pointer.wrapping_offset($offset as isize + 2) as libc::c_int
-                    == -88i32 as yaml_char_t as libc::c_int
-            || *$string.pointer.wrapping_offset($offset as isize) as libc::c_int
-                == -30i32 as yaml_char_t as libc::c_int
-                && *$string.pointer.wrapping_offset($offset as isize + 1) as libc::c_int
-                    == -128i32 as yaml_char_t as libc::c_int
-                && *$string.pointer.wrapping_offset($offset as isize + 2) as libc::c_int
-                    == -87i32 as yaml_char_t as libc::c_int
+        CHECK_AT!($string, '\r', $offset)
+            || CHECK_AT!($string, '\n', $offset)
+            || CHECK_AT!($string, b'\xC2', $offset) && CHECK_AT!($string, b'\x85', $offset + 1)
+            || CHECK_AT!($string, b'\xE2', $offset)
+                && CHECK_AT!($string, b'\x80', $offset + 1)
+                && CHECK_AT!($string, b'\xA8', $offset + 2)
+            || CHECK_AT!($string, b'\xE2', $offset)
+                && CHECK_AT!($string, b'\x80', $offset + 1)
+                && CHECK_AT!($string, b'\xA9', $offset + 2)
     };
 }
 
@@ -320,9 +306,7 @@ macro_rules! IS_BREAK {
 
 macro_rules! IS_CRLF {
     ($string:expr) => {
-        *$string.pointer as libc::c_int == '\r' as i32 as yaml_char_t as libc::c_int
-            && *$string.pointer.offset(1) as libc::c_int
-                == '\n' as i32 as yaml_char_t as libc::c_int
+        CHECK_AT!($string, '\r', 0) && CHECK_AT!($string, '\n', 1)
     };
 }
 

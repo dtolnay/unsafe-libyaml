@@ -89,11 +89,7 @@ macro_rules! READ {
 macro_rules! READ_LINE {
     ($parser:expr, $string:expr) => {
         if STRING_EXTEND!($parser, $string) != 0 {
-            if *((*$parser).buffer.pointer) as libc::c_int
-                == '\r' as i32 as yaml_char_t as libc::c_int
-                && *((*$parser).buffer.pointer).wrapping_offset(1_isize) as libc::c_int
-                    == '\n' as i32 as yaml_char_t as libc::c_int
-            {
+            if CHECK_AT!((*$parser).buffer, '\r', 0) && CHECK_AT!((*$parser).buffer, '\n', 1) {
                 let fresh484 = addr_of_mut!($string.pointer);
                 let fresh485 = *fresh484;
                 *fresh484 = (*fresh484).wrapping_offset(1);
@@ -107,10 +103,7 @@ macro_rules! READ_LINE {
                 *fresh488 = (*fresh488).wrapping_add(1);
                 let fresh489 = addr_of_mut!((*$parser).unread);
                 *fresh489 = (*fresh489 as libc::c_ulong).wrapping_sub(2_u64) as size_t as size_t;
-            } else if *((*$parser).buffer.pointer) as libc::c_int
-                == '\r' as i32 as yaml_char_t as libc::c_int
-                || *((*$parser).buffer.pointer) as libc::c_int
-                    == '\n' as i32 as yaml_char_t as libc::c_int
+            } else if CHECK_AT!((*$parser).buffer, '\r', 0) || CHECK_AT!((*$parser).buffer, '\n', 0)
             {
                 let fresh490 = addr_of_mut!($string.pointer);
                 let fresh491 = *fresh490;
@@ -125,10 +118,8 @@ macro_rules! READ_LINE {
                 *fresh494 = (*fresh494).wrapping_add(1);
                 let fresh495 = addr_of_mut!((*$parser).unread);
                 *fresh495 = (*fresh495).wrapping_sub(1);
-            } else if *((*$parser).buffer.pointer) as libc::c_int
-                == -62i32 as yaml_char_t as libc::c_int
-                && *((*$parser).buffer.pointer).wrapping_offset(1_isize) as libc::c_int
-                    == -123i32 as yaml_char_t as libc::c_int
+            } else if CHECK_AT!((*$parser).buffer, b'\xC2', 0)
+                && CHECK_AT!((*$parser).buffer, b'\x85', 1)
             {
                 let fresh496 = addr_of_mut!($string.pointer);
                 let fresh497 = *fresh496;
@@ -143,14 +134,10 @@ macro_rules! READ_LINE {
                 *fresh500 = (*fresh500).wrapping_add(1);
                 let fresh501 = addr_of_mut!((*$parser).unread);
                 *fresh501 = (*fresh501).wrapping_sub(1);
-            } else if *((*$parser).buffer.pointer) as libc::c_int
-                == -30i32 as yaml_char_t as libc::c_int
-                && *((*$parser).buffer.pointer).wrapping_offset(1_isize) as libc::c_int
-                    == -128i32 as yaml_char_t as libc::c_int
-                && (*((*$parser).buffer.pointer).wrapping_offset(2_isize) as libc::c_int
-                    == -88i32 as yaml_char_t as libc::c_int
-                    || *((*$parser).buffer.pointer).wrapping_offset(2_isize) as libc::c_int
-                        == -87i32 as yaml_char_t as libc::c_int)
+            } else if CHECK_AT!((*$parser).buffer, b'\xE2', 0)
+                && CHECK_AT!((*$parser).buffer, b'\x80', 1)
+                && (CHECK_AT!((*$parser).buffer, b'\xA8', 2)
+                    || CHECK_AT!((*$parser).buffer, b'\xA9', 2))
             {
                 let fresh502 = addr_of_mut!((*$parser).buffer.pointer);
                 let fresh503 = *fresh502;
@@ -310,21 +297,17 @@ unsafe fn yaml_parser_fetch_next_token(parser: *mut yaml_parser_t) -> libc::c_in
         return yaml_parser_fetch_directive(parser);
     }
     if (*parser).mark.column == 0_u64
-        && *((*parser).buffer.pointer) as libc::c_int == '-' as i32 as yaml_char_t as libc::c_int
-        && *((*parser).buffer.pointer).wrapping_offset(1_isize) as libc::c_int
-            == '-' as i32 as yaml_char_t as libc::c_int
-        && *((*parser).buffer.pointer).wrapping_offset(2_isize) as libc::c_int
-            == '-' as i32 as yaml_char_t as libc::c_int
+        && CHECK_AT!((*parser).buffer, '-', 0)
+        && CHECK_AT!((*parser).buffer, '-', 1)
+        && CHECK_AT!((*parser).buffer, '-', 2)
         && IS_BLANKZ_AT!((*parser).buffer, 3)
     {
         return yaml_parser_fetch_document_indicator(parser, YAML_DOCUMENT_START_TOKEN);
     }
     if (*parser).mark.column == 0_u64
-        && *((*parser).buffer.pointer) as libc::c_int == '.' as i32 as yaml_char_t as libc::c_int
-        && *((*parser).buffer.pointer).wrapping_offset(1_isize) as libc::c_int
-            == '.' as i32 as yaml_char_t as libc::c_int
-        && *((*parser).buffer.pointer).wrapping_offset(2_isize) as libc::c_int
-            == '.' as i32 as yaml_char_t as libc::c_int
+        && CHECK_AT!((*parser).buffer, '.', 0)
+        && CHECK_AT!((*parser).buffer, '.', 1)
+        && CHECK_AT!((*parser).buffer, '.', 2)
         && IS_BLANKZ_AT!((*parser).buffer, 3)
     {
         return yaml_parser_fetch_document_indicator(parser, YAML_DOCUMENT_END_TOKEN);
@@ -1587,9 +1570,7 @@ unsafe fn yaml_parser_scan_tag(
     let end_mark: yaml_mark_t;
     let start_mark: yaml_mark_t = (*parser).mark;
     if !(CACHE!(parser, 2_u64) == 0) {
-        if *((*parser).buffer.pointer).wrapping_offset(1_isize) as libc::c_int
-            == '<' as i32 as yaml_char_t as libc::c_int
-        {
+        if CHECK_AT!((*parser).buffer, '<', 1) {
             handle = yaml_malloc(1_u64) as *mut yaml_char_t;
             if handle.is_null() {
                 current_block = 17708497480799081542;
@@ -2441,22 +2422,12 @@ unsafe fn yaml_parser_scan_flow_scalar(
                             break;
                         }
                         if (*parser).mark.column == 0_u64
-                            && (*((*parser).buffer.pointer) as libc::c_int
-                                == '-' as i32 as yaml_char_t as libc::c_int
-                                && *((*parser).buffer.pointer).wrapping_offset(1_isize)
-                                    as libc::c_int
-                                    == '-' as i32 as yaml_char_t as libc::c_int
-                                && *((*parser).buffer.pointer).wrapping_offset(2_isize)
-                                    as libc::c_int
-                                    == '-' as i32 as yaml_char_t as libc::c_int
-                                || *((*parser).buffer.pointer) as libc::c_int
-                                    == '.' as i32 as yaml_char_t as libc::c_int
-                                    && *((*parser).buffer.pointer).wrapping_offset(1_isize)
-                                        as libc::c_int
-                                        == '.' as i32 as yaml_char_t as libc::c_int
-                                    && *((*parser).buffer.pointer).wrapping_offset(2_isize)
-                                        as libc::c_int
-                                        == '.' as i32 as yaml_char_t as libc::c_int)
+                            && (CHECK_AT!((*parser).buffer, '-', 0)
+                                && CHECK_AT!((*parser).buffer, '-', 1)
+                                && CHECK_AT!((*parser).buffer, '-', 2)
+                                || CHECK_AT!((*parser).buffer, '.', 0)
+                                    && CHECK_AT!((*parser).buffer, '.', 1)
+                                    && CHECK_AT!((*parser).buffer, '.', 2))
                             && IS_BLANKZ_AT!((*parser).buffer, 3)
                         {
                             yaml_parser_set_scanner_error(
@@ -2488,11 +2459,8 @@ unsafe fn yaml_parser_scan_flow_scalar(
                             leading_blanks = 0_i32;
                             while !IS_BLANKZ!((*parser).buffer) {
                                 if single != 0
-                                    && *((*parser).buffer.pointer) as libc::c_int
-                                        == '\'' as i32 as yaml_char_t as libc::c_int
-                                    && *((*parser).buffer.pointer).wrapping_offset(1_isize)
-                                        as libc::c_int
-                                        == '\'' as i32 as yaml_char_t as libc::c_int
+                                    && CHECK_AT!((*parser).buffer, '\'', 0)
+                                    && CHECK_AT!((*parser).buffer, '\'', 1)
                                 {
                                     if STRING_EXTEND!(parser, string) == 0 {
                                         current_block = 8114179180390253173;
@@ -2955,22 +2923,12 @@ unsafe fn yaml_parser_scan_plain_scalar(
                             break;
                         }
                         if (*parser).mark.column == 0_u64
-                            && (*((*parser).buffer.pointer) as libc::c_int
-                                == '-' as i32 as yaml_char_t as libc::c_int
-                                && *((*parser).buffer.pointer).wrapping_offset(1_isize)
-                                    as libc::c_int
-                                    == '-' as i32 as yaml_char_t as libc::c_int
-                                && *((*parser).buffer.pointer).wrapping_offset(2_isize)
-                                    as libc::c_int
-                                    == '-' as i32 as yaml_char_t as libc::c_int
-                                || *((*parser).buffer.pointer) as libc::c_int
-                                    == '.' as i32 as yaml_char_t as libc::c_int
-                                    && *((*parser).buffer.pointer).wrapping_offset(1_isize)
-                                        as libc::c_int
-                                        == '.' as i32 as yaml_char_t as libc::c_int
-                                    && *((*parser).buffer.pointer).wrapping_offset(2_isize)
-                                        as libc::c_int
-                                        == '.' as i32 as yaml_char_t as libc::c_int)
+                            && (CHECK_AT!((*parser).buffer, '-', 0)
+                                && CHECK_AT!((*parser).buffer, '-', 1)
+                                && CHECK_AT!((*parser).buffer, '-', 2)
+                                || CHECK_AT!((*parser).buffer, '.', 0)
+                                    && CHECK_AT!((*parser).buffer, '.', 1)
+                                    && CHECK_AT!((*parser).buffer, '.', 2))
                             && IS_BLANKZ_AT!((*parser).buffer, 3)
                         {
                             current_block = 6281126495347172768;
@@ -2986,24 +2944,12 @@ unsafe fn yaml_parser_scan_plain_scalar(
                             if (*parser).flow_level != 0
                                 && *((*parser).buffer.pointer) as libc::c_int
                                     == ':' as i32 as yaml_char_t as libc::c_int
-                                && (*((*parser).buffer.pointer).wrapping_offset(1_isize)
-                                    as libc::c_int
-                                    == ',' as i32 as yaml_char_t as libc::c_int
-                                    || *((*parser).buffer.pointer).wrapping_offset(1_isize)
-                                        as libc::c_int
-                                        == '?' as i32 as yaml_char_t as libc::c_int
-                                    || *((*parser).buffer.pointer).wrapping_offset(1_isize)
-                                        as libc::c_int
-                                        == '[' as i32 as yaml_char_t as libc::c_int
-                                    || *((*parser).buffer.pointer).wrapping_offset(1_isize)
-                                        as libc::c_int
-                                        == ']' as i32 as yaml_char_t as libc::c_int
-                                    || *((*parser).buffer.pointer).wrapping_offset(1_isize)
-                                        as libc::c_int
-                                        == '{' as i32 as yaml_char_t as libc::c_int
-                                    || *((*parser).buffer.pointer).wrapping_offset(1_isize)
-                                        as libc::c_int
-                                        == '}' as i32 as yaml_char_t as libc::c_int)
+                                && (CHECK_AT!((*parser).buffer, ',', 1)
+                                    || CHECK_AT!((*parser).buffer, '?', 1)
+                                    || CHECK_AT!((*parser).buffer, '[', 1)
+                                    || CHECK_AT!((*parser).buffer, ']', 1)
+                                    || CHECK_AT!((*parser).buffer, '{', 1)
+                                    || CHECK_AT!((*parser).buffer, '}', 1))
                             {
                                 yaml_parser_set_scanner_error(
                                     parser,

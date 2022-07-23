@@ -1511,16 +1511,8 @@ unsafe fn yaml_emitter_analyze_scalar(
         (*emitter).scalar_data.block_allowed = 0_i32;
         return 1_i32;
     }
-    if *string.pointer as libc::c_int == '-' as i32 as yaml_char_t as libc::c_int
-        && *string.pointer.wrapping_offset(1_isize) as libc::c_int
-            == '-' as i32 as yaml_char_t as libc::c_int
-        && *string.pointer.wrapping_offset(2_isize) as libc::c_int
-            == '-' as i32 as yaml_char_t as libc::c_int
-        || *string.pointer as libc::c_int == '.' as i32 as yaml_char_t as libc::c_int
-            && *string.pointer.wrapping_offset(1_isize) as libc::c_int
-                == '.' as i32 as yaml_char_t as libc::c_int
-            && *string.pointer.wrapping_offset(2_isize) as libc::c_int
-                == '.' as i32 as yaml_char_t as libc::c_int
+    if CHECK_AT!(string, '-', 0) && CHECK_AT!(string, '-', 1) && CHECK_AT!(string, '-', 2)
+        || CHECK_AT!(string, '.', 0) && CHECK_AT!(string, '.', 1) && CHECK_AT!(string, '.', 2)
     {
         block_indicators = 1_i32;
         flow_indicators = 1_i32;
