@@ -9,10 +9,10 @@ macro_rules! BUFFER_INIT {
             *last = *pointer;
             let end = addr_of_mut!($buffer.end);
             *end = $buffer.start.wrapping_add($size as usize);
-            1_i32
+            OK
         } else {
             (*$context).error = YAML_MEMORY_ERROR;
-            0_i32
+            FAIL
         }
     }};
 }
@@ -46,10 +46,10 @@ macro_rules! STRING_INIT {
             $string.pointer = $string.start;
             $string.end = $string.start.wrapping_add(16);
             memset($string.start as *mut libc::c_void, 0, 16);
-            1_i32
+            OK
         } else {
             (*$context).error = YAML_MEMORY_ERROR;
-            0_i32
+            FAIL
         }
     }};
 }
@@ -72,10 +72,10 @@ macro_rules! STRING_EXTEND {
                 addr_of_mut!($string.end),
             ) != 0
         {
-            1_i32
+            OK
         } else {
             (*$context).error = YAML_MEMORY_ERROR;
-            0_i32
+            FAIL
         }
     };
 }
@@ -103,10 +103,10 @@ macro_rules! JOIN {
         ) != 0
         {
             $string_b.pointer = $string_b.start;
-            1_i32
+            OK
         } else {
             (*$context).error = YAML_MEMORY_ERROR;
-            0_i32
+            FAIL
         }
     };
 }
@@ -375,10 +375,10 @@ macro_rules! STACK_INIT {
         if !$stack.start.is_null() {
             $stack.top = $stack.start;
             $stack.end = $stack.start.offset(16_isize);
-            1_i32
+            OK
         } else {
             (*$context).error = YAML_MEMORY_ERROR;
-            0_i32
+            FAIL
         }
     }};
 }
@@ -401,10 +401,10 @@ macro_rules! STACK_EMPTY {
 macro_rules! STACK_LIMIT {
     ($context:expr, $stack:expr) => {
         if $stack.top.c_offset_from($stack.start) < libc::c_int::MAX as isize - 1 {
-            1_i32
+            OK
         } else {
             (*$context).error = YAML_MEMORY_ERROR;
-            0_i32
+            FAIL
         }
     };
 }
@@ -420,10 +420,10 @@ macro_rules! PUSH {
         {
             $push;
             $stack.top = $stack.top.wrapping_offset(1);
-            1_i32
+            OK
         } else {
             (*$context).error = YAML_MEMORY_ERROR;
-            0_i32
+            FAIL
         }
     };
     ($context:expr, $stack:expr, *$value:expr) => {
@@ -450,10 +450,10 @@ macro_rules! QUEUE_INIT {
             $queue.tail = $queue.start;
             $queue.head = $queue.tail;
             $queue.end = $queue.start.offset(16_isize);
-            1_i32
+            OK
         } else {
             (*$context).error = YAML_MEMORY_ERROR;
-            0_i32
+            FAIL
         }
     }};
 }
@@ -486,10 +486,10 @@ macro_rules! ENQUEUE {
         {
             $enqueue;
             $queue.tail = $queue.tail.wrapping_offset(1);
-            1_i32
+            OK
         } else {
             (*$context).error = YAML_MEMORY_ERROR;
-            0_i32
+            FAIL
         }
     };
     ($context:expr, $queue:expr, *$value:expr) => {
@@ -532,10 +532,10 @@ macro_rules! QUEUE_INSERT {
             *($queue.head).wrapping_offset($index as isize) = $value;
             let fresh14 = addr_of_mut!($queue.tail);
             *fresh14 = (*fresh14).wrapping_offset(1);
-            1_i32
+            OK
         } else {
             (*$context).error = YAML_MEMORY_ERROR;
-            0_i32
+            FAIL
         }
     };
 }
