@@ -180,20 +180,18 @@ macro_rules! IS_ASCII {
 
 macro_rules! IS_PRINTABLE {
     ($string:expr) => {
-        (*$string.pointer as libc::c_int == 0xa
-            || *$string.pointer as libc::c_int >= 0x20 && *$string.pointer as libc::c_int <= 0x7e
-            || *$string.pointer as libc::c_int == 0xc2
-                && *$string.pointer.wrapping_offset(1) as libc::c_int >= 0xa0
-            || *$string.pointer as libc::c_int > 0xc2 && (*$string.pointer as libc::c_int) < 0xed
-            || *$string.pointer as libc::c_int == 0xed
-                && (*$string.pointer.wrapping_offset(1) as libc::c_int) < 0xa0
-            || *$string.pointer as libc::c_int == 0xee
-            || *$string.pointer as libc::c_int == 0xef
-                && !(*$string.pointer.wrapping_offset(1) as libc::c_int == 0xbb
-                    && *$string.pointer.wrapping_offset(2) as libc::c_int == 0xbf)
-                && !(*$string.pointer.wrapping_offset(1) as libc::c_int == 0xbf
-                    && (*$string.pointer.wrapping_offset(2) as libc::c_int == 0xbe
-                        || *$string.pointer.wrapping_offset(2) as libc::c_int == 0xbf)))
+        (*$string.pointer == 0x0A
+            || *$string.pointer >= 0x20 && *$string.pointer <= 0x7E
+            || *$string.pointer == 0xC2 && *$string.pointer.wrapping_offset(1) >= 0xA0
+            || *$string.pointer > 0xC2 && (*$string.pointer) < 0xED
+            || *$string.pointer == 0xED && (*$string.pointer.wrapping_offset(1)) < 0xA0
+            || *$string.pointer == 0xEE
+            || *$string.pointer == 0xEF
+                && !(*$string.pointer.wrapping_offset(1) == 0xBB
+                    && *$string.pointer.wrapping_offset(2) == 0xBF)
+                && !(*$string.pointer.wrapping_offset(1) == 0xBF
+                    && (*$string.pointer.wrapping_offset(2) == 0xBE
+                        || *$string.pointer.wrapping_offset(2) == 0xBF)))
     };
 }
 
@@ -305,19 +303,13 @@ macro_rules! IS_BLANKZ {
 
 macro_rules! WIDTH_AT {
     ($string:expr, $offset:expr) => {
-        if *$string.pointer.wrapping_offset($offset as isize) as libc::c_int & 0x80_i32 == 0_i32 {
+        if *$string.pointer.wrapping_offset($offset as isize) & 0x80 == 0x00 {
             1_i32
-        } else if *$string.pointer.wrapping_offset($offset as isize) as libc::c_int & 0xe0_i32
-            == 0xc0_i32
-        {
+        } else if *$string.pointer.wrapping_offset($offset as isize) & 0xE0 == 0xC0 {
             2_i32
-        } else if *$string.pointer.wrapping_offset($offset as isize) as libc::c_int & 0xf0_i32
-            == 0xe0_i32
-        {
+        } else if *$string.pointer.wrapping_offset($offset as isize) & 0xF0 == 0xE0 {
             3_i32
-        } else if *$string.pointer.wrapping_offset($offset as isize) as libc::c_int & 0xf8_i32
-            == 0xf0_i32
-        {
+        } else if *$string.pointer.wrapping_offset($offset as isize) & 0xF8 == 0xF0 {
             4_i32
         } else {
             0_i32
@@ -339,14 +331,14 @@ macro_rules! MOVE {
 
 macro_rules! COPY {
     ($string_a:expr, $string_b:expr) => {
-        if *$string_b.pointer as libc::c_int & 0x80_i32 == 0_i32 {
+        if *$string_b.pointer & 0x80 == 0x00 {
             let fresh77 = $string_b.pointer;
             $string_b.pointer = $string_b.pointer.wrapping_offset(1);
             let fresh78 = addr_of_mut!($string_a.pointer);
             let fresh79 = *fresh78;
             *fresh78 = (*fresh78).wrapping_offset(1);
             *fresh79 = *fresh77;
-        } else if *$string_b.pointer as libc::c_int & 0xe0_i32 == 0xc0_i32 {
+        } else if *$string_b.pointer & 0xE0 == 0xC0 {
             let fresh80 = $string_b.pointer;
             $string_b.pointer = $string_b.pointer.wrapping_offset(1);
             let fresh81 = addr_of_mut!($string_a.pointer);
@@ -359,7 +351,7 @@ macro_rules! COPY {
             let fresh85 = *fresh84;
             *fresh84 = (*fresh84).wrapping_offset(1);
             *fresh85 = *fresh83;
-        } else if *$string_b.pointer as libc::c_int & 0xf0_i32 == 0xe0_i32 {
+        } else if *$string_b.pointer & 0xF0 == 0xE0 {
             let fresh86 = $string_b.pointer;
             $string_b.pointer = $string_b.pointer.wrapping_offset(1);
             let fresh87 = addr_of_mut!($string_a.pointer);
@@ -378,7 +370,7 @@ macro_rules! COPY {
             let fresh94 = *fresh93;
             *fresh93 = (*fresh93).wrapping_offset(1);
             *fresh94 = *fresh92;
-        } else if *$string_b.pointer as libc::c_int & 0xf8_i32 == 0xf0_i32 {
+        } else if *$string_b.pointer & 0xF8 == 0xF0 {
             let fresh95 = $string_b.pointer;
             $string_b.pointer = $string_b.pointer.wrapping_offset(1);
             let fresh96 = addr_of_mut!($string_a.pointer);
@@ -563,7 +555,7 @@ macro_rules! QUEUE_INSERT {
                     .wrapping_offset($index as isize)
                     .wrapping_offset(1_isize) as *mut libc::c_void,
                 ($queue.head).wrapping_offset($index as isize) as *const libc::c_void,
-                (($queue.tail).c_offset_from($queue.head) as libc::c_long as libc::c_ulong)
+                (($queue.tail).c_offset_from($queue.head) as libc::c_ulong)
                     .wrapping_sub($index)
                     .wrapping_mul(size_of::<yaml_token_t>() as libc::c_ulong),
             );
