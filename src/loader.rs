@@ -48,7 +48,7 @@ pub unsafe fn yaml_parser_load(
         size_of::<yaml_document_t>() as libc::c_ulong,
     );
     if STACK_INIT!(parser, (*document).nodes, yaml_node_t).ok {
-        if (*parser).stream_start_produced == 0 {
+        if !(*parser).stream_start_produced {
             if yaml_parser_parse(parser, event).fail {
                 current_block = 6234624449317607669;
             } else {
@@ -64,7 +64,7 @@ pub unsafe fn yaml_parser_load(
         match current_block {
             6234624449317607669 => {}
             _ => {
-                if (*parser).stream_end_produced != 0 {
+                if (*parser).stream_end_produced {
                     return OK;
                 }
                 if yaml_parser_parse(parser, event).ok {

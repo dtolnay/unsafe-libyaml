@@ -26,7 +26,7 @@ const BOM_UTF16LE: *const libc::c_char = b"\xFF\xFE\0" as *const u8 as *const li
 const BOM_UTF16BE: *const libc::c_char = b"\xFE\xFF\0" as *const u8 as *const libc::c_char;
 
 unsafe fn yaml_parser_determine_encoding(mut parser: *mut yaml_parser_t) -> Success {
-    while (*parser).eof == 0
+    while !(*parser).eof
         && ((*parser)
             .raw_buffer
             .last
@@ -98,7 +98,7 @@ unsafe fn yaml_parser_update_raw_buffer(mut parser: *mut yaml_parser_t) -> Succe
     {
         return OK;
     }
-    if (*parser).eof != 0 {
+    if (*parser).eof {
         return OK;
     }
     if (*parser).raw_buffer.start < (*parser).raw_buffer.pointer
@@ -143,7 +143,7 @@ unsafe fn yaml_parser_update_raw_buffer(mut parser: *mut yaml_parser_t) -> Succe
     let fresh9 = addr_of_mut!((*parser).raw_buffer.last);
     *fresh9 = (*fresh9).wrapping_offset(size_read as isize);
     if size_read == 0 {
-        (*parser).eof = 1;
+        (*parser).eof = true;
     }
     OK
 }
@@ -154,7 +154,7 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
 ) -> Success {
     let mut first: libc::c_int = 1;
     __assert!(((*parser).read_handler).is_some());
-    if (*parser).eof != 0 && (*parser).raw_buffer.pointer == (*parser).raw_buffer.last {
+    if (*parser).eof && (*parser).raw_buffer.pointer == (*parser).raw_buffer.last {
         return OK;
     }
     if (*parser).unread >= length {
@@ -232,7 +232,7 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
                         );
                     }
                     if width as libc::c_ulong > raw_unread {
-                        if (*parser).eof != 0 {
+                        if (*parser).eof {
                             return yaml_parser_set_reader_error(
                                 parser,
                                 b"incomplete UTF-8 octet sequence\0" as *const u8
@@ -309,7 +309,7 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
                         0
                     };
                     if raw_unread < 2_u64 {
-                        if (*parser).eof != 0 {
+                        if (*parser).eof {
                             return yaml_parser_set_reader_error(
                                 parser,
                                 b"incomplete UTF-16 character\0" as *const u8
@@ -337,7 +337,7 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
                         if value & 0xFC00 == 0xD800 {
                             width = 4;
                             if raw_unread < 4_u64 {
-                                if (*parser).eof != 0 {
+                                if (*parser).eof {
                                     return yaml_parser_set_reader_error(
                                         parser,
                                         b"incomplete UTF-16 surrogate pair\0" as *const u8
@@ -452,7 +452,7 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
             let fresh36 = addr_of_mut!((*parser).unread);
             *fresh36 = (*fresh36).wrapping_add(1);
         }
-        if (*parser).eof != 0 {
+        if (*parser).eof {
             let fresh37 = addr_of_mut!((*parser).buffer.last);
             let fresh38 = *fresh37;
             *fresh37 = (*fresh37).wrapping_offset(1);

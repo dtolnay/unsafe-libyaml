@@ -500,7 +500,7 @@ pub struct unnamed_yaml_event_t_data_document_start {
     /// The list of tag directives.
     pub tag_directives: unnamed_yaml_event_t_data_document_start_tag_directives,
     /// Is the document indicator implicit?
-    pub implicit: libc::c_int,
+    pub implicit: bool,
 }
 
 #[derive(Copy, Clone)]
@@ -518,7 +518,7 @@ pub struct unnamed_yaml_event_t_data_document_start_tag_directives {
 #[non_exhaustive]
 pub struct unnamed_yaml_event_t_data_document_end {
     /// Is the document end indicator implicit?
-    pub implicit: libc::c_int,
+    pub implicit: bool,
 }
 
 #[derive(Copy, Clone)]
@@ -542,9 +542,9 @@ pub struct unnamed_yaml_event_t_data_scalar {
     /// The length of the scalar value.
     pub length: size_t,
     /// Is the tag optional for the plain style?
-    pub plain_implicit: libc::c_int,
+    pub plain_implicit: bool,
     /// Is the tag optional for any non-plain style?
-    pub quoted_implicit: libc::c_int,
+    pub quoted_implicit: bool,
     /// The scalar style.
     pub style: yaml_scalar_style_t,
 }
@@ -558,7 +558,7 @@ pub struct unnamed_yaml_event_t_data_sequence_start {
     /// The tag.
     pub tag: *mut yaml_char_t,
     /// Is the tag optional?
-    pub implicit: libc::c_int,
+    pub implicit: bool,
     /// The sequence style.
     pub style: yaml_sequence_style_t,
 }
@@ -572,7 +572,7 @@ pub struct unnamed_yaml_event_t_data_mapping_start {
     /// The tag.
     pub tag: *mut yaml_char_t,
     /// Is the tag optional?
-    pub implicit: libc::c_int,
+    pub implicit: bool,
     /// The mapping style.
     pub style: yaml_mapping_style_t,
 }
@@ -719,9 +719,9 @@ pub struct yaml_document_t {
     /// ```
     pub tag_directives: unnamed_yaml_document_t_tag_directives,
     /// Is the document start indicator implicit?
-    pub start_implicit: libc::c_int,
+    pub start_implicit: bool,
     /// Is the document end indicator implicit?
-    pub end_implicit: libc::c_int,
+    pub end_implicit: bool,
     /// The beginning of the document.
     pub start_mark: yaml_mark_t,
     /// The end of the document.
@@ -760,9 +760,9 @@ pub type yaml_read_handler_t = unsafe fn(
 #[non_exhaustive]
 pub struct yaml_simple_key_t {
     /// Is a simple key possible?
-    pub possible: libc::c_int,
+    pub possible: bool,
     /// Is a simple key required?
-    pub required: libc::c_int,
+    pub required: bool,
     /// The number of the token.
     pub token_number: size_t,
     /// The position mark.
@@ -887,7 +887,7 @@ pub struct yaml_parser_t {
     /// Standard (string or file) input data.
     pub(crate) input: unnamed_yaml_parser_t_input,
     /// EOF flag
-    pub(crate) eof: libc::c_int,
+    pub(crate) eof: bool,
     /// The working buffer.
     pub(crate) buffer: yaml_buffer_t<yaml_char_t>,
     /// The number of unread characters in the buffer.
@@ -901,9 +901,9 @@ pub struct yaml_parser_t {
     /// The mark of the current position.
     pub(crate) mark: yaml_mark_t,
     /// Have we started to scan the input stream?
-    pub(crate) stream_start_produced: libc::c_int,
+    pub(crate) stream_start_produced: bool,
     /// Have we reached the end of the input stream?
-    pub(crate) stream_end_produced: libc::c_int,
+    pub(crate) stream_end_produced: bool,
     /// The number of unclosed '[' and '{' indicators.
     pub(crate) flow_level: libc::c_int,
     /// The tokens queue.
@@ -911,13 +911,13 @@ pub struct yaml_parser_t {
     /// The number of tokens fetched from the queue.
     pub(crate) tokens_parsed: size_t,
     /// Does the tokens queue contain a token ready for dequeueing.
-    pub(crate) token_available: libc::c_int,
+    pub(crate) token_available: bool,
     /// The indentation levels stack.
     pub(crate) indents: yaml_stack_t<libc::c_int>,
     /// The current indentation level.
     pub(crate) indent: libc::c_int,
     /// May a simple key occur at the current position?
-    pub(crate) simple_key_allowed: libc::c_int,
+    pub(crate) simple_key_allowed: bool,
     /// The stack of simple keys.
     pub(crate) simple_keys: yaml_stack_t<yaml_simple_key_t>,
     /// The parser states stack.
@@ -1041,7 +1041,7 @@ pub(crate) struct yaml_anchors_t {
     /// The anchor id.
     pub anchor: libc::c_int,
     /// If the node has been emitted?
-    pub serialized: libc::c_int,
+    pub serialized: bool,
 }
 
 /// The emitter structure.
@@ -1075,13 +1075,13 @@ pub struct yaml_emitter_t {
     /// The stream encoding.
     pub(crate) encoding: yaml_encoding_t,
     /// If the output is in the canonical style?
-    pub(crate) canonical: libc::c_int,
+    pub(crate) canonical: bool,
     /// The number of indentation spaces.
     pub(crate) best_indent: libc::c_int,
     /// The preferred width of the output lines.
     pub(crate) best_width: libc::c_int,
     /// Allow unescaped non-ASCII characters?
-    pub(crate) unicode: libc::c_int,
+    pub(crate) unicode: bool,
     /// The preferred line break.
     pub(crate) line_break: yaml_break_t,
     /// The stack of states.
@@ -1099,21 +1099,21 @@ pub struct yaml_emitter_t {
     /// The current flow level.
     pub(crate) flow_level: libc::c_int,
     /// Is it the document root context?
-    pub(crate) root_context: libc::c_int,
+    pub(crate) root_context: bool,
     /// Is it a sequence context?
-    pub(crate) sequence_context: libc::c_int,
+    pub(crate) sequence_context: bool,
     /// Is it a mapping context?
-    pub(crate) mapping_context: libc::c_int,
+    pub(crate) mapping_context: bool,
     /// Is it a simple mapping key context?
-    pub(crate) simple_key_context: libc::c_int,
+    pub(crate) simple_key_context: bool,
     /// The current line.
     pub(crate) line: libc::c_int,
     /// The current column.
     pub(crate) column: libc::c_int,
     /// If the last character was a whitespace?
-    pub(crate) whitespace: libc::c_int,
+    pub(crate) whitespace: bool,
     /// If the last character was an indentation character (' ', '-', '?', ':')?
-    pub(crate) indention: libc::c_int,
+    pub(crate) indention: bool,
     /// If an explicit document end is required?
     pub(crate) open_ended: libc::c_int,
     /// Anchor analysis.
@@ -1123,9 +1123,9 @@ pub struct yaml_emitter_t {
     /// Scalar analysis.
     pub(crate) scalar_data: unnamed_yaml_emitter_t_scalar_data,
     /// If the stream was already opened?
-    pub(crate) opened: libc::c_int,
+    pub(crate) opened: bool,
     /// If the stream was already closed?
-    pub(crate) closed: libc::c_int,
+    pub(crate) closed: bool,
     /// The information associated with the document nodes.
     pub(crate) anchors: *mut yaml_anchors_t,
     /// The last assigned anchor id.
@@ -1177,7 +1177,7 @@ pub(crate) struct unnamed_yaml_emitter_t_anchor_data {
     /// The anchor length.
     pub anchor_length: size_t,
     /// Is it an alias?
-    pub alias: libc::c_int,
+    pub alias: bool,
 }
 
 #[derive(Copy, Clone)]
@@ -1201,15 +1201,15 @@ pub(crate) struct unnamed_yaml_emitter_t_scalar_data {
     /// The scalar length.
     pub length: size_t,
     /// Does the scalar contain line breaks?
-    pub multiline: libc::c_int,
+    pub multiline: bool,
     /// Can the scalar be expessed in the flow plain style?
-    pub flow_plain_allowed: libc::c_int,
+    pub flow_plain_allowed: bool,
     /// Can the scalar be expressed in the block plain style?
-    pub block_plain_allowed: libc::c_int,
+    pub block_plain_allowed: bool,
     /// Can the scalar be expressed in the single quoted style?
-    pub single_quoted_allowed: libc::c_int,
+    pub single_quoted_allowed: bool,
     /// Can the scalar be expressed in the literal or folded styles?
-    pub block_allowed: libc::c_int,
+    pub block_allowed: bool,
     /// The output style.
     pub style: yaml_scalar_style_t,
 }
