@@ -6,8 +6,10 @@ pub struct Success {
     pub ok: bool,
 }
 
-impl PartialEq<i32> for Success {
-    fn eq(&self, int: &i32) -> bool {
-        self.ok == (*int == 1)
+pub struct Zero;
+
+impl PartialEq<Zero> for Success {
+    fn eq(&self, _zero: &Zero) -> bool {
+        !self.ok
     }
 }

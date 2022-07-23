@@ -70,7 +70,7 @@ macro_rules! STRING_EXTEND {
                 addr_of_mut!($string.start),
                 addr_of_mut!($string.pointer),
                 addr_of_mut!($string.end),
-            ) != 0
+            ) != Zero
         {
             OK
         } else {
@@ -100,7 +100,7 @@ macro_rules! JOIN {
             addr_of_mut!($string_b.start),
             addr_of_mut!($string_b.pointer),
             addr_of_mut!($string_b.end),
-        ) != 0
+        ) != Zero
         {
             $string_b.pointer = $string_b.start;
             OK
@@ -416,7 +416,7 @@ macro_rules! PUSH {
                 addr_of_mut!($stack.start) as *mut *mut libc::c_void,
                 addr_of_mut!($stack.top) as *mut *mut libc::c_void,
                 addr_of_mut!($stack.end) as *mut *mut libc::c_void,
-            ) != 0
+            ) != Zero
         {
             $push;
             $stack.top = $stack.top.wrapping_offset(1);
@@ -482,7 +482,7 @@ macro_rules! ENQUEUE {
                 addr_of_mut!($queue.head) as *mut *mut libc::c_void,
                 addr_of_mut!($queue.tail) as *mut *mut libc::c_void,
                 addr_of_mut!($queue.end) as *mut *mut libc::c_void,
-            ) != 0
+            ) != Zero
         {
             $enqueue;
             $queue.tail = $queue.tail.wrapping_offset(1);
@@ -518,7 +518,7 @@ macro_rules! QUEUE_INSERT {
                 addr_of_mut!($queue.head) as *mut *mut libc::c_void,
                 addr_of_mut!($queue.tail) as *mut *mut libc::c_void,
                 addr_of_mut!($queue.end) as *mut *mut libc::c_void,
-            ) != 0
+            ) != Zero
         {
             memmove(
                 ($queue.head)

@@ -1,5 +1,5 @@
 use crate::externs::{memcmp, memmove};
-use crate::success::{Success, FAIL, OK};
+use crate::success::{Success, Zero, FAIL, OK};
 use crate::yaml::{size_t, yaml_char_t};
 use crate::{
     libc, yaml_parser_t, PointerExt, YAML_READER_ERROR, YAML_UTF16BE_ENCODING,
@@ -30,7 +30,7 @@ unsafe fn yaml_parser_determine_encoding(mut parser: *mut yaml_parser_t) -> Succ
         && (((*parser).raw_buffer.last).c_offset_from((*parser).raw_buffer.pointer) as libc::c_long)
             < 3_i64
     {
-        if yaml_parser_update_raw_buffer(parser) == 0 {
+        if yaml_parser_update_raw_buffer(parser) == Zero {
             return FAIL;
         }
     }
@@ -144,7 +144,7 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
         return OK;
     }
     if (*parser).encoding as u64 == 0 {
-        if yaml_parser_determine_encoding(parser) == 0 {
+        if yaml_parser_determine_encoding(parser) == Zero {
             return FAIL;
         }
     }
@@ -170,7 +170,7 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
     }
     while (*parser).unread < length {
         if first == 0 || (*parser).raw_buffer.pointer == (*parser).raw_buffer.last {
-            if yaml_parser_update_raw_buffer(parser) == 0 {
+            if yaml_parser_update_raw_buffer(parser) == Zero {
                 return FAIL;
             }
         }
