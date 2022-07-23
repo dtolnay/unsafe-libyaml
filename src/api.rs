@@ -203,7 +203,6 @@ pub(crate) unsafe fn yaml_queue_extend(
 ///
 /// This function creates a new parser object. An application is responsible
 /// for destroying the object using the yaml_parser_delete() function.
-#[must_use]
 pub unsafe fn yaml_parser_initialize(parser: *mut yaml_parser_t) -> Success {
     __assert!(!parser.is_null());
     memset(
@@ -353,7 +352,6 @@ pub unsafe fn yaml_parser_set_encoding(mut parser: *mut yaml_parser_t, encoding:
 ///
 /// This function creates a new emitter object. An application is responsible
 /// for destroying the object using the yaml_emitter_delete() function.
-#[must_use]
 pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> Success {
     __assert!(!emitter.is_null());
     memset(
@@ -618,7 +616,6 @@ unsafe fn yaml_check_utf8(start: *const yaml_char_t, length: size_t) -> Success 
 }
 
 /// Create the STREAM-START event.
-#[must_use]
 pub unsafe fn yaml_stream_start_event_initialize(
     mut event: *mut yaml_event_t,
     encoding: yaml_encoding_t,
@@ -642,7 +639,6 @@ pub unsafe fn yaml_stream_start_event_initialize(
 }
 
 /// Create the STREAM-END event.
-#[must_use]
 pub unsafe fn yaml_stream_end_event_initialize(mut event: *mut yaml_event_t) -> Success {
     let mark = yaml_mark_t {
         index: 0_u64,
@@ -665,7 +661,6 @@ pub unsafe fn yaml_stream_end_event_initialize(mut event: *mut yaml_event_t) -> 
 ///
 /// The `implicit` argument is considered as a stylistic parameter and may be
 /// ignored by the emitter.
-#[must_use]
 pub unsafe fn yaml_document_start_event_initialize(
     mut event: *mut yaml_event_t,
     version_directive: *mut yaml_version_directive_t,
@@ -810,7 +805,6 @@ pub unsafe fn yaml_document_start_event_initialize(
 ///
 /// The `implicit` argument is considered as a stylistic parameter and may be
 /// ignored by the emitter.
-#[must_use]
 pub unsafe fn yaml_document_end_event_initialize(
     mut event: *mut yaml_event_t,
     implicit: libc::c_int,
@@ -834,7 +828,6 @@ pub unsafe fn yaml_document_end_event_initialize(
 }
 
 /// Create an ALIAS event.
-#[must_use]
 pub unsafe fn yaml_alias_event_initialize(
     mut event: *mut yaml_event_t,
     anchor: *const yaml_char_t,
@@ -976,7 +969,6 @@ pub unsafe fn yaml_scalar_event_initialize(
 /// The `style` argument may be ignored by the emitter.
 ///
 /// Either the `tag` attribute or the `implicit` flag must be set.
-#[must_use]
 pub unsafe fn yaml_sequence_start_event_initialize(
     mut event: *mut yaml_event_t,
     anchor: *const yaml_char_t,
@@ -1052,7 +1044,6 @@ pub unsafe fn yaml_sequence_start_event_initialize(
 }
 
 /// Create a SEQUENCE-END event.
-#[must_use]
 pub unsafe fn yaml_sequence_end_event_initialize(mut event: *mut yaml_event_t) -> Success {
     let mark = yaml_mark_t {
         index: 0_u64,
@@ -1076,7 +1067,6 @@ pub unsafe fn yaml_sequence_end_event_initialize(mut event: *mut yaml_event_t) -
 /// The `style` argument may be ignored by the emitter.
 ///
 /// Either the `tag` attribute or the `implicit` flag must be set.
-#[must_use]
 pub unsafe fn yaml_mapping_start_event_initialize(
     mut event: *mut yaml_event_t,
     anchor: *const yaml_char_t,
@@ -1152,7 +1142,6 @@ pub unsafe fn yaml_mapping_start_event_initialize(
 }
 
 /// Create a MAPPING-END event.
-#[must_use]
 pub unsafe fn yaml_mapping_end_event_initialize(mut event: *mut yaml_event_t) -> Success {
     let mark = yaml_mark_t {
         index: 0_u64,
@@ -1212,7 +1201,6 @@ pub unsafe fn yaml_event_delete(event: *mut yaml_event_t) {
 }
 
 /// Create a YAML document.
-#[must_use]
 pub unsafe fn yaml_document_initialize(
     mut document: *mut yaml_document_t,
     version_directive: *mut yaml_version_directive_t,
@@ -1652,7 +1640,6 @@ pub unsafe fn yaml_document_add_mapping(
 }
 
 /// Add an item to a SEQUENCE node.
-#[must_use]
 pub unsafe fn yaml_document_append_sequence_item(
     document: *mut yaml_document_t,
     sequence: libc::c_int,
@@ -1691,7 +1678,6 @@ pub unsafe fn yaml_document_append_sequence_item(
 }
 
 /// Add a pair of a key and a value to a MAPPING node.
-#[must_use]
 pub unsafe fn yaml_document_append_mapping_pair(
     document: *mut yaml_document_t,
     mapping: libc::c_int,

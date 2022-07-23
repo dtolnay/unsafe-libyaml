@@ -63,7 +63,6 @@ unsafe fn SKIP_TOKEN(parser: *mut yaml_parser_t) {
 /// An application must not alternate the calls of yaml_parser_parse() with the
 /// calls of yaml_parser_scan() or yaml_parser_load(). Doing this will break the
 /// parser.
-#[must_use]
 pub unsafe fn yaml_parser_parse(parser: *mut yaml_parser_t, event: *mut yaml_event_t) -> Success {
     __assert!(!parser.is_null());
     __assert!(!event.is_null());
@@ -276,7 +275,7 @@ unsafe fn yaml_parser_parse_document_start(
             if (*token).type_ as libc::c_uint
                 != YAML_DOCUMENT_START_TOKEN as libc::c_int as libc::c_uint
             {
-                yaml_parser_set_parser_error(
+                let _ = yaml_parser_set_parser_error(
                     parser,
                     b"did not find expected <document start>\0" as *const u8 as *const libc::c_char,
                     (*token).start_mark,
@@ -541,7 +540,7 @@ unsafe fn yaml_parser_parse_node(
                             17786380918591080555 => {}
                             _ => {
                                 if tag.is_null() {
-                                    yaml_parser_set_parser_error_context(
+                                    let _ = yaml_parser_set_parser_error_context(
                                         parser,
                                         b"while parsing a node\0" as *const u8
                                             as *const libc::c_char,
@@ -735,7 +734,7 @@ unsafe fn yaml_parser_parse_node(
                                 return OK;
                             }
                         } else {
-                            yaml_parser_set_parser_error_context(
+                            let _ = yaml_parser_set_parser_error_context(
                                 parser,
                                 if block != 0 {
                                     b"while parsing a block node\0" as *const u8
@@ -1352,7 +1351,7 @@ unsafe fn yaml_parser_process_directives(
                     == YAML_VERSION_DIRECTIVE_TOKEN as libc::c_int as libc::c_uint
                 {
                     if !version_directive.is_null() {
-                        yaml_parser_set_parser_error(
+                        let _ = yaml_parser_set_parser_error(
                             parser,
                             b"found duplicate %YAML directive\0" as *const u8
                                 as *const libc::c_char,
@@ -1364,7 +1363,7 @@ unsafe fn yaml_parser_process_directives(
                         || (*token).data.version_directive.minor != 1_i32
                             && (*token).data.version_directive.minor != 2_i32
                     {
-                        yaml_parser_set_parser_error(
+                        let _ = yaml_parser_set_parser_error(
                             parser,
                             b"found incompatible YAML document\0" as *const u8
                                 as *const libc::c_char,

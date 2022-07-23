@@ -142,7 +142,6 @@ macro_rules! READ_LINE {
 /// An application must not alternate the calls of yaml_parser_scan() with the
 /// calls of yaml_parser_parse() or yaml_parser_load(). Doing this will break
 /// the parser.
-#[must_use]
 pub unsafe fn yaml_parser_scan(
     mut parser: *mut yaml_parser_t,
     token: *mut yaml_token_t,
@@ -1081,7 +1080,7 @@ unsafe fn yaml_parser_scan_directive(
                 current_block = 17407779659766490442;
             }
         } else {
-            yaml_parser_set_scanner_error(
+            let _ = yaml_parser_set_scanner_error(
                 parser,
                 b"while scanning a directive\0" as *const u8 as *const libc::c_char,
                 start_mark,
@@ -1126,7 +1125,7 @@ unsafe fn yaml_parser_scan_directive(
                                 11397968426844348457 => {}
                                 _ => {
                                     if !IS_BREAKZ!((*parser).buffer) {
-                                        yaml_parser_set_scanner_error(
+                                        let _ = yaml_parser_set_scanner_error(
                                             parser,
                                             b"while scanning a directive\0" as *const u8
                                                 as *const libc::c_char,
@@ -1195,7 +1194,7 @@ unsafe fn yaml_parser_scan_directive_name(
                 8318012024179131575 => {}
                 _ => {
                     if string.start == string.pointer {
-                        yaml_parser_set_scanner_error(
+                        let _ = yaml_parser_set_scanner_error(
                             parser,
                             b"while scanning a directive\0" as *const u8 as *const libc::c_char,
                             start_mark,
@@ -1203,7 +1202,7 @@ unsafe fn yaml_parser_scan_directive_name(
                                 as *const libc::c_char,
                         );
                     } else if !IS_BLANKZ!((*parser).buffer) {
-                        yaml_parser_set_scanner_error(
+                        let _ = yaml_parser_set_scanner_error(
                             parser,
                             b"while scanning a directive\0" as *const u8 as *const libc::c_char,
                             start_mark,
@@ -1340,7 +1339,7 @@ unsafe fn yaml_parser_scan_tag_directive_value(
                         continue;
                     }
                     if !IS_BLANK!((*parser).buffer) {
-                        yaml_parser_set_scanner_error(
+                        let _ = yaml_parser_set_scanner_error(
                             parser,
                             b"while scanning a %TAG directive\0" as *const u8
                                 as *const libc::c_char,
@@ -1374,7 +1373,7 @@ unsafe fn yaml_parser_scan_tag_directive_value(
                             continue;
                         }
                         if !IS_BLANKZ!((*parser).buffer) {
-                            yaml_parser_set_scanner_error(
+                            let _ = yaml_parser_set_scanner_error(
                                 parser,
                                 b"while scanning a %TAG directive\0" as *const u8
                                     as *const libc::c_char,
@@ -1439,7 +1438,7 @@ unsafe fn yaml_parser_scan_anchor(
                             || CHECK!((*parser).buffer, b'@')
                             || CHECK!((*parser).buffer, b'`'))
                     {
-                        yaml_parser_set_scanner_error(
+                        let _ = yaml_parser_set_scanner_error(
                             parser,
                             if type_ as libc::c_uint
                                 == YAML_ANCHOR_TOKEN as libc::c_int as libc::c_uint
@@ -1516,7 +1515,7 @@ unsafe fn yaml_parser_scan_tag(
                 {
                     current_block = 17708497480799081542;
                 } else if !CHECK!((*parser).buffer, b'>') {
-                    yaml_parser_set_scanner_error(
+                    let _ = yaml_parser_set_scanner_error(
                         parser,
                         b"while scanning a tag\0" as *const u8 as *const libc::c_char,
                         start_mark,
@@ -1583,7 +1582,7 @@ unsafe fn yaml_parser_scan_tag(
                 if !(CACHE(parser, 1_u64) == 0) {
                     if !IS_BLANKZ!((*parser).buffer) {
                         if (*parser).flow_level == 0 || !CHECK!((*parser).buffer, b',') {
-                            yaml_parser_set_scanner_error(
+                            let _ = yaml_parser_set_scanner_error(
                                 parser,
                                 b"while scanning a tag\0" as *const u8 as *const libc::c_char,
                                 start_mark,
@@ -1636,7 +1635,7 @@ unsafe fn yaml_parser_scan_tag_handle(
     if !(STRING_INIT!(parser, string) == 0) {
         if !(CACHE(parser, 1_u64) == 0) {
             if !CHECK!((*parser).buffer, b'!') {
-                yaml_parser_set_scanner_error(
+                let _ = yaml_parser_set_scanner_error(
                     parser,
                     if directive != 0 {
                         b"while scanning a tag directive\0" as *const u8 as *const libc::c_char
@@ -1676,7 +1675,7 @@ unsafe fn yaml_parser_scan_tag_handle(
                                     && *string.start.wrapping_offset(1_isize) as libc::c_int
                                         == '\0' as i32)
                             {
-                                yaml_parser_set_scanner_error(
+                                let _ = yaml_parser_set_scanner_error(
                                     parser,
                                     b"while parsing a tag directive\0" as *const u8
                                         as *const libc::c_char,
@@ -1812,7 +1811,7 @@ unsafe fn yaml_parser_scan_tag_uri(
                             current_block = 15265153392498847348;
                             continue;
                         }
-                        yaml_parser_set_scanner_error(
+                        let _ = yaml_parser_set_scanner_error(
                             parser,
                             if directive != 0 {
                                 b"while parsing a %TAG directive\0" as *const u8
@@ -1946,7 +1945,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                             current_block = 14984465786483313892;
                         } else if IS_DIGIT!((*parser).buffer) {
                             if CHECK!((*parser).buffer, b'0') {
-                                yaml_parser_set_scanner_error(
+                                let _ = yaml_parser_set_scanner_error(
                                     parser,
                                     b"while scanning a block scalar\0" as *const u8
                                         as *const libc::c_char,
@@ -1965,7 +1964,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                         }
                     } else if IS_DIGIT!((*parser).buffer) {
                         if CHECK!((*parser).buffer, b'0') {
-                            yaml_parser_set_scanner_error(
+                            let _ = yaml_parser_set_scanner_error(
                                 parser,
                                 b"while scanning a block scalar\0" as *const u8
                                     as *const libc::c_char,
@@ -2032,7 +2031,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                                             14984465786483313892 => {}
                                             _ => {
                                                 if !IS_BREAKZ!((*parser).buffer) {
-                                                    yaml_parser_set_scanner_error(
+                                                    let _ = yaml_parser_set_scanner_error(
                                                         parser,
                                                         b"while scanning a block scalar\0" as *const u8
                                                             as *const libc::c_char,
@@ -2309,7 +2308,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                     && CHECK_AT!((*parser).buffer, b'.', 2))
                             && IS_BLANKZ_AT!((*parser).buffer, 3)
                         {
-                            yaml_parser_set_scanner_error(
+                            let _ = yaml_parser_set_scanner_error(
                                 parser,
                                 b"while scanning a quoted scalar\0" as *const u8
                                     as *const libc::c_char,
@@ -2320,7 +2319,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                             current_block = 8114179180390253173;
                             break;
                         } else if IS_Z!((*parser).buffer) {
-                            yaml_parser_set_scanner_error(
+                            let _ = yaml_parser_set_scanner_error(
                                 parser,
                                 b"while scanning a quoted scalar\0" as *const u8
                                     as *const libc::c_char,
@@ -2491,7 +2490,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                 code_length = 8_u64;
                                             }
                                             _ => {
-                                                yaml_parser_set_scanner_error(
+                                                let _ = yaml_parser_set_scanner_error(
                                                     parser,
                                                     b"while parsing a quoted scalar\0" as *const u8
                                                         as *const libc::c_char,
@@ -2515,7 +2514,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                             k = 0_u64;
                                             while k < code_length {
                                                 if !IS_HEX_AT!((*parser).buffer, k as isize) {
-                                                    yaml_parser_set_scanner_error(
+                                                    let _ = yaml_parser_set_scanner_error(
                                                         parser,
                                                         b"while parsing a quoted scalar\0"
                                                             as *const u8
@@ -2539,7 +2538,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                 && value <= 0xdfff_i32 as libc::c_uint
                                                 || value > 0x10ffff_i32 as libc::c_uint
                                             {
-                                                yaml_parser_set_scanner_error(
+                                                let _ = yaml_parser_set_scanner_error(
                                                     parser,
                                                     b"while parsing a quoted scalar\0" as *const u8
                                                         as *const libc::c_char,
@@ -2819,7 +2818,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                     || CHECK_AT!((*parser).buffer, b'{', 1)
                                     || CHECK_AT!((*parser).buffer, b'}', 1))
                             {
-                                yaml_parser_set_scanner_error(
+                                let _ = yaml_parser_set_scanner_error(
                                     parser,
                                     b"while scanning a plain scalar\0" as *const u8
                                         as *const libc::c_char,
@@ -2906,7 +2905,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                     && ((*parser).mark.column as libc::c_int) < indent
                                     && IS_TAB!((*parser).buffer)
                                 {
-                                    yaml_parser_set_scanner_error(
+                                    let _ = yaml_parser_set_scanner_error(
                                         parser,
                                         b"while scanning a plain scalar\0" as *const u8
                                             as *const libc::c_char,
