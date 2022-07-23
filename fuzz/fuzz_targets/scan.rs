@@ -21,7 +21,7 @@ unsafe fn fuzz_target(mut data: &[u8]) {
 
     let mut token = MaybeUninit::<yaml_token_t>::uninit();
     let token = token.as_mut_ptr();
-    while yaml_parser_scan(parser, token) != 0 {
+    while yaml_parser_scan(parser, token).ok {
         let type_ = (*token).type_;
         yaml_token_delete(token);
         if type_ == YAML_STREAM_END_TOKEN {

@@ -21,7 +21,7 @@ unsafe fn fuzz_target(mut data: &[u8]) {
 
     let mut event = MaybeUninit::<yaml_event_t>::uninit();
     let event = event.as_mut_ptr();
-    while yaml_parser_parse(parser, event) != 0 {
+    while yaml_parser_parse(parser, event).ok {
         let type_ = (*event).type_;
         yaml_event_delete(event);
         if type_ == YAML_STREAM_END_EVENT {

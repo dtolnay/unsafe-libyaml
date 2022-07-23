@@ -21,7 +21,7 @@ unsafe fn fuzz_target(mut data: &[u8]) {
 
     let mut document = MaybeUninit::<yaml_document_t>::uninit();
     let document = document.as_mut_ptr();
-    while yaml_parser_load(parser, document) != 0 {
+    while yaml_parser_load(parser, document).ok {
         let done = yaml_document_get_root_node(document).is_null();
         yaml_document_delete(document);
         if done {

@@ -47,7 +47,7 @@ pub(crate) unsafe fn unsafe_main(
 ) -> Result<(), Box<dyn Error>> {
     let mut emitter = MaybeUninit::<yaml_emitter_t>::uninit();
     let emitter = emitter.as_mut_ptr();
-    if yaml_emitter_initialize(emitter) == 0 {
+    if !yaml_emitter_initialize(emitter).ok {
         return Err("Could not initalize the emitter object".into());
     }
 
@@ -75,7 +75,7 @@ pub(crate) unsafe fn unsafe_main(
 
         let mut anchor = [0u8; 256];
         let mut tag = [0u8; 256];
-        let ok = if line.starts_with(b"+STR") {
+        let result = if line.starts_with(b"+STR") {
             yaml_stream_start_event_initialize(event, YAML_UTF8_ENCODING)
         } else if line.starts_with(b"-STR") {
             yaml_stream_end_event_initialize(event)
@@ -133,10 +133,10 @@ pub(crate) unsafe fn unsafe_main(
             break Err(format!("Unknown event: '{}'", CStr::from_ptr(line)).into());
         };
 
-        if ok == 0 {
+        if !result.ok {
             break Err("Memory error: Not enough memory for creating an event".into());
         }
-        if yaml_emitter_emit(emitter, event) == 0 {
+        if !yaml_emitter_emit(emitter, event).ok {
             break Err(match (*emitter).error {
                 YAML_MEMORY_ERROR => "Memory error: Not enough memory for emitting".into(),
                 YAML_WRITER_ERROR => {
