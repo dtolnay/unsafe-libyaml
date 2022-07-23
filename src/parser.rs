@@ -281,7 +281,7 @@ unsafe fn yaml_parser_parse_document_start(
                     b"did not find expected <document start>\0" as *const u8 as *const libc::c_char,
                     (*token).start_mark,
                 );
-            } else if !(PUSH!(parser, (*parser).states, YAML_PARSE_DOCUMENT_END_STATE).fail) {
+            } else if !PUSH!(parser, (*parser).states, YAML_PARSE_DOCUMENT_END_STATE).fail {
                 (*parser).state = YAML_PARSE_DOCUMENT_CONTENT_STATE;
                 end_mark = (*token).end_mark;
                 memset(
@@ -1348,7 +1348,7 @@ unsafe fn yaml_parser_process_directives(
         top: ptr::null_mut::<yaml_tag_directive_t>(),
     };
     let mut token: *mut yaml_token_t;
-    if !(STACK_INIT!(parser, tag_directives, yaml_tag_directive_t).fail) {
+    if !STACK_INIT!(parser, tag_directives, yaml_tag_directive_t).fail {
         token = PEEK_TOKEN(parser);
         if !token.is_null() {
             loop {
@@ -1427,7 +1427,7 @@ unsafe fn yaml_parser_process_directives(
                 _ => {
                     default_tag_directive = default_tag_directives.as_mut_ptr();
                     loop {
-                        if ((*default_tag_directive).handle).is_null() {
+                        if (*default_tag_directive).handle.is_null() {
                             current_block = 18377268871191777778;
                             break;
                         }
@@ -1517,7 +1517,7 @@ unsafe fn yaml_parser_append_tag_directive(
     copy.prefix = yaml_strdup(value.prefix);
     if copy.handle.is_null() || copy.prefix.is_null() {
         (*parser).error = YAML_MEMORY_ERROR;
-    } else if !(PUSH!(parser, (*parser).tag_directives, copy).fail) {
+    } else if !PUSH!(parser, (*parser).tag_directives, copy).fail {
         return OK;
     }
     yaml_free(copy.handle as *mut libc::c_void);

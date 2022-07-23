@@ -352,7 +352,7 @@ unsafe fn yaml_parser_stale_simple_keys(parser: *mut yaml_parser_t) -> Success {
     while simple_key != (*parser).simple_keys.top {
         if (*simple_key).possible != 0
             && ((*simple_key).mark.line < (*parser).mark.line
-                || ((*simple_key).mark.index).wrapping_add(1024_u64) < (*parser).mark.index)
+                || (*simple_key).mark.index.wrapping_add(1024_u64) < (*parser).mark.index)
         {
             if (*simple_key).required != 0 {
                 yaml_parser_set_scanner_error(
@@ -378,22 +378,23 @@ unsafe fn yaml_parser_save_simple_key(parser: *mut yaml_parser_t) -> Success {
         let simple_key = yaml_simple_key_t {
             possible: 1_i32,
             required,
-            token_number: ((*parser).tokens_parsed)
-                .wrapping_add(((*parser).tokens.tail).c_offset_from((*parser).tokens.head)
+            token_number: (*parser)
+                .tokens_parsed
+                .wrapping_add((*parser).tokens.tail.c_offset_from((*parser).tokens.head)
                     as libc::c_long as libc::c_ulong),
             mark: (*parser).mark,
         };
         if yaml_parser_remove_simple_key(parser).fail {
             return FAIL;
         }
-        *((*parser).simple_keys.top).wrapping_offset(-(1_isize)) = simple_key;
+        *(*parser).simple_keys.top.wrapping_offset(-1_isize) = simple_key;
     }
     OK
 }
 
 unsafe fn yaml_parser_remove_simple_key(parser: *mut yaml_parser_t) -> Success {
     let mut simple_key: *mut yaml_simple_key_t =
-        ((*parser).simple_keys.top).wrapping_offset(-(1_isize));
+        (*parser).simple_keys.top.wrapping_offset(-1_isize);
     if (*simple_key).possible != 0 {
         if (*simple_key).required != 0 {
             yaml_parser_set_scanner_error(
@@ -808,7 +809,7 @@ unsafe fn yaml_parser_fetch_value(mut parser: *mut yaml_parser_t) -> Success {
     let mut token = MaybeUninit::<yaml_token_t>::uninit();
     let token = token.as_mut_ptr();
     let mut simple_key: *mut yaml_simple_key_t =
-        ((*parser).simple_keys.top).wrapping_offset(-(1_isize));
+        (*parser).simple_keys.top.wrapping_offset(-1_isize);
     if (*simple_key).possible != 0 {
         memset(
             token as *mut libc::c_void,
@@ -1033,7 +1034,7 @@ unsafe fn yaml_parser_scan_directive(
     let mut prefix: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
     let start_mark: yaml_mark_t = (*parser).mark;
     SKIP(parser);
-    if !(yaml_parser_scan_directive_name(parser, start_mark, addr_of_mut!(name)).fail) {
+    if !yaml_parser_scan_directive_name(parser, start_mark, addr_of_mut!(name)).fail {
         if strcmp(
             name as *mut libc::c_char,
             b"YAML\0" as *const u8 as *const libc::c_char,
@@ -1104,7 +1105,7 @@ unsafe fn yaml_parser_scan_directive(
         match current_block {
             11397968426844348457 => {}
             _ => {
-                if !(CACHE(parser, 1_u64).fail) {
+                if !CACHE(parser, 1_u64).fail {
                     loop {
                         if !IS_BLANK!((*parser).buffer) {
                             current_block = 11584701595673473500;
@@ -1187,8 +1188,8 @@ unsafe fn yaml_parser_scan_directive_name(
 ) -> Success {
     let current_block: u64;
     let mut string = NULL_STRING;
-    if !(STRING_INIT!(parser, string).fail) {
-        if !(CACHE(parser, 1_u64).fail) {
+    if !STRING_INIT!(parser, string).fail {
+        if !CACHE(parser, 1_u64).fail {
             loop {
                 if !IS_ALPHA!((*parser).buffer) {
                     current_block = 10879442775620481940;
@@ -1422,10 +1423,10 @@ unsafe fn yaml_parser_scan_anchor(
     let start_mark: yaml_mark_t;
     let end_mark: yaml_mark_t;
     let mut string = NULL_STRING;
-    if !(STRING_INIT!(parser, string).fail) {
+    if !STRING_INIT!(parser, string).fail {
         start_mark = (*parser).mark;
         SKIP(parser);
-        if !(CACHE(parser, 1_u64).fail) {
+        if !CACHE(parser, 1_u64).fail {
             loop {
                 if !IS_ALPHA!((*parser).buffer) {
                     current_block = 2868539653012386629;
@@ -1513,7 +1514,7 @@ unsafe fn yaml_parser_scan_tag(
     let mut suffix: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
     let end_mark: yaml_mark_t;
     let start_mark: yaml_mark_t = (*parser).mark;
-    if !(CACHE(parser, 2_u64).fail) {
+    if !CACHE(parser, 2_u64).fail {
         if CHECK_AT!((*parser).buffer, b'<', 1) {
             handle = yaml_malloc(1_u64) as *mut yaml_char_t;
             if handle.is_null() {
@@ -1552,7 +1553,7 @@ unsafe fn yaml_parser_scan_tag(
         } else if *handle as libc::c_int == '!' as i32
             && *handle.wrapping_offset(1_isize) as libc::c_int != '\0' as i32
             && *handle
-                .wrapping_offset((strlen(handle as *mut libc::c_char)).wrapping_sub(1_u64) as isize)
+                .wrapping_offset(strlen(handle as *mut libc::c_char).wrapping_sub(1_u64) as isize)
                 as libc::c_int
                 == '!' as i32
         {
@@ -1600,7 +1601,7 @@ unsafe fn yaml_parser_scan_tag(
         match current_block {
             17708497480799081542 => {}
             _ => {
-                if !(CACHE(parser, 1_u64).fail) {
+                if !CACHE(parser, 1_u64).fail {
                     if !IS_BLANKZ!((*parser).buffer) {
                         if (*parser).flow_level == 0 || !CHECK!((*parser).buffer, b',') {
                             yaml_parser_set_scanner_error(
@@ -1653,8 +1654,8 @@ unsafe fn yaml_parser_scan_tag_handle(
 ) -> Success {
     let mut current_block: u64;
     let mut string = NULL_STRING;
-    if !(STRING_INIT!(parser, string).fail) {
-        if !(CACHE(parser, 1_u64).fail) {
+    if !STRING_INIT!(parser, string).fail {
+        if !CACHE(parser, 1_u64).fail {
             if !CHECK!((*parser).buffer, b'!') {
                 yaml_parser_set_scanner_error(
                     parser,
@@ -1666,8 +1667,8 @@ unsafe fn yaml_parser_scan_tag_handle(
                     start_mark,
                     b"did not find expected '!'\0" as *const u8 as *const libc::c_char,
                 );
-            } else if !(READ!(parser, string).fail) {
-                if !(CACHE(parser, 1_u64).fail) {
+            } else if !READ!(parser, string).fail {
+                if !CACHE(parser, 1_u64).fail {
                     loop {
                         if !IS_ALPHA!((*parser).buffer) {
                             current_block = 7651349459974463963;
@@ -1753,12 +1754,12 @@ unsafe fn yaml_parser_scan_tag_uri(
             }
             _ => {
                 if string.end.c_offset_from(string.start) as libc::c_long as size_t <= length {
-                    if !(yaml_string_extend(
+                    if !yaml_string_extend(
                         addr_of_mut!(string.start),
                         addr_of_mut!(string.pointer),
                         addr_of_mut!(string.end),
                     )
-                    .fail)
+                    .fail
                     {
                         current_block = 14916268686031723178;
                         continue;
@@ -1954,12 +1955,12 @@ unsafe fn yaml_parser_scan_block_scalar(
     let mut indent: libc::c_int = 0_i32;
     let mut leading_blank: libc::c_int = 0_i32;
     let mut trailing_blank: libc::c_int;
-    if !(STRING_INIT!(parser, string).fail) {
-        if !(STRING_INIT!(parser, leading_break).fail) {
-            if !(STRING_INIT!(parser, trailing_breaks).fail) {
+    if !STRING_INIT!(parser, string).fail {
+        if !STRING_INIT!(parser, leading_break).fail {
+            if !STRING_INIT!(parser, trailing_breaks).fail {
                 start_mark = (*parser).mark;
                 SKIP(parser);
-                if !(CACHE(parser, 1_u64).fail) {
+                if !CACHE(parser, 1_u64).fail {
                     if CHECK!((*parser).buffer, b'+') || CHECK!((*parser).buffer, b'-') {
                         chomping = if CHECK!((*parser).buffer, b'+') {
                             1_i32
@@ -2023,7 +2024,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                     match current_block {
                         14984465786483313892 => {}
                         _ => {
-                            if !(CACHE(parser, 1_u64).fail) {
+                            if !CACHE(parser, 1_u64).fail {
                                 loop {
                                     if !IS_BLANK!((*parser).buffer) {
                                         current_block = 4090602189656566074;
@@ -2088,15 +2089,15 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                         increment
                                                                     };
                                                             }
-                                                            if !(yaml_parser_scan_block_scalar_breaks(
+                                                            if !yaml_parser_scan_block_scalar_breaks(
                                                                 parser,
                                                                 addr_of_mut!(indent),
                                                                 addr_of_mut!(trailing_breaks),
                                                                 start_mark,
                                                                 addr_of_mut!(end_mark),
-                                                            ).fail)
+                                                            ).fail
                                                             {
-                                                                if !(CACHE(parser, 1_u64).fail) {
+                                                                if !CACHE(parser, 1_u64).fail {
                                                                     's_281: loop {
                                                                         if !((*parser).mark.column as libc::c_int == indent
                                                                             && !IS_Z!((*parser).buffer))
@@ -2315,10 +2316,10 @@ unsafe fn yaml_parser_scan_flow_scalar(
     let mut trailing_breaks = NULL_STRING;
     let mut whitespaces = NULL_STRING;
     let mut leading_blanks: libc::c_int;
-    if !(STRING_INIT!(parser, string).fail) {
-        if !(STRING_INIT!(parser, leading_break).fail) {
-            if !(STRING_INIT!(parser, trailing_breaks).fail) {
-                if !(STRING_INIT!(parser, whitespaces).fail) {
+    if !STRING_INIT!(parser, string).fail {
+        if !STRING_INIT!(parser, leading_break).fail {
+            if !STRING_INIT!(parser, trailing_breaks).fail {
+                if !STRING_INIT!(parser, whitespaces).fail {
                     start_mark = (*parser).mark;
                     SKIP(parser);
                     's_58: loop {
@@ -2401,7 +2402,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                             current_block = 8114179180390253173;
                                             break 's_58;
                                         }
-                                        match *((*parser).buffer.pointer).wrapping_offset(1_isize)
+                                        match *(*parser).buffer.pointer.wrapping_offset(1_isize)
                                             as libc::c_int
                                         {
                                             48 => {
@@ -2808,10 +2809,10 @@ unsafe fn yaml_parser_scan_plain_scalar(
     let mut whitespaces = NULL_STRING;
     let mut leading_blanks: libc::c_int = 0_i32;
     let indent: libc::c_int = (*parser).indent + 1_i32;
-    if !(STRING_INIT!(parser, string).fail) {
-        if !(STRING_INIT!(parser, leading_break).fail) {
-            if !(STRING_INIT!(parser, trailing_breaks).fail) {
-                if !(STRING_INIT!(parser, whitespaces).fail) {
+    if !STRING_INIT!(parser, string).fail {
+        if !STRING_INIT!(parser, leading_break).fail {
+            if !STRING_INIT!(parser, trailing_breaks).fail {
+                if !STRING_INIT!(parser, whitespaces).fail {
                     end_mark = (*parser).mark;
                     start_mark = end_mark;
                     's_57: loop {

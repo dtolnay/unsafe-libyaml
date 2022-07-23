@@ -210,19 +210,19 @@ pub unsafe fn yaml_parser_initialize(parser: *mut yaml_parser_t) -> Success {
         0_i32,
         size_of::<yaml_parser_t>() as libc::c_ulong,
     );
-    if !(BUFFER_INIT!(parser, (*parser).raw_buffer, INPUT_RAW_BUFFER_SIZE).fail) {
-        if !(BUFFER_INIT!(parser, (*parser).buffer, INPUT_BUFFER_SIZE).fail) {
-            if !(QUEUE_INIT!(parser, (*parser).tokens, yaml_token_t).fail) {
-                if !(STACK_INIT!(parser, (*parser).indents, libc::c_int).fail) {
-                    if !(STACK_INIT!(parser, (*parser).simple_keys, yaml_simple_key_t).fail) {
-                        if !(STACK_INIT!(parser, (*parser).states, yaml_parser_state_t).fail) {
-                            if !(STACK_INIT!(parser, (*parser).marks, yaml_mark_t).fail) {
-                                if !(STACK_INIT!(
+    if !BUFFER_INIT!(parser, (*parser).raw_buffer, INPUT_RAW_BUFFER_SIZE).fail {
+        if !BUFFER_INIT!(parser, (*parser).buffer, INPUT_BUFFER_SIZE).fail {
+            if !QUEUE_INIT!(parser, (*parser).tokens, yaml_token_t).fail {
+                if !STACK_INIT!(parser, (*parser).indents, libc::c_int).fail {
+                    if !STACK_INIT!(parser, (*parser).simple_keys, yaml_simple_key_t).fail {
+                        if !STACK_INIT!(parser, (*parser).states, yaml_parser_state_t).fail {
+                            if !STACK_INIT!(parser, (*parser).marks, yaml_mark_t).fail {
+                                if !STACK_INIT!(
                                     parser,
                                     (*parser).tag_directives,
                                     yaml_tag_directive_t
                                 )
-                                .fail)
+                                .fail
                                 {
                                     return OK;
                                 }
@@ -282,11 +282,17 @@ unsafe fn yaml_string_read_handler(
         return 1_i32;
     }
     if size
-        > ((*parser).input.string.end).c_offset_from((*parser).input.string.current) as libc::c_long
-            as size_t
+        > (*parser)
+            .input
+            .string
+            .end
+            .c_offset_from((*parser).input.string.current) as libc::c_long as size_t
     {
-        size = ((*parser).input.string.end).c_offset_from((*parser).input.string.current)
-            as libc::c_long as size_t;
+        size = (*parser)
+            .input
+            .string
+            .end
+            .c_offset_from((*parser).input.string.current) as libc::c_long as size_t;
     }
     memcpy(
         buffer as *mut libc::c_void,
@@ -360,13 +366,13 @@ pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> Succe
         0_i32,
         size_of::<yaml_emitter_t>() as libc::c_ulong,
     );
-    if !(BUFFER_INIT!(emitter, (*emitter).buffer, OUTPUT_BUFFER_SIZE).fail) {
-        if !(BUFFER_INIT!(emitter, (*emitter).raw_buffer, OUTPUT_RAW_BUFFER_SIZE).fail) {
-            if !(STACK_INIT!(emitter, (*emitter).states, yaml_emitter_state_t).fail) {
-                if !(QUEUE_INIT!(emitter, (*emitter).events, yaml_event_t).fail) {
-                    if !(STACK_INIT!(emitter, (*emitter).indents, libc::c_int).fail) {
-                        if !(STACK_INIT!(emitter, (*emitter).tag_directives, yaml_tag_directive_t)
-                            .fail)
+    if !BUFFER_INIT!(emitter, (*emitter).buffer, OUTPUT_BUFFER_SIZE).fail {
+        if !BUFFER_INIT!(emitter, (*emitter).raw_buffer, OUTPUT_RAW_BUFFER_SIZE).fail {
+            if !STACK_INIT!(emitter, (*emitter).states, yaml_emitter_state_t).fail {
+                if !QUEUE_INIT!(emitter, (*emitter).events, yaml_event_t).fail {
+                    if !STACK_INIT!(emitter, (*emitter).indents, libc::c_int).fail {
+                        if !STACK_INIT!(emitter, (*emitter).tag_directives, yaml_tag_directive_t)
+                            .fail
                         {
                             return OK;
                         }
@@ -415,19 +421,35 @@ unsafe fn yaml_string_write_handler(
     size: size_t,
 ) -> libc::c_int {
     let emitter: *mut yaml_emitter_t = data as *mut yaml_emitter_t;
-    if ((*emitter).output.string.size).wrapping_sub(*(*emitter).output.string.size_written) < size {
+    if (*emitter)
+        .output
+        .string
+        .size
+        .wrapping_sub(*(*emitter).output.string.size_written)
+        < size
+    {
         memcpy(
-            ((*emitter).output.string.buffer)
+            (*emitter)
+                .output
+                .string
+                .buffer
                 .wrapping_offset(*(*emitter).output.string.size_written as isize)
                 as *mut libc::c_void,
             buffer as *const libc::c_void,
-            ((*emitter).output.string.size).wrapping_sub(*(*emitter).output.string.size_written),
+            (*emitter)
+                .output
+                .string
+                .size
+                .wrapping_sub(*(*emitter).output.string.size_written),
         );
         *(*emitter).output.string.size_written = (*emitter).output.string.size;
         return 0_i32;
     }
     memcpy(
-        ((*emitter).output.string.buffer)
+        (*emitter)
+            .output
+            .string
+            .buffer
             .wrapping_offset(*(*emitter).output.string.size_written as isize)
             as *mut libc::c_void,
         buffer as *const libc::c_void,
@@ -566,7 +588,7 @@ unsafe fn yaml_check_utf8(start: *const yaml_char_t, length: size_t) -> Success 
         let mut value: libc::c_uint;
         let mut k: size_t;
         octet = *pointer;
-        let width: libc::c_uint = (if octet as libc::c_int & 0x80_i32 == 0_i32 {
+        let width: libc::c_uint = if octet as libc::c_int & 0x80_i32 == 0_i32 {
             1_i32
         } else if octet as libc::c_int & 0xe0_i32 == 0xc0_i32 {
             2_i32
@@ -576,8 +598,8 @@ unsafe fn yaml_check_utf8(start: *const yaml_char_t, length: size_t) -> Success 
             4_i32
         } else {
             0_i32
-        }) as libc::c_uint;
-        value = (if octet as libc::c_int & 0x80_i32 == 0_i32 {
+        } as libc::c_uint;
+        value = if octet as libc::c_int & 0x80_i32 == 0_i32 {
             octet as libc::c_int & 0x7f_i32
         } else if octet as libc::c_int & 0xe0_i32 == 0xc0_i32 {
             octet as libc::c_int & 0x1f_i32
@@ -587,7 +609,7 @@ unsafe fn yaml_check_utf8(start: *const yaml_char_t, length: size_t) -> Success 
             octet as libc::c_int & 0x7_i32
         } else {
             0_i32
-        }) as libc::c_uint;
+        } as libc::c_uint;
         if width == 0 {
             return FAIL;
         }
@@ -927,7 +949,7 @@ pub unsafe fn yaml_scalar_event_initialize(
                     if length < 0_i32 {
                         length = strlen(value as *mut libc::c_char) as libc::c_int;
                     }
-                    if !(yaml_check_utf8(value, length as size_t).fail) {
+                    if !yaml_check_utf8(value, length as size_t).fail {
                         value_copy = yaml_malloc((length + 1_i32) as size_t) as *mut yaml_char_t;
                         if !value_copy.is_null() {
                             memcpy(
@@ -1253,7 +1275,7 @@ pub unsafe fn yaml_document_initialize(
         !tag_directives_start.is_null() && !tag_directives_end.is_null()
             || tag_directives_start == tag_directives_end
     );
-    if !(STACK_INIT!(addr_of_mut!(context), nodes, yaml_node_t).fail) {
+    if !STACK_INIT!(addr_of_mut!(context), nodes, yaml_node_t).fail {
         if !version_directive.is_null() {
             version_directive_copy =
                 yaml_malloc(size_of::<yaml_version_directive_t>() as libc::c_ulong)
@@ -1419,11 +1441,13 @@ pub unsafe fn yaml_document_get_node(
 ) -> *mut yaml_node_t {
     __assert!(!document.is_null());
     if index > 0_i32
-        && ((*document).nodes.start).wrapping_offset(index as isize) <= (*document).nodes.top
+        && (*document).nodes.start.wrapping_offset(index as isize) <= (*document).nodes.top
     {
-        return ((*document).nodes.start)
+        return (*document)
+            .nodes
+            .start
             .wrapping_offset(index as isize)
-            .wrapping_offset(-(1_isize));
+            .wrapping_offset(-1_isize);
     }
     ptr::null_mut::<yaml_node_t>()
 }
@@ -1476,13 +1500,13 @@ pub unsafe fn yaml_document_add_scalar(
     if tag.is_null() {
         tag = b"tag:yaml.org,2002:str\0" as *const u8 as *const libc::c_char as *mut yaml_char_t;
     }
-    if !(yaml_check_utf8(tag, strlen(tag as *mut libc::c_char)).fail) {
+    if !yaml_check_utf8(tag, strlen(tag as *mut libc::c_char)).fail {
         tag_copy = yaml_strdup(tag);
         if !tag_copy.is_null() {
             if length < 0_i32 {
                 length = strlen(value as *mut libc::c_char) as libc::c_int;
             }
-            if !(yaml_check_utf8(value, length as size_t).fail) {
+            if !yaml_check_utf8(value, length as size_t).fail {
                 value_copy = yaml_malloc((length + 1_i32) as size_t) as *mut yaml_char_t;
                 if !value_copy.is_null() {
                     memcpy(
@@ -1503,8 +1527,8 @@ pub unsafe fn yaml_document_add_scalar(
                     (*node).data.scalar.value = value_copy;
                     (*node).data.scalar.length = length as size_t;
                     (*node).data.scalar.style = style;
-                    if !(PUSH!(addr_of_mut!(context), (*document).nodes, *node).fail) {
-                        return ((*document).nodes.top).c_offset_from((*document).nodes.start)
+                    if !PUSH!(addr_of_mut!(context), (*document).nodes, *node).fail {
+                        return (*document).nodes.top.c_offset_from((*document).nodes.start)
                             as libc::c_long as libc::c_int;
                     }
                 }
@@ -1552,10 +1576,10 @@ pub unsafe fn yaml_document_add_sequence(
     if tag.is_null() {
         tag = b"tag:yaml.org,2002:seq\0" as *const u8 as *const libc::c_char as *mut yaml_char_t;
     }
-    if !(yaml_check_utf8(tag, strlen(tag as *mut libc::c_char)).fail) {
+    if !yaml_check_utf8(tag, strlen(tag as *mut libc::c_char)).fail {
         tag_copy = yaml_strdup(tag);
         if !tag_copy.is_null() {
-            if !(STACK_INIT!(addr_of_mut!(context), items, yaml_node_item_t).fail) {
+            if !STACK_INIT!(addr_of_mut!(context), items, yaml_node_item_t).fail {
                 memset(
                     node as *mut libc::c_void,
                     0_i32,
@@ -1569,8 +1593,8 @@ pub unsafe fn yaml_document_add_sequence(
                 (*node).data.sequence.items.end = items.end;
                 (*node).data.sequence.items.top = items.start;
                 (*node).data.sequence.style = style;
-                if !(PUSH!(addr_of_mut!(context), (*document).nodes, *node).fail) {
-                    return ((*document).nodes.top).c_offset_from((*document).nodes.start)
+                if !PUSH!(addr_of_mut!(context), (*document).nodes, *node).fail {
+                    return (*document).nodes.top.c_offset_from((*document).nodes.start)
                         as libc::c_long as libc::c_int;
                 }
             }
@@ -1617,10 +1641,10 @@ pub unsafe fn yaml_document_add_mapping(
     if tag.is_null() {
         tag = b"tag:yaml.org,2002:map\0" as *const u8 as *const libc::c_char as *mut yaml_char_t;
     }
-    if !(yaml_check_utf8(tag, strlen(tag as *mut libc::c_char)).fail) {
+    if !yaml_check_utf8(tag, strlen(tag as *mut libc::c_char)).fail {
         tag_copy = yaml_strdup(tag);
         if !tag_copy.is_null() {
-            if !(STACK_INIT!(addr_of_mut!(context), pairs, yaml_node_pair_t).fail) {
+            if !STACK_INIT!(addr_of_mut!(context), pairs, yaml_node_pair_t).fail {
                 memset(
                     node as *mut libc::c_void,
                     0_i32,
@@ -1634,8 +1658,8 @@ pub unsafe fn yaml_document_add_mapping(
                 (*node).data.mapping.pairs.end = pairs.end;
                 (*node).data.mapping.pairs.top = pairs.start;
                 (*node).data.mapping.style = style;
-                if !(PUSH!(addr_of_mut!(context), (*document).nodes, *node).fail) {
-                    return ((*document).nodes.top).c_offset_from((*document).nodes.start)
+                if !PUSH!(addr_of_mut!(context), (*document).nodes, *node).fail {
+                    return (*document).nodes.top.c_offset_from((*document).nodes.start)
                         as libc::c_long as libc::c_int;
                 }
             }
