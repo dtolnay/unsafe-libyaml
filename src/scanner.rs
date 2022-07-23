@@ -2156,47 +2156,8 @@ unsafe fn yaml_parser_scan_uri_escapes(
                 b"did not find URI escaped octet\0" as *const u8 as *const libc::c_char,
             );
         }
-        let octet: libc::c_uchar = (((if *((*parser).buffer.pointer).wrapping_offset(1_isize)
-            as libc::c_int
-            >= 'A' as i32 as yaml_char_t as libc::c_int
-            && *((*parser).buffer.pointer).wrapping_offset(1_isize) as libc::c_int
-                <= 'F' as i32 as yaml_char_t as libc::c_int
-        {
-            *((*parser).buffer.pointer).wrapping_offset(1_isize) as libc::c_int
-                - 'A' as i32 as yaml_char_t as libc::c_int
-                + 10_i32
-        } else if *((*parser).buffer.pointer).wrapping_offset(1_isize) as libc::c_int
-            >= 'a' as i32 as yaml_char_t as libc::c_int
-            && *((*parser).buffer.pointer).wrapping_offset(1_isize) as libc::c_int
-                <= 'f' as i32 as yaml_char_t as libc::c_int
-        {
-            *((*parser).buffer.pointer).wrapping_offset(1_isize) as libc::c_int
-                - 'a' as i32 as yaml_char_t as libc::c_int
-                + 10_i32
-        } else {
-            *((*parser).buffer.pointer).wrapping_offset(1_isize) as libc::c_int
-                - '0' as i32 as yaml_char_t as libc::c_int
-        }) << 4_i32)
-            + (if *((*parser).buffer.pointer).wrapping_offset(2_isize) as libc::c_int
-                >= 'A' as i32 as yaml_char_t as libc::c_int
-                && *((*parser).buffer.pointer).wrapping_offset(2_isize) as libc::c_int
-                    <= 'F' as i32 as yaml_char_t as libc::c_int
-            {
-                *((*parser).buffer.pointer).wrapping_offset(2_isize) as libc::c_int
-                    - 'A' as i32 as yaml_char_t as libc::c_int
-                    + 10_i32
-            } else if *((*parser).buffer.pointer).wrapping_offset(2_isize) as libc::c_int
-                >= 'a' as i32 as yaml_char_t as libc::c_int
-                && *((*parser).buffer.pointer).wrapping_offset(2_isize) as libc::c_int
-                    <= 'f' as i32 as yaml_char_t as libc::c_int
-            {
-                *((*parser).buffer.pointer).wrapping_offset(2_isize) as libc::c_int
-                    - 'a' as i32 as yaml_char_t as libc::c_int
-                    + 10_i32
-            } else {
-                *((*parser).buffer.pointer).wrapping_offset(2_isize) as libc::c_int
-                    - '0' as i32 as yaml_char_t as libc::c_int
-            })) as libc::c_uchar;
+        let octet: libc::c_uchar = ((AS_HEX_AT!((*parser).buffer, 1) << 4_i32)
+            + AS_HEX_AT!((*parser).buffer, 2)) as libc::c_uchar;
         if width == 0 {
             width = if octet as libc::c_int & 0x80_i32 == 0_i32 {
                 1_i32
@@ -3098,47 +3059,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                     break 's_58;
                                                 } else {
                                                     value = (value << 4_i32).wrapping_add(
-                                                        (if *((*parser).buffer.pointer)
-                                                            .wrapping_offset(k as isize)
-                                                            as libc::c_int
-                                                            >= 'A' as i32 as yaml_char_t
-                                                                as libc::c_int
-                                                            && *((*parser).buffer.pointer)
-                                                                .wrapping_offset(k as isize)
-                                                                as libc::c_int
-                                                                <= 'F' as i32 as yaml_char_t
-                                                                    as libc::c_int
-                                                        {
-                                                            *((*parser).buffer.pointer)
-                                                                .wrapping_offset(k as isize)
-                                                                as libc::c_int
-                                                                - 'A' as i32 as yaml_char_t
-                                                                    as libc::c_int
-                                                                + 10_i32
-                                                        } else if *((*parser).buffer.pointer)
-                                                            .wrapping_offset(k as isize)
-                                                            as libc::c_int
-                                                            >= 'a' as i32 as yaml_char_t
-                                                                as libc::c_int
-                                                            && *((*parser).buffer.pointer)
-                                                                .wrapping_offset(k as isize)
-                                                                as libc::c_int
-                                                                <= 'f' as i32 as yaml_char_t
-                                                                    as libc::c_int
-                                                        {
-                                                            *((*parser).buffer.pointer)
-                                                                .wrapping_offset(k as isize)
-                                                                as libc::c_int
-                                                                - 'a' as i32 as yaml_char_t
-                                                                    as libc::c_int
-                                                                + 10_i32
-                                                        } else {
-                                                            *((*parser).buffer.pointer)
-                                                                .wrapping_offset(k as isize)
-                                                                as libc::c_int
-                                                                - '0' as i32 as yaml_char_t
-                                                                    as libc::c_int
-                                                        })
+                                                        AS_HEX_AT!((*parser).buffer, k as isize)
                                                             as libc::c_uint,
                                                     );
                                                     k = k.wrapping_add(1);
