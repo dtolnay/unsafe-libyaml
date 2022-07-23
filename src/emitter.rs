@@ -486,7 +486,7 @@ unsafe fn yaml_emitter_emit_document_start(
                 tag_directive = tag_directive.wrapping_offset(1);
             }
         }
-        if yaml_emitter_check_empty_document(emitter) != 0 {
+        if yaml_emitter_check_empty_document(emitter) {
             implicit = 0_i32;
         }
         if implicit == 0 {
@@ -748,7 +748,7 @@ unsafe fn yaml_emitter_emit_flow_mapping_key(
             return FAIL;
         }
     }
-    if (*emitter).canonical == 0 && yaml_emitter_check_simple_key(emitter) != 0 {
+    if (*emitter).canonical == 0 && yaml_emitter_check_simple_key(emitter) {
         if PUSH!(
             emitter,
             (*emitter).states,
@@ -882,7 +882,7 @@ unsafe fn yaml_emitter_emit_block_mapping_key(
     if yaml_emitter_write_indent(emitter) == 0 {
         return FAIL;
     }
-    if yaml_emitter_check_simple_key(emitter) != 0 {
+    if yaml_emitter_check_simple_key(emitter) {
         if PUSH!(
             emitter,
             (*emitter).states,
@@ -1036,7 +1036,7 @@ unsafe fn yaml_emitter_emit_sequence_start(
         || (*emitter).canonical != 0
         || (*event).data.sequence_start.style as libc::c_uint
             == YAML_FLOW_SEQUENCE_STYLE as libc::c_int as libc::c_uint
-        || yaml_emitter_check_empty_sequence(emitter) != 0
+        || yaml_emitter_check_empty_sequence(emitter)
     {
         (*emitter).state = YAML_EMIT_FLOW_SEQUENCE_FIRST_ITEM_STATE;
     } else {
@@ -1059,7 +1059,7 @@ unsafe fn yaml_emitter_emit_mapping_start(
         || (*emitter).canonical != 0
         || (*event).data.mapping_start.style as libc::c_uint
             == YAML_FLOW_MAPPING_STYLE as libc::c_int as libc::c_uint
-        || yaml_emitter_check_empty_mapping(emitter) != 0
+        || yaml_emitter_check_empty_mapping(emitter)
     {
         (*emitter).state = YAML_EMIT_FLOW_MAPPING_FIRST_KEY_STATE;
     } else {
@@ -1068,31 +1068,31 @@ unsafe fn yaml_emitter_emit_mapping_start(
     OK
 }
 
-unsafe fn yaml_emitter_check_empty_document(_emitter: *mut yaml_emitter_t) -> libc::c_int {
-    0_i32
+unsafe fn yaml_emitter_check_empty_document(_emitter: *mut yaml_emitter_t) -> bool {
+    false
 }
 
-unsafe fn yaml_emitter_check_empty_sequence(emitter: *mut yaml_emitter_t) -> libc::c_int {
+unsafe fn yaml_emitter_check_empty_sequence(emitter: *mut yaml_emitter_t) -> bool {
     if (((*emitter).events.tail).c_offset_from((*emitter).events.head) as libc::c_long) < 2_i64 {
-        return 0_i32;
+        return false;
     }
-    ((*((*emitter).events.head)).type_ as libc::c_uint
+    (*((*emitter).events.head)).type_ as libc::c_uint
         == YAML_SEQUENCE_START_EVENT as libc::c_int as libc::c_uint
         && (*((*emitter).events.head).wrapping_offset(1_isize)).type_ as libc::c_uint
-            == YAML_SEQUENCE_END_EVENT as libc::c_int as libc::c_uint) as libc::c_int
+            == YAML_SEQUENCE_END_EVENT as libc::c_int as libc::c_uint
 }
 
-unsafe fn yaml_emitter_check_empty_mapping(emitter: *mut yaml_emitter_t) -> libc::c_int {
+unsafe fn yaml_emitter_check_empty_mapping(emitter: *mut yaml_emitter_t) -> bool {
     if (((*emitter).events.tail).c_offset_from((*emitter).events.head) as libc::c_long) < 2_i64 {
-        return 0_i32;
+        return false;
     }
-    ((*((*emitter).events.head)).type_ as libc::c_uint
+    (*((*emitter).events.head)).type_ as libc::c_uint
         == YAML_MAPPING_START_EVENT as libc::c_int as libc::c_uint
         && (*((*emitter).events.head).wrapping_offset(1_isize)).type_ as libc::c_uint
-            == YAML_MAPPING_END_EVENT as libc::c_int as libc::c_uint) as libc::c_int
+            == YAML_MAPPING_END_EVENT as libc::c_int as libc::c_uint
 }
 
-unsafe fn yaml_emitter_check_simple_key(emitter: *mut yaml_emitter_t) -> libc::c_int {
+unsafe fn yaml_emitter_check_simple_key(emitter: *mut yaml_emitter_t) -> bool {
     let event: *mut yaml_event_t = (*emitter).events.head;
     let mut length: size_t = 0_u64;
     match (*event).type_ as libc::c_uint {
@@ -1102,7 +1102,7 @@ unsafe fn yaml_emitter_check_simple_key(emitter: *mut yaml_emitter_t) -> libc::c
         }
         6 => {
             if (*emitter).scalar_data.multiline != 0 {
-                return 0_i32;
+                return false;
             }
             length = (length as libc::c_ulong).wrapping_add(
                 ((*emitter).anchor_data.anchor_length)
@@ -1112,8 +1112,8 @@ unsafe fn yaml_emitter_check_simple_key(emitter: *mut yaml_emitter_t) -> libc::c
             ) as size_t as size_t;
         }
         7 => {
-            if yaml_emitter_check_empty_sequence(emitter) == 0 {
-                return 0_i32;
+            if !yaml_emitter_check_empty_sequence(emitter) {
+                return false;
             }
             length = (length as libc::c_ulong).wrapping_add(
                 ((*emitter).anchor_data.anchor_length)
@@ -1122,8 +1122,8 @@ unsafe fn yaml_emitter_check_simple_key(emitter: *mut yaml_emitter_t) -> libc::c
             ) as size_t as size_t;
         }
         9 => {
-            if yaml_emitter_check_empty_mapping(emitter) == 0 {
-                return 0_i32;
+            if !yaml_emitter_check_empty_mapping(emitter) {
+                return false;
             }
             length = (length as libc::c_ulong).wrapping_add(
                 ((*emitter).anchor_data.anchor_length)
@@ -1131,12 +1131,12 @@ unsafe fn yaml_emitter_check_simple_key(emitter: *mut yaml_emitter_t) -> libc::c
                     .wrapping_add((*emitter).tag_data.suffix_length),
             ) as size_t as size_t;
         }
-        _ => return 0_i32,
+        _ => return false,
     }
     if length > 128_u64 {
-        return 0_i32;
+        return false;
     }
-    1_i32
+    true
 }
 
 unsafe fn yaml_emitter_select_scalar_style(
