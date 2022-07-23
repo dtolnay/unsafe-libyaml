@@ -39,9 +39,9 @@ pub unsafe fn yaml_get_version(
     minor: *mut libc::c_int,
     patch: *mut libc::c_int,
 ) {
-    *major = 0_i32;
-    *minor = 2_i32;
-    *patch = 5_i32;
+    *major = 0;
+    *minor = 2;
+    *patch = 5;
 }
 
 pub(crate) unsafe fn yaml_malloc(size: size_t) -> *mut libc::c_void {
@@ -84,7 +84,7 @@ pub(crate) unsafe fn yaml_string_extend(
     memset(
         new_start.wrapping_offset((*end).c_offset_from(*start) as libc::c_long as isize)
             as *mut libc::c_void,
-        0_i32,
+        0,
         (*end).c_offset_from(*start) as libc::c_long as libc::c_ulong,
     );
     *pointer = new_start.wrapping_offset((*pointer).c_offset_from(*start) as libc::c_long as isize);
@@ -128,7 +128,7 @@ pub(crate) unsafe fn yaml_stack_extend(
     end: *mut *mut libc::c_void,
 ) -> Success {
     if (*end as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
-        >= (2147483647_i32 / 2_i32) as libc::c_long
+        >= (2147483647 / 2) as libc::c_long
     {
         return FAIL;
     }
@@ -207,7 +207,7 @@ pub unsafe fn yaml_parser_initialize(parser: *mut yaml_parser_t) -> Success {
     __assert!(!parser.is_null());
     memset(
         parser as *mut libc::c_void,
-        0_i32,
+        0,
         size_of::<yaml_parser_t>() as libc::c_ulong,
     );
     if BUFFER_INIT!(parser, (*parser).raw_buffer, INPUT_RAW_BUFFER_SIZE).ok {
@@ -265,7 +265,7 @@ pub unsafe fn yaml_parser_delete(parser: *mut yaml_parser_t) {
     STACK_DEL!((*parser).tag_directives);
     memset(
         parser as *mut libc::c_void,
-        0_i32,
+        0,
         size_of::<yaml_parser_t>() as libc::c_ulong,
     );
 }
@@ -279,7 +279,7 @@ unsafe fn yaml_string_read_handler(
     let parser: *mut yaml_parser_t = data as *mut yaml_parser_t;
     if (*parser).input.string.current == (*parser).input.string.end {
         *size_read = 0_u64;
-        return 1_i32;
+        return 1;
     }
     if size
         > (*parser)
@@ -302,7 +302,7 @@ unsafe fn yaml_string_read_handler(
     let fresh80 = addr_of_mut!((*parser).input.string.current);
     *fresh80 = (*fresh80).wrapping_offset(size as isize);
     *size_read = size;
-    1_i32
+    1
 }
 
 /// Set a string input.
@@ -363,7 +363,7 @@ pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> Succe
     __assert!(!emitter.is_null());
     memset(
         emitter as *mut libc::c_void,
-        0_i32,
+        0,
         size_of::<yaml_emitter_t>() as libc::c_ulong,
     );
     if BUFFER_INIT!(emitter, (*emitter).buffer, OUTPUT_BUFFER_SIZE).ok {
@@ -409,7 +409,7 @@ pub unsafe fn yaml_emitter_delete(emitter: *mut yaml_emitter_t) {
     yaml_free((*emitter).anchors as *mut libc::c_void);
     memset(
         emitter as *mut libc::c_void,
-        0_i32,
+        0,
         size_of::<yaml_emitter_t>() as libc::c_ulong,
     );
 }
@@ -442,7 +442,7 @@ unsafe fn yaml_string_write_handler(
                 .wrapping_sub(*(*emitter).output.string.size_written),
         );
         *(*emitter).output.string.size_written = (*emitter).output.string.size;
-        return 0_i32;
+        return 0;
     }
     memcpy(
         (*emitter)
@@ -456,7 +456,7 @@ unsafe fn yaml_string_write_handler(
     );
     let fresh153 = addr_of_mut!((*(*emitter).output.string.size_written));
     *fresh153 = (*fresh153 as libc::c_ulong).wrapping_add(size) as size_t as size_t;
-    1_i32
+    1
 }
 
 /// Set a string output.
@@ -518,29 +518,25 @@ pub unsafe fn yaml_emitter_set_encoding(
 /// specification.
 pub unsafe fn yaml_emitter_set_canonical(mut emitter: *mut yaml_emitter_t, canonical: libc::c_int) {
     __assert!(!emitter.is_null());
-    (*emitter).canonical = (canonical != 0_i32) as libc::c_int;
+    (*emitter).canonical = (canonical != 0) as libc::c_int;
 }
 
 /// Set the indentation increment.
 pub unsafe fn yaml_emitter_set_indent(mut emitter: *mut yaml_emitter_t, indent: libc::c_int) {
     __assert!(!emitter.is_null());
-    (*emitter).best_indent = if 1_i32 < indent && indent < 10_i32 {
-        indent
-    } else {
-        2_i32
-    };
+    (*emitter).best_indent = if 1 < indent && indent < 10 { indent } else { 2 };
 }
 
 /// Set the preferred line width. -1 means unlimited.
 pub unsafe fn yaml_emitter_set_width(mut emitter: *mut yaml_emitter_t, width: libc::c_int) {
     __assert!(!emitter.is_null());
-    (*emitter).best_width = if width >= 0_i32 { width } else { -1_i32 };
+    (*emitter).best_width = if width >= 0 { width } else { -1 };
 }
 
 /// Set if unescaped non-ASCII characters are allowed.
 pub unsafe fn yaml_emitter_set_unicode(mut emitter: *mut yaml_emitter_t, unicode: libc::c_int) {
     __assert!(!emitter.is_null());
-    (*emitter).unicode = (unicode != 0_i32) as libc::c_int;
+    (*emitter).unicode = (unicode != 0) as libc::c_int;
 }
 
 /// Set the preferred line break.
@@ -574,7 +570,7 @@ pub unsafe fn yaml_token_delete(token: *mut yaml_token_t) {
     }
     memset(
         token as *mut libc::c_void,
-        0_i32,
+        0,
         size_of::<yaml_token_t>() as libc::c_ulong,
     );
 }
@@ -587,27 +583,27 @@ unsafe fn yaml_check_utf8(start: *const yaml_char_t, length: size_t) -> Success 
         let mut value: libc::c_uint;
         let mut k: size_t;
         octet = *pointer;
-        let width: libc::c_uint = if octet as libc::c_int & 0x80_i32 == 0_i32 {
-            1_i32
-        } else if octet as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-            2_i32
-        } else if octet as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-            3_i32
-        } else if octet as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-            4_i32
+        let width: libc::c_uint = if octet as libc::c_int & 0x80 == 0 {
+            1
+        } else if octet as libc::c_int & 0xe0 == 0xc0 {
+            2
+        } else if octet as libc::c_int & 0xf0 == 0xe0 {
+            3
+        } else if octet as libc::c_int & 0xf8 == 0xf0 {
+            4
         } else {
-            0_i32
+            0
         } as libc::c_uint;
-        value = if octet as libc::c_int & 0x80_i32 == 0_i32 {
-            octet as libc::c_int & 0x7f_i32
-        } else if octet as libc::c_int & 0xe0_i32 == 0xc0_i32 {
-            octet as libc::c_int & 0x1f_i32
-        } else if octet as libc::c_int & 0xf0_i32 == 0xe0_i32 {
-            octet as libc::c_int & 0xf_i32
-        } else if octet as libc::c_int & 0xf8_i32 == 0xf0_i32 {
-            octet as libc::c_int & 0x7_i32
+        value = if octet as libc::c_int & 0x80 == 0 {
+            octet as libc::c_int & 0x7f
+        } else if octet as libc::c_int & 0xe0 == 0xc0 {
+            octet as libc::c_int & 0x1f
+        } else if octet as libc::c_int & 0xf0 == 0xe0 {
+            octet as libc::c_int & 0xf
+        } else if octet as libc::c_int & 0xf8 == 0xf0 {
+            octet as libc::c_int & 0x7
         } else {
-            0_i32
+            0
         } as libc::c_uint;
         if width == 0 {
             return FAIL;
@@ -618,17 +614,16 @@ unsafe fn yaml_check_utf8(start: *const yaml_char_t, length: size_t) -> Success 
         k = 1_u64;
         while k < width as libc::c_ulong {
             octet = *pointer.wrapping_offset(k as isize);
-            if octet as libc::c_int & 0xc0_i32 != 0x80_i32 {
+            if octet as libc::c_int & 0xc0 != 0x80 {
                 return FAIL;
             }
-            value =
-                (value << 6_i32).wrapping_add((octet as libc::c_int & 0x3f_i32) as libc::c_uint);
+            value = (value << 6).wrapping_add((octet as libc::c_int & 0x3f) as libc::c_uint);
             k = k.wrapping_add(1);
         }
         if !(width == 1_u32
-            || width == 2_u32 && value >= 0x80_i32 as libc::c_uint
-            || width == 3_u32 && value >= 0x800_i32 as libc::c_uint
-            || width == 4_u32 && value >= 0x10000_i32 as libc::c_uint)
+            || width == 2_u32 && value >= 0x80 as libc::c_uint
+            || width == 3_u32 && value >= 0x800 as libc::c_uint
+            || width == 4_u32 && value >= 0x10000 as libc::c_uint)
         {
             return FAIL;
         }
@@ -650,7 +645,7 @@ pub unsafe fn yaml_stream_start_event_initialize(
     __assert!(!event.is_null());
     memset(
         event as *mut libc::c_void,
-        0_i32,
+        0,
         size_of::<yaml_event_t>() as libc::c_ulong,
     );
     (*event).type_ = YAML_STREAM_START_EVENT;
@@ -670,7 +665,7 @@ pub unsafe fn yaml_stream_end_event_initialize(mut event: *mut yaml_event_t) -> 
     __assert!(!event.is_null());
     memset(
         event as *mut libc::c_void,
-        0_i32,
+        0,
         size_of::<yaml_event_t>() as libc::c_ulong,
     );
     (*event).type_ = YAML_STREAM_END_EVENT;
@@ -795,7 +790,7 @@ pub unsafe fn yaml_document_start_event_initialize(
                 _ => {
                     memset(
                         event as *mut libc::c_void,
-                        0_i32,
+                        0,
                         size_of::<yaml_event_t>() as libc::c_ulong,
                     );
                     (*event).type_ = YAML_DOCUMENT_START_EVENT;
@@ -842,7 +837,7 @@ pub unsafe fn yaml_document_end_event_initialize(
     __assert!(!event.is_null());
     memset(
         event as *mut libc::c_void,
-        0_i32,
+        0,
         size_of::<yaml_event_t>() as libc::c_ulong,
     );
     (*event).type_ = YAML_DOCUMENT_END_EVENT;
@@ -873,7 +868,7 @@ pub unsafe fn yaml_alias_event_initialize(
     }
     memset(
         event as *mut libc::c_void,
-        0_i32,
+        0,
         size_of::<yaml_event_t>() as libc::c_ulong,
     );
     (*event).type_ = YAML_ALIAS_EVENT;
@@ -945,11 +940,11 @@ pub unsafe fn yaml_scalar_event_initialize(
             match current_block {
                 16285396129609901221 => {}
                 _ => {
-                    if length < 0_i32 {
+                    if length < 0 {
                         length = strlen(value as *mut libc::c_char) as libc::c_int;
                     }
                     if yaml_check_utf8(value, length as size_t).ok {
-                        value_copy = yaml_malloc((length + 1_i32) as size_t) as *mut yaml_char_t;
+                        value_copy = yaml_malloc((length + 1) as size_t) as *mut yaml_char_t;
                         if !value_copy.is_null() {
                             memcpy(
                                 value_copy as *mut libc::c_void,
@@ -959,7 +954,7 @@ pub unsafe fn yaml_scalar_event_initialize(
                             *value_copy.wrapping_offset(length as isize) = b'\0';
                             memset(
                                 event as *mut libc::c_void,
-                                0_i32,
+                                0,
                                 size_of::<yaml_event_t>() as libc::c_ulong,
                             );
                             (*event).type_ = YAML_SCALAR_EVENT;
@@ -1045,7 +1040,7 @@ pub unsafe fn yaml_sequence_start_event_initialize(
                 _ => {
                     memset(
                         event as *mut libc::c_void,
-                        0_i32,
+                        0,
                         size_of::<yaml_event_t>() as libc::c_ulong,
                     );
                     (*event).type_ = YAML_SEQUENCE_START_EVENT;
@@ -1078,7 +1073,7 @@ pub unsafe fn yaml_sequence_end_event_initialize(mut event: *mut yaml_event_t) -
     __assert!(!event.is_null());
     memset(
         event as *mut libc::c_void,
-        0_i32,
+        0,
         size_of::<yaml_event_t>() as libc::c_ulong,
     );
     (*event).type_ = YAML_SEQUENCE_END_EVENT;
@@ -1143,7 +1138,7 @@ pub unsafe fn yaml_mapping_start_event_initialize(
                 _ => {
                     memset(
                         event as *mut libc::c_void,
-                        0_i32,
+                        0,
                         size_of::<yaml_event_t>() as libc::c_ulong,
                     );
                     (*event).type_ = YAML_MAPPING_START_EVENT;
@@ -1176,7 +1171,7 @@ pub unsafe fn yaml_mapping_end_event_initialize(mut event: *mut yaml_event_t) ->
     __assert!(!event.is_null());
     memset(
         event as *mut libc::c_void,
-        0_i32,
+        0,
         size_of::<yaml_event_t>() as libc::c_ulong,
     );
     (*event).type_ = YAML_MAPPING_END_EVENT;
@@ -1220,7 +1215,7 @@ pub unsafe fn yaml_event_delete(event: *mut yaml_event_t) {
     }
     memset(
         event as *mut libc::c_void,
-        0_i32,
+        0,
         size_of::<yaml_event_t>() as libc::c_ulong,
     );
 }
@@ -1352,7 +1347,7 @@ pub unsafe fn yaml_document_initialize(
                     _ => {
                         memset(
                             document as *mut libc::c_void,
-                            0_i32,
+                            0,
                             size_of::<yaml_document_t>() as libc::c_ulong,
                         );
                         let fresh176 = addr_of_mut!((*document).nodes.start);
@@ -1423,7 +1418,7 @@ pub unsafe fn yaml_document_delete(document: *mut yaml_document_t) {
     yaml_free((*document).tag_directives.start as *mut libc::c_void);
     memset(
         document as *mut libc::c_void,
-        0_i32,
+        0,
         size_of::<yaml_document_t>() as libc::c_ulong,
     );
 }
@@ -1439,8 +1434,7 @@ pub unsafe fn yaml_document_get_node(
     index: libc::c_int,
 ) -> *mut yaml_node_t {
     __assert!(!document.is_null());
-    if index > 0_i32
-        && (*document).nodes.start.wrapping_offset(index as isize) <= (*document).nodes.top
+    if index > 0 && (*document).nodes.start.wrapping_offset(index as isize) <= (*document).nodes.top
     {
         return (*document)
             .nodes
@@ -1502,11 +1496,11 @@ pub unsafe fn yaml_document_add_scalar(
     if yaml_check_utf8(tag, strlen(tag as *mut libc::c_char)).ok {
         tag_copy = yaml_strdup(tag);
         if !tag_copy.is_null() {
-            if length < 0_i32 {
+            if length < 0 {
                 length = strlen(value as *mut libc::c_char) as libc::c_int;
             }
             if yaml_check_utf8(value, length as size_t).ok {
-                value_copy = yaml_malloc((length + 1_i32) as size_t) as *mut yaml_char_t;
+                value_copy = yaml_malloc((length + 1) as size_t) as *mut yaml_char_t;
                 if !value_copy.is_null() {
                     memcpy(
                         value_copy as *mut libc::c_void,
@@ -1516,7 +1510,7 @@ pub unsafe fn yaml_document_add_scalar(
                     *value_copy.wrapping_offset(length as isize) = b'\0';
                     memset(
                         node as *mut libc::c_void,
-                        0_i32,
+                        0,
                         size_of::<yaml_node_t>() as libc::c_ulong,
                     );
                     (*node).type_ = YAML_SCALAR_NODE;
@@ -1536,7 +1530,7 @@ pub unsafe fn yaml_document_add_scalar(
     }
     yaml_free(tag_copy as *mut libc::c_void);
     yaml_free(value_copy as *mut libc::c_void);
-    0_i32
+    0
 }
 
 /// Create a SEQUENCE node and attach it to the document.
@@ -1581,7 +1575,7 @@ pub unsafe fn yaml_document_add_sequence(
             if STACK_INIT!(addr_of_mut!(context), items, yaml_node_item_t).ok {
                 memset(
                     node as *mut libc::c_void,
-                    0_i32,
+                    0,
                     size_of::<yaml_node_t>() as libc::c_ulong,
                 );
                 (*node).type_ = YAML_SEQUENCE_NODE;
@@ -1601,7 +1595,7 @@ pub unsafe fn yaml_document_add_sequence(
     }
     STACK_DEL!(items);
     yaml_free(tag_copy as *mut libc::c_void);
-    0_i32
+    0
 }
 
 /// Create a MAPPING node and attach it to the document.
@@ -1646,7 +1640,7 @@ pub unsafe fn yaml_document_add_mapping(
             if STACK_INIT!(addr_of_mut!(context), pairs, yaml_node_pair_t).ok {
                 memset(
                     node as *mut libc::c_void,
-                    0_i32,
+                    0,
                     size_of::<yaml_node_t>() as libc::c_ulong,
                 );
                 (*node).type_ = YAML_MAPPING_NODE;
@@ -1666,7 +1660,7 @@ pub unsafe fn yaml_document_add_mapping(
     }
     STACK_DEL!(pairs);
     yaml_free(tag_copy as *mut libc::c_void);
-    0_i32
+    0
 }
 
 /// Add an item to a SEQUENCE node.
@@ -1680,17 +1674,16 @@ pub unsafe fn yaml_document_append_sequence_item(
     };
     __assert!(!document.is_null());
     __assert!(
-        sequence > 0_i32
+        sequence > 0
             && ((*document).nodes.start).wrapping_offset(sequence as isize)
                 <= (*document).nodes.top
     );
     __assert!(
-        (*((*document).nodes.start).wrapping_offset((sequence - 1_i32) as isize)).type_
-            as libc::c_uint
+        (*((*document).nodes.start).wrapping_offset((sequence - 1) as isize)).type_ as libc::c_uint
             == YAML_SEQUENCE_NODE as libc::c_int as libc::c_uint
     );
     __assert!(
-        item > 0_i32
+        item > 0
             && ((*document).nodes.start).wrapping_offset(item as isize) <= (*document).nodes.top
     );
     if PUSH!(
@@ -1720,26 +1713,24 @@ pub unsafe fn yaml_document_append_mapping_pair(
     };
     __assert!(!document.is_null());
     __assert!(
-        mapping > 0_i32
+        mapping > 0
             && ((*document).nodes.start).wrapping_offset(mapping as isize) <= (*document).nodes.top
     );
     __assert!(
-        (*((*document).nodes.start).wrapping_offset((mapping - 1_i32) as isize)).type_
-            as libc::c_uint
+        (*((*document).nodes.start).wrapping_offset((mapping - 1) as isize)).type_ as libc::c_uint
             == YAML_MAPPING_NODE as libc::c_int as libc::c_uint
     );
     __assert!(
-        key > 0_i32
-            && ((*document).nodes.start).wrapping_offset(key as isize) <= (*document).nodes.top
+        key > 0 && ((*document).nodes.start).wrapping_offset(key as isize) <= (*document).nodes.top
     );
     __assert!(
-        value > 0_i32
+        value > 0
             && ((*document).nodes.start).wrapping_offset(value as isize) <= (*document).nodes.top
     );
     let pair = yaml_node_pair_t { key, value };
     if PUSH!(
         addr_of_mut!(context),
-        (*((*document).nodes.start).wrapping_offset((mapping - 1_i32) as isize))
+        (*((*document).nodes.start).wrapping_offset((mapping - 1) as isize))
             .data
             .mapping
             .pairs,

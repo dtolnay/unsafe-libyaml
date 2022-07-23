@@ -28,7 +28,7 @@ pub unsafe fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> Success {
     __assert!((*emitter).opened == 0);
     memset(
         event as *mut libc::c_void,
-        0_i32,
+        0,
         size_of::<yaml_event_t>() as libc::c_ulong,
     );
     (*event).type_ = YAML_STREAM_START_EVENT;
@@ -38,7 +38,7 @@ pub unsafe fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> Success {
     if yaml_emitter_emit(emitter, event).fail {
         return FAIL;
     }
-    (*emitter).opened = 1_i32;
+    (*emitter).opened = 1;
     OK
 }
 
@@ -60,7 +60,7 @@ pub unsafe fn yaml_emitter_close(mut emitter: *mut yaml_emitter_t) -> Success {
     }
     memset(
         event as *mut libc::c_void,
-        0_i32,
+        0,
         size_of::<yaml_event_t>() as libc::c_ulong,
     );
     (*event).type_ = YAML_STREAM_END_EVENT;
@@ -69,7 +69,7 @@ pub unsafe fn yaml_emitter_close(mut emitter: *mut yaml_emitter_t) -> Success {
     if yaml_emitter_emit(emitter, event).fail {
         return FAIL;
     }
-    (*emitter).closed = 1_i32;
+    (*emitter).closed = 1;
     OK
 }
 
@@ -122,7 +122,7 @@ pub unsafe fn yaml_emitter_dump(
                 if !(*emitter).anchors.is_null() {
                     memset(
                         (*emitter).anchors as *mut libc::c_void,
-                        0_i32,
+                        0,
                         (size_of::<yaml_anchors_t>() as libc::c_ulong).wrapping_mul(
                             (*document).nodes.top.c_offset_from((*document).nodes.start)
                                 as libc::c_long as libc::c_ulong,
@@ -130,7 +130,7 @@ pub unsafe fn yaml_emitter_dump(
                     );
                     memset(
                         event as *mut libc::c_void,
-                        0_i32,
+                        0,
                         size_of::<yaml_event_t>() as libc::c_ulong,
                     );
                     (*event).type_ = YAML_DOCUMENT_START_EVENT;
@@ -143,11 +143,11 @@ pub unsafe fn yaml_emitter_dump(
                         (*document).tag_directives.end;
                     (*event).data.document_start.implicit = (*document).start_implicit;
                     if yaml_emitter_emit(emitter, event).ok {
-                        yaml_emitter_anchor_node(emitter, 1_i32);
-                        if yaml_emitter_dump_node(emitter, 1_i32).ok {
+                        yaml_emitter_anchor_node(emitter, 1);
+                        if yaml_emitter_dump_node(emitter, 1).ok {
                             memset(
                                 event as *mut libc::c_void,
-                                0_i32,
+                                0,
                                 size_of::<yaml_event_t>() as libc::c_ulong,
                             );
                             (*event).type_ = YAML_DOCUMENT_END_EVENT;
@@ -177,7 +177,7 @@ unsafe fn yaml_emitter_delete_document_and_anchors(mut emitter: *mut yaml_emitte
         *fresh2 = ptr::null_mut::<yaml_document_t>();
         return;
     }
-    index = 0_i32;
+    index = 0;
     while (*(*emitter).document)
         .nodes
         .start
@@ -206,7 +206,7 @@ unsafe fn yaml_emitter_delete_document_and_anchors(mut emitter: *mut yaml_emitte
     yaml_free((*emitter).anchors as *mut libc::c_void);
     let fresh6 = addr_of_mut!((*emitter).anchors);
     *fresh6 = ptr::null_mut::<yaml_anchors_t>();
-    (*emitter).last_anchor_id = 0_i32;
+    (*emitter).last_anchor_id = 0;
     let fresh7 = addr_of_mut!((*emitter).document);
     *fresh7 = ptr::null_mut::<yaml_document_t>();
 }
@@ -220,9 +220,9 @@ unsafe fn yaml_emitter_anchor_node(emitter: *mut yaml_emitter_t, index: libc::c_
     let mut item: *mut yaml_node_item_t;
     let mut pair: *mut yaml_node_pair_t;
     let fresh8 =
-        addr_of_mut!((*((*emitter).anchors).wrapping_offset((index - 1_i32) as isize)).references);
+        addr_of_mut!((*((*emitter).anchors).wrapping_offset((index - 1) as isize)).references);
     *fresh8 += 1;
-    if (*(*emitter).anchors.wrapping_offset((index - 1_i32) as isize)).references == 1_i32 {
+    if (*(*emitter).anchors.wrapping_offset((index - 1) as isize)).references == 1 {
         match (*node).type_ as libc::c_uint {
             2 => {
                 item = (*node).data.sequence.items.start;
@@ -241,10 +241,10 @@ unsafe fn yaml_emitter_anchor_node(emitter: *mut yaml_emitter_t, index: libc::c_
             }
             _ => {}
         }
-    } else if (*(*emitter).anchors.wrapping_offset((index - 1_i32) as isize)).references == 2_i32 {
+    } else if (*(*emitter).anchors.wrapping_offset((index - 1) as isize)).references == 2 {
         let fresh9 = addr_of_mut!((*emitter).last_anchor_id);
         *fresh9 += 1;
-        (*(*emitter).anchors.wrapping_offset((index - 1_i32) as isize)).anchor = *fresh9;
+        (*(*emitter).anchors.wrapping_offset((index - 1) as isize)).anchor = *fresh9;
     }
 }
 
@@ -266,8 +266,7 @@ unsafe fn yaml_emitter_dump_node(emitter: *mut yaml_emitter_t, index: libc::c_in
         .start
         .wrapping_offset(index as isize)
         .wrapping_offset(-1_isize);
-    let anchor_id: libc::c_int =
-        (*(*emitter).anchors.wrapping_offset((index - 1_i32) as isize)).anchor;
+    let anchor_id: libc::c_int = (*(*emitter).anchors.wrapping_offset((index - 1) as isize)).anchor;
     let mut anchor: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
     if anchor_id != 0 {
         anchor = yaml_emitter_generate_anchor(emitter, anchor_id);
@@ -275,10 +274,10 @@ unsafe fn yaml_emitter_dump_node(emitter: *mut yaml_emitter_t, index: libc::c_in
             return FAIL;
         }
     }
-    if (*(*emitter).anchors.wrapping_offset((index - 1_i32) as isize)).serialized != 0 {
+    if (*(*emitter).anchors.wrapping_offset((index - 1) as isize)).serialized != 0 {
         return yaml_emitter_dump_alias(emitter, anchor);
     }
-    (*(*emitter).anchors.wrapping_offset((index - 1_i32) as isize)).serialized = 1_i32;
+    (*(*emitter).anchors.wrapping_offset((index - 1) as isize)).serialized = 1;
     match (*node).type_ as libc::c_uint {
         1 => yaml_emitter_dump_scalar(emitter, node, anchor),
         2 => yaml_emitter_dump_sequence(emitter, node, anchor),
@@ -300,7 +299,7 @@ unsafe fn yaml_emitter_dump_alias(
     };
     memset(
         event as *mut libc::c_void,
-        0_i32,
+        0,
         size_of::<yaml_event_t>() as libc::c_ulong,
     );
     (*event).type_ = YAML_ALIAS_EVENT;
@@ -325,14 +324,14 @@ unsafe fn yaml_emitter_dump_scalar(
     let plain_implicit: libc::c_int = (strcmp(
         (*node).tag as *mut libc::c_char,
         b"tag:yaml.org,2002:str\0" as *const u8 as *const libc::c_char,
-    ) == 0_i32) as libc::c_int;
+    ) == 0) as libc::c_int;
     let quoted_implicit: libc::c_int = (strcmp(
         (*node).tag as *mut libc::c_char,
         b"tag:yaml.org,2002:str\0" as *const u8 as *const libc::c_char,
-    ) == 0_i32) as libc::c_int;
+    ) == 0) as libc::c_int;
     memset(
         event as *mut libc::c_void,
-        0_i32,
+        0,
         size_of::<yaml_event_t>() as libc::c_ulong,
     );
     (*event).type_ = YAML_SCALAR_EVENT;
@@ -363,11 +362,11 @@ unsafe fn yaml_emitter_dump_sequence(
     let implicit: libc::c_int = (strcmp(
         (*node).tag as *mut libc::c_char,
         b"tag:yaml.org,2002:seq\0" as *const u8 as *const libc::c_char,
-    ) == 0_i32) as libc::c_int;
+    ) == 0) as libc::c_int;
     let mut item: *mut yaml_node_item_t;
     memset(
         event as *mut libc::c_void,
-        0_i32,
+        0,
         size_of::<yaml_event_t>() as libc::c_ulong,
     );
     (*event).type_ = YAML_SEQUENCE_START_EVENT;
@@ -389,7 +388,7 @@ unsafe fn yaml_emitter_dump_sequence(
     }
     memset(
         event as *mut libc::c_void,
-        0_i32,
+        0,
         size_of::<yaml_event_t>() as libc::c_ulong,
     );
     (*event).type_ = YAML_SEQUENCE_END_EVENT;
@@ -416,11 +415,11 @@ unsafe fn yaml_emitter_dump_mapping(
     let implicit: libc::c_int = (strcmp(
         (*node).tag as *mut libc::c_char,
         b"tag:yaml.org,2002:map\0" as *const u8 as *const libc::c_char,
-    ) == 0_i32) as libc::c_int;
+    ) == 0) as libc::c_int;
     let mut pair: *mut yaml_node_pair_t;
     memset(
         event as *mut libc::c_void,
-        0_i32,
+        0,
         size_of::<yaml_event_t>() as libc::c_ulong,
     );
     (*event).type_ = YAML_MAPPING_START_EVENT;
@@ -445,7 +444,7 @@ unsafe fn yaml_emitter_dump_mapping(
     }
     memset(
         event as *mut libc::c_void,
-        0_i32,
+        0,
         size_of::<yaml_event_t>() as libc::c_ulong,
     );
     (*event).type_ = YAML_MAPPING_END_EVENT;

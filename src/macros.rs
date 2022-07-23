@@ -86,7 +86,7 @@ macro_rules! CLEAR {
         $string.pointer = $string.start;
         memset(
             $string.start as *mut libc::c_void,
-            0_i32,
+            0,
             $string.end.c_offset_from($string.start) as libc::c_ulong,
         );
     }};
@@ -306,15 +306,15 @@ macro_rules! IS_BLANKZ {
 macro_rules! WIDTH_AT {
     ($string:expr, $offset:expr) => {
         if *$string.pointer.wrapping_offset($offset as isize) & 0x80 == 0x00 {
-            1_i32
+            1
         } else if *$string.pointer.wrapping_offset($offset as isize) & 0xE0 == 0xC0 {
-            2_i32
+            2
         } else if *$string.pointer.wrapping_offset($offset as isize) & 0xF0 == 0xE0 {
-            3_i32
+            3
         } else if *$string.pointer.wrapping_offset($offset as isize) & 0xF8 == 0xF0 {
-            4_i32
+            4
         } else {
-            0_i32
+            0
         }
     };
 }
