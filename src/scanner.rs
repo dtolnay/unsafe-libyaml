@@ -2396,8 +2396,7 @@ unsafe fn yaml_parser_scan_block_scalar_breaks(
             return 0_i32;
         }
         while (*indent == 0 || ((*parser).mark.column as libc::c_int) < *indent)
-            && *((*parser).buffer.pointer) as libc::c_int
-                == ' ' as i32 as yaml_char_t as libc::c_int
+            && IS_SPACE!((*parser).buffer)
         {
             SKIP!(parser);
             if CACHE!(parser, 1_u64) == 0 {

@@ -1605,7 +1605,7 @@ unsafe fn yaml_emitter_analyze_scalar(
         if IS_BREAK!(string) {
             line_breaks = 1_i32;
         }
-        if *string.pointer as libc::c_int == ' ' as i32 as yaml_char_t as libc::c_int {
+        if IS_SPACE!(string) {
             if string.start == string.pointer {
                 leading_space = 1_i32;
             }
@@ -2013,7 +2013,7 @@ unsafe fn yaml_emitter_write_plain_scalar(
         }
     }
     while string.pointer != string.end {
-        if *string.pointer as libc::c_int == ' ' as i32 as yaml_char_t as libc::c_int {
+        if IS_SPACE!(string) {
             if allow_breaks != 0
                 && spaces == 0
                 && (*emitter).column > (*emitter).best_width
@@ -2080,7 +2080,7 @@ unsafe fn yaml_emitter_write_single_quoted_scalar(
         return 0_i32;
     }
     while string.pointer != string.end {
-        if *string.pointer as libc::c_int == ' ' as i32 as yaml_char_t as libc::c_int {
+        if IS_SPACE!(string) {
             if allow_breaks != 0
                 && spaces == 0
                 && (*emitter).column > (*emitter).best_width
@@ -2326,7 +2326,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                 }
             }
             spaces = 0_i32;
-        } else if *string.pointer as libc::c_int == ' ' as i32 as yaml_char_t as libc::c_int {
+        } else if IS_SPACE!(string) {
             if allow_breaks != 0
                 && spaces == 0
                 && (*emitter).column > (*emitter).best_width
@@ -2376,9 +2376,7 @@ unsafe fn yaml_emitter_write_block_scalar_hints(
 ) -> libc::c_int {
     let mut indent_hint: [libc::c_char; 2] = [0; 2];
     let mut chomp_hint: *const libc::c_char = ptr::null::<libc::c_char>();
-    if *string.pointer as libc::c_int == ' ' as i32 as yaml_char_t as libc::c_int
-        || IS_BREAK!(string)
-    {
+    if IS_SPACE!(string) || IS_BREAK!(string) {
         indent_hint[0_usize] =
             ('0' as i32 + (*emitter).best_indent as libc::c_char as libc::c_int) as libc::c_char;
         indent_hint[1_usize] = '\0' as libc::c_char;
@@ -2545,7 +2543,7 @@ unsafe fn yaml_emitter_write_folded_scalar(
                 leading_spaces = IS_BLANK!(string) as libc::c_int;
             }
             if breaks == 0
-                && *string.pointer as libc::c_int == ' ' as i32 as yaml_char_t as libc::c_int
+                && IS_SPACE!(string)
                 && !(*string.pointer.wrapping_offset(1_isize) as libc::c_int
                     == ' ' as i32 as yaml_char_t as libc::c_int)
                 && (*emitter).column > (*emitter).best_width

@@ -254,7 +254,9 @@ macro_rules! IS_SPACE_AT {
 }
 
 macro_rules! IS_SPACE {
-    () => {}; // TODO
+    ($string:expr) => {
+        *$string.pointer as libc::c_int == ' ' as i32 as yaml_char_t as libc::c_int
+    };
 }
 
 macro_rules! IS_TAB_AT {
