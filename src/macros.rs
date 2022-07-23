@@ -274,38 +274,6 @@ macro_rules! IS_BLANK {
 }
 
 macro_rules! IS_BREAK_AT {
-    () => {}; // TODO
-}
-
-macro_rules! IS_BREAK {
-    ($string:expr) => {
-        *$string.pointer as libc::c_int == '\r' as i32 as yaml_char_t as libc::c_int
-            || *$string.pointer as libc::c_int == '\n' as i32 as yaml_char_t as libc::c_int
-            || *$string.pointer as libc::c_int == -62i32 as yaml_char_t as libc::c_int
-                && *$string.pointer.wrapping_offset(1_isize) as libc::c_int
-                    == -123i32 as yaml_char_t as libc::c_int
-            || *$string.pointer as libc::c_int == -30i32 as yaml_char_t as libc::c_int
-                && *$string.pointer.wrapping_offset(1_isize) as libc::c_int
-                    == -128i32 as yaml_char_t as libc::c_int
-                && *$string.pointer.wrapping_offset(2_isize) as libc::c_int
-                    == -88i32 as yaml_char_t as libc::c_int
-            || *$string.pointer as libc::c_int == -30i32 as yaml_char_t as libc::c_int
-                && *$string.pointer.wrapping_offset(1_isize) as libc::c_int
-                    == -128i32 as yaml_char_t as libc::c_int
-                && *$string.pointer.wrapping_offset(2_isize) as libc::c_int
-                    == -87i32 as yaml_char_t as libc::c_int
-    };
-}
-
-macro_rules! IS_CRLF_AT {
-    () => {}; // TODO
-}
-
-macro_rules! IS_CRLF {
-    () => {}; // TODO
-}
-
-macro_rules! IS_BREAKZ_AT {
     ($string:expr, $offset:expr) => {
         *$string.pointer.wrapping_offset($offset as isize) as libc::c_int
             == '\r' as i32 as yaml_char_t as libc::c_int
@@ -327,6 +295,26 @@ macro_rules! IS_BREAKZ_AT {
                     == -128i32 as yaml_char_t as libc::c_int
                 && *$string.pointer.wrapping_offset($offset as isize + 2) as libc::c_int
                     == -87i32 as yaml_char_t as libc::c_int
+    };
+}
+
+macro_rules! IS_BREAK {
+    ($string:expr) => {
+        IS_BREAK_AT!($string, 0)
+    };
+}
+
+macro_rules! IS_CRLF_AT {
+    () => {}; // TODO
+}
+
+macro_rules! IS_CRLF {
+    () => {}; // TODO
+}
+
+macro_rules! IS_BREAKZ_AT {
+    ($string:expr, $offset:expr) => {
+        IS_BREAK_AT!($string, $offset)
             || *$string.pointer.wrapping_offset($offset as isize) as libc::c_int
                 == '\0' as i32 as yaml_char_t as libc::c_int
     };

@@ -2509,27 +2509,7 @@ unsafe fn yaml_emitter_write_folded_scalar(
                 && *string.pointer as libc::c_int == '\n' as i32 as yaml_char_t as libc::c_int
             {
                 let mut k: libc::c_int = 0_i32;
-                while *string.pointer.wrapping_offset(k as isize) as libc::c_int
-                    == '\r' as i32 as yaml_char_t as libc::c_int
-                    || *string.pointer.wrapping_offset(k as isize) as libc::c_int
-                        == '\n' as i32 as yaml_char_t as libc::c_int
-                    || *string.pointer.wrapping_offset(k as isize) as libc::c_int
-                        == -62i32 as yaml_char_t as libc::c_int
-                        && *string.pointer.wrapping_offset((k + 1_i32) as isize) as libc::c_int
-                            == -123i32 as yaml_char_t as libc::c_int
-                    || *string.pointer.wrapping_offset(k as isize) as libc::c_int
-                        == -30i32 as yaml_char_t as libc::c_int
-                        && *string.pointer.wrapping_offset((k + 1_i32) as isize) as libc::c_int
-                            == -128i32 as yaml_char_t as libc::c_int
-                        && *string.pointer.wrapping_offset((k + 2_i32) as isize) as libc::c_int
-                            == -88i32 as yaml_char_t as libc::c_int
-                    || *string.pointer.wrapping_offset(k as isize) as libc::c_int
-                        == -30i32 as yaml_char_t as libc::c_int
-                        && *string.pointer.wrapping_offset((k + 1_i32) as isize) as libc::c_int
-                            == -128i32 as yaml_char_t as libc::c_int
-                        && *string.pointer.wrapping_offset((k + 2_i32) as isize) as libc::c_int
-                            == -87i32 as yaml_char_t as libc::c_int
-                {
+                while IS_BREAK_AT!(string, k as isize) {
                     k += if *string.pointer.wrapping_offset(k as isize) as libc::c_int & 0x80_i32
                         == 0_i32
                     {
