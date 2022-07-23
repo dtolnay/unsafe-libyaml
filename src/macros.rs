@@ -188,10 +188,6 @@ macro_rules! IS_ASCII {
     };
 }
 
-macro_rules! IS_PRINTABLE_AT {
-    () => {}; // TODO
-}
-
 macro_rules! IS_PRINTABLE {
     ($string:expr) => {
         (*$string.pointer as libc::c_int == 0xa
