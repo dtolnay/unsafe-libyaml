@@ -34,7 +34,7 @@ macro_rules! PUT {
             let fresh40 = addr_of_mut!((*$emitter).buffer.pointer);
             let fresh41 = *fresh40;
             *fresh40 = (*fresh40).wrapping_offset(1);
-            *fresh41 = $value as i32 as yaml_char_t;
+            *fresh41 = $value as yaml_char_t;
             let fresh42 = addr_of_mut!((*$emitter).column);
             *fresh42 += 1;
             true
@@ -51,25 +51,25 @@ macro_rules! PUT_BREAK {
                 let fresh62 = addr_of_mut!((*$emitter).buffer.pointer);
                 let fresh63 = *fresh62;
                 *fresh62 = (*fresh62).wrapping_offset(1);
-                *fresh63 = '\r' as i32 as yaml_char_t;
+                *fresh63 = b'\r';
             } else if (*$emitter).line_break as libc::c_uint
                 == YAML_LN_BREAK as libc::c_int as libc::c_uint
             {
                 let fresh64 = addr_of_mut!((*$emitter).buffer.pointer);
                 let fresh65 = *fresh64;
                 *fresh64 = (*fresh64).wrapping_offset(1);
-                *fresh65 = '\n' as i32 as yaml_char_t;
+                *fresh65 = b'\n';
             } else if (*$emitter).line_break as libc::c_uint
                 == YAML_CRLN_BREAK as libc::c_int as libc::c_uint
             {
                 let fresh66 = addr_of_mut!((*$emitter).buffer.pointer);
                 let fresh67 = *fresh66;
                 *fresh66 = (*fresh66).wrapping_offset(1);
-                *fresh67 = '\r' as i32 as yaml_char_t;
+                *fresh67 = b'\r';
                 let fresh68 = addr_of_mut!((*$emitter).buffer.pointer);
                 let fresh69 = *fresh68;
                 *fresh68 = (*fresh68).wrapping_offset(1);
-                *fresh69 = '\n' as i32 as yaml_char_t;
+                *fresh69 = b'\n';
             };
             (*$emitter).column = 0_i32;
             let fresh70 = addr_of_mut!((*$emitter).line);
@@ -1741,15 +1741,15 @@ unsafe fn yaml_emitter_write_bom(emitter: *mut yaml_emitter_t) -> libc::c_int {
     let fresh56 = addr_of_mut!((*emitter).buffer.pointer);
     let fresh57 = *fresh56;
     *fresh56 = (*fresh56).wrapping_offset(1);
-    *fresh57 = -17i32 as yaml_char_t;
+    *fresh57 = b'\xEF';
     let fresh58 = addr_of_mut!((*emitter).buffer.pointer);
     let fresh59 = *fresh58;
     *fresh58 = (*fresh58).wrapping_offset(1);
-    *fresh59 = -69i32 as yaml_char_t;
+    *fresh59 = b'\xBB';
     let fresh60 = addr_of_mut!((*emitter).buffer.pointer);
     let fresh61 = *fresh60;
     *fresh60 = (*fresh60).wrapping_offset(1);
-    *fresh61 = -65i32 as yaml_char_t;
+    *fresh61 = b'\xBF';
     1_i32
 }
 

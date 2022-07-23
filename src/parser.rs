@@ -533,7 +533,7 @@ unsafe fn yaml_parser_parse_node(
                                     );
                                     *tag.wrapping_offset(
                                         prefix_len.wrapping_add(suffix_len) as isize
-                                    ) = '\0' as i32 as yaml_char_t;
+                                    ) = b'\0';
                                     yaml_free(tag_handle as *mut libc::c_void);
                                     yaml_free(tag_suffix as *mut libc::c_void);
                                     tag_suffix = ptr::null_mut::<yaml_char_t>();
@@ -720,7 +720,7 @@ unsafe fn yaml_parser_parse_node(
                             if value.is_null() {
                                 (*parser).error = YAML_MEMORY_ERROR;
                             } else {
-                                *value = '\0' as i32 as yaml_char_t;
+                                *value = b'\0';
                                 (*parser).state = POP!((*parser).states);
                                 memset(
                                     event as *mut libc::c_void,
@@ -1287,7 +1287,7 @@ unsafe fn yaml_parser_process_empty_scalar(
         (*parser).error = YAML_MEMORY_ERROR;
         return 0_i32;
     }
-    *value = '\0' as i32 as yaml_char_t;
+    *value = b'\0';
     memset(
         event as *mut libc::c_void,
         0_i32,

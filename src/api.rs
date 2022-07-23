@@ -953,8 +953,7 @@ pub unsafe fn yaml_scalar_event_initialize(
                                 value as *const libc::c_void,
                                 length as libc::c_ulong,
                             );
-                            *value_copy.wrapping_offset(length as isize) =
-                                '\0' as i32 as yaml_char_t;
+                            *value_copy.wrapping_offset(length as isize) = b'\0';
                             memset(
                                 event as *mut libc::c_void,
                                 0_i32,
@@ -1521,7 +1520,7 @@ pub unsafe fn yaml_document_add_scalar(
                         value as *const libc::c_void,
                         length as libc::c_ulong,
                     );
-                    *value_copy.wrapping_offset(length as isize) = '\0' as i32 as yaml_char_t;
+                    *value_copy.wrapping_offset(length as isize) = b'\0';
                     memset(
                         node as *mut libc::c_void,
                         0_i32,

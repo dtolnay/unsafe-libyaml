@@ -135,75 +135,56 @@ macro_rules! CHECK {
 
 macro_rules! IS_ALPHA {
     ($string:expr) => {
-        *$string.pointer as libc::c_int >= '0' as i32 as yaml_char_t as libc::c_int
-            && *$string.pointer as libc::c_int <= '9' as i32 as yaml_char_t as libc::c_int
-            || *$string.pointer as libc::c_int >= 'A' as i32 as yaml_char_t as libc::c_int
-                && *$string.pointer as libc::c_int <= 'Z' as i32 as yaml_char_t as libc::c_int
-            || *$string.pointer as libc::c_int >= 'a' as i32 as yaml_char_t as libc::c_int
-                && *$string.pointer as libc::c_int <= 'z' as i32 as yaml_char_t as libc::c_int
-            || *$string.pointer as libc::c_int == '_' as i32
-            || *$string.pointer as libc::c_int == '-' as i32
+        *$string.pointer >= b'0' && *$string.pointer <= b'9'
+            || *$string.pointer >= b'A' && *$string.pointer <= b'Z'
+            || *$string.pointer >= b'a' && *$string.pointer <= b'z'
+            || *$string.pointer == b'_'
+            || *$string.pointer == b'-'
     };
 }
 
 macro_rules! IS_DIGIT {
     ($string:expr) => {
-        *$string.pointer as libc::c_int >= '0' as i32 as yaml_char_t as libc::c_int
-            && *$string.pointer as libc::c_int <= '9' as i32 as yaml_char_t as libc::c_int
+        *$string.pointer >= b'0' && *$string.pointer <= b'9'
     };
 }
 
 macro_rules! AS_DIGIT {
     ($string:expr) => {
-        *$string.pointer as libc::c_int - '0' as i32 as yaml_char_t as libc::c_int
+        (*$string.pointer - b'0') as libc::c_int
     };
 }
 
 macro_rules! IS_HEX_AT {
     ($string:expr, $offset:expr) => {
-        *$string.pointer.wrapping_offset($offset) as libc::c_int
-            >= '0' as i32 as yaml_char_t as libc::c_int
-            && *$string.pointer.wrapping_offset($offset) as libc::c_int
-                <= '9' as i32 as yaml_char_t as libc::c_int
-            || *$string.pointer.wrapping_offset($offset) as libc::c_int
-                >= 'A' as i32 as yaml_char_t as libc::c_int
-                && *$string.pointer.wrapping_offset($offset) as libc::c_int
-                    <= 'F' as i32 as yaml_char_t as libc::c_int
-            || *$string.pointer.wrapping_offset($offset) as libc::c_int
-                >= 'a' as i32 as yaml_char_t as libc::c_int
-                && *$string.pointer.wrapping_offset($offset) as libc::c_int
-                    <= 'f' as i32 as yaml_char_t as libc::c_int
+        *$string.pointer.wrapping_offset($offset) >= b'0'
+            && *$string.pointer.wrapping_offset($offset) <= b'9'
+            || *$string.pointer.wrapping_offset($offset) >= b'A'
+                && *$string.pointer.wrapping_offset($offset) <= b'F'
+            || *$string.pointer.wrapping_offset($offset) >= b'a'
+                && *$string.pointer.wrapping_offset($offset) <= b'f'
     };
 }
 
 macro_rules! AS_HEX_AT {
     ($string:expr, $offset:expr) => {
-        if *$string.pointer.wrapping_offset($offset) as libc::c_int
-            >= 'A' as i32 as yaml_char_t as libc::c_int
-            && *$string.pointer.wrapping_offset($offset) as libc::c_int
-                <= 'F' as i32 as yaml_char_t as libc::c_int
+        if *$string.pointer.wrapping_offset($offset) >= b'A'
+            && *$string.pointer.wrapping_offset($offset) <= b'F'
         {
-            *$string.pointer.wrapping_offset($offset) as libc::c_int
-                - 'A' as i32 as yaml_char_t as libc::c_int
-                + 10_i32
-        } else if *$string.pointer.wrapping_offset($offset) as libc::c_int
-            >= 'a' as i32 as yaml_char_t as libc::c_int
-            && *$string.pointer.wrapping_offset($offset) as libc::c_int
-                <= 'f' as i32 as yaml_char_t as libc::c_int
+            *$string.pointer.wrapping_offset($offset) - b'A' + 10
+        } else if *$string.pointer.wrapping_offset($offset) >= b'a'
+            && *$string.pointer.wrapping_offset($offset) <= b'f'
         {
-            *$string.pointer.wrapping_offset($offset) as libc::c_int
-                - 'a' as i32 as yaml_char_t as libc::c_int
-                + 10_i32
+            *$string.pointer.wrapping_offset($offset) - b'a' + 10
         } else {
-            *$string.pointer.wrapping_offset($offset) as libc::c_int
-                - '0' as i32 as yaml_char_t as libc::c_int
-        }
+            *$string.pointer.wrapping_offset($offset) - b'0'
+        } as libc::c_int
     };
 }
 
 macro_rules! IS_ASCII {
     ($string:expr) => {
-        *$string.pointer as libc::c_int <= '\u{7f}' as i32 as yaml_char_t as libc::c_int
+        *$string.pointer <= b'\x7F'
     };
 }
 

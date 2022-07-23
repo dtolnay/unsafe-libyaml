@@ -442,7 +442,7 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
             let fresh37 = addr_of_mut!((*parser).buffer.last);
             let fresh38 = *fresh37;
             *fresh37 = (*fresh37).wrapping_offset(1);
-            *fresh38 = '\0' as i32 as yaml_char_t;
+            *fresh38 = b'\0';
             let fresh39 = addr_of_mut!((*parser).unread);
             *fresh39 = (*fresh39).wrapping_add(1);
             return 1_i32;

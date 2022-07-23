@@ -93,7 +93,7 @@ macro_rules! READ_LINE {
                 let fresh484 = addr_of_mut!($string.pointer);
                 let fresh485 = *fresh484;
                 *fresh484 = (*fresh484).wrapping_offset(1);
-                *fresh485 = '\n' as i32 as yaml_char_t;
+                *fresh485 = b'\n';
                 let fresh486 = addr_of_mut!((*$parser).buffer.pointer);
                 *fresh486 = (*fresh486).wrapping_offset(2_isize);
                 let fresh487 = addr_of_mut!((*$parser).mark.index);
@@ -108,7 +108,7 @@ macro_rules! READ_LINE {
                 let fresh490 = addr_of_mut!($string.pointer);
                 let fresh491 = *fresh490;
                 *fresh490 = (*fresh490).wrapping_offset(1);
-                *fresh491 = '\n' as i32 as yaml_char_t;
+                *fresh491 = b'\n';
                 let fresh492 = addr_of_mut!((*$parser).buffer.pointer);
                 *fresh492 = (*fresh492).wrapping_offset(1);
                 let fresh493 = addr_of_mut!((*$parser).mark.index);
@@ -124,7 +124,7 @@ macro_rules! READ_LINE {
                 let fresh496 = addr_of_mut!($string.pointer);
                 let fresh497 = *fresh496;
                 *fresh496 = (*fresh496).wrapping_offset(1);
-                *fresh497 = '\n' as i32 as yaml_char_t;
+                *fresh497 = b'\n';
                 let fresh498 = addr_of_mut!((*$parser).buffer.pointer);
                 *fresh498 = (*fresh498).wrapping_offset(2_isize);
                 let fresh499 = addr_of_mut!((*$parser).mark.index);
@@ -1552,7 +1552,7 @@ unsafe fn yaml_parser_scan_tag(
             if handle.is_null() {
                 current_block = 17708497480799081542;
             } else {
-                *handle = '\0' as i32 as yaml_char_t;
+                *handle = b'\0';
                 SKIP!(parser);
                 SKIP!(parser);
                 if yaml_parser_scan_tag_uri(
@@ -1617,8 +1617,8 @@ unsafe fn yaml_parser_scan_tag(
             if handle.is_null() {
                 current_block = 17708497480799081542;
             } else {
-                *handle = '!' as i32 as yaml_char_t;
-                *handle.wrapping_offset(1_isize) = '\0' as i32 as yaml_char_t;
+                *handle = b'!';
+                *handle.wrapping_offset(1_isize) = b'\0';
                 if *suffix as libc::c_int == '\0' as i32 {
                     let tmp: *mut yaml_char_t = handle;
                     handle = suffix;
@@ -2140,7 +2140,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                                 }
                                                                                 let fresh418 = string.pointer;
                                                                                 string.pointer = string.pointer.wrapping_offset(1);
-                                                                                *fresh418 = ' ' as i32 as yaml_char_t;
+                                                                                *fresh418 = b' ';
                                                                             }
                                                                             CLEAR!(leading_break);
                                                                         } else {
@@ -2396,7 +2396,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                     }
                                     let fresh521 = string.pointer;
                                     string.pointer = string.pointer.wrapping_offset(1);
-                                    *fresh521 = '\'' as i32 as yaml_char_t;
+                                    *fresh521 = b'\'';
                                     SKIP!(parser);
                                     SKIP!(parser);
                                 } else {
@@ -2430,105 +2430,105 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                             48 => {
                                                 let fresh542 = string.pointer;
                                                 string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh542 = '\0' as i32 as yaml_char_t;
+                                                *fresh542 = b'\0';
                                             }
                                             97 => {
                                                 let fresh543 = string.pointer;
                                                 string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh543 = '\u{7}' as i32 as yaml_char_t;
+                                                *fresh543 = b'\x07';
                                             }
                                             98 => {
                                                 let fresh544 = string.pointer;
                                                 string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh544 = '\u{8}' as i32 as yaml_char_t;
+                                                *fresh544 = b'\x08';
                                             }
                                             116 | 9 => {
                                                 let fresh545 = string.pointer;
                                                 string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh545 = '\t' as i32 as yaml_char_t;
+                                                *fresh545 = b'\t';
                                             }
                                             110 => {
                                                 let fresh546 = string.pointer;
                                                 string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh546 = '\n' as i32 as yaml_char_t;
+                                                *fresh546 = b'\n';
                                             }
                                             118 => {
                                                 let fresh547 = string.pointer;
                                                 string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh547 = '\u{b}' as i32 as yaml_char_t;
+                                                *fresh547 = b'\x0B';
                                             }
                                             102 => {
                                                 let fresh548 = string.pointer;
                                                 string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh548 = '\u{c}' as i32 as yaml_char_t;
+                                                *fresh548 = b'\x0C';
                                             }
                                             114 => {
                                                 let fresh549 = string.pointer;
                                                 string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh549 = '\r' as i32 as yaml_char_t;
+                                                *fresh549 = b'\r';
                                             }
                                             101 => {
                                                 let fresh550 = string.pointer;
                                                 string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh550 = '\u{1b}' as i32 as yaml_char_t;
+                                                *fresh550 = b'\x1B';
                                             }
                                             32 => {
                                                 let fresh551 = string.pointer;
                                                 string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh551 = ' ' as i32 as yaml_char_t;
+                                                *fresh551 = b' ';
                                             }
                                             34 => {
                                                 let fresh552 = string.pointer;
                                                 string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh552 = '"' as i32 as yaml_char_t;
+                                                *fresh552 = b'"';
                                             }
                                             47 => {
                                                 let fresh553 = string.pointer;
                                                 string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh553 = '/' as i32 as yaml_char_t;
+                                                *fresh553 = b'/';
                                             }
                                             92 => {
                                                 let fresh554 = string.pointer;
                                                 string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh554 = '\\' as i32 as yaml_char_t;
+                                                *fresh554 = b'\\';
                                             }
                                             78 => {
                                                 let fresh555 = string.pointer;
                                                 string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh555 = -62i32 as yaml_char_t;
+                                                *fresh555 = b'\xC2';
                                                 let fresh556 = string.pointer;
                                                 string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh556 = -123i32 as yaml_char_t;
+                                                *fresh556 = b'\x85';
                                             }
                                             95 => {
                                                 let fresh557 = string.pointer;
                                                 string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh557 = -62i32 as yaml_char_t;
+                                                *fresh557 = b'\xC2';
                                                 let fresh558 = string.pointer;
                                                 string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh558 = -96i32 as yaml_char_t;
+                                                *fresh558 = b'\xA0';
                                             }
                                             76 => {
                                                 let fresh559 = string.pointer;
                                                 string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh559 = -30i32 as yaml_char_t;
+                                                *fresh559 = b'\xE2';
                                                 let fresh560 = string.pointer;
                                                 string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh560 = -128i32 as yaml_char_t;
+                                                *fresh560 = b'\x80';
                                                 let fresh561 = string.pointer;
                                                 string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh561 = -88i32 as yaml_char_t;
+                                                *fresh561 = b'\xA8';
                                             }
                                             80 => {
                                                 let fresh562 = string.pointer;
                                                 string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh562 = -30i32 as yaml_char_t;
+                                                *fresh562 = b'\xE2';
                                                 let fresh563 = string.pointer;
                                                 string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh563 = -128i32 as yaml_char_t;
+                                                *fresh563 = b'\x80';
                                                 let fresh564 = string.pointer;
                                                 string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh564 = -87i32 as yaml_char_t;
+                                                *fresh564 = b'\xA9';
                                             }
                                             120 => {
                                                 code_length = 2_u64;
@@ -2748,7 +2748,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                         }
                                         let fresh711 = string.pointer;
                                         string.pointer = string.pointer.wrapping_offset(1);
-                                        *fresh711 = ' ' as i32 as yaml_char_t;
+                                        *fresh711 = b' ';
                                     } else {
                                         if JOIN!(parser, string, trailing_breaks) == 0 {
                                             current_block = 8114179180390253173;
@@ -2900,7 +2900,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                                 }
                                                 let fresh717 = string.pointer;
                                                 string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh717 = ' ' as i32 as yaml_char_t;
+                                                *fresh717 = b' ';
                                             } else {
                                                 if JOIN!(parser, string, trailing_breaks) == 0 {
                                                     current_block = 16642808987012640029;
