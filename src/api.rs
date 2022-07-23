@@ -585,22 +585,22 @@ unsafe fn yaml_check_utf8(start: *const yaml_char_t, length: size_t) -> Success 
         octet = *pointer;
         let width: libc::c_uint = if octet as libc::c_int & 0x80 == 0 {
             1
-        } else if octet as libc::c_int & 0xe0 == 0xc0 {
+        } else if octet as libc::c_int & 0xE0 == 0xC0 {
             2
-        } else if octet as libc::c_int & 0xf0 == 0xe0 {
+        } else if octet as libc::c_int & 0xF0 == 0xE0 {
             3
-        } else if octet as libc::c_int & 0xf8 == 0xf0 {
+        } else if octet as libc::c_int & 0xF8 == 0xF0 {
             4
         } else {
             0
         } as libc::c_uint;
         value = if octet as libc::c_int & 0x80 == 0 {
-            octet as libc::c_int & 0x7f
-        } else if octet as libc::c_int & 0xe0 == 0xc0 {
-            octet as libc::c_int & 0x1f
-        } else if octet as libc::c_int & 0xf0 == 0xe0 {
-            octet as libc::c_int & 0xf
-        } else if octet as libc::c_int & 0xf8 == 0xf0 {
+            octet as libc::c_int & 0x7F
+        } else if octet as libc::c_int & 0xE0 == 0xC0 {
+            octet as libc::c_int & 0x1F
+        } else if octet as libc::c_int & 0xF0 == 0xE0 {
+            octet as libc::c_int & 0xF
+        } else if octet as libc::c_int & 0xF8 == 0xF0 {
             octet as libc::c_int & 0x7
         } else {
             0
@@ -614,10 +614,10 @@ unsafe fn yaml_check_utf8(start: *const yaml_char_t, length: size_t) -> Success 
         k = 1_u64;
         while k < width as libc::c_ulong {
             octet = *pointer.wrapping_offset(k as isize);
-            if octet as libc::c_int & 0xc0 != 0x80 {
+            if octet as libc::c_int & 0xC0 != 0x80 {
                 return FAIL;
             }
-            value = (value << 6).wrapping_add((octet as libc::c_int & 0x3f) as libc::c_uint);
+            value = (value << 6).wrapping_add((octet as libc::c_int & 0x3F) as libc::c_uint);
             k = k.wrapping_add(1);
         }
         if !(width == 1_u32

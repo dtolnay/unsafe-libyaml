@@ -1881,11 +1881,11 @@ unsafe fn yaml_parser_scan_uri_escapes(
         if width == 0 {
             width = if octet as libc::c_int & 0x80 == 0 {
                 1
-            } else if octet as libc::c_int & 0xe0 == 0xc0 {
+            } else if octet as libc::c_int & 0xE0 == 0xC0 {
                 2
-            } else if octet as libc::c_int & 0xf0 == 0xe0 {
+            } else if octet as libc::c_int & 0xF0 == 0xE0 {
                 3
-            } else if octet as libc::c_int & 0xf8 == 0xf0 {
+            } else if octet as libc::c_int & 0xF8 == 0xF0 {
                 4
             } else {
                 0
@@ -1903,7 +1903,7 @@ unsafe fn yaml_parser_scan_uri_escapes(
                 );
                 return FAIL;
             }
-        } else if octet as libc::c_int & 0xc0 != 0x80 {
+        } else if octet as libc::c_int & 0xC0 != 0x80 {
             yaml_parser_set_scanner_error(
                 parser,
                 if directive != 0 {
@@ -2608,8 +2608,8 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                     k = k.wrapping_add(1);
                                                 }
                                             }
-                                            if value >= 0xd800_u32 && value <= 0xdfff_u32
-                                                || value > 0x10ffff_u32
+                                            if value >= 0xD800_u32 && value <= 0xDFFF_u32
+                                                || value > 0x10FFFF_u32
                                             {
                                                 yaml_parser_set_scanner_error(
                                                     parser,
@@ -2623,64 +2623,64 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                                 current_block = 8114179180390253173;
                                                 break 's_58;
                                             } else {
-                                                if value <= 0x7f_u32 {
+                                                if value <= 0x7F_u32 {
                                                     let fresh573 = string.pointer;
                                                     string.pointer =
                                                         string.pointer.wrapping_offset(1);
                                                     *fresh573 = value as yaml_char_t;
-                                                } else if value <= 0x7ff_u32 {
+                                                } else if value <= 0x7FF_u32 {
                                                     let fresh574 = string.pointer;
                                                     string.pointer =
                                                         string.pointer.wrapping_offset(1);
-                                                    *fresh574 = 0xc0_u32.wrapping_add(value >> 6)
+                                                    *fresh574 = 0xC0_u32.wrapping_add(value >> 6)
                                                         as yaml_char_t;
                                                     let fresh575 = string.pointer;
                                                     string.pointer =
                                                         string.pointer.wrapping_offset(1);
                                                     *fresh575 = 0x80_u32
-                                                        .wrapping_add(value & 0x3f_u32)
+                                                        .wrapping_add(value & 0x3F_u32)
                                                         as yaml_char_t;
-                                                } else if value <= 0xffff_u32 {
+                                                } else if value <= 0xFFFF_u32 {
                                                     let fresh576 = string.pointer;
                                                     string.pointer =
                                                         string.pointer.wrapping_offset(1);
-                                                    *fresh576 = 0xe0_u32.wrapping_add(value >> 12)
+                                                    *fresh576 = 0xE0_u32.wrapping_add(value >> 12)
                                                         as yaml_char_t;
                                                     let fresh577 = string.pointer;
                                                     string.pointer =
                                                         string.pointer.wrapping_offset(1);
                                                     *fresh577 = 0x80_u32
-                                                        .wrapping_add(value >> 6 & 0x3f_u32)
+                                                        .wrapping_add(value >> 6 & 0x3F_u32)
                                                         as yaml_char_t;
                                                     let fresh578 = string.pointer;
                                                     string.pointer =
                                                         string.pointer.wrapping_offset(1);
                                                     *fresh578 = 0x80_u32
-                                                        .wrapping_add(value & 0x3f_u32)
+                                                        .wrapping_add(value & 0x3F_u32)
                                                         as yaml_char_t;
                                                 } else {
                                                     let fresh579 = string.pointer;
                                                     string.pointer =
                                                         string.pointer.wrapping_offset(1);
-                                                    *fresh579 = 0xf0_u32.wrapping_add(value >> 18)
+                                                    *fresh579 = 0xF0_u32.wrapping_add(value >> 18)
                                                         as yaml_char_t;
                                                     let fresh580 = string.pointer;
                                                     string.pointer =
                                                         string.pointer.wrapping_offset(1);
                                                     *fresh580 = 0x80_u32
-                                                        .wrapping_add(value >> 12 & 0x3f_u32)
+                                                        .wrapping_add(value >> 12 & 0x3F_u32)
                                                         as yaml_char_t;
                                                     let fresh581 = string.pointer;
                                                     string.pointer =
                                                         string.pointer.wrapping_offset(1);
                                                     *fresh581 = 0x80_u32
-                                                        .wrapping_add(value >> 6 & 0x3f_u32)
+                                                        .wrapping_add(value >> 6 & 0x3F_u32)
                                                         as yaml_char_t;
                                                     let fresh582 = string.pointer;
                                                     string.pointer =
                                                         string.pointer.wrapping_offset(1);
                                                     *fresh582 = 0x80_u32
-                                                        .wrapping_add(value & 0x3f_u32)
+                                                        .wrapping_add(value & 0x3F_u32)
                                                         as yaml_char_t;
                                                 }
                                                 k = 0_u64;

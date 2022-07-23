@@ -2206,12 +2206,12 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                     }
                 }
                 _ => {
-                    if value_0 <= 0xff_u32 {
+                    if value_0 <= 0xFF_u32 {
                         if PUT(emitter, b'x').fail {
                             return FAIL;
                         }
                         width = 2_u32;
-                    } else if value_0 <= 0xffff_u32 {
+                    } else if value_0 <= 0xFFFF_u32 {
                         if PUT(emitter, b'u').fail {
                             return FAIL;
                         }
@@ -2302,7 +2302,7 @@ unsafe fn yaml_emitter_write_block_scalar_hints(
     } else {
         loop {
             string.pointer = string.pointer.wrapping_offset(-1);
-            if !(*string.pointer as libc::c_int & 0xc0 == 0x80) {
+            if !(*string.pointer as libc::c_int & 0xC0 == 0x80) {
                 break;
             }
         }
@@ -2314,7 +2314,7 @@ unsafe fn yaml_emitter_write_block_scalar_hints(
         } else {
             loop {
                 string.pointer = string.pointer.wrapping_offset(-1);
-                if !(*string.pointer as libc::c_int & 0xc0 == 0x80) {
+                if !(*string.pointer as libc::c_int & 0xC0 == 0x80) {
                     break;
                 }
             }
