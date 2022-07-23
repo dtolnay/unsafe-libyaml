@@ -1034,7 +1034,7 @@ unsafe fn yaml_parser_scan_directive(
     let mut prefix: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
     let start_mark: yaml_mark_t = (*parser).mark;
     SKIP(parser);
-    if !yaml_parser_scan_directive_name(parser, start_mark, addr_of_mut!(name)).fail {
+    if yaml_parser_scan_directive_name(parser, start_mark, addr_of_mut!(name)).ok {
         if strcmp(
             name as *mut libc::c_char,
             b"YAML\0" as *const u8 as *const libc::c_char,
@@ -1105,7 +1105,7 @@ unsafe fn yaml_parser_scan_directive(
         match current_block {
             11397968426844348457 => {}
             _ => {
-                if !CACHE(parser, 1_u64).fail {
+                if CACHE(parser, 1_u64).ok {
                     loop {
                         if !IS_BLANK!((*parser).buffer) {
                             current_block = 11584701595673473500;
@@ -1188,8 +1188,8 @@ unsafe fn yaml_parser_scan_directive_name(
 ) -> Success {
     let current_block: u64;
     let mut string = NULL_STRING;
-    if !STRING_INIT!(parser, string).fail {
-        if !CACHE(parser, 1_u64).fail {
+    if STRING_INIT!(parser, string).ok {
+        if CACHE(parser, 1_u64).ok {
             loop {
                 if !IS_ALPHA!((*parser).buffer) {
                     current_block = 10879442775620481940;
@@ -1423,10 +1423,10 @@ unsafe fn yaml_parser_scan_anchor(
     let start_mark: yaml_mark_t;
     let end_mark: yaml_mark_t;
     let mut string = NULL_STRING;
-    if !STRING_INIT!(parser, string).fail {
+    if STRING_INIT!(parser, string).ok {
         start_mark = (*parser).mark;
         SKIP(parser);
-        if !CACHE(parser, 1_u64).fail {
+        if CACHE(parser, 1_u64).ok {
             loop {
                 if !IS_ALPHA!((*parser).buffer) {
                     current_block = 2868539653012386629;
@@ -1514,7 +1514,7 @@ unsafe fn yaml_parser_scan_tag(
     let mut suffix: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
     let end_mark: yaml_mark_t;
     let start_mark: yaml_mark_t = (*parser).mark;
-    if !CACHE(parser, 2_u64).fail {
+    if CACHE(parser, 2_u64).ok {
         if CHECK_AT!((*parser).buffer, b'<', 1) {
             handle = yaml_malloc(1_u64) as *mut yaml_char_t;
             if handle.is_null() {
@@ -1601,7 +1601,7 @@ unsafe fn yaml_parser_scan_tag(
         match current_block {
             17708497480799081542 => {}
             _ => {
-                if !CACHE(parser, 1_u64).fail {
+                if CACHE(parser, 1_u64).ok {
                     if !IS_BLANKZ!((*parser).buffer) {
                         if (*parser).flow_level == 0 || !CHECK!((*parser).buffer, b',') {
                             yaml_parser_set_scanner_error(
@@ -1654,8 +1654,8 @@ unsafe fn yaml_parser_scan_tag_handle(
 ) -> Success {
     let mut current_block: u64;
     let mut string = NULL_STRING;
-    if !STRING_INIT!(parser, string).fail {
-        if !CACHE(parser, 1_u64).fail {
+    if STRING_INIT!(parser, string).ok {
+        if CACHE(parser, 1_u64).ok {
             if !CHECK!((*parser).buffer, b'!') {
                 yaml_parser_set_scanner_error(
                     parser,
@@ -1667,8 +1667,8 @@ unsafe fn yaml_parser_scan_tag_handle(
                     start_mark,
                     b"did not find expected '!'\0" as *const u8 as *const libc::c_char,
                 );
-            } else if !READ!(parser, string).fail {
-                if !CACHE(parser, 1_u64).fail {
+            } else if READ!(parser, string).ok {
+                if CACHE(parser, 1_u64).ok {
                     loop {
                         if !IS_ALPHA!((*parser).buffer) {
                             current_block = 7651349459974463963;
@@ -1754,12 +1754,12 @@ unsafe fn yaml_parser_scan_tag_uri(
             }
             _ => {
                 if string.end.c_offset_from(string.start) as libc::c_long as size_t <= length {
-                    if !yaml_string_extend(
+                    if yaml_string_extend(
                         addr_of_mut!(string.start),
                         addr_of_mut!(string.pointer),
                         addr_of_mut!(string.end),
                     )
-                    .fail
+                    .ok
                     {
                         current_block = 14916268686031723178;
                         continue;
@@ -1955,12 +1955,12 @@ unsafe fn yaml_parser_scan_block_scalar(
     let mut indent: libc::c_int = 0_i32;
     let mut leading_blank: libc::c_int = 0_i32;
     let mut trailing_blank: libc::c_int;
-    if !STRING_INIT!(parser, string).fail {
-        if !STRING_INIT!(parser, leading_break).fail {
-            if !STRING_INIT!(parser, trailing_breaks).fail {
+    if STRING_INIT!(parser, string).ok {
+        if STRING_INIT!(parser, leading_break).ok {
+            if STRING_INIT!(parser, trailing_breaks).ok {
                 start_mark = (*parser).mark;
                 SKIP(parser);
-                if !CACHE(parser, 1_u64).fail {
+                if CACHE(parser, 1_u64).ok {
                     if CHECK!((*parser).buffer, b'+') || CHECK!((*parser).buffer, b'-') {
                         chomping = if CHECK!((*parser).buffer, b'+') {
                             1_i32
@@ -2024,7 +2024,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                     match current_block {
                         14984465786483313892 => {}
                         _ => {
-                            if !CACHE(parser, 1_u64).fail {
+                            if CACHE(parser, 1_u64).ok {
                                 loop {
                                     if !IS_BLANK!((*parser).buffer) {
                                         current_block = 4090602189656566074;
@@ -2089,65 +2089,113 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                         increment
                                                                     };
                                                             }
-                                                            if !yaml_parser_scan_block_scalar_breaks(
+                                                            if yaml_parser_scan_block_scalar_breaks(
                                                                 parser,
                                                                 addr_of_mut!(indent),
                                                                 addr_of_mut!(trailing_breaks),
                                                                 start_mark,
                                                                 addr_of_mut!(end_mark),
-                                                            ).fail
+                                                            )
+                                                            .ok
                                                             {
-                                                                if !CACHE(parser, 1_u64).fail {
+                                                                if CACHE(parser, 1_u64).ok {
                                                                     's_281: loop {
-                                                                        if !((*parser).mark.column as libc::c_int == indent
-                                                                            && !IS_Z!((*parser).buffer))
+                                                                        if !((*parser).mark.column
+                                                                            as libc::c_int
+                                                                            == indent
+                                                                            && !IS_Z!(
+                                                                                (*parser).buffer
+                                                                            ))
                                                                         {
-                                                                            current_block = 5793491756164225964;
+                                                                            current_block =
+                                                                                5793491756164225964;
                                                                             break;
                                                                         }
-                                                                        trailing_blank = IS_BLANK!((*parser).buffer) as libc::c_int;
+                                                                        trailing_blank = IS_BLANK!(
+                                                                            (*parser).buffer
+                                                                        )
+                                                                            as libc::c_int;
                                                                         if literal == 0
-                                                                            && *leading_break.start as libc::c_int == '\n' as i32
-                                                                            && leading_blank == 0 && trailing_blank == 0
+                                                                            && *leading_break.start
+                                                                                as libc::c_int
+                                                                                == '\n' as i32
+                                                                            && leading_blank == 0
+                                                                            && trailing_blank == 0
                                                                         {
-                                                                            if *trailing_breaks.start as libc::c_int == '\0' as i32 {
-                                                                                if STRING_EXTEND!(parser, string).fail {
+                                                                            if *trailing_breaks
+                                                                                .start
+                                                                                as libc::c_int
+                                                                                == '\0' as i32
+                                                                            {
+                                                                                if STRING_EXTEND!(
+                                                                                    parser, string
+                                                                                )
+                                                                                .fail
+                                                                                {
                                                                                     current_block = 14984465786483313892;
                                                                                     break;
                                                                                 }
-                                                                                let fresh418 = string.pointer;
+                                                                                let fresh418 =
+                                                                                    string.pointer;
                                                                                 string.pointer = string.pointer.wrapping_offset(1);
                                                                                 *fresh418 = b' ';
                                                                             }
                                                                             CLEAR!(leading_break);
                                                                         } else {
-                                                                            if JOIN!(parser, string, leading_break).fail {
+                                                                            if JOIN!(
+                                                                                parser,
+                                                                                string,
+                                                                                leading_break
+                                                                            )
+                                                                            .fail
+                                                                            {
                                                                                 current_block = 14984465786483313892;
                                                                                 break;
                                                                             }
                                                                             CLEAR!(leading_break);
                                                                         }
-                                                                        if JOIN!(parser, string, trailing_breaks).fail {
+                                                                        if JOIN!(
+                                                                            parser,
+                                                                            string,
+                                                                            trailing_breaks
+                                                                        )
+                                                                        .fail
+                                                                        {
                                                                             current_block = 14984465786483313892;
                                                                             break;
                                                                         }
                                                                         CLEAR!(trailing_breaks);
-                                                                        leading_blank = IS_BLANK!((*parser).buffer) as libc::c_int;
-                                                                        while !IS_BREAKZ!((*parser).buffer) {
-                                                                            if READ!(parser, string).fail {
+                                                                        leading_blank = IS_BLANK!(
+                                                                            (*parser).buffer
+                                                                        )
+                                                                            as libc::c_int;
+                                                                        while !IS_BREAKZ!(
+                                                                            (*parser).buffer
+                                                                        ) {
+                                                                            if READ!(parser, string)
+                                                                                .fail
+                                                                            {
                                                                                 current_block = 14984465786483313892;
                                                                                 break 's_281;
                                                                             }
-                                                                            if CACHE(parser, 1_u64).fail {
+                                                                            if CACHE(parser, 1_u64)
+                                                                                .fail
+                                                                            {
                                                                                 current_block = 14984465786483313892;
                                                                                 break 's_281;
                                                                             }
                                                                         }
-                                                                        if CACHE(parser, 2_u64).fail {
+                                                                        if CACHE(parser, 2_u64).fail
+                                                                        {
                                                                             current_block = 14984465786483313892;
                                                                             break;
                                                                         }
-                                                                        if READ_LINE!(parser, leading_break).fail {
+                                                                        if READ_LINE!(
+                                                                            parser,
+                                                                            leading_break
+                                                                        )
+                                                                        .fail
+                                                                        {
                                                                             current_block = 14984465786483313892;
                                                                             break;
                                                                         }
@@ -2167,7 +2215,13 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                         14984465786483313892 => {}
                                                                         _ => {
                                                                             if chomping != -1_i32 {
-                                                                                if JOIN!(parser, string, leading_break).fail {
+                                                                                if JOIN!(
+                                                                                    parser,
+                                                                                    string,
+                                                                                    leading_break
+                                                                                )
+                                                                                .fail
+                                                                                {
                                                                                     current_block = 14984465786483313892;
                                                                                 } else {
                                                                                     current_block = 17787701279558130514;
@@ -2316,10 +2370,10 @@ unsafe fn yaml_parser_scan_flow_scalar(
     let mut trailing_breaks = NULL_STRING;
     let mut whitespaces = NULL_STRING;
     let mut leading_blanks: libc::c_int;
-    if !STRING_INIT!(parser, string).fail {
-        if !STRING_INIT!(parser, leading_break).fail {
-            if !STRING_INIT!(parser, trailing_breaks).fail {
-                if !STRING_INIT!(parser, whitespaces).fail {
+    if STRING_INIT!(parser, string).ok {
+        if STRING_INIT!(parser, leading_break).ok {
+            if STRING_INIT!(parser, trailing_breaks).ok {
+                if STRING_INIT!(parser, whitespaces).ok {
                     start_mark = (*parser).mark;
                     SKIP(parser);
                     's_58: loop {
@@ -2809,10 +2863,10 @@ unsafe fn yaml_parser_scan_plain_scalar(
     let mut whitespaces = NULL_STRING;
     let mut leading_blanks: libc::c_int = 0_i32;
     let indent: libc::c_int = (*parser).indent + 1_i32;
-    if !STRING_INIT!(parser, string).fail {
-        if !STRING_INIT!(parser, leading_break).fail {
-            if !STRING_INIT!(parser, trailing_breaks).fail {
-                if !STRING_INIT!(parser, whitespaces).fail {
+    if STRING_INIT!(parser, string).ok {
+        if STRING_INIT!(parser, leading_break).ok {
+            if STRING_INIT!(parser, trailing_breaks).ok {
+                if STRING_INIT!(parser, whitespaces).ok {
                     end_mark = (*parser).mark;
                     start_mark = end_mark;
                     's_57: loop {

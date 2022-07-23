@@ -107,7 +107,7 @@ pub unsafe fn yaml_emitter_dump(
     match current_block {
         15619007995458559411 => {
             if STACK_EMPTY!((*document).nodes) {
-                if !yaml_emitter_close(emitter).fail {
+                if yaml_emitter_close(emitter).ok {
                     yaml_emitter_delete_document_and_anchors(emitter);
                     return OK;
                 }
@@ -142,9 +142,9 @@ pub unsafe fn yaml_emitter_dump(
                     (*event).data.document_start.tag_directives.end =
                         (*document).tag_directives.end;
                     (*event).data.document_start.implicit = (*document).start_implicit;
-                    if !yaml_emitter_emit(emitter, event).fail {
+                    if yaml_emitter_emit(emitter, event).ok {
                         yaml_emitter_anchor_node(emitter, 1_i32);
-                        if !yaml_emitter_dump_node(emitter, 1_i32).fail {
+                        if yaml_emitter_dump_node(emitter, 1_i32).ok {
                             memset(
                                 event as *mut libc::c_void,
                                 0_i32,
@@ -154,7 +154,7 @@ pub unsafe fn yaml_emitter_dump(
                             (*event).start_mark = mark;
                             (*event).end_mark = mark;
                             (*event).data.document_end.implicit = (*document).end_implicit;
-                            if !yaml_emitter_emit(emitter, event).fail {
+                            if yaml_emitter_emit(emitter, event).ok {
                                 yaml_emitter_delete_document_and_anchors(emitter);
                                 return OK;
                             }
