@@ -93,7 +93,7 @@ macro_rules! WRITE {
 macro_rules! WRITE_BREAK {
     ($emitter:expr, $string:expr) => {
         FLUSH!($emitter)
-            && if CHECK!($string, '\n') {
+            && if CHECK!($string, b'\n') {
                 let _ = PUT_BREAK!($emitter);
                 $string.pointer = $string.pointer.wrapping_offset(1);
                 1_i32
@@ -1511,8 +1511,8 @@ unsafe fn yaml_emitter_analyze_scalar(
         (*emitter).scalar_data.block_allowed = 0_i32;
         return 1_i32;
     }
-    if CHECK_AT!(string, '-', 0) && CHECK_AT!(string, '-', 1) && CHECK_AT!(string, '-', 2)
-        || CHECK_AT!(string, '.', 0) && CHECK_AT!(string, '.', 1) && CHECK_AT!(string, '.', 2)
+    if CHECK_AT!(string, b'-', 0) && CHECK_AT!(string, b'-', 1) && CHECK_AT!(string, b'-', 2)
+        || CHECK_AT!(string, b'.', 0) && CHECK_AT!(string, b'.', 1) && CHECK_AT!(string, b'.', 2)
     {
         block_indicators = 1_i32;
         flow_indicators = 1_i32;
@@ -1521,53 +1521,53 @@ unsafe fn yaml_emitter_analyze_scalar(
     followed_by_whitespace = IS_BLANKZ_AT!(string, WIDTH!(string)) as libc::c_int;
     while string.pointer != string.end {
         if string.start == string.pointer {
-            if CHECK!(string, '#')
-                || CHECK!(string, ',')
-                || CHECK!(string, '[')
-                || CHECK!(string, ']')
-                || CHECK!(string, '{')
-                || CHECK!(string, '}')
-                || CHECK!(string, '&')
-                || CHECK!(string, '*')
-                || CHECK!(string, '!')
-                || CHECK!(string, '|')
-                || CHECK!(string, '>')
-                || CHECK!(string, '\'')
-                || CHECK!(string, '"')
-                || CHECK!(string, '%')
-                || CHECK!(string, '@')
-                || CHECK!(string, '`')
+            if CHECK!(string, b'#')
+                || CHECK!(string, b',')
+                || CHECK!(string, b'[')
+                || CHECK!(string, b']')
+                || CHECK!(string, b'{')
+                || CHECK!(string, b'}')
+                || CHECK!(string, b'&')
+                || CHECK!(string, b'*')
+                || CHECK!(string, b'!')
+                || CHECK!(string, b'|')
+                || CHECK!(string, b'>')
+                || CHECK!(string, b'\'')
+                || CHECK!(string, b'"')
+                || CHECK!(string, b'%')
+                || CHECK!(string, b'@')
+                || CHECK!(string, b'`')
             {
                 flow_indicators = 1_i32;
                 block_indicators = 1_i32;
             }
-            if CHECK!(string, '?') || CHECK!(string, ':') {
+            if CHECK!(string, b'?') || CHECK!(string, b':') {
                 flow_indicators = 1_i32;
                 if followed_by_whitespace != 0 {
                     block_indicators = 1_i32;
                 }
             }
-            if CHECK!(string, '-') && followed_by_whitespace != 0 {
+            if CHECK!(string, b'-') && followed_by_whitespace != 0 {
                 flow_indicators = 1_i32;
                 block_indicators = 1_i32;
             }
         } else {
-            if CHECK!(string, ',')
-                || CHECK!(string, '?')
-                || CHECK!(string, '[')
-                || CHECK!(string, ']')
-                || CHECK!(string, '{')
-                || CHECK!(string, '}')
+            if CHECK!(string, b',')
+                || CHECK!(string, b'?')
+                || CHECK!(string, b'[')
+                || CHECK!(string, b']')
+                || CHECK!(string, b'{')
+                || CHECK!(string, b'}')
             {
                 flow_indicators = 1_i32;
             }
-            if CHECK!(string, ':') {
+            if CHECK!(string, b':') {
                 flow_indicators = 1_i32;
                 if followed_by_whitespace != 0 {
                     block_indicators = 1_i32;
                 }
             }
-            if CHECK!(string, '#') && preceded_by_whitespace != 0 {
+            if CHECK!(string, b'#') && preceded_by_whitespace != 0 {
                 flow_indicators = 1_i32;
                 block_indicators = 1_i32;
             }
@@ -1852,25 +1852,25 @@ unsafe fn yaml_emitter_write_tag_content(
     }
     while string.pointer != string.end {
         if IS_ALPHA!(string)
-            || CHECK!(string, ';')
-            || CHECK!(string, '/')
-            || CHECK!(string, '?')
-            || CHECK!(string, ':')
-            || CHECK!(string, '@')
-            || CHECK!(string, '&')
-            || CHECK!(string, '=')
-            || CHECK!(string, '+')
-            || CHECK!(string, '$')
-            || CHECK!(string, ',')
-            || CHECK!(string, '_')
-            || CHECK!(string, '.')
-            || CHECK!(string, '~')
-            || CHECK!(string, '*')
-            || CHECK!(string, '\'')
-            || CHECK!(string, '(')
-            || CHECK!(string, ')')
-            || CHECK!(string, '[')
-            || CHECK!(string, ']')
+            || CHECK!(string, b';')
+            || CHECK!(string, b'/')
+            || CHECK!(string, b'?')
+            || CHECK!(string, b':')
+            || CHECK!(string, b'@')
+            || CHECK!(string, b'&')
+            || CHECK!(string, b'=')
+            || CHECK!(string, b'+')
+            || CHECK!(string, b'$')
+            || CHECK!(string, b',')
+            || CHECK!(string, b'_')
+            || CHECK!(string, b'.')
+            || CHECK!(string, b'~')
+            || CHECK!(string, b'*')
+            || CHECK!(string, b'\'')
+            || CHECK!(string, b'(')
+            || CHECK!(string, b')')
+            || CHECK!(string, b'[')
+            || CHECK!(string, b']')
         {
             if !(WRITE!(emitter, string)) {
                 return 0_i32;
@@ -1952,7 +1952,7 @@ unsafe fn yaml_emitter_write_plain_scalar(
             }
             spaces = 1_i32;
         } else if IS_BREAK!(string) {
-            if breaks == 0 && CHECK!(string, '\n') {
+            if breaks == 0 && CHECK!(string, b'\n') {
                 if !(PUT_BREAK!(emitter)) {
                     return 0_i32;
                 }
@@ -2018,7 +2018,7 @@ unsafe fn yaml_emitter_write_single_quoted_scalar(
             }
             spaces = 1_i32;
         } else if IS_BREAK!(string) {
-            if breaks == 0 && CHECK!(string, '\n') {
+            if breaks == 0 && CHECK!(string, b'\n') {
                 if !(PUT_BREAK!(emitter)) {
                     return 0_i32;
                 }
@@ -2034,8 +2034,8 @@ unsafe fn yaml_emitter_write_single_quoted_scalar(
                     return 0_i32;
                 }
             }
-            if CHECK!(string, '\'') {
-                if !(PUT!(emitter, '\'')) {
+            if CHECK!(string, b'\'') {
+                if !(PUT!(emitter, b'\'')) {
                     return 0_i32;
                 }
             }
@@ -2090,8 +2090,8 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
             || (*emitter).unicode == 0 && !IS_ASCII!(string)
             || IS_BOM!(string)
             || IS_BREAK!(string)
-            || CHECK!(string, '"')
-            || CHECK!(string, '\\')
+            || CHECK!(string, b'"')
+            || CHECK!(string, b'\\')
         {
             let mut octet: libc::c_uchar;
             let mut width: libc::c_uint;
@@ -2414,7 +2414,7 @@ unsafe fn yaml_emitter_write_folded_scalar(
     (*emitter).whitespace = 1_i32;
     while string.pointer != string.end {
         if IS_BREAK!(string) {
-            if breaks == 0 && leading_spaces == 0 && CHECK!(string, '\n') {
+            if breaks == 0 && leading_spaces == 0 && CHECK!(string, b'\n') {
                 let mut k: libc::c_int = 0_i32;
                 while IS_BREAK_AT!(string, k as isize) {
                     k += WIDTH_AT!(string, k as isize);

@@ -123,13 +123,13 @@ macro_rules! JOIN {
 
 macro_rules! CHECK_AT {
     ($string:expr, $octet:expr, $offset:expr) => {
-        *$string.pointer.offset($offset as isize) == $octet as yaml_char_t
+        *$string.pointer.offset($offset as isize) == $octet
     };
 }
 
 macro_rules! CHECK {
     ($string:expr, $octet:expr) => {
-        *$string.pointer == $octet as yaml_char_t
+        *$string.pointer == $octet
     };
 }
 
@@ -209,7 +209,7 @@ macro_rules! IS_PRINTABLE {
 
 macro_rules! IS_Z_AT {
     ($string:expr, $offset:expr) => {
-        CHECK_AT!($string, '\0', $offset)
+        CHECK_AT!($string, b'\0', $offset)
     };
 }
 
@@ -229,7 +229,7 @@ macro_rules! IS_BOM {
 
 macro_rules! IS_SPACE_AT {
     ($string:expr, $offset:expr) => {
-        CHECK_AT!($string, ' ', $offset)
+        CHECK_AT!($string, b' ', $offset)
     };
 }
 
@@ -241,7 +241,7 @@ macro_rules! IS_SPACE {
 
 macro_rules! IS_TAB_AT {
     ($string:expr, $offset:expr) => {
-        CHECK_AT!($string, '\t', $offset)
+        CHECK_AT!($string, b'\t', $offset)
     };
 }
 
@@ -265,8 +265,8 @@ macro_rules! IS_BLANK {
 
 macro_rules! IS_BREAK_AT {
     ($string:expr, $offset:expr) => {
-        CHECK_AT!($string, '\r', $offset)
-            || CHECK_AT!($string, '\n', $offset)
+        CHECK_AT!($string, b'\r', $offset)
+            || CHECK_AT!($string, b'\n', $offset)
             || CHECK_AT!($string, b'\xC2', $offset) && CHECK_AT!($string, b'\x85', $offset + 1)
             || CHECK_AT!($string, b'\xE2', $offset)
                 && CHECK_AT!($string, b'\x80', $offset + 1)
@@ -285,7 +285,7 @@ macro_rules! IS_BREAK {
 
 macro_rules! IS_CRLF {
     ($string:expr) => {
-        CHECK_AT!($string, '\r', 0) && CHECK_AT!($string, '\n', 1)
+        CHECK_AT!($string, b'\r', 0) && CHECK_AT!($string, b'\n', 1)
     };
 }
 
