@@ -304,12 +304,12 @@ macro_rules! IS_BREAK {
     };
 }
 
-macro_rules! IS_CRLF_AT {
-    () => {}; // TODO
-}
-
 macro_rules! IS_CRLF {
-    () => {}; // TODO
+    ($string:expr) => {
+        *$string.pointer as libc::c_int == '\r' as i32 as yaml_char_t as libc::c_int
+            && *$string.pointer.offset(1) as libc::c_int
+                == '\n' as i32 as yaml_char_t as libc::c_int
+    };
 }
 
 macro_rules! IS_BREAKZ_AT {

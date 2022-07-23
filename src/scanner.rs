@@ -57,10 +57,7 @@ macro_rules! SKIP {
 
 macro_rules! SKIP_LINE {
     ($parser:expr) => {
-        if *((*$parser).buffer.pointer) as libc::c_int == '\r' as i32 as yaml_char_t as libc::c_int
-            && *((*$parser).buffer.pointer).wrapping_offset(1_isize) as libc::c_int
-                == '\n' as i32 as yaml_char_t as libc::c_int
-        {
+        if IS_CRLF!((*$parser).buffer) {
             let index = addr_of_mut!((*$parser).mark.index);
             *index = (*index as libc::c_ulong).wrapping_add(2_u64) as size_t as size_t;
             (*$parser).mark.column = 0_u64;
