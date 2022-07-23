@@ -32,7 +32,8 @@
     clippy::single_match_else,
     clippy::too_many_arguments,
     clippy::too_many_lines,
-    clippy::unreadable_literal
+    clippy::unreadable_literal,
+    clippy::while_immutable_condition, // https://github.com/rust-lang/rust-clippy/issues/3548
 )]
 
 extern crate alloc;
