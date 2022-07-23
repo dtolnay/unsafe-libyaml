@@ -65,110 +65,114 @@ unsafe fn SKIP_LINE(parser: *mut yaml_parser_t) {
     };
 }
 
+unsafe fn READ(parser: *mut yaml_parser_t, string: *mut yaml_string_t) -> i32 {
+    if STRING_EXTEND!(parser, *string) != 0 {
+        COPY!(*string, (*parser).buffer);
+        let fresh160 = addr_of_mut!((*parser).mark.index);
+        *fresh160 = (*fresh160).wrapping_add(1);
+        let fresh161 = addr_of_mut!((*parser).mark.column);
+        *fresh161 = (*fresh161).wrapping_add(1);
+        let fresh162 = addr_of_mut!((*parser).unread);
+        *fresh162 = (*fresh162).wrapping_sub(1);
+        1_i32
+    } else {
+        0_i32
+    }
+}
+
+unsafe fn READ_LINE(parser: *mut yaml_parser_t, string: *mut yaml_string_t) -> i32 {
+    if STRING_EXTEND!(parser, *string) != 0 {
+        if CHECK_AT!((*parser).buffer, b'\r', 0) && CHECK_AT!((*parser).buffer, b'\n', 1) {
+            let fresh484 = addr_of_mut!((*string).pointer);
+            let fresh485 = *fresh484;
+            *fresh484 = (*fresh484).wrapping_offset(1);
+            *fresh485 = b'\n';
+            let fresh486 = addr_of_mut!((*parser).buffer.pointer);
+            *fresh486 = (*fresh486).wrapping_offset(2_isize);
+            let fresh487 = addr_of_mut!((*parser).mark.index);
+            *fresh487 = (*fresh487 as libc::c_ulong).wrapping_add(2_u64) as size_t as size_t;
+            (*parser).mark.column = 0_u64;
+            let fresh488 = addr_of_mut!((*parser).mark.line);
+            *fresh488 = (*fresh488).wrapping_add(1);
+            let fresh489 = addr_of_mut!((*parser).unread);
+            *fresh489 = (*fresh489 as libc::c_ulong).wrapping_sub(2_u64) as size_t as size_t;
+        } else if CHECK_AT!((*parser).buffer, b'\r', 0) || CHECK_AT!((*parser).buffer, b'\n', 0) {
+            let fresh490 = addr_of_mut!((*string).pointer);
+            let fresh491 = *fresh490;
+            *fresh490 = (*fresh490).wrapping_offset(1);
+            *fresh491 = b'\n';
+            let fresh492 = addr_of_mut!((*parser).buffer.pointer);
+            *fresh492 = (*fresh492).wrapping_offset(1);
+            let fresh493 = addr_of_mut!((*parser).mark.index);
+            *fresh493 = (*fresh493).wrapping_add(1);
+            (*parser).mark.column = 0_u64;
+            let fresh494 = addr_of_mut!((*parser).mark.line);
+            *fresh494 = (*fresh494).wrapping_add(1);
+            let fresh495 = addr_of_mut!((*parser).unread);
+            *fresh495 = (*fresh495).wrapping_sub(1);
+        } else if CHECK_AT!((*parser).buffer, b'\xC2', 0) && CHECK_AT!((*parser).buffer, b'\x85', 1)
+        {
+            let fresh496 = addr_of_mut!((*string).pointer);
+            let fresh497 = *fresh496;
+            *fresh496 = (*fresh496).wrapping_offset(1);
+            *fresh497 = b'\n';
+            let fresh498 = addr_of_mut!((*parser).buffer.pointer);
+            *fresh498 = (*fresh498).wrapping_offset(2_isize);
+            let fresh499 = addr_of_mut!((*parser).mark.index);
+            *fresh499 = (*fresh499).wrapping_add(1);
+            (*parser).mark.column = 0_u64;
+            let fresh500 = addr_of_mut!((*parser).mark.line);
+            *fresh500 = (*fresh500).wrapping_add(1);
+            let fresh501 = addr_of_mut!((*parser).unread);
+            *fresh501 = (*fresh501).wrapping_sub(1);
+        } else if CHECK_AT!((*parser).buffer, b'\xE2', 0)
+            && CHECK_AT!((*parser).buffer, b'\x80', 1)
+            && (CHECK_AT!((*parser).buffer, b'\xA8', 2) || CHECK_AT!((*parser).buffer, b'\xA9', 2))
+        {
+            let fresh502 = addr_of_mut!((*parser).buffer.pointer);
+            let fresh503 = *fresh502;
+            *fresh502 = (*fresh502).wrapping_offset(1);
+            let fresh504 = addr_of_mut!((*string).pointer);
+            let fresh505 = *fresh504;
+            *fresh504 = (*fresh504).wrapping_offset(1);
+            *fresh505 = *fresh503;
+            let fresh506 = addr_of_mut!((*parser).buffer.pointer);
+            let fresh507 = *fresh506;
+            *fresh506 = (*fresh506).wrapping_offset(1);
+            let fresh508 = addr_of_mut!((*string).pointer);
+            let fresh509 = *fresh508;
+            *fresh508 = (*fresh508).wrapping_offset(1);
+            *fresh509 = *fresh507;
+            let fresh510 = addr_of_mut!((*parser).buffer.pointer);
+            let fresh511 = *fresh510;
+            *fresh510 = (*fresh510).wrapping_offset(1);
+            let fresh512 = addr_of_mut!((*string).pointer);
+            let fresh513 = *fresh512;
+            *fresh512 = (*fresh512).wrapping_offset(1);
+            *fresh513 = *fresh511;
+            let fresh514 = addr_of_mut!((*parser).mark.index);
+            *fresh514 = (*fresh514).wrapping_add(1);
+            (*parser).mark.column = 0_u64;
+            let fresh515 = addr_of_mut!((*parser).mark.line);
+            *fresh515 = (*fresh515).wrapping_add(1);
+            let fresh516 = addr_of_mut!((*parser).unread);
+            *fresh516 = (*fresh516).wrapping_sub(1);
+        };
+        1_i32
+    } else {
+        0_i32
+    }
+}
+
 macro_rules! READ {
     ($parser:expr, $string:expr) => {
-        if STRING_EXTEND!($parser, $string) != 0 {
-            COPY!($string, (*$parser).buffer);
-            let fresh160 = addr_of_mut!((*$parser).mark.index);
-            *fresh160 = (*fresh160).wrapping_add(1);
-            let fresh161 = addr_of_mut!((*$parser).mark.column);
-            *fresh161 = (*fresh161).wrapping_add(1);
-            let fresh162 = addr_of_mut!((*$parser).unread);
-            *fresh162 = (*fresh162).wrapping_sub(1);
-            1_i32
-        } else {
-            0_i32
-        }
+        READ($parser, addr_of_mut!($string))
     };
 }
 
 macro_rules! READ_LINE {
     ($parser:expr, $string:expr) => {
-        if STRING_EXTEND!($parser, $string) != 0 {
-            if CHECK_AT!((*$parser).buffer, b'\r', 0) && CHECK_AT!((*$parser).buffer, b'\n', 1) {
-                let fresh484 = addr_of_mut!($string.pointer);
-                let fresh485 = *fresh484;
-                *fresh484 = (*fresh484).wrapping_offset(1);
-                *fresh485 = b'\n';
-                let fresh486 = addr_of_mut!((*$parser).buffer.pointer);
-                *fresh486 = (*fresh486).wrapping_offset(2_isize);
-                let fresh487 = addr_of_mut!((*$parser).mark.index);
-                *fresh487 = (*fresh487 as libc::c_ulong).wrapping_add(2_u64) as size_t as size_t;
-                (*$parser).mark.column = 0_u64;
-                let fresh488 = addr_of_mut!((*$parser).mark.line);
-                *fresh488 = (*fresh488).wrapping_add(1);
-                let fresh489 = addr_of_mut!((*$parser).unread);
-                *fresh489 = (*fresh489 as libc::c_ulong).wrapping_sub(2_u64) as size_t as size_t;
-            } else if CHECK_AT!((*$parser).buffer, b'\r', 0)
-                || CHECK_AT!((*$parser).buffer, b'\n', 0)
-            {
-                let fresh490 = addr_of_mut!($string.pointer);
-                let fresh491 = *fresh490;
-                *fresh490 = (*fresh490).wrapping_offset(1);
-                *fresh491 = b'\n';
-                let fresh492 = addr_of_mut!((*$parser).buffer.pointer);
-                *fresh492 = (*fresh492).wrapping_offset(1);
-                let fresh493 = addr_of_mut!((*$parser).mark.index);
-                *fresh493 = (*fresh493).wrapping_add(1);
-                (*$parser).mark.column = 0_u64;
-                let fresh494 = addr_of_mut!((*$parser).mark.line);
-                *fresh494 = (*fresh494).wrapping_add(1);
-                let fresh495 = addr_of_mut!((*$parser).unread);
-                *fresh495 = (*fresh495).wrapping_sub(1);
-            } else if CHECK_AT!((*$parser).buffer, b'\xC2', 0)
-                && CHECK_AT!((*$parser).buffer, b'\x85', 1)
-            {
-                let fresh496 = addr_of_mut!($string.pointer);
-                let fresh497 = *fresh496;
-                *fresh496 = (*fresh496).wrapping_offset(1);
-                *fresh497 = b'\n';
-                let fresh498 = addr_of_mut!((*$parser).buffer.pointer);
-                *fresh498 = (*fresh498).wrapping_offset(2_isize);
-                let fresh499 = addr_of_mut!((*$parser).mark.index);
-                *fresh499 = (*fresh499).wrapping_add(1);
-                (*$parser).mark.column = 0_u64;
-                let fresh500 = addr_of_mut!((*$parser).mark.line);
-                *fresh500 = (*fresh500).wrapping_add(1);
-                let fresh501 = addr_of_mut!((*$parser).unread);
-                *fresh501 = (*fresh501).wrapping_sub(1);
-            } else if CHECK_AT!((*$parser).buffer, b'\xE2', 0)
-                && CHECK_AT!((*$parser).buffer, b'\x80', 1)
-                && (CHECK_AT!((*$parser).buffer, b'\xA8', 2)
-                    || CHECK_AT!((*$parser).buffer, b'\xA9', 2))
-            {
-                let fresh502 = addr_of_mut!((*$parser).buffer.pointer);
-                let fresh503 = *fresh502;
-                *fresh502 = (*fresh502).wrapping_offset(1);
-                let fresh504 = addr_of_mut!($string.pointer);
-                let fresh505 = *fresh504;
-                *fresh504 = (*fresh504).wrapping_offset(1);
-                *fresh505 = *fresh503;
-                let fresh506 = addr_of_mut!((*$parser).buffer.pointer);
-                let fresh507 = *fresh506;
-                *fresh506 = (*fresh506).wrapping_offset(1);
-                let fresh508 = addr_of_mut!($string.pointer);
-                let fresh509 = *fresh508;
-                *fresh508 = (*fresh508).wrapping_offset(1);
-                *fresh509 = *fresh507;
-                let fresh510 = addr_of_mut!((*$parser).buffer.pointer);
-                let fresh511 = *fresh510;
-                *fresh510 = (*fresh510).wrapping_offset(1);
-                let fresh512 = addr_of_mut!($string.pointer);
-                let fresh513 = *fresh512;
-                *fresh512 = (*fresh512).wrapping_offset(1);
-                *fresh513 = *fresh511;
-                let fresh514 = addr_of_mut!((*$parser).mark.index);
-                *fresh514 = (*fresh514).wrapping_add(1);
-                (*$parser).mark.column = 0_u64;
-                let fresh515 = addr_of_mut!((*$parser).mark.line);
-                *fresh515 = (*fresh515).wrapping_add(1);
-                let fresh516 = addr_of_mut!((*$parser).unread);
-                *fresh516 = (*fresh516).wrapping_sub(1);
-            };
-            1_i32
-        } else {
-            0_i32
-        }
+        READ_LINE($parser, addr_of_mut!($string))
     };
 }
 
@@ -2266,7 +2270,7 @@ unsafe fn yaml_parser_scan_block_scalar(
 }
 
 unsafe fn yaml_parser_scan_block_scalar_breaks(
-    mut parser: *mut yaml_parser_t,
+    parser: *mut yaml_parser_t,
     indent: *mut libc::c_int,
     breaks: *mut yaml_string_t,
     start_mark: yaml_mark_t,
