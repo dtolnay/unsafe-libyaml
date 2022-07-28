@@ -211,6 +211,14 @@ unsafe fn yaml_emitter_delete_document_and_anchors(mut emitter: *mut yaml_emitte
     *fresh7 = ptr::null_mut::<yaml_document_t>();
 }
 
+unsafe fn yaml_emitter_anchor_node_sub(emitter: *mut yaml_emitter_t, index: libc::c_int) {
+    (*((*emitter).anchors).offset((index - 1) as isize)).references += 1;
+    if (*(*emitter).anchors.offset((index - 1) as isize)).references == 2 {
+        (*emitter).last_anchor_id += 1;
+        (*(*emitter).anchors.offset((index - 1) as isize)).anchor = (*emitter).last_anchor_id;
+    }
+}
+
 unsafe fn yaml_emitter_anchor_node(emitter: *mut yaml_emitter_t, index: libc::c_int) {
     let node: *mut yaml_node_t = (*(*emitter).document)
         .nodes
@@ -227,15 +235,15 @@ unsafe fn yaml_emitter_anchor_node(emitter: *mut yaml_emitter_t, index: libc::c_
             YAML_SEQUENCE_NODE => {
                 item = (*node).data.sequence.items.start;
                 while item < (*node).data.sequence.items.top {
-                    yaml_emitter_anchor_node(emitter, *item);
+                    yaml_emitter_anchor_node_sub(emitter, *item);
                     item = item.wrapping_offset(1);
                 }
             }
             YAML_MAPPING_NODE => {
                 pair = (*node).data.mapping.pairs.start;
                 while pair < (*node).data.mapping.pairs.top {
-                    yaml_emitter_anchor_node(emitter, (*pair).key);
-                    yaml_emitter_anchor_node(emitter, (*pair).value);
+                    yaml_emitter_anchor_node_sub(emitter, (*pair).key);
+                    yaml_emitter_anchor_node_sub(emitter, (*pair).value);
                     pair = pair.wrapping_offset(1);
                 }
             }
