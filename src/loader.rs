@@ -5,9 +5,10 @@ use crate::yaml::yaml_char_t;
 use crate::{
     libc, yaml_alias_data_t, yaml_document_delete, yaml_document_t, yaml_event_t, yaml_mark_t,
     yaml_node_item_t, yaml_node_pair_t, yaml_node_t, yaml_parser_parse, yaml_parser_t, PointerExt,
-    YAML_COMPOSER_ERROR, YAML_DOCUMENT_END_EVENT, YAML_DOCUMENT_START_EVENT, YAML_MAPPING_NODE,
-    YAML_MEMORY_ERROR, YAML_SCALAR_NODE, YAML_SEQUENCE_NODE, YAML_STREAM_END_EVENT,
-    YAML_STREAM_START_EVENT,
+    YAML_ALIAS_EVENT, YAML_COMPOSER_ERROR, YAML_DOCUMENT_END_EVENT, YAML_DOCUMENT_START_EVENT,
+    YAML_MAPPING_END_EVENT, YAML_MAPPING_NODE, YAML_MAPPING_START_EVENT, YAML_MEMORY_ERROR,
+    YAML_SCALAR_EVENT, YAML_SCALAR_NODE, YAML_SEQUENCE_END_EVENT, YAML_SEQUENCE_NODE,
+    YAML_SEQUENCE_START_EVENT, YAML_STREAM_END_EVENT, YAML_STREAM_START_EVENT,
 };
 use core::mem::{size_of, MaybeUninit};
 use core::ptr::{self, addr_of_mut};
@@ -52,10 +53,7 @@ pub unsafe fn yaml_parser_load(
             if yaml_parser_parse(parser, event).fail {
                 current_block = 6234624449317607669;
             } else {
-                __assert!(
-                    (*event).type_ as libc::c_uint
-                        == YAML_STREAM_START_EVENT as libc::c_int as libc::c_uint
-                );
+                __assert!((*event).type_ == YAML_STREAM_START_EVENT);
                 current_block = 7815301370352969686;
             }
         } else {
@@ -68,9 +66,7 @@ pub unsafe fn yaml_parser_load(
                     return OK;
                 }
                 if yaml_parser_parse(parser, event).ok {
-                    if (*event).type_ as libc::c_uint
-                        == YAML_STREAM_END_EVENT as libc::c_int as libc::c_uint
-                    {
+                    if (*event).type_ == YAML_STREAM_END_EVENT {
                         return OK;
                     }
                     if STACK_INIT!(parser, (*parser).aliases, yaml_alias_data_t).ok {
@@ -139,9 +135,7 @@ unsafe fn yaml_parser_load_document(
         end: ptr::null_mut::<libc::c_int>(),
         top: ptr::null_mut::<libc::c_int>(),
     };
-    __assert!(
-        (*event).type_ as libc::c_uint == YAML_DOCUMENT_START_EVENT as libc::c_int as libc::c_uint
-    );
+    __assert!((*event).type_ == YAML_DOCUMENT_START_EVENT);
     let fresh16 = addr_of_mut!((*(*parser).document).version_directive);
     *fresh16 = (*event).data.document_start.version_directive;
     let fresh17 = addr_of_mut!((*(*parser).document).tag_directives.start);
@@ -168,45 +162,43 @@ unsafe fn yaml_parser_load_nodes(mut parser: *mut yaml_parser_t, ctx: *mut loade
         if yaml_parser_parse(parser, event).fail {
             return FAIL;
         }
-        match (*event).type_ as libc::c_uint {
-            5 => {
+        match (*event).type_ {
+            YAML_ALIAS_EVENT => {
                 if yaml_parser_load_alias(parser, event, ctx).fail {
                     return FAIL;
                 }
             }
-            6 => {
+            YAML_SCALAR_EVENT => {
                 if yaml_parser_load_scalar(parser, event, ctx).fail {
                     return FAIL;
                 }
             }
-            7 => {
+            YAML_SEQUENCE_START_EVENT => {
                 if yaml_parser_load_sequence(parser, event, ctx).fail {
                     return FAIL;
                 }
             }
-            8 => {
+            YAML_SEQUENCE_END_EVENT => {
                 if yaml_parser_load_sequence_end(parser, event, ctx).fail {
                     return FAIL;
                 }
             }
-            9 => {
+            YAML_MAPPING_START_EVENT => {
                 if yaml_parser_load_mapping(parser, event, ctx).fail {
                     return FAIL;
                 }
             }
-            10 => {
+            YAML_MAPPING_END_EVENT => {
                 if yaml_parser_load_mapping_end(parser, event, ctx).fail {
                     return FAIL;
                 }
             }
-            4 => {}
+            YAML_DOCUMENT_END_EVENT => {}
             _ => {
                 __assert!(false);
             }
         }
-        if !((*event).type_ as libc::c_uint
-            != YAML_DOCUMENT_END_EVENT as libc::c_int as libc::c_uint)
-        {
+        if (*event).type_ == YAML_DOCUMENT_END_EVENT {
             break;
         }
     }
@@ -271,8 +263,8 @@ unsafe fn yaml_parser_load_node_add(
         *((*(*parser).document).nodes.start).wrapping_offset((parent_index - 1) as isize)
     );
     let current_block_17: u64;
-    match (*parent).type_ as libc::c_uint {
-        2 => {
+    match (*parent).type_ {
+        YAML_SEQUENCE_NODE => {
             if STACK_LIMIT!(parser, (*parent).data.sequence.items).fail {
                 return FAIL;
             }
@@ -280,7 +272,7 @@ unsafe fn yaml_parser_load_node_add(
                 return FAIL;
             }
         }
-        3 => {
+        YAML_MAPPING_NODE => {
             let mut pair = MaybeUninit::<yaml_node_pair_t>::uninit();
             let pair = pair.as_mut_ptr();
             if !STACK_EMPTY!((*parent).data.mapping.pairs) {
@@ -508,8 +500,7 @@ unsafe fn yaml_parser_load_sequence_end(
     let index: libc::c_int = *(*ctx).top.wrapping_offset(-1_isize);
     __assert!(
         (*((*(*parser).document).nodes.start).wrapping_offset((index - 1) as isize)).type_
-            as libc::c_uint
-            == YAML_SEQUENCE_NODE as libc::c_int as libc::c_uint
+            == YAML_SEQUENCE_NODE
     );
     (*(*(*parser).document)
         .nodes
@@ -620,8 +611,7 @@ unsafe fn yaml_parser_load_mapping_end(
     let index: libc::c_int = *(*ctx).top.wrapping_offset(-1_isize);
     __assert!(
         (*((*(*parser).document).nodes.start).wrapping_offset((index - 1) as isize)).type_
-            as libc::c_uint
-            == YAML_MAPPING_NODE as libc::c_int as libc::c_uint
+            == YAML_MAPPING_NODE
     );
     (*(*(*parser).document)
         .nodes

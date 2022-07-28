@@ -2,7 +2,7 @@ use crate::externs::{memcmp, memmove};
 use crate::success::{Success, FAIL, OK};
 use crate::yaml::{size_t, yaml_char_t};
 use crate::{
-    libc, yaml_parser_t, PointerExt, YAML_READER_ERROR, YAML_UTF16BE_ENCODING,
+    libc, yaml_parser_t, PointerExt, YAML_ANY_ENCODING, YAML_READER_ERROR, YAML_UTF16BE_ENCODING,
     YAML_UTF16LE_ENCODING, YAML_UTF8_ENCODING,
 };
 use core::ptr::addr_of_mut;
@@ -160,7 +160,7 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
     if (*parser).unread >= length {
         return OK;
     }
-    if (*parser).encoding as u64 == 0 {
+    if (*parser).encoding == YAML_ANY_ENCODING {
         if yaml_parser_determine_encoding(parser).fail {
             return FAIL;
         }
@@ -209,8 +209,8 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
                 .last
                 .c_offset_from((*parser).raw_buffer.pointer)
                 as libc::c_long as size_t;
-            match (*parser).encoding as libc::c_uint {
-                1 => {
+            match (*parser).encoding {
+                YAML_UTF8_ENCODING => {
                     octet = *(*parser).raw_buffer.pointer;
                     width = if octet as libc::c_int & 0x80 == 0 {
                         1
@@ -293,17 +293,13 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
                         }
                     }
                 }
-                2 | 3 => {
-                    low = if (*parser).encoding as libc::c_uint
-                        == YAML_UTF16LE_ENCODING as libc::c_int as libc::c_uint
-                    {
+                YAML_UTF16LE_ENCODING | YAML_UTF16BE_ENCODING => {
+                    low = if (*parser).encoding == YAML_UTF16LE_ENCODING {
                         0
                     } else {
                         1
                     };
-                    high = if (*parser).encoding as libc::c_uint
-                        == YAML_UTF16LE_ENCODING as libc::c_int as libc::c_uint
-                    {
+                    high = if (*parser).encoding == YAML_UTF16LE_ENCODING {
                         1
                     } else {
                         0

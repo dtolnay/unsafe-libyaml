@@ -7,10 +7,11 @@ use crate::{
     yaml_node_pair_t, yaml_node_t, yaml_parser_state_t, yaml_parser_t, yaml_read_handler_t,
     yaml_scalar_style_t, yaml_sequence_style_t, yaml_simple_key_t, yaml_tag_directive_t,
     yaml_token_t, yaml_version_directive_t, yaml_write_handler_t, PointerExt, YAML_ALIAS_EVENT,
-    YAML_DOCUMENT_END_EVENT, YAML_DOCUMENT_START_EVENT, YAML_MAPPING_END_EVENT, YAML_MAPPING_NODE,
-    YAML_MAPPING_START_EVENT, YAML_MEMORY_ERROR, YAML_NO_ERROR, YAML_SCALAR_EVENT,
-    YAML_SCALAR_NODE, YAML_SEQUENCE_END_EVENT, YAML_SEQUENCE_NODE, YAML_SEQUENCE_START_EVENT,
-    YAML_STREAM_END_EVENT, YAML_STREAM_START_EVENT,
+    YAML_ALIAS_TOKEN, YAML_ANCHOR_TOKEN, YAML_ANY_ENCODING, YAML_DOCUMENT_END_EVENT,
+    YAML_DOCUMENT_START_EVENT, YAML_MAPPING_END_EVENT, YAML_MAPPING_NODE, YAML_MAPPING_START_EVENT,
+    YAML_MEMORY_ERROR, YAML_NO_ERROR, YAML_SCALAR_EVENT, YAML_SCALAR_NODE, YAML_SCALAR_TOKEN,
+    YAML_SEQUENCE_END_EVENT, YAML_SEQUENCE_NODE, YAML_SEQUENCE_START_EVENT, YAML_STREAM_END_EVENT,
+    YAML_STREAM_START_EVENT, YAML_TAG_DIRECTIVE_TOKEN, YAML_TAG_TOKEN,
 };
 use core::mem::{size_of, MaybeUninit};
 use core::ptr::{self, addr_of_mut};
@@ -330,7 +331,7 @@ pub unsafe fn yaml_parser_set_input(
 /// Set the source encoding.
 pub unsafe fn yaml_parser_set_encoding(mut parser: *mut yaml_parser_t, encoding: yaml_encoding_t) {
     __assert!(!parser.is_null());
-    __assert!((*parser).encoding as u64 == 0);
+    __assert!((*parser).encoding == YAML_ANY_ENCODING);
     (*parser).encoding = encoding;
 }
 
@@ -488,7 +489,7 @@ pub unsafe fn yaml_emitter_set_encoding(
     encoding: yaml_encoding_t,
 ) {
     __assert!(!emitter.is_null());
-    __assert!((*emitter).encoding as u64 == 0);
+    __assert!((*emitter).encoding == YAML_ANY_ENCODING);
     (*emitter).encoding = encoding;
 }
 
@@ -526,22 +527,22 @@ pub unsafe fn yaml_emitter_set_break(mut emitter: *mut yaml_emitter_t, line_brea
 /// Free any memory allocated for a token object.
 pub unsafe fn yaml_token_delete(token: *mut yaml_token_t) {
     __assert!(!token.is_null());
-    match (*token).type_ as libc::c_uint {
-        4 => {
+    match (*token).type_ {
+        YAML_TAG_DIRECTIVE_TOKEN => {
             yaml_free((*token).data.tag_directive.handle as *mut libc::c_void);
             yaml_free((*token).data.tag_directive.prefix as *mut libc::c_void);
         }
-        18 => {
+        YAML_ALIAS_TOKEN => {
             yaml_free((*token).data.alias.value as *mut libc::c_void);
         }
-        19 => {
+        YAML_ANCHOR_TOKEN => {
             yaml_free((*token).data.anchor.value as *mut libc::c_void);
         }
-        20 => {
+        YAML_TAG_TOKEN => {
             yaml_free((*token).data.tag.handle as *mut libc::c_void);
             yaml_free((*token).data.tag.suffix as *mut libc::c_void);
         }
-        21 => {
+        YAML_SCALAR_TOKEN => {
             yaml_free((*token).data.scalar.value as *mut libc::c_void);
         }
         _ => {}
@@ -1162,8 +1163,8 @@ pub unsafe fn yaml_mapping_end_event_initialize(mut event: *mut yaml_event_t) ->
 pub unsafe fn yaml_event_delete(event: *mut yaml_event_t) {
     let mut tag_directive: *mut yaml_tag_directive_t;
     __assert!(!event.is_null());
-    match (*event).type_ as libc::c_uint {
-        3 => {
+    match (*event).type_ {
+        YAML_DOCUMENT_START_EVENT => {
             yaml_free((*event).data.document_start.version_directive as *mut libc::c_void);
             tag_directive = (*event).data.document_start.tag_directives.start;
             while tag_directive != (*event).data.document_start.tag_directives.end {
@@ -1173,19 +1174,19 @@ pub unsafe fn yaml_event_delete(event: *mut yaml_event_t) {
             }
             yaml_free((*event).data.document_start.tag_directives.start as *mut libc::c_void);
         }
-        5 => {
+        YAML_ALIAS_EVENT => {
             yaml_free((*event).data.alias.anchor as *mut libc::c_void);
         }
-        6 => {
+        YAML_SCALAR_EVENT => {
             yaml_free((*event).data.scalar.anchor as *mut libc::c_void);
             yaml_free((*event).data.scalar.tag as *mut libc::c_void);
             yaml_free((*event).data.scalar.value as *mut libc::c_void);
         }
-        7 => {
+        YAML_SEQUENCE_START_EVENT => {
             yaml_free((*event).data.sequence_start.anchor as *mut libc::c_void);
             yaml_free((*event).data.sequence_start.tag as *mut libc::c_void);
         }
-        9 => {
+        YAML_MAPPING_START_EVENT => {
             yaml_free((*event).data.mapping_start.anchor as *mut libc::c_void);
             yaml_free((*event).data.mapping_start.tag as *mut libc::c_void);
         }
@@ -1370,14 +1371,14 @@ pub unsafe fn yaml_document_delete(document: *mut yaml_document_t) {
     while !STACK_EMPTY!((*document).nodes) {
         let mut node = POP!((*document).nodes);
         yaml_free(node.tag as *mut libc::c_void);
-        match node.type_ as libc::c_uint {
-            1 => {
+        match node.type_ {
+            YAML_SCALAR_NODE => {
                 yaml_free(node.data.scalar.value as *mut libc::c_void);
             }
-            2 => {
+            YAML_SEQUENCE_NODE => {
                 STACK_DEL!(node.data.sequence.items);
             }
-            3 => {
+            YAML_MAPPING_NODE => {
                 STACK_DEL!(node.data.mapping.pairs);
             }
             _ => {
@@ -1657,8 +1658,8 @@ pub unsafe fn yaml_document_append_sequence_item(
                 <= (*document).nodes.top
     );
     __assert!(
-        (*((*document).nodes.start).wrapping_offset((sequence - 1) as isize)).type_ as libc::c_uint
-            == YAML_SEQUENCE_NODE as libc::c_int as libc::c_uint
+        (*((*document).nodes.start).wrapping_offset((sequence - 1) as isize)).type_
+            == YAML_SEQUENCE_NODE
     );
     __assert!(
         item > 0
@@ -1695,8 +1696,8 @@ pub unsafe fn yaml_document_append_mapping_pair(
             && ((*document).nodes.start).wrapping_offset(mapping as isize) <= (*document).nodes.top
     );
     __assert!(
-        (*((*document).nodes.start).wrapping_offset((mapping - 1) as isize)).type_ as libc::c_uint
-            == YAML_MAPPING_NODE as libc::c_int as libc::c_uint
+        (*((*document).nodes.start).wrapping_offset((mapping - 1) as isize)).type_
+            == YAML_MAPPING_NODE
     );
     __assert!(
         key > 0 && ((*document).nodes.start).wrapping_offset(key as isize) <= (*document).nodes.top
