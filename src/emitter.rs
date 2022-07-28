@@ -722,6 +722,9 @@ unsafe fn yaml_emitter_emit_flow_mapping_key(
         *fresh18 += 1;
     }
     if (*event).type_ == YAML_MAPPING_END_EVENT {
+        if STACK_EMPTY!((*emitter).indents) {
+            return FAIL;
+        }
         let fresh19 = addr_of_mut!((*emitter).flow_level);
         *fresh19 -= 1;
         (*emitter).indent = POP!((*emitter).indents);
