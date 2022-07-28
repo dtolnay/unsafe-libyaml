@@ -1398,13 +1398,13 @@ unsafe fn yaml_emitter_analyze_tag_directive(
             b"tag handle must not be empty\0" as *const u8 as *const libc::c_char,
         );
     }
-    if *handle.start as libc::c_int != '!' as i32 {
+    if *handle.start != b'!' {
         return yaml_emitter_set_emitter_error(
             emitter,
             b"tag handle must start with '!'\0" as *const u8 as *const libc::c_char,
         );
     }
-    if *handle.end.wrapping_offset(-1_isize) as libc::c_int != '!' as i32 {
+    if *handle.end.wrapping_offset(-1_isize) != b'!' {
         return yaml_emitter_set_emitter_error(
             emitter,
             b"tag handle must end with '!'\0" as *const u8 as *const libc::c_char,
@@ -2317,8 +2317,7 @@ unsafe fn yaml_emitter_write_block_scalar_hints(
     let mut indent_hint: [libc::c_char; 2] = [0; 2];
     let mut chomp_hint: *const libc::c_char = ptr::null::<libc::c_char>();
     if IS_SPACE!(string) || IS_BREAK!(string) {
-        indent_hint[0_usize] =
-            ('0' as i32 + (*emitter).best_indent as libc::c_char as libc::c_int) as libc::c_char;
+        indent_hint[0_usize] = (b'0' as libc::c_int + (*emitter).best_indent) as libc::c_char;
         indent_hint[1_usize] = '\0' as libc::c_char;
         if yaml_emitter_write_indicator(emitter, indent_hint.as_mut_ptr(), false, false, false).fail
         {
@@ -2332,7 +2331,7 @@ unsafe fn yaml_emitter_write_block_scalar_hints(
     } else {
         loop {
             string.pointer = string.pointer.wrapping_offset(-1);
-            if !(*string.pointer as libc::c_int & 0xC0 == 0x80) {
+            if !(*string.pointer & 0xC0 == 0x80) {
                 break;
             }
         }
@@ -2344,7 +2343,7 @@ unsafe fn yaml_emitter_write_block_scalar_hints(
         } else {
             loop {
                 string.pointer = string.pointer.wrapping_offset(-1);
-                if !(*string.pointer as libc::c_int & 0xC0 == 0x80) {
+                if !(*string.pointer & 0xC0 == 0x80) {
                     break;
                 }
             }
