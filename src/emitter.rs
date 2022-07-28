@@ -2317,8 +2317,8 @@ unsafe fn yaml_emitter_write_block_scalar_hints(
     let mut indent_hint: [libc::c_char; 2] = [0; 2];
     let mut chomp_hint: *const libc::c_char = ptr::null::<libc::c_char>();
     if IS_SPACE!(string) || IS_BREAK!(string) {
-        indent_hint[0_usize] = (b'0' as libc::c_int + (*emitter).best_indent) as libc::c_char;
-        indent_hint[1_usize] = '\0' as libc::c_char;
+        indent_hint[0] = (b'0' as libc::c_int + (*emitter).best_indent) as libc::c_char;
+        indent_hint[1] = '\0' as libc::c_char;
         if yaml_emitter_write_indicator(emitter, indent_hint.as_mut_ptr(), false, false, false).fail
         {
             return FAIL;
