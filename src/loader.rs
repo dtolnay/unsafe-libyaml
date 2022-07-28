@@ -384,7 +384,7 @@ unsafe fn yaml_parser_load_scalar(
                         .nodes
                         .top
                         .c_offset_from((*(*parser).document).nodes.start)
-                        as libc::c_long as libc::c_int;
+                        as libc::c_int;
                     if yaml_parser_register_anchor(parser, index, (*event).data.scalar.anchor).fail
                     {
                         return FAIL;
@@ -461,7 +461,7 @@ unsafe fn yaml_parser_load_sequence(
                             .nodes
                             .top
                             .c_offset_from((*(*parser).document).nodes.start)
-                            as libc::c_long as libc::c_int;
+                            as libc::c_int;
                         if yaml_parser_register_anchor(
                             parser,
                             index,
@@ -572,7 +572,7 @@ unsafe fn yaml_parser_load_mapping(
                             .nodes
                             .top
                             .c_offset_from((*(*parser).document).nodes.start)
-                            as libc::c_long as libc::c_int;
+                            as libc::c_int;
                         if yaml_parser_register_anchor(
                             parser,
                             index,

@@ -212,13 +212,13 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
             match (*parser).encoding {
                 YAML_UTF8_ENCODING => {
                     octet = *(*parser).raw_buffer.pointer;
-                    width = if octet as libc::c_int & 0x80 == 0 {
+                    width = if octet & 0x80 == 0 {
                         1
-                    } else if octet as libc::c_int & 0xE0 == 0xC0 {
+                    } else if octet & 0xE0 == 0xC0 {
                         2
-                    } else if octet as libc::c_int & 0xF0 == 0xE0 {
+                    } else if octet & 0xF0 == 0xE0 {
                         3
-                    } else if octet as libc::c_int & 0xF8 == 0xF0 {
+                    } else if octet & 0xF8 == 0xF0 {
                         4
                     } else {
                         0
@@ -243,21 +243,21 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
                         }
                         incomplete = 1;
                     } else {
-                        value = if octet as libc::c_int & 0x80 == 0 {
-                            octet as libc::c_int & 0x7F
-                        } else if octet as libc::c_int & 0xE0 == 0xC0 {
-                            octet as libc::c_int & 0x1F
-                        } else if octet as libc::c_int & 0xF0 == 0xE0 {
-                            octet as libc::c_int & 0xF
-                        } else if octet as libc::c_int & 0xF8 == 0xF0 {
-                            octet as libc::c_int & 0x7
+                        value = if octet & 0x80 == 0 {
+                            octet & 0x7F
+                        } else if octet & 0xE0 == 0xC0 {
+                            octet & 0x1F
+                        } else if octet & 0xF0 == 0xE0 {
+                            octet & 0xF
+                        } else if octet & 0xF8 == 0xF0 {
+                            octet & 0x7
                         } else {
                             0
                         } as libc::c_uint;
                         k = 1_u64;
                         while k < width as libc::c_ulong {
                             octet = *(*parser).raw_buffer.pointer.wrapping_offset(k as isize);
-                            if octet as libc::c_int & 0xC0 != 0x80 {
+                            if octet & 0xC0 != 0x80 {
                                 return yaml_parser_set_reader_error(
                                     parser,
                                     b"invalid trailing UTF-8 octet\0" as *const u8
@@ -266,8 +266,7 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
                                     octet as libc::c_int,
                                 );
                             }
-                            value = (value << 6)
-                                .wrapping_add((octet as libc::c_int & 0x3F) as libc::c_uint);
+                            value = (value << 6).wrapping_add((octet & 0x3F) as libc::c_uint);
                             k = k.wrapping_add(1);
                         }
                         if !(width == 1

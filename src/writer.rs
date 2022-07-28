@@ -65,32 +65,32 @@ pub unsafe fn yaml_emitter_flush(emitter: *mut yaml_emitter_t) -> Success {
         let mut value: libc::c_uint;
         let mut k: size_t;
         octet = *(*emitter).buffer.pointer;
-        let width: libc::c_uint = if octet as libc::c_int & 0x80 == 0 {
+        let width: libc::c_uint = if octet & 0x80 == 0 {
             1
-        } else if octet as libc::c_int & 0xE0 == 0xC0 {
+        } else if octet & 0xE0 == 0xC0 {
             2
-        } else if octet as libc::c_int & 0xF0 == 0xE0 {
+        } else if octet & 0xF0 == 0xE0 {
             3
-        } else if octet as libc::c_int & 0xF8 == 0xF0 {
+        } else if octet & 0xF8 == 0xF0 {
             4
         } else {
             0
         } as libc::c_uint;
-        value = if octet as libc::c_int & 0x80 == 0 {
-            octet as libc::c_int & 0x7F
-        } else if octet as libc::c_int & 0xE0 == 0xC0 {
-            octet as libc::c_int & 0x1F
-        } else if octet as libc::c_int & 0xF0 == 0xE0 {
-            octet as libc::c_int & 0xF
-        } else if octet as libc::c_int & 0xF8 == 0xF0 {
-            octet as libc::c_int & 0x7
+        value = if octet & 0x80 == 0 {
+            octet & 0x7F
+        } else if octet & 0xE0 == 0xC0 {
+            octet & 0x1F
+        } else if octet & 0xF0 == 0xE0 {
+            octet & 0xF
+        } else if octet & 0xF8 == 0xF0 {
+            octet & 0x7
         } else {
             0
         } as libc::c_uint;
         k = 1_u64;
         while k < width as libc::c_ulong {
             octet = *(*emitter).buffer.pointer.wrapping_offset(k as isize);
-            value = (value << 6).wrapping_add((octet as libc::c_int & 0x3F) as libc::c_uint);
+            value = (value << 6).wrapping_add((octet & 0x3F) as libc::c_uint);
             k = k.wrapping_add(1);
         }
         let fresh5 = addr_of_mut!((*emitter).buffer.pointer);

@@ -1538,12 +1538,11 @@ unsafe fn yaml_parser_scan_tag(
         } else if yaml_parser_scan_tag_handle(parser, false, start_mark, addr_of_mut!(handle)).fail
         {
             current_block = 17708497480799081542;
-        } else if *handle as libc::c_int == '!' as i32
-            && *handle.wrapping_offset(1_isize) as libc::c_int != '\0' as i32
+        } else if *handle == b'!'
+            && *handle.wrapping_offset(1_isize) != b'\0'
             && *handle
                 .wrapping_offset(strlen(handle as *mut libc::c_char).wrapping_sub(1_u64) as isize)
-                as libc::c_int
-                == '!' as i32
+                == b'!'
         {
             if yaml_parser_scan_tag_uri(
                 parser,
@@ -1578,7 +1577,7 @@ unsafe fn yaml_parser_scan_tag(
             } else {
                 *handle = b'!';
                 *handle.wrapping_offset(1_isize) = b'\0';
-                if *suffix as libc::c_int == '\0' as i32 {
+                if *suffix == b'\0' {
                     let tmp: *mut yaml_char_t = handle;
                     handle = suffix;
                     suffix = tmp;
@@ -1681,9 +1680,8 @@ unsafe fn yaml_parser_scan_tag_handle(
                                     current_block = 5689001924483802034;
                                 }
                             } else if directive
-                                && !(*string.start as libc::c_int == '!' as i32
-                                    && *string.start.wrapping_offset(1_isize) as libc::c_int
-                                        == '\0' as i32)
+                                && !(*string.start == b'!'
+                                    && *string.start.wrapping_offset(1_isize) == b'\0')
                             {
                                 yaml_parser_set_scanner_error(
                                     parser,
@@ -1875,13 +1873,13 @@ unsafe fn yaml_parser_scan_uri_escapes(
         let octet: libc::c_uchar = ((AS_HEX_AT!((*parser).buffer, 1) << 4)
             + AS_HEX_AT!((*parser).buffer, 2)) as libc::c_uchar;
         if width == 0 {
-            width = if octet as libc::c_int & 0x80 == 0 {
+            width = if octet & 0x80 == 0 {
                 1
-            } else if octet as libc::c_int & 0xE0 == 0xC0 {
+            } else if octet & 0xE0 == 0xC0 {
                 2
-            } else if octet as libc::c_int & 0xF0 == 0xE0 {
+            } else if octet & 0xF0 == 0xE0 {
                 3
-            } else if octet as libc::c_int & 0xF8 == 0xF0 {
+            } else if octet & 0xF8 == 0xF0 {
                 4
             } else {
                 0
@@ -1899,7 +1897,7 @@ unsafe fn yaml_parser_scan_uri_escapes(
                 );
                 return FAIL;
             }
-        } else if octet as libc::c_int & 0xC0 != 0x80 {
+        } else if octet & 0xC0 != 0x80 {
             yaml_parser_set_scanner_error(
                 parser,
                 if directive {
@@ -2104,15 +2102,13 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                             as libc::c_int;
                                                                         if !literal
                                                                             && *leading_break.start
-                                                                                as libc::c_int
-                                                                                == '\n' as i32
+                                                                                == b'\n'
                                                                             && leading_blank == 0
                                                                             && trailing_blank == 0
                                                                         {
                                                                             if *trailing_breaks
                                                                                 .start
-                                                                                as libc::c_int
-                                                                                == '\0' as i32
+                                                                                == b'\0'
                                                                             {
                                                                                 if STRING_EXTEND!(
                                                                                     parser, string
@@ -2440,9 +2436,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                             current_block = 8114179180390253173;
                                             break 's_58;
                                         }
-                                        match *(*parser).buffer.pointer.wrapping_offset(1_isize)
-                                            as libc::c_int
-                                        {
+                                        match *(*parser).buffer.pointer.wrapping_offset(1_isize) {
                                             48 => {
                                                 let fresh542 = string.pointer;
                                                 string.pointer = string.pointer.wrapping_offset(1);
@@ -2735,8 +2729,8 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                 }
                             }
                             if leading_blanks != 0 {
-                                if *leading_break.start as libc::c_int == '\n' as i32 {
-                                    if *trailing_breaks.start as libc::c_int == '\0' as i32 {
+                                if *leading_break.start == b'\n' {
+                                    if *trailing_breaks.start == b'\0' {
                                         if STRING_EXTEND!(parser, string).fail {
                                             current_block = 8114179180390253173;
                                             break;
@@ -2886,9 +2880,8 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                 }
                                 if leading_blanks != 0 || whitespaces.start != whitespaces.pointer {
                                     if leading_blanks != 0 {
-                                        if *leading_break.start as libc::c_int == '\n' as i32 {
-                                            if *trailing_breaks.start as libc::c_int == '\0' as i32
-                                            {
+                                        if *leading_break.start == b'\n' {
+                                            if *trailing_breaks.start == b'\0' {
                                                 if STRING_EXTEND!(parser, string).fail {
                                                     current_block = 16642808987012640029;
                                                     break 's_57;

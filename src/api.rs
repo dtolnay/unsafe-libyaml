@@ -562,25 +562,25 @@ unsafe fn yaml_check_utf8(start: *const yaml_char_t, length: size_t) -> Success 
         let mut value: libc::c_uint;
         let mut k: size_t;
         octet = *pointer;
-        let width: libc::c_uint = if octet as libc::c_int & 0x80 == 0 {
+        let width: libc::c_uint = if octet & 0x80 == 0 {
             1
-        } else if octet as libc::c_int & 0xE0 == 0xC0 {
+        } else if octet & 0xE0 == 0xC0 {
             2
-        } else if octet as libc::c_int & 0xF0 == 0xE0 {
+        } else if octet & 0xF0 == 0xE0 {
             3
-        } else if octet as libc::c_int & 0xF8 == 0xF0 {
+        } else if octet & 0xF8 == 0xF0 {
             4
         } else {
             0
         } as libc::c_uint;
-        value = if octet as libc::c_int & 0x80 == 0 {
-            octet as libc::c_int & 0x7F
-        } else if octet as libc::c_int & 0xE0 == 0xC0 {
-            octet as libc::c_int & 0x1F
-        } else if octet as libc::c_int & 0xF0 == 0xE0 {
-            octet as libc::c_int & 0xF
-        } else if octet as libc::c_int & 0xF8 == 0xF0 {
-            octet as libc::c_int & 0x7
+        value = if octet & 0x80 == 0 {
+            octet & 0x7F
+        } else if octet & 0xE0 == 0xC0 {
+            octet & 0x1F
+        } else if octet & 0xF0 == 0xE0 {
+            octet & 0xF
+        } else if octet & 0xF8 == 0xF0 {
+            octet & 0x7
         } else {
             0
         } as libc::c_uint;
@@ -593,10 +593,10 @@ unsafe fn yaml_check_utf8(start: *const yaml_char_t, length: size_t) -> Success 
         k = 1_u64;
         while k < width as libc::c_ulong {
             octet = *pointer.wrapping_offset(k as isize);
-            if octet as libc::c_int & 0xC0 != 0x80 {
+            if octet & 0xC0 != 0x80 {
                 return FAIL;
             }
-            value = (value << 6).wrapping_add((octet as libc::c_int & 0x3F) as libc::c_uint);
+            value = (value << 6).wrapping_add((octet & 0x3F) as libc::c_uint);
             k = k.wrapping_add(1);
         }
         if !(width == 1
@@ -1501,7 +1501,7 @@ pub unsafe fn yaml_document_add_scalar(
                     (*node).data.scalar.style = style;
                     if PUSH!(addr_of_mut!(context), (*document).nodes, *node).ok {
                         return (*document).nodes.top.c_offset_from((*document).nodes.start)
-                            as libc::c_long as libc::c_int;
+                            as libc::c_int;
                     }
                 }
             }
@@ -1567,7 +1567,7 @@ pub unsafe fn yaml_document_add_sequence(
                 (*node).data.sequence.style = style;
                 if PUSH!(addr_of_mut!(context), (*document).nodes, *node).ok {
                     return (*document).nodes.top.c_offset_from((*document).nodes.start)
-                        as libc::c_long as libc::c_int;
+                        as libc::c_int;
                 }
             }
         }
@@ -1632,7 +1632,7 @@ pub unsafe fn yaml_document_add_mapping(
                 (*node).data.mapping.style = style;
                 if PUSH!(addr_of_mut!(context), (*document).nodes, *node).ok {
                     return (*document).nodes.top.c_offset_from((*document).nodes.start)
-                        as libc::c_long as libc::c_int;
+                        as libc::c_int;
                 }
             }
         }
