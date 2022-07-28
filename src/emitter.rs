@@ -250,59 +250,53 @@ unsafe fn yaml_emitter_state_machine(
     event: *mut yaml_event_t,
 ) -> Success {
     match (*emitter).state {
-        YAML_EMIT_STREAM_START_STATE => return yaml_emitter_emit_stream_start(emitter, event),
+        YAML_EMIT_STREAM_START_STATE => yaml_emitter_emit_stream_start(emitter, event),
         YAML_EMIT_FIRST_DOCUMENT_START_STATE => {
-            return yaml_emitter_emit_document_start(emitter, event, true)
+            yaml_emitter_emit_document_start(emitter, event, true)
         }
-        YAML_EMIT_DOCUMENT_START_STATE => {
-            return yaml_emitter_emit_document_start(emitter, event, false)
-        }
-        YAML_EMIT_DOCUMENT_CONTENT_STATE => {
-            return yaml_emitter_emit_document_content(emitter, event)
-        }
-        YAML_EMIT_DOCUMENT_END_STATE => return yaml_emitter_emit_document_end(emitter, event),
+        YAML_EMIT_DOCUMENT_START_STATE => yaml_emitter_emit_document_start(emitter, event, false),
+        YAML_EMIT_DOCUMENT_CONTENT_STATE => yaml_emitter_emit_document_content(emitter, event),
+        YAML_EMIT_DOCUMENT_END_STATE => yaml_emitter_emit_document_end(emitter, event),
         YAML_EMIT_FLOW_SEQUENCE_FIRST_ITEM_STATE => {
-            return yaml_emitter_emit_flow_sequence_item(emitter, event, true)
+            yaml_emitter_emit_flow_sequence_item(emitter, event, true)
         }
         YAML_EMIT_FLOW_SEQUENCE_ITEM_STATE => {
-            return yaml_emitter_emit_flow_sequence_item(emitter, event, false)
+            yaml_emitter_emit_flow_sequence_item(emitter, event, false)
         }
         YAML_EMIT_FLOW_MAPPING_FIRST_KEY_STATE => {
-            return yaml_emitter_emit_flow_mapping_key(emitter, event, true)
+            yaml_emitter_emit_flow_mapping_key(emitter, event, true)
         }
         YAML_EMIT_FLOW_MAPPING_KEY_STATE => {
-            return yaml_emitter_emit_flow_mapping_key(emitter, event, false)
+            yaml_emitter_emit_flow_mapping_key(emitter, event, false)
         }
         YAML_EMIT_FLOW_MAPPING_SIMPLE_VALUE_STATE => {
-            return yaml_emitter_emit_flow_mapping_value(emitter, event, true)
+            yaml_emitter_emit_flow_mapping_value(emitter, event, true)
         }
         YAML_EMIT_FLOW_MAPPING_VALUE_STATE => {
-            return yaml_emitter_emit_flow_mapping_value(emitter, event, false)
+            yaml_emitter_emit_flow_mapping_value(emitter, event, false)
         }
         YAML_EMIT_BLOCK_SEQUENCE_FIRST_ITEM_STATE => {
-            return yaml_emitter_emit_block_sequence_item(emitter, event, true)
+            yaml_emitter_emit_block_sequence_item(emitter, event, true)
         }
         YAML_EMIT_BLOCK_SEQUENCE_ITEM_STATE => {
-            return yaml_emitter_emit_block_sequence_item(emitter, event, false)
+            yaml_emitter_emit_block_sequence_item(emitter, event, false)
         }
         YAML_EMIT_BLOCK_MAPPING_FIRST_KEY_STATE => {
-            return yaml_emitter_emit_block_mapping_key(emitter, event, true)
+            yaml_emitter_emit_block_mapping_key(emitter, event, true)
         }
         YAML_EMIT_BLOCK_MAPPING_KEY_STATE => {
-            return yaml_emitter_emit_block_mapping_key(emitter, event, false)
+            yaml_emitter_emit_block_mapping_key(emitter, event, false)
         }
         YAML_EMIT_BLOCK_MAPPING_SIMPLE_VALUE_STATE => {
-            return yaml_emitter_emit_block_mapping_value(emitter, event, true)
+            yaml_emitter_emit_block_mapping_value(emitter, event, true)
         }
         YAML_EMIT_BLOCK_MAPPING_VALUE_STATE => {
-            return yaml_emitter_emit_block_mapping_value(emitter, event, false)
+            yaml_emitter_emit_block_mapping_value(emitter, event, false)
         }
-        YAML_EMIT_END_STATE => {
-            return yaml_emitter_set_emitter_error(
-                emitter,
-                b"expected nothing after STREAM-END\0" as *const u8 as *const libc::c_char,
-            )
-        }
+        YAML_EMIT_END_STATE => yaml_emitter_set_emitter_error(
+            emitter,
+            b"expected nothing after STREAM-END\0" as *const u8 as *const libc::c_char,
+        ),
     }
 }
 
