@@ -1,7 +1,8 @@
 use crate::success::{Success, FAIL, OK};
 use crate::yaml::size_t;
 use crate::{
-    libc, yaml_emitter_t, PointerExt, YAML_UTF16LE_ENCODING, YAML_UTF8_ENCODING, YAML_WRITER_ERROR,
+    libc, yaml_emitter_t, PointerExt, YAML_ANY_ENCODING, YAML_UTF16LE_ENCODING, YAML_UTF8_ENCODING,
+    YAML_WRITER_ERROR,
 };
 use core::ptr::addr_of_mut;
 
@@ -19,7 +20,7 @@ unsafe fn yaml_emitter_set_writer_error(
 pub unsafe fn yaml_emitter_flush(emitter: *mut yaml_emitter_t) -> Success {
     __assert!(!emitter.is_null());
     __assert!(((*emitter).write_handler).is_some());
-    __assert!((*emitter).encoding as u64 != 0);
+    __assert!((*emitter).encoding != YAML_ANY_ENCODING);
     let fresh1 = addr_of_mut!((*emitter).buffer.last);
     *fresh1 = (*emitter).buffer.pointer;
     let fresh2 = addr_of_mut!((*emitter).buffer.pointer);
@@ -27,7 +28,7 @@ pub unsafe fn yaml_emitter_flush(emitter: *mut yaml_emitter_t) -> Success {
     if (*emitter).buffer.start == (*emitter).buffer.last {
         return OK;
     }
-    if (*emitter).encoding as libc::c_uint == YAML_UTF8_ENCODING as libc::c_int as libc::c_uint {
+    if (*emitter).encoding == YAML_UTF8_ENCODING {
         if (*emitter).write_handler.expect("non-null function pointer")(
             (*emitter).write_handler_data,
             (*emitter).buffer.start,
@@ -49,16 +50,12 @@ pub unsafe fn yaml_emitter_flush(emitter: *mut yaml_emitter_t) -> Success {
             );
         }
     }
-    let low: libc::c_int = if (*emitter).encoding as libc::c_uint
-        == YAML_UTF16LE_ENCODING as libc::c_int as libc::c_uint
-    {
+    let low: libc::c_int = if (*emitter).encoding == YAML_UTF16LE_ENCODING {
         0
     } else {
         1
     };
-    let high: libc::c_int = if (*emitter).encoding as libc::c_uint
-        == YAML_UTF16LE_ENCODING as libc::c_int as libc::c_uint
-    {
+    let high: libc::c_int = if (*emitter).encoding == YAML_UTF16LE_ENCODING {
         1
     } else {
         0

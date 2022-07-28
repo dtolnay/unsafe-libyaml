@@ -13,10 +13,10 @@ use crate::{
     YAML_DOCUMENT_END_TOKEN, YAML_DOCUMENT_START_TOKEN, YAML_DOUBLE_QUOTED_SCALAR_STYLE,
     YAML_FLOW_ENTRY_TOKEN, YAML_FLOW_MAPPING_END_TOKEN, YAML_FLOW_MAPPING_START_TOKEN,
     YAML_FLOW_SEQUENCE_END_TOKEN, YAML_FLOW_SEQUENCE_START_TOKEN, YAML_FOLDED_SCALAR_STYLE,
-    YAML_KEY_TOKEN, YAML_LITERAL_SCALAR_STYLE, YAML_MEMORY_ERROR, YAML_PLAIN_SCALAR_STYLE,
-    YAML_SCALAR_TOKEN, YAML_SCANNER_ERROR, YAML_SINGLE_QUOTED_SCALAR_STYLE, YAML_STREAM_END_TOKEN,
-    YAML_STREAM_START_TOKEN, YAML_TAG_DIRECTIVE_TOKEN, YAML_TAG_TOKEN, YAML_VALUE_TOKEN,
-    YAML_VERSION_DIRECTIVE_TOKEN,
+    YAML_KEY_TOKEN, YAML_LITERAL_SCALAR_STYLE, YAML_MEMORY_ERROR, YAML_NO_ERROR,
+    YAML_PLAIN_SCALAR_STYLE, YAML_SCALAR_TOKEN, YAML_SCANNER_ERROR,
+    YAML_SINGLE_QUOTED_SCALAR_STYLE, YAML_STREAM_END_TOKEN, YAML_STREAM_START_TOKEN,
+    YAML_TAG_DIRECTIVE_TOKEN, YAML_TAG_TOKEN, YAML_VALUE_TOKEN, YAML_VERSION_DIRECTIVE_TOKEN,
 };
 use core::mem::{size_of, MaybeUninit};
 use core::ptr::{self, addr_of_mut};
@@ -153,7 +153,7 @@ pub unsafe fn yaml_parser_scan(
         0,
         size_of::<yaml_token_t>() as libc::c_ulong,
     );
-    if (*parser).stream_end_produced || (*parser).error as libc::c_uint != 0 {
+    if (*parser).stream_end_produced || (*parser).error != YAML_NO_ERROR {
         return OK;
     }
     if !(*parser).token_available {
@@ -165,7 +165,7 @@ pub unsafe fn yaml_parser_scan(
     (*parser).token_available = false;
     let fresh2 = addr_of_mut!((*parser).tokens_parsed);
     *fresh2 = (*fresh2).wrapping_add(1);
-    if (*token).type_ as libc::c_uint == YAML_STREAM_END_TOKEN as libc::c_int as libc::c_uint {
+    if (*token).type_ == YAML_STREAM_END_TOKEN {
         (*parser).stream_end_produced = true;
     }
     OK
@@ -1450,9 +1450,7 @@ unsafe fn yaml_parser_scan_anchor(
                     {
                         yaml_parser_set_scanner_error(
                             parser,
-                            if type_ as libc::c_uint
-                                == YAML_ANCHOR_TOKEN as libc::c_int as libc::c_uint
-                            {
+                            if type_ == YAML_ANCHOR_TOKEN {
                                 b"while scanning an anchor\0" as *const u8 as *const libc::c_char
                             } else {
                                 b"while scanning an alias\0" as *const u8 as *const libc::c_char
@@ -1462,8 +1460,7 @@ unsafe fn yaml_parser_scan_anchor(
                                 as *const libc::c_char,
                         );
                     } else {
-                        if type_ as libc::c_uint == YAML_ANCHOR_TOKEN as libc::c_int as libc::c_uint
-                        {
+                        if type_ == YAML_ANCHOR_TOKEN {
                             memset(
                                 token as *mut libc::c_void,
                                 0,

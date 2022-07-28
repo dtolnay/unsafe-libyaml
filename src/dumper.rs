@@ -190,14 +190,14 @@ unsafe fn yaml_emitter_delete_document_and_anchors(mut emitter: *mut yaml_emitte
             .wrapping_offset(index as isize);
         if !(*(*emitter).anchors.wrapping_offset(index as isize)).serialized {
             yaml_free(node.tag as *mut libc::c_void);
-            if node.type_ as libc::c_uint == YAML_SCALAR_NODE as libc::c_int as libc::c_uint {
+            if node.type_ == YAML_SCALAR_NODE {
                 yaml_free(node.data.scalar.value as *mut libc::c_void);
             }
         }
-        if node.type_ as libc::c_uint == YAML_SEQUENCE_NODE as libc::c_int as libc::c_uint {
+        if node.type_ == YAML_SEQUENCE_NODE {
             STACK_DEL!(node.data.sequence.items);
         }
-        if node.type_ as libc::c_uint == YAML_MAPPING_NODE as libc::c_int as libc::c_uint {
+        if node.type_ == YAML_MAPPING_NODE {
             STACK_DEL!(node.data.mapping.pairs);
         }
         index += 1;
@@ -223,15 +223,15 @@ unsafe fn yaml_emitter_anchor_node(emitter: *mut yaml_emitter_t, index: libc::c_
         addr_of_mut!((*((*emitter).anchors).wrapping_offset((index - 1) as isize)).references);
     *fresh8 += 1;
     if (*(*emitter).anchors.wrapping_offset((index - 1) as isize)).references == 1 {
-        match (*node).type_ as libc::c_uint {
-            2 => {
+        match (*node).type_ {
+            YAML_SEQUENCE_NODE => {
                 item = (*node).data.sequence.items.start;
                 while item < (*node).data.sequence.items.top {
                     yaml_emitter_anchor_node(emitter, *item);
                     item = item.wrapping_offset(1);
                 }
             }
-            3 => {
+            YAML_MAPPING_NODE => {
                 pair = (*node).data.mapping.pairs.start;
                 while pair < (*node).data.mapping.pairs.top {
                     yaml_emitter_anchor_node(emitter, (*pair).key);
@@ -278,10 +278,10 @@ unsafe fn yaml_emitter_dump_node(emitter: *mut yaml_emitter_t, index: libc::c_in
         return yaml_emitter_dump_alias(emitter, anchor);
     }
     (*(*emitter).anchors.wrapping_offset((index - 1) as isize)).serialized = true;
-    match (*node).type_ as libc::c_uint {
-        1 => yaml_emitter_dump_scalar(emitter, node, anchor),
-        2 => yaml_emitter_dump_sequence(emitter, node, anchor),
-        3 => yaml_emitter_dump_mapping(emitter, node, anchor),
+    match (*node).type_ {
+        YAML_SCALAR_NODE => yaml_emitter_dump_scalar(emitter, node, anchor),
+        YAML_SEQUENCE_NODE => yaml_emitter_dump_sequence(emitter, node, anchor),
+        YAML_MAPPING_NODE => yaml_emitter_dump_mapping(emitter, node, anchor),
         _ => __assert!(false),
     }
 }
