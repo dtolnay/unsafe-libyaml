@@ -1448,6 +1448,9 @@ unsafe fn yaml_parser_process_directives(
                         _ => {
                             if !version_directive_ref.is_null() {
                                 *version_directive_ref = version_directive;
+                            } else {
+                                yaml_free(version_directive as *mut libc::c_void);
+                                version_directive = ptr::null_mut();
                             }
                             if !tag_directives_start_ref.is_null() {
                                 if STACK_EMPTY!(tag_directives) {
