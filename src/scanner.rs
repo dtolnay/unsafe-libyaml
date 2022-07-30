@@ -1187,10 +1187,7 @@ unsafe fn yaml_parser_scan_version_directive_value(
         return FAIL;
     }
     SKIP(parser);
-    if yaml_parser_scan_version_directive_number(parser, start_mark, minor).fail {
-        return FAIL;
-    }
-    OK
+    yaml_parser_scan_version_directive_number(parser, start_mark, minor)
 }
 
 const MAX_NUMBER_LENGTH: u64 = 9_u64;

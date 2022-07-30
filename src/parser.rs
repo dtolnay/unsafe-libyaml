@@ -112,74 +112,65 @@ unsafe fn yaml_parser_state_machine(
     event: *mut yaml_event_t,
 ) -> Success {
     match (*parser).state {
-        YAML_PARSE_STREAM_START_STATE => return yaml_parser_parse_stream_start(parser, event),
+        YAML_PARSE_STREAM_START_STATE => yaml_parser_parse_stream_start(parser, event),
         YAML_PARSE_IMPLICIT_DOCUMENT_START_STATE => {
-            return yaml_parser_parse_document_start(parser, event, true)
+            yaml_parser_parse_document_start(parser, event, true)
         }
-        YAML_PARSE_DOCUMENT_START_STATE => {
-            return yaml_parser_parse_document_start(parser, event, false)
-        }
-        YAML_PARSE_DOCUMENT_CONTENT_STATE => {
-            return yaml_parser_parse_document_content(parser, event)
-        }
-        YAML_PARSE_DOCUMENT_END_STATE => return yaml_parser_parse_document_end(parser, event),
-        YAML_PARSE_BLOCK_NODE_STATE => {
-            return yaml_parser_parse_node(parser, event, true, false);
-        }
+        YAML_PARSE_DOCUMENT_START_STATE => yaml_parser_parse_document_start(parser, event, false),
+        YAML_PARSE_DOCUMENT_CONTENT_STATE => yaml_parser_parse_document_content(parser, event),
+        YAML_PARSE_DOCUMENT_END_STATE => yaml_parser_parse_document_end(parser, event),
+        YAML_PARSE_BLOCK_NODE_STATE => yaml_parser_parse_node(parser, event, true, false),
         YAML_PARSE_BLOCK_NODE_OR_INDENTLESS_SEQUENCE_STATE => {
-            return yaml_parser_parse_node(parser, event, true, true);
+            yaml_parser_parse_node(parser, event, true, true)
         }
-        YAML_PARSE_FLOW_NODE_STATE => {
-            return yaml_parser_parse_node(parser, event, false, false);
-        }
+        YAML_PARSE_FLOW_NODE_STATE => yaml_parser_parse_node(parser, event, false, false),
         YAML_PARSE_BLOCK_SEQUENCE_FIRST_ENTRY_STATE => {
-            return yaml_parser_parse_block_sequence_entry(parser, event, true);
+            yaml_parser_parse_block_sequence_entry(parser, event, true)
         }
         YAML_PARSE_BLOCK_SEQUENCE_ENTRY_STATE => {
-            return yaml_parser_parse_block_sequence_entry(parser, event, false);
+            yaml_parser_parse_block_sequence_entry(parser, event, false)
         }
         YAML_PARSE_INDENTLESS_SEQUENCE_ENTRY_STATE => {
-            return yaml_parser_parse_indentless_sequence_entry(parser, event)
+            yaml_parser_parse_indentless_sequence_entry(parser, event)
         }
         YAML_PARSE_BLOCK_MAPPING_FIRST_KEY_STATE => {
-            return yaml_parser_parse_block_mapping_key(parser, event, true)
+            yaml_parser_parse_block_mapping_key(parser, event, true)
         }
         YAML_PARSE_BLOCK_MAPPING_KEY_STATE => {
-            return yaml_parser_parse_block_mapping_key(parser, event, false)
+            yaml_parser_parse_block_mapping_key(parser, event, false)
         }
         YAML_PARSE_BLOCK_MAPPING_VALUE_STATE => {
-            return yaml_parser_parse_block_mapping_value(parser, event)
+            yaml_parser_parse_block_mapping_value(parser, event)
         }
         YAML_PARSE_FLOW_SEQUENCE_FIRST_ENTRY_STATE => {
-            return yaml_parser_parse_flow_sequence_entry(parser, event, true);
+            yaml_parser_parse_flow_sequence_entry(parser, event, true)
         }
         YAML_PARSE_FLOW_SEQUENCE_ENTRY_STATE => {
-            return yaml_parser_parse_flow_sequence_entry(parser, event, false);
+            yaml_parser_parse_flow_sequence_entry(parser, event, false)
         }
         YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_KEY_STATE => {
-            return yaml_parser_parse_flow_sequence_entry_mapping_key(parser, event)
+            yaml_parser_parse_flow_sequence_entry_mapping_key(parser, event)
         }
         YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_VALUE_STATE => {
-            return yaml_parser_parse_flow_sequence_entry_mapping_value(parser, event)
+            yaml_parser_parse_flow_sequence_entry_mapping_value(parser, event)
         }
         YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_END_STATE => {
-            return yaml_parser_parse_flow_sequence_entry_mapping_end(parser, event)
+            yaml_parser_parse_flow_sequence_entry_mapping_end(parser, event)
         }
         YAML_PARSE_FLOW_MAPPING_FIRST_KEY_STATE => {
-            return yaml_parser_parse_flow_mapping_key(parser, event, true)
+            yaml_parser_parse_flow_mapping_key(parser, event, true)
         }
         YAML_PARSE_FLOW_MAPPING_KEY_STATE => {
-            return yaml_parser_parse_flow_mapping_key(parser, event, false)
+            yaml_parser_parse_flow_mapping_key(parser, event, false)
         }
         YAML_PARSE_FLOW_MAPPING_VALUE_STATE => {
-            return yaml_parser_parse_flow_mapping_value(parser, event, false);
+            yaml_parser_parse_flow_mapping_value(parser, event, false)
         }
         YAML_PARSE_FLOW_MAPPING_EMPTY_VALUE_STATE => {
-            return yaml_parser_parse_flow_mapping_value(parser, event, true);
+            yaml_parser_parse_flow_mapping_value(parser, event, true)
         }
-        _ => {}
+        _ => FAIL,
     }
-    FAIL
 }
 
 unsafe fn yaml_parser_parse_stream_start(

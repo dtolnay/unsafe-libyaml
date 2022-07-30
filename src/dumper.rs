@@ -392,10 +392,7 @@ unsafe fn yaml_emitter_dump_sequence(
     (*event).type_ = YAML_SEQUENCE_END_EVENT;
     (*event).start_mark = mark;
     (*event).end_mark = mark;
-    if yaml_emitter_emit(emitter, event).fail {
-        return FAIL;
-    }
-    OK
+    yaml_emitter_emit(emitter, event)
 }
 
 unsafe fn yaml_emitter_dump_mapping(
@@ -448,8 +445,5 @@ unsafe fn yaml_emitter_dump_mapping(
     (*event).type_ = YAML_MAPPING_END_EVENT;
     (*event).start_mark = mark;
     (*event).end_mark = mark;
-    if yaml_emitter_emit(emitter, event).fail {
-        return FAIL;
-    }
-    OK
+    yaml_emitter_emit(emitter, event)
 }

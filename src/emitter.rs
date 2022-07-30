@@ -1640,12 +1640,7 @@ unsafe fn yaml_emitter_analyze_event(
     *fresh55 = ptr::null_mut::<yaml_char_t>();
     (*emitter).scalar_data.length = 0_u64;
     match (*event).type_ {
-        YAML_ALIAS_EVENT => {
-            if yaml_emitter_analyze_anchor(emitter, (*event).data.alias.anchor, true).fail {
-                return FAIL;
-            }
-            OK
-        }
+        YAML_ALIAS_EVENT => yaml_emitter_analyze_anchor(emitter, (*event).data.alias.anchor, true),
         YAML_SCALAR_EVENT => {
             if !(*event).data.scalar.anchor.is_null() {
                 if yaml_emitter_analyze_anchor(emitter, (*event).data.scalar.anchor, false).fail {
@@ -1661,16 +1656,11 @@ unsafe fn yaml_emitter_analyze_event(
                     return FAIL;
                 }
             }
-            if yaml_emitter_analyze_scalar(
+            yaml_emitter_analyze_scalar(
                 emitter,
                 (*event).data.scalar.value,
                 (*event).data.scalar.length,
             )
-            .fail
-            {
-                return FAIL;
-            }
-            OK
         }
         YAML_SEQUENCE_START_EVENT => {
             if !(*event).data.sequence_start.anchor.is_null() {
