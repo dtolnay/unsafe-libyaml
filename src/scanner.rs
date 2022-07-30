@@ -214,7 +214,8 @@ unsafe fn yaml_parser_fetch_next_token(parser: *mut yaml_parser_t) -> Success {
         return FAIL;
     }
     if !(*parser).stream_start_produced {
-        return yaml_parser_fetch_stream_start(parser);
+        yaml_parser_fetch_stream_start(parser);
+        return OK;
     }
     if yaml_parser_scan_to_next_token(parser).fail {
         return FAIL;
@@ -222,9 +223,7 @@ unsafe fn yaml_parser_fetch_next_token(parser: *mut yaml_parser_t) -> Success {
     if yaml_parser_stale_simple_keys(parser).fail {
         return FAIL;
     }
-    if yaml_parser_unroll_indent(parser, (*parser).mark.column as ptrdiff_t).fail {
-        return FAIL;
-    }
+    yaml_parser_unroll_indent(parser, (*parser).mark.column as ptrdiff_t);
     if CACHE(parser, 4_u64).fail {
         return FAIL;
     }
@@ -419,13 +418,12 @@ unsafe fn yaml_parser_increase_flow_level(mut parser: *mut yaml_parser_t) -> Suc
     OK
 }
 
-unsafe fn yaml_parser_decrease_flow_level(parser: *mut yaml_parser_t) -> Success {
+unsafe fn yaml_parser_decrease_flow_level(parser: *mut yaml_parser_t) {
     if (*parser).flow_level != 0 {
         let fresh8 = addr_of_mut!((*parser).flow_level);
         *fresh8 -= 1;
         let _ = POP!((*parser).simple_keys);
     }
-    OK
 }
 
 unsafe fn yaml_parser_roll_indent(
@@ -468,11 +466,11 @@ unsafe fn yaml_parser_roll_indent(
     OK
 }
 
-unsafe fn yaml_parser_unroll_indent(mut parser: *mut yaml_parser_t, column: ptrdiff_t) -> Success {
+unsafe fn yaml_parser_unroll_indent(mut parser: *mut yaml_parser_t, column: ptrdiff_t) {
     let mut token = MaybeUninit::<yaml_token_t>::uninit();
     let token = token.as_mut_ptr();
     if (*parser).flow_level != 0 {
-        return OK;
+        return;
     }
     while (*parser).indent as libc::c_long > column {
         memset(
@@ -486,10 +484,9 @@ unsafe fn yaml_parser_unroll_indent(mut parser: *mut yaml_parser_t, column: ptrd
         ENQUEUE!((*parser).tokens, *token);
         (*parser).indent = POP!((*parser).indents);
     }
-    OK
 }
 
-unsafe fn yaml_parser_fetch_stream_start(mut parser: *mut yaml_parser_t) -> Success {
+unsafe fn yaml_parser_fetch_stream_start(mut parser: *mut yaml_parser_t) {
     let simple_key = yaml_simple_key_t {
         possible: false,
         required: false,
@@ -516,7 +513,6 @@ unsafe fn yaml_parser_fetch_stream_start(mut parser: *mut yaml_parser_t) -> Succ
     (*token).end_mark = (*parser).mark;
     (*token).data.stream_start.encoding = (*parser).encoding;
     ENQUEUE!((*parser).tokens, *token);
-    OK
 }
 
 unsafe fn yaml_parser_fetch_stream_end(mut parser: *mut yaml_parser_t) -> Success {
@@ -527,9 +523,7 @@ unsafe fn yaml_parser_fetch_stream_end(mut parser: *mut yaml_parser_t) -> Succes
         let fresh22 = addr_of_mut!((*parser).mark.line);
         *fresh22 = (*fresh22).wrapping_add(1);
     }
-    if yaml_parser_unroll_indent(parser, -1_i64).fail {
-        return FAIL;
-    }
+    yaml_parser_unroll_indent(parser, -1_i64);
     if yaml_parser_remove_simple_key(parser).fail {
         return FAIL;
     }
@@ -549,9 +543,7 @@ unsafe fn yaml_parser_fetch_stream_end(mut parser: *mut yaml_parser_t) -> Succes
 unsafe fn yaml_parser_fetch_directive(mut parser: *mut yaml_parser_t) -> Success {
     let mut token = MaybeUninit::<yaml_token_t>::uninit();
     let token = token.as_mut_ptr();
-    if yaml_parser_unroll_indent(parser, -1_i64).fail {
-        return FAIL;
-    }
+    yaml_parser_unroll_indent(parser, -1_i64);
     if yaml_parser_remove_simple_key(parser).fail {
         return FAIL;
     }
@@ -569,9 +561,7 @@ unsafe fn yaml_parser_fetch_document_indicator(
 ) -> Success {
     let mut token = MaybeUninit::<yaml_token_t>::uninit();
     let token = token.as_mut_ptr();
-    if yaml_parser_unroll_indent(parser, -1_i64).fail {
-        return FAIL;
-    }
+    yaml_parser_unroll_indent(parser, -1_i64);
     if yaml_parser_remove_simple_key(parser).fail {
         return FAIL;
     }
@@ -630,9 +620,7 @@ unsafe fn yaml_parser_fetch_flow_collection_end(
     if yaml_parser_remove_simple_key(parser).fail {
         return FAIL;
     }
-    if yaml_parser_decrease_flow_level(parser).fail {
-        return FAIL;
-    }
+    yaml_parser_decrease_flow_level(parser);
     (*parser).simple_key_allowed = false;
     let start_mark: yaml_mark_t = (*parser).mark;
     SKIP(parser);
