@@ -54,17 +54,16 @@ unsafe fn SKIP_LINE(parser: *mut yaml_parser_t) {
     };
 }
 
-unsafe fn READ(parser: *mut yaml_parser_t, string: *mut yaml_string_t) -> Success {
+unsafe fn READ(parser: *mut yaml_parser_t, string: *mut yaml_string_t) {
     STRING_EXTEND!(parser, *string);
     let width = WIDTH!((*parser).buffer);
     COPY!(*string, (*parser).buffer);
     (*parser).mark.index = (*parser).mark.index.wrapping_add(width as u64);
     (*parser).mark.column = (*parser).mark.column.wrapping_add(1);
     (*parser).unread = (*parser).unread.wrapping_sub(1);
-    OK
 }
 
-unsafe fn READ_LINE(parser: *mut yaml_parser_t, string: *mut yaml_string_t) -> Success {
+unsafe fn READ_LINE(parser: *mut yaml_parser_t, string: *mut yaml_string_t) {
     STRING_EXTEND!(parser, *string);
     if CHECK_AT!((*parser).buffer, b'\r', 0) && CHECK_AT!((*parser).buffer, b'\n', 1) {
         *(*string).pointer = b'\n';
@@ -108,7 +107,6 @@ unsafe fn READ_LINE(parser: *mut yaml_parser_t, string: *mut yaml_string_t) -> S
         (*parser).mark.line = (*parser).mark.line.wrapping_add(1);
         (*parser).unread = (*parser).unread.wrapping_sub(1);
     };
-    OK
 }
 
 macro_rules! READ {
@@ -1179,10 +1177,7 @@ unsafe fn yaml_parser_scan_directive_name(
                 current_block = 10879442775620481940;
                 break;
             }
-            if READ!(parser, string).fail {
-                current_block = 8318012024179131575;
-                break;
-            }
+            READ!(parser, string);
             if CACHE(parser, 1_u64).fail {
                 current_block = 8318012024179131575;
                 break;
@@ -1414,10 +1409,7 @@ unsafe fn yaml_parser_scan_anchor(
                 current_block = 2868539653012386629;
                 break;
             }
-            if READ!(parser, string).fail {
-                current_block = 5883759901342942623;
-                break;
-            }
+            READ!(parser, string);
             if CACHE(parser, 1_u64).fail {
                 current_block = 5883759901342942623;
                 break;
@@ -1636,17 +1628,15 @@ unsafe fn yaml_parser_scan_tag_handle(
                 start_mark,
                 b"did not find expected '!'\0" as *const u8 as *const libc::c_char,
             );
-        } else if READ!(parser, string).ok {
+        } else {
+            READ!(parser, string);
             if CACHE(parser, 1_u64).ok {
                 loop {
                     if !IS_ALPHA!((*parser).buffer) {
                         current_block = 7651349459974463963;
                         break;
                     }
-                    if READ!(parser, string).fail {
-                        current_block = 1771849829115608806;
-                        break;
-                    }
+                    READ!(parser, string);
                     if CACHE(parser, 1_u64).fail {
                         current_block = 1771849829115608806;
                         break;
@@ -1656,11 +1646,8 @@ unsafe fn yaml_parser_scan_tag_handle(
                     1771849829115608806 => {}
                     _ => {
                         if CHECK!((*parser).buffer, b'!') {
-                            if READ!(parser, string).fail {
-                                current_block = 1771849829115608806;
-                            } else {
-                                current_block = 5689001924483802034;
-                            }
+                            READ!(parser, string);
+                            current_block = 5689001924483802034;
                         } else if directive
                             && !(*string.start == b'!'
                                 && *string.start.wrapping_offset(1_isize) == b'\0')
@@ -1775,9 +1762,8 @@ unsafe fn yaml_parser_scan_tag_uri(
                                 current_block = 15265153392498847348;
                                 continue 'c_21953;
                             }
-                        } else if READ!(parser, string).fail {
-                            current_block = 15265153392498847348;
-                            continue 'c_21953;
+                        } else {
+                            READ!(parser, string);
                         }
                         length = length.wrapping_add(1);
                         if CACHE(parser, 1_u64).fail {
@@ -2103,11 +2089,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                 IS_BLANK!((*parser).buffer)
                                                                     as libc::c_int;
                                                             while !IS_BREAKZ!((*parser).buffer) {
-                                                                if READ!(parser, string).fail {
-                                                                    current_block =
-                                                                        14984465786483313892;
-                                                                    break 's_281;
-                                                                }
+                                                                READ!(parser, string);
                                                                 if CACHE(parser, 1_u64).fail {
                                                                     current_block =
                                                                         14984465786483313892;
@@ -2119,13 +2101,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                     14984465786483313892;
                                                                 break;
                                                             }
-                                                            if READ_LINE!(parser, leading_break)
-                                                                .fail
-                                                            {
-                                                                current_block =
-                                                                    14984465786483313892;
-                                                                break;
-                                                            }
+                                                            READ_LINE!(parser, leading_break);
                                                             if yaml_parser_scan_block_scalar_breaks(
                                                                 parser,
                                                                 addr_of_mut!(indent),
@@ -2275,9 +2251,7 @@ unsafe fn yaml_parser_scan_block_scalar_breaks(
         if CACHE(parser, 2_u64).fail {
             return FAIL;
         }
-        if READ_LINE!(parser, *breaks).fail {
-            return FAIL;
-        }
+        READ_LINE!(parser, *breaks);
         *end_mark = (*parser).mark;
     }
     if *indent == 0 {
@@ -2591,9 +2565,8 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                 }
                             }
                         }
-                    } else if READ!(parser, string).fail {
-                        current_block = 8114179180390253173;
-                        break 's_58;
+                    } else {
+                        READ!(parser, string);
                     }
                 }
                 if CACHE(parser, 2_u64).fail {
@@ -2616,10 +2589,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
             while IS_BLANK!((*parser).buffer) || IS_BREAK!((*parser).buffer) {
                 if IS_BLANK!((*parser).buffer) {
                     if leading_blanks == 0 {
-                        if READ!(parser, whitespaces).fail {
-                            current_block = 8114179180390253173;
-                            break 's_58;
-                        }
+                        READ!(parser, whitespaces);
                     } else {
                         SKIP(parser);
                     }
@@ -2630,14 +2600,10 @@ unsafe fn yaml_parser_scan_flow_scalar(
                     }
                     if leading_blanks == 0 {
                         CLEAR!(whitespaces);
-                        if READ_LINE!(parser, leading_break).fail {
-                            current_block = 8114179180390253173;
-                            break 's_58;
-                        }
+                        READ_LINE!(parser, leading_break);
                         leading_blanks = 1;
-                    } else if READ_LINE!(parser, trailing_breaks).fail {
-                        current_block = 8114179180390253173;
-                        break 's_58;
+                    } else {
+                        READ_LINE!(parser, trailing_breaks);
                     }
                 }
                 if CACHE(parser, 1_u64).fail {
@@ -2821,10 +2787,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
                         CLEAR!(whitespaces);
                     }
                 }
-                if READ!(parser, string).fail {
-                    current_block = 16642808987012640029;
-                    break 's_57;
-                }
+                READ!(parser, string);
                 end_mark = (*parser).mark;
                 if CACHE(parser, 2_u64).fail {
                     current_block = 16642808987012640029;
@@ -2856,10 +2819,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
                     current_block = 16642808987012640029;
                     break 's_57;
                 } else if leading_blanks == 0 {
-                    if READ!(parser, whitespaces).fail {
-                        current_block = 16642808987012640029;
-                        break 's_57;
-                    }
+                    READ!(parser, whitespaces);
                 } else {
                     SKIP(parser);
                 }
@@ -2870,14 +2830,10 @@ unsafe fn yaml_parser_scan_plain_scalar(
                 }
                 if leading_blanks == 0 {
                     CLEAR!(whitespaces);
-                    if READ_LINE!(parser, leading_break).fail {
-                        current_block = 16642808987012640029;
-                        break 's_57;
-                    }
+                    READ_LINE!(parser, leading_break);
                     leading_blanks = 1;
-                } else if READ_LINE!(parser, trailing_breaks).fail {
-                    current_block = 16642808987012640029;
-                    break 's_57;
+                } else {
+                    READ_LINE!(parser, trailing_breaks);
                 }
             }
             if CACHE(parser, 1_u64).fail {
