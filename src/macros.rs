@@ -2,18 +2,13 @@ macro_rules! BUFFER_INIT {
     ($context:expr, $buffer:expr, $size:expr) => {{
         let start = addr_of_mut!($buffer.start);
         *start = yaml_malloc($size as size_t) as *mut yaml_char_t;
-        if !(*start).is_null() {
-            let pointer = addr_of_mut!($buffer.pointer);
-            *pointer = $buffer.start;
-            let last = addr_of_mut!($buffer.last);
-            *last = *pointer;
-            let end = addr_of_mut!($buffer.end);
-            *end = $buffer.start.wrapping_add($size as usize);
-            OK
-        } else {
-            (*$context).error = YAML_MEMORY_ERROR;
-            FAIL
-        }
+        let pointer = addr_of_mut!($buffer.pointer);
+        *pointer = $buffer.start;
+        let last = addr_of_mut!($buffer.last);
+        *last = *pointer;
+        let end = addr_of_mut!($buffer.end);
+        *end = $buffer.start.wrapping_add($size as usize);
+        OK
     }};
 }
 
@@ -42,15 +37,10 @@ macro_rules! STRING_ASSIGN {
 macro_rules! STRING_INIT {
     ($context:expr, $string:expr) => {{
         $string.start = yaml_malloc(16) as *mut yaml_char_t;
-        if !$string.start.is_null() {
-            $string.pointer = $string.start;
-            $string.end = $string.start.wrapping_add(16);
-            memset($string.start as *mut libc::c_void, 0, 16);
-            OK
-        } else {
-            (*$context).error = YAML_MEMORY_ERROR;
-            FAIL
-        }
+        $string.pointer = $string.start;
+        $string.end = $string.start.wrapping_add(16);
+        memset($string.start as *mut libc::c_void, 0, 16);
+        OK
     }};
 }
 
@@ -374,14 +364,9 @@ macro_rules! COPY {
 macro_rules! STACK_INIT {
     ($context:expr, $stack:expr, $type:ty) => {{
         $stack.start = yaml_malloc(16 * size_of::<$type>() as libc::c_ulong) as *mut $type;
-        if !$stack.start.is_null() {
-            $stack.top = $stack.start;
-            $stack.end = $stack.start.offset(16_isize);
-            OK
-        } else {
-            (*$context).error = YAML_MEMORY_ERROR;
-            FAIL
-        }
+        $stack.top = $stack.start;
+        $stack.end = $stack.start.offset(16_isize);
+        OK
     }};
 }
 
@@ -448,15 +433,10 @@ macro_rules! POP {
 macro_rules! QUEUE_INIT {
     ($context:expr, $queue:expr, $type:ty) => {{
         $queue.start = yaml_malloc(16 * size_of::<$type>() as libc::c_ulong) as *mut $type;
-        if !$queue.start.is_null() {
-            $queue.tail = $queue.start;
-            $queue.head = $queue.tail;
-            $queue.end = $queue.start.offset(16_isize);
-            OK
-        } else {
-            (*$context).error = YAML_MEMORY_ERROR;
-            FAIL
-        }
+        $queue.tail = $queue.start;
+        $queue.head = $queue.tail;
+        $queue.end = $queue.start.offset(16_isize);
+        OK
     }};
 }
 

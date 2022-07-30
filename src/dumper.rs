@@ -119,45 +119,41 @@ pub unsafe fn yaml_emitter_dump(
                         .wrapping_mul((*document).nodes.top.c_offset_from((*document).nodes.start)
                             as libc::c_long as libc::c_ulong),
                 ) as *mut yaml_anchors_t;
-                if !(*emitter).anchors.is_null() {
-                    memset(
-                        (*emitter).anchors as *mut libc::c_void,
-                        0,
-                        (size_of::<yaml_anchors_t>() as libc::c_ulong).wrapping_mul(
-                            (*document).nodes.top.c_offset_from((*document).nodes.start)
-                                as libc::c_long as libc::c_ulong,
-                        ),
-                    );
-                    memset(
-                        event as *mut libc::c_void,
-                        0,
-                        size_of::<yaml_event_t>() as libc::c_ulong,
-                    );
-                    (*event).type_ = YAML_DOCUMENT_START_EVENT;
-                    (*event).start_mark = mark;
-                    (*event).end_mark = mark;
-                    (*event).data.document_start.version_directive = (*document).version_directive;
-                    (*event).data.document_start.tag_directives.start =
-                        (*document).tag_directives.start;
-                    (*event).data.document_start.tag_directives.end =
-                        (*document).tag_directives.end;
-                    (*event).data.document_start.implicit = (*document).start_implicit;
-                    if yaml_emitter_emit(emitter, event).ok {
-                        yaml_emitter_anchor_node(emitter, 1);
-                        if yaml_emitter_dump_node(emitter, 1).ok {
-                            memset(
-                                event as *mut libc::c_void,
-                                0,
-                                size_of::<yaml_event_t>() as libc::c_ulong,
-                            );
-                            (*event).type_ = YAML_DOCUMENT_END_EVENT;
-                            (*event).start_mark = mark;
-                            (*event).end_mark = mark;
-                            (*event).data.document_end.implicit = (*document).end_implicit;
-                            if yaml_emitter_emit(emitter, event).ok {
-                                yaml_emitter_delete_document_and_anchors(emitter);
-                                return OK;
-                            }
+                memset(
+                    (*emitter).anchors as *mut libc::c_void,
+                    0,
+                    (size_of::<yaml_anchors_t>() as libc::c_ulong)
+                        .wrapping_mul((*document).nodes.top.c_offset_from((*document).nodes.start)
+                            as libc::c_long as libc::c_ulong),
+                );
+                memset(
+                    event as *mut libc::c_void,
+                    0,
+                    size_of::<yaml_event_t>() as libc::c_ulong,
+                );
+                (*event).type_ = YAML_DOCUMENT_START_EVENT;
+                (*event).start_mark = mark;
+                (*event).end_mark = mark;
+                (*event).data.document_start.version_directive = (*document).version_directive;
+                (*event).data.document_start.tag_directives.start =
+                    (*document).tag_directives.start;
+                (*event).data.document_start.tag_directives.end = (*document).tag_directives.end;
+                (*event).data.document_start.implicit = (*document).start_implicit;
+                if yaml_emitter_emit(emitter, event).ok {
+                    yaml_emitter_anchor_node(emitter, 1);
+                    if yaml_emitter_dump_node(emitter, 1).ok {
+                        memset(
+                            event as *mut libc::c_void,
+                            0,
+                            size_of::<yaml_event_t>() as libc::c_ulong,
+                        );
+                        (*event).type_ = YAML_DOCUMENT_END_EVENT;
+                        (*event).start_mark = mark;
+                        (*event).end_mark = mark;
+                        (*event).data.document_end.implicit = (*document).end_implicit;
+                        if yaml_emitter_emit(emitter, event).ok {
+                            yaml_emitter_delete_document_and_anchors(emitter);
+                            return OK;
                         }
                     }
                 }
@@ -261,9 +257,6 @@ unsafe fn yaml_emitter_generate_anchor(
     anchor_id: libc::c_int,
 ) -> *mut yaml_char_t {
     let anchor: *mut yaml_char_t = yaml_malloc(16_u64) as *mut yaml_char_t;
-    if anchor.is_null() {
-        return ptr::null_mut::<yaml_char_t>();
-    }
     write!(WriteToPtr::new(anchor), "id{:03}\0", anchor_id);
     anchor
 }
@@ -278,9 +271,6 @@ unsafe fn yaml_emitter_dump_node(emitter: *mut yaml_emitter_t, index: libc::c_in
     let mut anchor: *mut yaml_char_t = ptr::null_mut::<yaml_char_t>();
     if anchor_id != 0 {
         anchor = yaml_emitter_generate_anchor(emitter, anchor_id);
-        if anchor.is_null() {
-            return FAIL;
-        }
     }
     if (*(*emitter).anchors.wrapping_offset((index - 1) as isize)).serialized {
         return yaml_emitter_dump_alias(emitter, anchor);
