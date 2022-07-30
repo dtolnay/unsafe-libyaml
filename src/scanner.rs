@@ -1410,11 +1410,10 @@ unsafe fn yaml_parser_scan_anchor(
 ) -> Success {
     let current_block: u64;
     let mut length: libc::c_int = 0;
-    let start_mark: yaml_mark_t;
     let end_mark: yaml_mark_t;
     let mut string = NULL_STRING;
     STRING_INIT!(parser, string);
-    start_mark = (*parser).mark;
+    let start_mark: yaml_mark_t = (*parser).mark;
     SKIP(parser);
     if CACHE(parser, 1_u64).ok {
         loop {
@@ -1916,7 +1915,6 @@ unsafe fn yaml_parser_scan_block_scalar(
     literal: bool,
 ) -> Success {
     let mut current_block: u64;
-    let start_mark: yaml_mark_t;
     let mut end_mark: yaml_mark_t;
     let mut string = NULL_STRING;
     let mut leading_break = NULL_STRING;
@@ -1929,7 +1927,7 @@ unsafe fn yaml_parser_scan_block_scalar(
     STRING_INIT!(parser, string);
     STRING_INIT!(parser, leading_break);
     STRING_INIT!(parser, trailing_breaks);
-    start_mark = (*parser).mark;
+    let start_mark: yaml_mark_t = (*parser).mark;
     SKIP(parser);
     if CACHE(parser, 1_u64).ok {
         if CHECK!((*parser).buffer, b'+') || CHECK!((*parser).buffer, b'-') {
@@ -2326,7 +2324,6 @@ unsafe fn yaml_parser_scan_flow_scalar(
     single: bool,
 ) -> Success {
     let current_block: u64;
-    let start_mark: yaml_mark_t;
     let end_mark: yaml_mark_t;
     let mut string = NULL_STRING;
     let mut leading_break = NULL_STRING;
@@ -2337,7 +2334,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
     STRING_INIT!(parser, leading_break);
     STRING_INIT!(parser, trailing_breaks);
     STRING_INIT!(parser, whitespaces);
-    start_mark = (*parser).mark;
+    let start_mark: yaml_mark_t = (*parser).mark;
     SKIP(parser);
     's_58: loop {
         if CACHE(parser, 4_u64).fail {
@@ -2759,7 +2756,6 @@ unsafe fn yaml_parser_scan_plain_scalar(
     mut token: *mut yaml_token_t,
 ) -> Success {
     let current_block: u64;
-    let start_mark: yaml_mark_t;
     let mut end_mark: yaml_mark_t;
     let mut string = NULL_STRING;
     let mut leading_break = NULL_STRING;
@@ -2772,7 +2768,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
     STRING_INIT!(parser, trailing_breaks);
     STRING_INIT!(parser, whitespaces);
     end_mark = (*parser).mark;
-    start_mark = end_mark;
+    let start_mark: yaml_mark_t = end_mark;
     's_57: loop {
         if CACHE(parser, 4_u64).fail {
             current_block = 16642808987012640029;
