@@ -433,7 +433,6 @@ macro_rules! QUEUE_INIT {
         $queue.tail = $queue.start;
         $queue.head = $queue.tail;
         $queue.end = $queue.start.offset(16_isize);
-        OK
     }};
 }
 
