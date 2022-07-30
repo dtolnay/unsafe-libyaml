@@ -59,25 +59,22 @@ pub unsafe fn yaml_parser_load(
     } else {
         current_block = 7815301370352969686;
     }
-    match current_block {
-        6234624449317607669 => {}
-        _ => {
-            if (*parser).stream_end_produced {
+    if current_block != 6234624449317607669 {
+        if (*parser).stream_end_produced {
+            return OK;
+        }
+        if yaml_parser_parse(parser, event).ok {
+            if (*event).type_ == YAML_STREAM_END_EVENT {
                 return OK;
             }
-            if yaml_parser_parse(parser, event).ok {
-                if (*event).type_ == YAML_STREAM_END_EVENT {
-                    return OK;
-                }
-                STACK_INIT!((*parser).aliases, yaml_alias_data_t);
-                let fresh6 = addr_of_mut!((*parser).document);
-                *fresh6 = document;
-                if yaml_parser_load_document(parser, event).ok {
-                    yaml_parser_delete_aliases(parser);
-                    let fresh7 = addr_of_mut!((*parser).document);
-                    *fresh7 = ptr::null_mut::<yaml_document_t>();
-                    return OK;
-                }
+            STACK_INIT!((*parser).aliases, yaml_alias_data_t);
+            let fresh6 = addr_of_mut!((*parser).document);
+            *fresh6 = document;
+            if yaml_parser_load_document(parser, event).ok {
+                yaml_parser_delete_aliases(parser);
+                let fresh7 = addr_of_mut!((*parser).document);
+                *fresh7 = ptr::null_mut::<yaml_document_t>();
+                return OK;
             }
         }
     }
@@ -353,32 +350,29 @@ unsafe fn yaml_parser_load_scalar(
         } else {
             current_block = 11006700562992250127;
         }
-        match current_block {
-            10579931339944277179 => {}
-            _ => {
-                memset(
-                    node as *mut libc::c_void,
-                    0,
-                    size_of::<yaml_node_t>() as libc::c_ulong,
-                );
-                (*node).type_ = YAML_SCALAR_NODE;
-                (*node).tag = tag;
-                (*node).start_mark = (*event).start_mark;
-                (*node).end_mark = (*event).end_mark;
-                (*node).data.scalar.value = (*event).data.scalar.value;
-                (*node).data.scalar.length = (*event).data.scalar.length;
-                (*node).data.scalar.style = (*event).data.scalar.style;
-                PUSH!((*(*parser).document).nodes, *node);
-                index = (*(*parser).document)
-                    .nodes
-                    .top
-                    .c_offset_from((*(*parser).document).nodes.start)
-                    as libc::c_int;
-                if yaml_parser_register_anchor(parser, index, (*event).data.scalar.anchor).fail {
-                    return FAIL;
-                }
-                return yaml_parser_load_node_add(parser, ctx, index);
+        if current_block != 10579931339944277179 {
+            memset(
+                node as *mut libc::c_void,
+                0,
+                size_of::<yaml_node_t>() as libc::c_ulong,
+            );
+            (*node).type_ = YAML_SCALAR_NODE;
+            (*node).tag = tag;
+            (*node).start_mark = (*event).start_mark;
+            (*node).end_mark = (*event).end_mark;
+            (*node).data.scalar.value = (*event).data.scalar.value;
+            (*node).data.scalar.length = (*event).data.scalar.length;
+            (*node).data.scalar.style = (*event).data.scalar.style;
+            PUSH!((*(*parser).document).nodes, *node);
+            index = (*(*parser).document)
+                .nodes
+                .top
+                .c_offset_from((*(*parser).document).nodes.start)
+                as libc::c_int;
+            if yaml_parser_register_anchor(parser, index, (*event).data.scalar.anchor).fail {
+                return FAIL;
             }
+            return yaml_parser_load_node_add(parser, ctx, index);
         }
     }
     yaml_free(tag as *mut libc::c_void);
@@ -426,43 +420,39 @@ unsafe fn yaml_parser_load_sequence(
         } else {
             current_block = 6937071982253665452;
         }
-        match current_block {
-            13474536459355229096 => {}
-            _ => {
-                STACK_INIT!(items, yaml_node_item_t);
-                memset(
-                    node as *mut libc::c_void,
-                    0,
-                    size_of::<yaml_node_t>() as libc::c_ulong,
-                );
-                (*node).type_ = YAML_SEQUENCE_NODE;
-                (*node).tag = tag;
-                (*node).start_mark = (*event).start_mark;
-                (*node).end_mark = (*event).end_mark;
-                (*node).data.sequence.items.start = items.start;
-                (*node).data.sequence.items.end = items.end;
-                (*node).data.sequence.items.top = items.start;
-                (*node).data.sequence.style = (*event).data.sequence_start.style;
-                PUSH!((*(*parser).document).nodes, *node);
-                index = (*(*parser).document)
-                    .nodes
-                    .top
-                    .c_offset_from((*(*parser).document).nodes.start)
-                    as libc::c_int;
-                if yaml_parser_register_anchor(parser, index, (*event).data.sequence_start.anchor)
-                    .fail
-                {
-                    return FAIL;
-                }
-                if yaml_parser_load_node_add(parser, ctx, index).fail {
-                    return FAIL;
-                }
-                if STACK_LIMIT!(parser, *ctx).fail {
-                    return FAIL;
-                }
-                PUSH!(*ctx, index);
-                return OK;
+        if current_block != 13474536459355229096 {
+            STACK_INIT!(items, yaml_node_item_t);
+            memset(
+                node as *mut libc::c_void,
+                0,
+                size_of::<yaml_node_t>() as libc::c_ulong,
+            );
+            (*node).type_ = YAML_SEQUENCE_NODE;
+            (*node).tag = tag;
+            (*node).start_mark = (*event).start_mark;
+            (*node).end_mark = (*event).end_mark;
+            (*node).data.sequence.items.start = items.start;
+            (*node).data.sequence.items.end = items.end;
+            (*node).data.sequence.items.top = items.start;
+            (*node).data.sequence.style = (*event).data.sequence_start.style;
+            PUSH!((*(*parser).document).nodes, *node);
+            index = (*(*parser).document)
+                .nodes
+                .top
+                .c_offset_from((*(*parser).document).nodes.start)
+                as libc::c_int;
+            if yaml_parser_register_anchor(parser, index, (*event).data.sequence_start.anchor).fail
+            {
+                return FAIL;
             }
+            if yaml_parser_load_node_add(parser, ctx, index).fail {
+                return FAIL;
+            }
+            if STACK_LIMIT!(parser, *ctx).fail {
+                return FAIL;
+            }
+            PUSH!(*ctx, index);
+            return OK;
         }
     }
     yaml_free(tag as *mut libc::c_void);
@@ -529,43 +519,38 @@ unsafe fn yaml_parser_load_mapping(
         } else {
             current_block = 6937071982253665452;
         }
-        match current_block {
-            13635467803606088781 => {}
-            _ => {
-                STACK_INIT!(pairs, yaml_node_pair_t);
-                memset(
-                    node as *mut libc::c_void,
-                    0,
-                    size_of::<yaml_node_t>() as libc::c_ulong,
-                );
-                (*node).type_ = YAML_MAPPING_NODE;
-                (*node).tag = tag;
-                (*node).start_mark = (*event).start_mark;
-                (*node).end_mark = (*event).end_mark;
-                (*node).data.mapping.pairs.start = pairs.start;
-                (*node).data.mapping.pairs.end = pairs.end;
-                (*node).data.mapping.pairs.top = pairs.start;
-                (*node).data.mapping.style = (*event).data.mapping_start.style;
-                PUSH!((*(*parser).document).nodes, *node);
-                index = (*(*parser).document)
-                    .nodes
-                    .top
-                    .c_offset_from((*(*parser).document).nodes.start)
-                    as libc::c_int;
-                if yaml_parser_register_anchor(parser, index, (*event).data.mapping_start.anchor)
-                    .fail
-                {
-                    return FAIL;
-                }
-                if yaml_parser_load_node_add(parser, ctx, index).fail {
-                    return FAIL;
-                }
-                if STACK_LIMIT!(parser, *ctx).fail {
-                    return FAIL;
-                }
-                PUSH!(*ctx, index);
-                return OK;
+        if current_block != 13635467803606088781 {
+            STACK_INIT!(pairs, yaml_node_pair_t);
+            memset(
+                node as *mut libc::c_void,
+                0,
+                size_of::<yaml_node_t>() as libc::c_ulong,
+            );
+            (*node).type_ = YAML_MAPPING_NODE;
+            (*node).tag = tag;
+            (*node).start_mark = (*event).start_mark;
+            (*node).end_mark = (*event).end_mark;
+            (*node).data.mapping.pairs.start = pairs.start;
+            (*node).data.mapping.pairs.end = pairs.end;
+            (*node).data.mapping.pairs.top = pairs.start;
+            (*node).data.mapping.style = (*event).data.mapping_start.style;
+            PUSH!((*(*parser).document).nodes, *node);
+            index = (*(*parser).document)
+                .nodes
+                .top
+                .c_offset_from((*(*parser).document).nodes.start)
+                as libc::c_int;
+            if yaml_parser_register_anchor(parser, index, (*event).data.mapping_start.anchor).fail {
+                return FAIL;
             }
+            if yaml_parser_load_node_add(parser, ctx, index).fail {
+                return FAIL;
+            }
+            if STACK_LIMIT!(parser, *ctx).fail {
+                return FAIL;
+            }
+            PUSH!(*ctx, index);
+            return OK;
         }
     }
     yaml_free(tag as *mut libc::c_void);

@@ -481,254 +481,238 @@ unsafe fn yaml_parser_parse_node(
         } else {
             current_block = 11743904203796629665;
         }
-        match current_block {
-            11743904203796629665 => {
-                if !tag_handle.is_null() {
-                    if *tag_handle == 0 {
-                        tag = tag_suffix;
-                        yaml_free(tag_handle as *mut libc::c_void);
-                        tag_suffix = ptr::null_mut::<yaml_char_t>();
-                        tag_handle = tag_suffix;
-                        current_block = 9437013279121998969;
-                    } else {
-                        let mut tag_directive: *mut yaml_tag_directive_t;
-                        tag_directive = (*parser).tag_directives.start;
-                        loop {
-                            if !(tag_directive != (*parser).tag_directives.top) {
-                                current_block = 17728966195399430138;
-                                break;
-                            }
-                            if strcmp(
-                                (*tag_directive).handle as *mut libc::c_char,
-                                tag_handle as *mut libc::c_char,
-                            ) == 0
-                            {
-                                let prefix_len: size_t =
-                                    strlen((*tag_directive).prefix as *mut libc::c_char);
-                                let suffix_len: size_t = strlen(tag_suffix as *mut libc::c_char);
-                                tag = yaml_malloc(
-                                    prefix_len.wrapping_add(suffix_len).wrapping_add(1_u64),
-                                ) as *mut yaml_char_t;
-                                memcpy(
-                                    tag as *mut libc::c_void,
-                                    (*tag_directive).prefix as *const libc::c_void,
-                                    prefix_len,
-                                );
-                                memcpy(
-                                    tag.wrapping_offset(prefix_len as isize) as *mut libc::c_void,
-                                    tag_suffix as *const libc::c_void,
-                                    suffix_len,
-                                );
-                                *tag.wrapping_offset(
-                                    prefix_len.wrapping_add(suffix_len) as isize
-                                ) = b'\0';
-                                yaml_free(tag_handle as *mut libc::c_void);
-                                yaml_free(tag_suffix as *mut libc::c_void);
-                                tag_suffix = ptr::null_mut::<yaml_char_t>();
-                                tag_handle = tag_suffix;
-                                current_block = 17728966195399430138;
-                                break;
-                            } else {
-                                tag_directive = tag_directive.wrapping_offset(1);
-                            }
+        if current_block == 11743904203796629665 {
+            if !tag_handle.is_null() {
+                if *tag_handle == 0 {
+                    tag = tag_suffix;
+                    yaml_free(tag_handle as *mut libc::c_void);
+                    tag_suffix = ptr::null_mut::<yaml_char_t>();
+                    tag_handle = tag_suffix;
+                    current_block = 9437013279121998969;
+                } else {
+                    let mut tag_directive: *mut yaml_tag_directive_t;
+                    tag_directive = (*parser).tag_directives.start;
+                    loop {
+                        if !(tag_directive != (*parser).tag_directives.top) {
+                            current_block = 17728966195399430138;
+                            break;
                         }
-                        match current_block {
-                            17786380918591080555 => {}
-                            _ => {
-                                if tag.is_null() {
-                                    yaml_parser_set_parser_error_context(
-                                        parser,
-                                        b"while parsing a node\0" as *const u8
-                                            as *const libc::c_char,
-                                        start_mark,
-                                        b"found undefined tag handle\0" as *const u8
-                                            as *const libc::c_char,
-                                        tag_mark,
-                                    );
-                                    current_block = 17786380918591080555;
-                                } else {
-                                    current_block = 9437013279121998969;
-                                }
-                            }
+                        if strcmp(
+                            (*tag_directive).handle as *mut libc::c_char,
+                            tag_handle as *mut libc::c_char,
+                        ) == 0
+                        {
+                            let prefix_len: size_t =
+                                strlen((*tag_directive).prefix as *mut libc::c_char);
+                            let suffix_len: size_t = strlen(tag_suffix as *mut libc::c_char);
+                            tag = yaml_malloc(
+                                prefix_len.wrapping_add(suffix_len).wrapping_add(1_u64),
+                            ) as *mut yaml_char_t;
+                            memcpy(
+                                tag as *mut libc::c_void,
+                                (*tag_directive).prefix as *const libc::c_void,
+                                prefix_len,
+                            );
+                            memcpy(
+                                tag.wrapping_offset(prefix_len as isize) as *mut libc::c_void,
+                                tag_suffix as *const libc::c_void,
+                                suffix_len,
+                            );
+                            *tag.wrapping_offset(prefix_len.wrapping_add(suffix_len) as isize) =
+                                b'\0';
+                            yaml_free(tag_handle as *mut libc::c_void);
+                            yaml_free(tag_suffix as *mut libc::c_void);
+                            tag_suffix = ptr::null_mut::<yaml_char_t>();
+                            tag_handle = tag_suffix;
+                            current_block = 17728966195399430138;
+                            break;
+                        } else {
+                            tag_directive = tag_directive.wrapping_offset(1);
                         }
                     }
-                } else {
-                    current_block = 9437013279121998969;
-                }
-                match current_block {
-                    17786380918591080555 => {}
-                    _ => {
-                        implicit = tag.is_null() || *tag == 0;
-                        if indentless_sequence && (*token).type_ == YAML_BLOCK_ENTRY_TOKEN {
-                            end_mark = (*token).end_mark;
-                            (*parser).state = YAML_PARSE_INDENTLESS_SEQUENCE_ENTRY_STATE;
-                            memset(
-                                event as *mut libc::c_void,
-                                0,
-                                size_of::<yaml_event_t>() as libc::c_ulong,
-                            );
-                            (*event).type_ = YAML_SEQUENCE_START_EVENT;
-                            (*event).start_mark = start_mark;
-                            (*event).end_mark = end_mark;
-                            let fresh37 = addr_of_mut!((*event).data.sequence_start.anchor);
-                            *fresh37 = anchor;
-                            let fresh38 = addr_of_mut!((*event).data.sequence_start.tag);
-                            *fresh38 = tag;
-                            (*event).data.sequence_start.implicit = implicit;
-                            (*event).data.sequence_start.style = YAML_BLOCK_SEQUENCE_STYLE;
-                            return OK;
-                        } else if (*token).type_ == YAML_SCALAR_TOKEN {
-                            let mut plain_implicit = false;
-                            let mut quoted_implicit = false;
-                            end_mark = (*token).end_mark;
-                            if (*token).data.scalar.style == YAML_PLAIN_SCALAR_STYLE
-                                && tag.is_null()
-                                || !tag.is_null()
-                                    && strcmp(
-                                        tag as *mut libc::c_char,
-                                        b"!\0" as *const u8 as *const libc::c_char,
-                                    ) == 0
-                            {
-                                plain_implicit = true;
-                            } else if tag.is_null() {
-                                quoted_implicit = true;
-                            }
-                            (*parser).state = POP!((*parser).states);
-                            memset(
-                                event as *mut libc::c_void,
-                                0,
-                                size_of::<yaml_event_t>() as libc::c_ulong,
-                            );
-                            (*event).type_ = YAML_SCALAR_EVENT;
-                            (*event).start_mark = start_mark;
-                            (*event).end_mark = end_mark;
-                            let fresh40 = addr_of_mut!((*event).data.scalar.anchor);
-                            *fresh40 = anchor;
-                            let fresh41 = addr_of_mut!((*event).data.scalar.tag);
-                            *fresh41 = tag;
-                            let fresh42 = addr_of_mut!((*event).data.scalar.value);
-                            *fresh42 = (*token).data.scalar.value;
-                            (*event).data.scalar.length = (*token).data.scalar.length;
-                            (*event).data.scalar.plain_implicit = plain_implicit;
-                            (*event).data.scalar.quoted_implicit = quoted_implicit;
-                            (*event).data.scalar.style = (*token).data.scalar.style;
-                            SKIP_TOKEN(parser);
-                            return OK;
-                        } else if (*token).type_ == YAML_FLOW_SEQUENCE_START_TOKEN {
-                            end_mark = (*token).end_mark;
-                            (*parser).state = YAML_PARSE_FLOW_SEQUENCE_FIRST_ENTRY_STATE;
-                            memset(
-                                event as *mut libc::c_void,
-                                0,
-                                size_of::<yaml_event_t>() as libc::c_ulong,
-                            );
-                            (*event).type_ = YAML_SEQUENCE_START_EVENT;
-                            (*event).start_mark = start_mark;
-                            (*event).end_mark = end_mark;
-                            let fresh45 = addr_of_mut!((*event).data.sequence_start.anchor);
-                            *fresh45 = anchor;
-                            let fresh46 = addr_of_mut!((*event).data.sequence_start.tag);
-                            *fresh46 = tag;
-                            (*event).data.sequence_start.implicit = implicit;
-                            (*event).data.sequence_start.style = YAML_FLOW_SEQUENCE_STYLE;
-                            return OK;
-                        } else if (*token).type_ == YAML_FLOW_MAPPING_START_TOKEN {
-                            end_mark = (*token).end_mark;
-                            (*parser).state = YAML_PARSE_FLOW_MAPPING_FIRST_KEY_STATE;
-                            memset(
-                                event as *mut libc::c_void,
-                                0,
-                                size_of::<yaml_event_t>() as libc::c_ulong,
-                            );
-                            (*event).type_ = YAML_MAPPING_START_EVENT;
-                            (*event).start_mark = start_mark;
-                            (*event).end_mark = end_mark;
-                            let fresh47 = addr_of_mut!((*event).data.mapping_start.anchor);
-                            *fresh47 = anchor;
-                            let fresh48 = addr_of_mut!((*event).data.mapping_start.tag);
-                            *fresh48 = tag;
-                            (*event).data.mapping_start.implicit = implicit;
-                            (*event).data.mapping_start.style = YAML_FLOW_MAPPING_STYLE;
-                            return OK;
-                        } else if block && (*token).type_ == YAML_BLOCK_SEQUENCE_START_TOKEN {
-                            end_mark = (*token).end_mark;
-                            (*parser).state = YAML_PARSE_BLOCK_SEQUENCE_FIRST_ENTRY_STATE;
-                            memset(
-                                event as *mut libc::c_void,
-                                0,
-                                size_of::<yaml_event_t>() as libc::c_ulong,
-                            );
-                            (*event).type_ = YAML_SEQUENCE_START_EVENT;
-                            (*event).start_mark = start_mark;
-                            (*event).end_mark = end_mark;
-                            let fresh49 = addr_of_mut!((*event).data.sequence_start.anchor);
-                            *fresh49 = anchor;
-                            let fresh50 = addr_of_mut!((*event).data.sequence_start.tag);
-                            *fresh50 = tag;
-                            (*event).data.sequence_start.implicit = implicit;
-                            (*event).data.sequence_start.style = YAML_BLOCK_SEQUENCE_STYLE;
-                            return OK;
-                        } else if block && (*token).type_ == YAML_BLOCK_MAPPING_START_TOKEN {
-                            end_mark = (*token).end_mark;
-                            (*parser).state = YAML_PARSE_BLOCK_MAPPING_FIRST_KEY_STATE;
-                            memset(
-                                event as *mut libc::c_void,
-                                0,
-                                size_of::<yaml_event_t>() as libc::c_ulong,
-                            );
-                            (*event).type_ = YAML_MAPPING_START_EVENT;
-                            (*event).start_mark = start_mark;
-                            (*event).end_mark = end_mark;
-                            let fresh51 = addr_of_mut!((*event).data.mapping_start.anchor);
-                            *fresh51 = anchor;
-                            let fresh52 = addr_of_mut!((*event).data.mapping_start.tag);
-                            *fresh52 = tag;
-                            (*event).data.mapping_start.implicit = implicit;
-                            (*event).data.mapping_start.style = YAML_BLOCK_MAPPING_STYLE;
-                            return OK;
-                        } else if !anchor.is_null() || !tag.is_null() {
-                            let value: *mut yaml_char_t = yaml_malloc(1_u64) as *mut yaml_char_t;
-                            *value = b'\0';
-                            (*parser).state = POP!((*parser).states);
-                            memset(
-                                event as *mut libc::c_void,
-                                0,
-                                size_of::<yaml_event_t>() as libc::c_ulong,
-                            );
-                            (*event).type_ = YAML_SCALAR_EVENT;
-                            (*event).start_mark = start_mark;
-                            (*event).end_mark = end_mark;
-                            let fresh54 = addr_of_mut!((*event).data.scalar.anchor);
-                            *fresh54 = anchor;
-                            let fresh55 = addr_of_mut!((*event).data.scalar.tag);
-                            *fresh55 = tag;
-                            let fresh56 = addr_of_mut!((*event).data.scalar.value);
-                            *fresh56 = value;
-                            (*event).data.scalar.length = 0_u64;
-                            (*event).data.scalar.plain_implicit = implicit;
-                            (*event).data.scalar.quoted_implicit = false;
-                            (*event).data.scalar.style = YAML_PLAIN_SCALAR_STYLE;
-                            return OK;
-                        } else {
+                    if current_block != 17786380918591080555 {
+                        if tag.is_null() {
                             yaml_parser_set_parser_error_context(
                                 parser,
-                                if block {
-                                    b"while parsing a block node\0" as *const u8
-                                        as *const libc::c_char
-                                } else {
-                                    b"while parsing a flow node\0" as *const u8
-                                        as *const libc::c_char
-                                },
+                                b"while parsing a node\0" as *const u8 as *const libc::c_char,
                                 start_mark,
-                                b"did not find expected node content\0" as *const u8
-                                    as *const libc::c_char,
-                                (*token).start_mark,
+                                b"found undefined tag handle\0" as *const u8 as *const libc::c_char,
+                                tag_mark,
                             );
+                            current_block = 17786380918591080555;
+                        } else {
+                            current_block = 9437013279121998969;
                         }
                     }
                 }
+            } else {
+                current_block = 9437013279121998969;
             }
-            _ => {}
+            if current_block != 17786380918591080555 {
+                implicit = tag.is_null() || *tag == 0;
+                if indentless_sequence && (*token).type_ == YAML_BLOCK_ENTRY_TOKEN {
+                    end_mark = (*token).end_mark;
+                    (*parser).state = YAML_PARSE_INDENTLESS_SEQUENCE_ENTRY_STATE;
+                    memset(
+                        event as *mut libc::c_void,
+                        0,
+                        size_of::<yaml_event_t>() as libc::c_ulong,
+                    );
+                    (*event).type_ = YAML_SEQUENCE_START_EVENT;
+                    (*event).start_mark = start_mark;
+                    (*event).end_mark = end_mark;
+                    let fresh37 = addr_of_mut!((*event).data.sequence_start.anchor);
+                    *fresh37 = anchor;
+                    let fresh38 = addr_of_mut!((*event).data.sequence_start.tag);
+                    *fresh38 = tag;
+                    (*event).data.sequence_start.implicit = implicit;
+                    (*event).data.sequence_start.style = YAML_BLOCK_SEQUENCE_STYLE;
+                    return OK;
+                } else if (*token).type_ == YAML_SCALAR_TOKEN {
+                    let mut plain_implicit = false;
+                    let mut quoted_implicit = false;
+                    end_mark = (*token).end_mark;
+                    if (*token).data.scalar.style == YAML_PLAIN_SCALAR_STYLE && tag.is_null()
+                        || !tag.is_null()
+                            && strcmp(
+                                tag as *mut libc::c_char,
+                                b"!\0" as *const u8 as *const libc::c_char,
+                            ) == 0
+                    {
+                        plain_implicit = true;
+                    } else if tag.is_null() {
+                        quoted_implicit = true;
+                    }
+                    (*parser).state = POP!((*parser).states);
+                    memset(
+                        event as *mut libc::c_void,
+                        0,
+                        size_of::<yaml_event_t>() as libc::c_ulong,
+                    );
+                    (*event).type_ = YAML_SCALAR_EVENT;
+                    (*event).start_mark = start_mark;
+                    (*event).end_mark = end_mark;
+                    let fresh40 = addr_of_mut!((*event).data.scalar.anchor);
+                    *fresh40 = anchor;
+                    let fresh41 = addr_of_mut!((*event).data.scalar.tag);
+                    *fresh41 = tag;
+                    let fresh42 = addr_of_mut!((*event).data.scalar.value);
+                    *fresh42 = (*token).data.scalar.value;
+                    (*event).data.scalar.length = (*token).data.scalar.length;
+                    (*event).data.scalar.plain_implicit = plain_implicit;
+                    (*event).data.scalar.quoted_implicit = quoted_implicit;
+                    (*event).data.scalar.style = (*token).data.scalar.style;
+                    SKIP_TOKEN(parser);
+                    return OK;
+                } else if (*token).type_ == YAML_FLOW_SEQUENCE_START_TOKEN {
+                    end_mark = (*token).end_mark;
+                    (*parser).state = YAML_PARSE_FLOW_SEQUENCE_FIRST_ENTRY_STATE;
+                    memset(
+                        event as *mut libc::c_void,
+                        0,
+                        size_of::<yaml_event_t>() as libc::c_ulong,
+                    );
+                    (*event).type_ = YAML_SEQUENCE_START_EVENT;
+                    (*event).start_mark = start_mark;
+                    (*event).end_mark = end_mark;
+                    let fresh45 = addr_of_mut!((*event).data.sequence_start.anchor);
+                    *fresh45 = anchor;
+                    let fresh46 = addr_of_mut!((*event).data.sequence_start.tag);
+                    *fresh46 = tag;
+                    (*event).data.sequence_start.implicit = implicit;
+                    (*event).data.sequence_start.style = YAML_FLOW_SEQUENCE_STYLE;
+                    return OK;
+                } else if (*token).type_ == YAML_FLOW_MAPPING_START_TOKEN {
+                    end_mark = (*token).end_mark;
+                    (*parser).state = YAML_PARSE_FLOW_MAPPING_FIRST_KEY_STATE;
+                    memset(
+                        event as *mut libc::c_void,
+                        0,
+                        size_of::<yaml_event_t>() as libc::c_ulong,
+                    );
+                    (*event).type_ = YAML_MAPPING_START_EVENT;
+                    (*event).start_mark = start_mark;
+                    (*event).end_mark = end_mark;
+                    let fresh47 = addr_of_mut!((*event).data.mapping_start.anchor);
+                    *fresh47 = anchor;
+                    let fresh48 = addr_of_mut!((*event).data.mapping_start.tag);
+                    *fresh48 = tag;
+                    (*event).data.mapping_start.implicit = implicit;
+                    (*event).data.mapping_start.style = YAML_FLOW_MAPPING_STYLE;
+                    return OK;
+                } else if block && (*token).type_ == YAML_BLOCK_SEQUENCE_START_TOKEN {
+                    end_mark = (*token).end_mark;
+                    (*parser).state = YAML_PARSE_BLOCK_SEQUENCE_FIRST_ENTRY_STATE;
+                    memset(
+                        event as *mut libc::c_void,
+                        0,
+                        size_of::<yaml_event_t>() as libc::c_ulong,
+                    );
+                    (*event).type_ = YAML_SEQUENCE_START_EVENT;
+                    (*event).start_mark = start_mark;
+                    (*event).end_mark = end_mark;
+                    let fresh49 = addr_of_mut!((*event).data.sequence_start.anchor);
+                    *fresh49 = anchor;
+                    let fresh50 = addr_of_mut!((*event).data.sequence_start.tag);
+                    *fresh50 = tag;
+                    (*event).data.sequence_start.implicit = implicit;
+                    (*event).data.sequence_start.style = YAML_BLOCK_SEQUENCE_STYLE;
+                    return OK;
+                } else if block && (*token).type_ == YAML_BLOCK_MAPPING_START_TOKEN {
+                    end_mark = (*token).end_mark;
+                    (*parser).state = YAML_PARSE_BLOCK_MAPPING_FIRST_KEY_STATE;
+                    memset(
+                        event as *mut libc::c_void,
+                        0,
+                        size_of::<yaml_event_t>() as libc::c_ulong,
+                    );
+                    (*event).type_ = YAML_MAPPING_START_EVENT;
+                    (*event).start_mark = start_mark;
+                    (*event).end_mark = end_mark;
+                    let fresh51 = addr_of_mut!((*event).data.mapping_start.anchor);
+                    *fresh51 = anchor;
+                    let fresh52 = addr_of_mut!((*event).data.mapping_start.tag);
+                    *fresh52 = tag;
+                    (*event).data.mapping_start.implicit = implicit;
+                    (*event).data.mapping_start.style = YAML_BLOCK_MAPPING_STYLE;
+                    return OK;
+                } else if !anchor.is_null() || !tag.is_null() {
+                    let value: *mut yaml_char_t = yaml_malloc(1_u64) as *mut yaml_char_t;
+                    *value = b'\0';
+                    (*parser).state = POP!((*parser).states);
+                    memset(
+                        event as *mut libc::c_void,
+                        0,
+                        size_of::<yaml_event_t>() as libc::c_ulong,
+                    );
+                    (*event).type_ = YAML_SCALAR_EVENT;
+                    (*event).start_mark = start_mark;
+                    (*event).end_mark = end_mark;
+                    let fresh54 = addr_of_mut!((*event).data.scalar.anchor);
+                    *fresh54 = anchor;
+                    let fresh55 = addr_of_mut!((*event).data.scalar.tag);
+                    *fresh55 = tag;
+                    let fresh56 = addr_of_mut!((*event).data.scalar.value);
+                    *fresh56 = value;
+                    (*event).data.scalar.length = 0_u64;
+                    (*event).data.scalar.plain_implicit = implicit;
+                    (*event).data.scalar.quoted_implicit = false;
+                    (*event).data.scalar.style = YAML_PLAIN_SCALAR_STYLE;
+                    return OK;
+                } else {
+                    yaml_parser_set_parser_error_context(
+                        parser,
+                        if block {
+                            b"while parsing a block node\0" as *const u8 as *const libc::c_char
+                        } else {
+                            b"while parsing a flow node\0" as *const u8 as *const libc::c_char
+                        },
+                        start_mark,
+                        b"did not find expected node content\0" as *const u8 as *const libc::c_char,
+                        (*token).start_mark,
+                    );
+                }
+            }
         }
         yaml_free(anchor as *mut libc::c_void);
         yaml_free(tag_handle as *mut libc::c_void);
@@ -1283,52 +1267,46 @@ unsafe fn yaml_parser_process_directives(
                 break;
             }
         }
-        match current_block {
-            17143798186130252483 => {}
-            _ => {
-                default_tag_directive = default_tag_directives.as_mut_ptr();
-                loop {
-                    if (*default_tag_directive).handle.is_null() {
-                        current_block = 18377268871191777778;
-                        break;
-                    }
-                    if yaml_parser_append_tag_directive(
-                        parser,
-                        *default_tag_directive,
-                        true,
-                        (*token).start_mark,
-                    )
-                    .fail
-                    {
-                        current_block = 17143798186130252483;
-                        break;
-                    }
-                    default_tag_directive = default_tag_directive.wrapping_offset(1);
+        if current_block != 17143798186130252483 {
+            default_tag_directive = default_tag_directives.as_mut_ptr();
+            loop {
+                if (*default_tag_directive).handle.is_null() {
+                    current_block = 18377268871191777778;
+                    break;
                 }
-                match current_block {
-                    17143798186130252483 => {}
-                    _ => {
-                        if !version_directive_ref.is_null() {
-                            *version_directive_ref = version_directive;
-                        }
-                        if !tag_directives_start_ref.is_null() {
-                            if STACK_EMPTY!(tag_directives) {
-                                *tag_directives_end_ref = ptr::null_mut::<yaml_tag_directive_t>();
-                                *tag_directives_start_ref = *tag_directives_end_ref;
-                                STACK_DEL!(tag_directives);
-                            } else {
-                                *tag_directives_start_ref = tag_directives.start;
-                                *tag_directives_end_ref = tag_directives.top;
-                            }
-                        } else {
-                            STACK_DEL!(tag_directives);
-                        }
-                        if version_directive_ref.is_null() {
-                            yaml_free(version_directive as *mut libc::c_void);
-                        }
-                        return OK;
-                    }
+                if yaml_parser_append_tag_directive(
+                    parser,
+                    *default_tag_directive,
+                    true,
+                    (*token).start_mark,
+                )
+                .fail
+                {
+                    current_block = 17143798186130252483;
+                    break;
                 }
+                default_tag_directive = default_tag_directive.wrapping_offset(1);
+            }
+            if current_block != 17143798186130252483 {
+                if !version_directive_ref.is_null() {
+                    *version_directive_ref = version_directive;
+                }
+                if !tag_directives_start_ref.is_null() {
+                    if STACK_EMPTY!(tag_directives) {
+                        *tag_directives_end_ref = ptr::null_mut::<yaml_tag_directive_t>();
+                        *tag_directives_start_ref = *tag_directives_end_ref;
+                        STACK_DEL!(tag_directives);
+                    } else {
+                        *tag_directives_start_ref = tag_directives.start;
+                        *tag_directives_end_ref = tag_directives.top;
+                    }
+                } else {
+                    STACK_DEL!(tag_directives);
+                }
+                if version_directive_ref.is_null() {
+                    yaml_free(version_directive as *mut libc::c_void);
+                }
+                return OK;
             }
         }
     }
