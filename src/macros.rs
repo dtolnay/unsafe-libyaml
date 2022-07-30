@@ -39,7 +39,6 @@ macro_rules! STRING_INIT {
         $string.pointer = $string.start;
         $string.end = $string.start.wrapping_add(16);
         memset($string.start as *mut libc::c_void, 0, 16);
-        OK
     }};
 }
 
