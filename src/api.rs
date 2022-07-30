@@ -59,9 +59,6 @@ pub(crate) unsafe fn yaml_string_extend(
         *start as *mut libc::c_void,
         ((*end).c_offset_from(*start) as libc::c_long * 2_i64) as size_t,
     ) as *mut yaml_char_t;
-    if new_start.is_null() {
-        return FAIL;
-    }
     memset(
         new_start.wrapping_offset((*end).c_offset_from(*start) as libc::c_long as isize)
             as *mut libc::c_void,
@@ -118,9 +115,6 @@ pub(crate) unsafe fn yaml_stack_extend(
         ((*end as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
             * 2_i64) as size_t,
     );
-    if new_start.is_null() {
-        return FAIL;
-    }
     *top = (new_start as *mut libc::c_char).wrapping_offset(
         (*top as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
             as isize,
@@ -145,9 +139,6 @@ pub(crate) unsafe fn yaml_queue_extend(
             ((*end as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
                 * 2_i64) as size_t,
         );
-        if new_start.is_null() {
-            return FAIL;
-        }
         *head = (new_start as *mut libc::c_char).wrapping_offset(
             (*head as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
                 as isize,
@@ -697,13 +688,9 @@ pub unsafe fn yaml_document_start_event_initialize(
     if !version_directive.is_null() {
         version_directive_copy = yaml_malloc(size_of::<yaml_version_directive_t>() as libc::c_ulong)
             as *mut yaml_version_directive_t;
-        if version_directive_copy.is_null() {
-            current_block = 14964981520188694172;
-        } else {
-            (*version_directive_copy).major = (*version_directive).major;
-            (*version_directive_copy).minor = (*version_directive).minor;
-            current_block = 1394248824506584008;
-        }
+        (*version_directive_copy).major = (*version_directive).major;
+        (*version_directive_copy).minor = (*version_directive).minor;
+        current_block = 1394248824506584008;
     } else {
         current_block = 1394248824506584008;
     }
@@ -924,33 +911,31 @@ pub unsafe fn yaml_scalar_event_initialize(
                     }
                     if yaml_check_utf8(value, length as size_t).ok {
                         value_copy = yaml_malloc((length + 1) as size_t) as *mut yaml_char_t;
-                        if !value_copy.is_null() {
-                            memcpy(
-                                value_copy as *mut libc::c_void,
-                                value as *const libc::c_void,
-                                length as libc::c_ulong,
-                            );
-                            *value_copy.wrapping_offset(length as isize) = b'\0';
-                            memset(
-                                event as *mut libc::c_void,
-                                0,
-                                size_of::<yaml_event_t>() as libc::c_ulong,
-                            );
-                            (*event).type_ = YAML_SCALAR_EVENT;
-                            (*event).start_mark = mark;
-                            (*event).end_mark = mark;
-                            let fresh168 = addr_of_mut!((*event).data.scalar.anchor);
-                            *fresh168 = anchor_copy;
-                            let fresh169 = addr_of_mut!((*event).data.scalar.tag);
-                            *fresh169 = tag_copy;
-                            let fresh170 = addr_of_mut!((*event).data.scalar.value);
-                            *fresh170 = value_copy;
-                            (*event).data.scalar.length = length as size_t;
-                            (*event).data.scalar.plain_implicit = plain_implicit;
-                            (*event).data.scalar.quoted_implicit = quoted_implicit;
-                            (*event).data.scalar.style = style;
-                            return OK;
-                        }
+                        memcpy(
+                            value_copy as *mut libc::c_void,
+                            value as *const libc::c_void,
+                            length as libc::c_ulong,
+                        );
+                        *value_copy.wrapping_offset(length as isize) = b'\0';
+                        memset(
+                            event as *mut libc::c_void,
+                            0,
+                            size_of::<yaml_event_t>() as libc::c_ulong,
+                        );
+                        (*event).type_ = YAML_SCALAR_EVENT;
+                        (*event).start_mark = mark;
+                        (*event).end_mark = mark;
+                        let fresh168 = addr_of_mut!((*event).data.scalar.anchor);
+                        *fresh168 = anchor_copy;
+                        let fresh169 = addr_of_mut!((*event).data.scalar.tag);
+                        *fresh169 = tag_copy;
+                        let fresh170 = addr_of_mut!((*event).data.scalar.value);
+                        *fresh170 = value_copy;
+                        (*event).data.scalar.length = length as size_t;
+                        (*event).data.scalar.plain_implicit = plain_implicit;
+                        (*event).data.scalar.quoted_implicit = quoted_implicit;
+                        (*event).data.scalar.style = style;
+                        return OK;
                     }
                 }
             }
@@ -1253,13 +1238,9 @@ pub unsafe fn yaml_document_initialize(
             version_directive_copy =
                 yaml_malloc(size_of::<yaml_version_directive_t>() as libc::c_ulong)
                     as *mut yaml_version_directive_t;
-            if version_directive_copy.is_null() {
-                current_block = 8142820162064489797;
-            } else {
-                (*version_directive_copy).major = (*version_directive).major;
-                (*version_directive_copy).minor = (*version_directive).minor;
-                current_block = 7746791466490516765;
-            }
+            (*version_directive_copy).major = (*version_directive).major;
+            (*version_directive_copy).minor = (*version_directive).minor;
+            current_block = 7746791466490516765;
         } else {
             current_block = 7746791466490516765;
         }
@@ -1480,29 +1461,27 @@ pub unsafe fn yaml_document_add_scalar(
             }
             if yaml_check_utf8(value, length as size_t).ok {
                 value_copy = yaml_malloc((length + 1) as size_t) as *mut yaml_char_t;
-                if !value_copy.is_null() {
-                    memcpy(
-                        value_copy as *mut libc::c_void,
-                        value as *const libc::c_void,
-                        length as libc::c_ulong,
-                    );
-                    *value_copy.wrapping_offset(length as isize) = b'\0';
-                    memset(
-                        node as *mut libc::c_void,
-                        0,
-                        size_of::<yaml_node_t>() as libc::c_ulong,
-                    );
-                    (*node).type_ = YAML_SCALAR_NODE;
-                    (*node).tag = tag_copy;
-                    (*node).start_mark = mark;
-                    (*node).end_mark = mark;
-                    (*node).data.scalar.value = value_copy;
-                    (*node).data.scalar.length = length as size_t;
-                    (*node).data.scalar.style = style;
-                    if PUSH!(addr_of_mut!(context), (*document).nodes, *node).ok {
-                        return (*document).nodes.top.c_offset_from((*document).nodes.start)
-                            as libc::c_int;
-                    }
+                memcpy(
+                    value_copy as *mut libc::c_void,
+                    value as *const libc::c_void,
+                    length as libc::c_ulong,
+                );
+                *value_copy.wrapping_offset(length as isize) = b'\0';
+                memset(
+                    node as *mut libc::c_void,
+                    0,
+                    size_of::<yaml_node_t>() as libc::c_ulong,
+                );
+                (*node).type_ = YAML_SCALAR_NODE;
+                (*node).tag = tag_copy;
+                (*node).start_mark = mark;
+                (*node).end_mark = mark;
+                (*node).data.scalar.value = value_copy;
+                (*node).data.scalar.length = length as size_t;
+                (*node).data.scalar.style = style;
+                if PUSH!(addr_of_mut!(context), (*document).nodes, *node).ok {
+                    return (*document).nodes.top.c_offset_from((*document).nodes.start)
+                        as libc::c_int;
                 }
             }
         }

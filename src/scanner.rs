@@ -1173,7 +1173,7 @@ unsafe fn yaml_parser_scan_directive(
 }
 
 unsafe fn yaml_parser_scan_directive_name(
-    mut parser: *mut yaml_parser_t,
+    parser: *mut yaml_parser_t,
     start_mark: yaml_mark_t,
     name: *mut *mut yaml_char_t,
 ) -> Success {
@@ -1405,7 +1405,7 @@ unsafe fn yaml_parser_scan_tag_directive_value(
 }
 
 unsafe fn yaml_parser_scan_anchor(
-    mut parser: *mut yaml_parser_t,
+    parser: *mut yaml_parser_t,
     mut token: *mut yaml_token_t,
     type_: yaml_token_type_t,
 ) -> Success {
@@ -1505,35 +1505,31 @@ unsafe fn yaml_parser_scan_tag(
     if CACHE(parser, 2_u64).ok {
         if CHECK_AT!((*parser).buffer, b'<', 1) {
             handle = yaml_malloc(1_u64) as *mut yaml_char_t;
-            if handle.is_null() {
+            *handle = b'\0';
+            SKIP(parser);
+            SKIP(parser);
+            if yaml_parser_scan_tag_uri(
+                parser,
+                true,
+                false,
+                ptr::null_mut::<yaml_char_t>(),
+                start_mark,
+                addr_of_mut!(suffix),
+            )
+            .fail
+            {
+                current_block = 17708497480799081542;
+            } else if !CHECK!((*parser).buffer, b'>') {
+                yaml_parser_set_scanner_error(
+                    parser,
+                    b"while scanning a tag\0" as *const u8 as *const libc::c_char,
+                    start_mark,
+                    b"did not find the expected '>'\0" as *const u8 as *const libc::c_char,
+                );
                 current_block = 17708497480799081542;
             } else {
-                *handle = b'\0';
                 SKIP(parser);
-                SKIP(parser);
-                if yaml_parser_scan_tag_uri(
-                    parser,
-                    true,
-                    false,
-                    ptr::null_mut::<yaml_char_t>(),
-                    start_mark,
-                    addr_of_mut!(suffix),
-                )
-                .fail
-                {
-                    current_block = 17708497480799081542;
-                } else if !CHECK!((*parser).buffer, b'>') {
-                    yaml_parser_set_scanner_error(
-                        parser,
-                        b"while scanning a tag\0" as *const u8 as *const libc::c_char,
-                        start_mark,
-                        b"did not find the expected '>'\0" as *const u8 as *const libc::c_char,
-                    );
-                    current_block = 17708497480799081542;
-                } else {
-                    SKIP(parser);
-                    current_block = 4488286894823169796;
-                }
+                current_block = 4488286894823169796;
             }
         } else if yaml_parser_scan_tag_handle(parser, false, start_mark, addr_of_mut!(handle)).fail
         {
@@ -1572,18 +1568,14 @@ unsafe fn yaml_parser_scan_tag(
         } else {
             yaml_free(handle as *mut libc::c_void);
             handle = yaml_malloc(2_u64) as *mut yaml_char_t;
-            if handle.is_null() {
-                current_block = 17708497480799081542;
-            } else {
-                *handle = b'!';
-                *handle.wrapping_offset(1_isize) = b'\0';
-                if *suffix == b'\0' {
-                    let tmp: *mut yaml_char_t = handle;
-                    handle = suffix;
-                    suffix = tmp;
-                }
-                current_block = 4488286894823169796;
+            *handle = b'!';
+            *handle.wrapping_offset(1_isize) = b'\0';
+            if *suffix == b'\0' {
+                let tmp: *mut yaml_char_t = handle;
+                handle = suffix;
+                suffix = tmp;
             }
+            current_block = 4488286894823169796;
         }
         match current_block {
             17708497480799081542 => {}
@@ -1634,7 +1626,7 @@ unsafe fn yaml_parser_scan_tag(
 }
 
 unsafe fn yaml_parser_scan_tag_handle(
-    mut parser: *mut yaml_parser_t,
+    parser: *mut yaml_parser_t,
     directive: bool,
     start_mark: yaml_mark_t,
     handle: *mut *mut yaml_char_t,
