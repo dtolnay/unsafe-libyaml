@@ -132,7 +132,7 @@ pub unsafe fn yaml_emitter_emit(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
 ) -> Success {
-    ENQUEUE!(emitter, (*emitter).events, *event);
+    ENQUEUE!((*emitter).events, *event);
     while yaml_emitter_need_more_events(emitter).fail {
         if yaml_emitter_analyze_event(emitter, (*emitter).events.head).fail {
             return FAIL;
@@ -219,7 +219,7 @@ unsafe fn yaml_emitter_append_tag_directive(
     if copy.handle.is_null() || copy.prefix.is_null() {
         (*emitter).error = YAML_MEMORY_ERROR;
     } else {
-        PUSH!(emitter, (*emitter).tag_directives, copy);
+        PUSH!((*emitter).tag_directives, copy);
         return OK;
     }
     yaml_free(copy.handle as *mut libc::c_void);
@@ -232,7 +232,7 @@ unsafe fn yaml_emitter_increase_indent(
     flow: bool,
     indentless: bool,
 ) -> Success {
-    PUSH!(emitter, (*emitter).indents, (*emitter).indent);
+    PUSH!((*emitter).indents, (*emitter).indent);
     if (*emitter).indent < 0 {
         (*emitter).indent = if flow { (*emitter).best_indent } else { 0 };
     } else if !indentless {
@@ -557,7 +557,7 @@ unsafe fn yaml_emitter_emit_document_content(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
 ) -> Success {
-    PUSH!(emitter, (*emitter).states, YAML_EMIT_DOCUMENT_END_STATE);
+    PUSH!((*emitter).states, YAML_EMIT_DOCUMENT_END_STATE);
     yaml_emitter_emit_node(emitter, event, true, false, false, false)
 }
 
@@ -680,11 +680,7 @@ unsafe fn yaml_emitter_emit_flow_sequence_item(
             return FAIL;
         }
     }
-    PUSH!(
-        emitter,
-        (*emitter).states,
-        YAML_EMIT_FLOW_SEQUENCE_ITEM_STATE
-    );
+    PUSH!((*emitter).states, YAML_EMIT_FLOW_SEQUENCE_ITEM_STATE);
     yaml_emitter_emit_node(emitter, event, false, true, false, false)
 }
 
@@ -767,11 +763,7 @@ unsafe fn yaml_emitter_emit_flow_mapping_key(
         }
     }
     if !(*emitter).canonical && yaml_emitter_check_simple_key(emitter) {
-        PUSH!(
-            emitter,
-            (*emitter).states,
-            YAML_EMIT_FLOW_MAPPING_SIMPLE_VALUE_STATE
-        );
+        PUSH!((*emitter).states, YAML_EMIT_FLOW_MAPPING_SIMPLE_VALUE_STATE);
         yaml_emitter_emit_node(emitter, event, false, false, true, true)
     } else {
         if yaml_emitter_write_indicator(
@@ -785,11 +777,7 @@ unsafe fn yaml_emitter_emit_flow_mapping_key(
         {
             return FAIL;
         }
-        PUSH!(
-            emitter,
-            (*emitter).states,
-            YAML_EMIT_FLOW_MAPPING_VALUE_STATE
-        );
+        PUSH!((*emitter).states, YAML_EMIT_FLOW_MAPPING_VALUE_STATE);
         yaml_emitter_emit_node(emitter, event, false, false, true, false)
     }
 }
@@ -829,7 +817,7 @@ unsafe fn yaml_emitter_emit_flow_mapping_value(
             return FAIL;
         }
     }
-    PUSH!(emitter, (*emitter).states, YAML_EMIT_FLOW_MAPPING_KEY_STATE);
+    PUSH!((*emitter).states, YAML_EMIT_FLOW_MAPPING_KEY_STATE);
     yaml_emitter_emit_node(emitter, event, false, false, true, false)
 }
 
@@ -868,11 +856,7 @@ unsafe fn yaml_emitter_emit_block_sequence_item(
     {
         return FAIL;
     }
-    PUSH!(
-        emitter,
-        (*emitter).states,
-        YAML_EMIT_BLOCK_SEQUENCE_ITEM_STATE
-    );
+    PUSH!((*emitter).states, YAML_EMIT_BLOCK_SEQUENCE_ITEM_STATE);
     yaml_emitter_emit_node(emitter, event, false, true, false, false)
 }
 
@@ -896,7 +880,6 @@ unsafe fn yaml_emitter_emit_block_mapping_key(
     }
     if yaml_emitter_check_simple_key(emitter) {
         PUSH!(
-            emitter,
             (*emitter).states,
             YAML_EMIT_BLOCK_MAPPING_SIMPLE_VALUE_STATE
         );
@@ -913,11 +896,7 @@ unsafe fn yaml_emitter_emit_block_mapping_key(
         {
             return FAIL;
         }
-        PUSH!(
-            emitter,
-            (*emitter).states,
-            YAML_EMIT_BLOCK_MAPPING_VALUE_STATE
-        );
+        PUSH!((*emitter).states, YAML_EMIT_BLOCK_MAPPING_VALUE_STATE);
         yaml_emitter_emit_node(emitter, event, false, false, true, false)
     }
 }
@@ -955,11 +934,7 @@ unsafe fn yaml_emitter_emit_block_mapping_value(
             return FAIL;
         }
     }
-    PUSH!(
-        emitter,
-        (*emitter).states,
-        YAML_EMIT_BLOCK_MAPPING_KEY_STATE
-    );
+    PUSH!((*emitter).states, YAML_EMIT_BLOCK_MAPPING_KEY_STATE);
     yaml_emitter_emit_node(emitter, event, false, false, true, false)
 }
 

@@ -48,7 +48,7 @@ pub unsafe fn yaml_parser_load(
         0,
         size_of::<yaml_document_t>() as libc::c_ulong,
     );
-    STACK_INIT!(parser, (*document).nodes, yaml_node_t);
+    STACK_INIT!((*document).nodes, yaml_node_t);
     if !(*parser).stream_start_produced {
         if yaml_parser_parse(parser, event).fail {
             current_block = 6234624449317607669;
@@ -69,7 +69,7 @@ pub unsafe fn yaml_parser_load(
                 if (*event).type_ == YAML_STREAM_END_EVENT {
                     return OK;
                 }
-                STACK_INIT!(parser, (*parser).aliases, yaml_alias_data_t);
+                STACK_INIT!((*parser).aliases, yaml_alias_data_t);
                 let fresh6 = addr_of_mut!((*parser).document);
                 *fresh6 = document;
                 if yaml_parser_load_document(parser, event).ok {
@@ -142,7 +142,7 @@ unsafe fn yaml_parser_load_document(
     *fresh18 = (*event).data.document_start.tag_directives.end;
     (*(*parser).document).start_implicit = (*event).data.document_start.implicit;
     (*(*parser).document).start_mark = (*event).start_mark;
-    STACK_INIT!(parser, ctx, libc::c_int);
+    STACK_INIT!(ctx, libc::c_int);
     if yaml_parser_load_nodes(parser, addr_of_mut!(ctx)).fail {
         STACK_DEL!(ctx);
         return FAIL;
@@ -239,7 +239,7 @@ unsafe fn yaml_parser_register_anchor(
         }
         alias_data = alias_data.wrapping_offset(1);
     }
-    PUSH!(parser, (*parser).aliases, *data);
+    PUSH!((*parser).aliases, *data);
     OK
 }
 
@@ -261,7 +261,7 @@ unsafe fn yaml_parser_load_node_add(
             if STACK_LIMIT!(parser, (*parent).data.sequence.items).fail {
                 return FAIL;
             }
-            PUSH!(parser, (*parent).data.sequence.items, index);
+            PUSH!((*parent).data.sequence.items, index);
         }
         YAML_MAPPING_NODE => {
             let mut pair = MaybeUninit::<yaml_node_pair_t>::uninit();
@@ -286,7 +286,7 @@ unsafe fn yaml_parser_load_node_add(
                     if STACK_LIMIT!(parser, (*parent).data.mapping.pairs).fail {
                         return FAIL;
                     }
-                    PUSH!(parser, (*parent).data.mapping.pairs, *pair);
+                    PUSH!((*parent).data.mapping.pairs, *pair);
                 }
             }
         }
@@ -368,7 +368,7 @@ unsafe fn yaml_parser_load_scalar(
                 (*node).data.scalar.value = (*event).data.scalar.value;
                 (*node).data.scalar.length = (*event).data.scalar.length;
                 (*node).data.scalar.style = (*event).data.scalar.style;
-                PUSH!(parser, (*(*parser).document).nodes, *node);
+                PUSH!((*(*parser).document).nodes, *node);
                 index = (*(*parser).document)
                     .nodes
                     .top
@@ -429,7 +429,7 @@ unsafe fn yaml_parser_load_sequence(
         match current_block {
             13474536459355229096 => {}
             _ => {
-                STACK_INIT!(parser, items, yaml_node_item_t);
+                STACK_INIT!(items, yaml_node_item_t);
                 memset(
                     node as *mut libc::c_void,
                     0,
@@ -443,7 +443,7 @@ unsafe fn yaml_parser_load_sequence(
                 (*node).data.sequence.items.end = items.end;
                 (*node).data.sequence.items.top = items.start;
                 (*node).data.sequence.style = (*event).data.sequence_start.style;
-                PUSH!(parser, (*(*parser).document).nodes, *node);
+                PUSH!((*(*parser).document).nodes, *node);
                 index = (*(*parser).document)
                     .nodes
                     .top
@@ -460,7 +460,7 @@ unsafe fn yaml_parser_load_sequence(
                 if STACK_LIMIT!(parser, *ctx).fail {
                     return FAIL;
                 }
-                PUSH!(parser, *ctx, index);
+                PUSH!(*ctx, index);
                 return OK;
             }
         }
@@ -532,7 +532,7 @@ unsafe fn yaml_parser_load_mapping(
         match current_block {
             13635467803606088781 => {}
             _ => {
-                STACK_INIT!(parser, pairs, yaml_node_pair_t);
+                STACK_INIT!(pairs, yaml_node_pair_t);
                 memset(
                     node as *mut libc::c_void,
                     0,
@@ -546,7 +546,7 @@ unsafe fn yaml_parser_load_mapping(
                 (*node).data.mapping.pairs.end = pairs.end;
                 (*node).data.mapping.pairs.top = pairs.start;
                 (*node).data.mapping.style = (*event).data.mapping_start.style;
-                PUSH!(parser, (*(*parser).document).nodes, *node);
+                PUSH!((*(*parser).document).nodes, *node);
                 index = (*(*parser).document)
                     .nodes
                     .top
@@ -563,7 +563,7 @@ unsafe fn yaml_parser_load_mapping(
                 if STACK_LIMIT!(parser, *ctx).fail {
                     return FAIL;
                 }
-                PUSH!(parser, *ctx, index);
+                PUSH!(*ctx, index);
                 return OK;
             }
         }

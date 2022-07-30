@@ -1,5 +1,5 @@
 macro_rules! BUFFER_INIT {
-    ($context:expr, $buffer:expr, $size:expr) => {{
+    ($buffer:expr, $size:expr) => {{
         let start = addr_of_mut!($buffer.start);
         *start = yaml_malloc($size as size_t) as *mut yaml_char_t;
         let pointer = addr_of_mut!($buffer.pointer);
@@ -34,7 +34,7 @@ macro_rules! STRING_ASSIGN {
 }
 
 macro_rules! STRING_INIT {
-    ($context:expr, $string:expr) => {{
+    ($string:expr) => {{
         $string.start = yaml_malloc(16) as *mut yaml_char_t;
         $string.pointer = $string.start;
         $string.end = $string.start.wrapping_add(16);
@@ -52,7 +52,7 @@ macro_rules! STRING_DEL {
 }
 
 macro_rules! STRING_EXTEND {
-    ($context:expr, $string:expr) => {
+    ($string:expr) => {
         if $string.pointer.wrapping_add(5) >= $string.end {
             yaml_string_extend(
                 addr_of_mut!($string.start),
@@ -75,7 +75,7 @@ macro_rules! CLEAR {
 }
 
 macro_rules! JOIN {
-    ($context:expr, $string_a:expr, $string_b:expr) => {{
+    ($string_a:expr, $string_b:expr) => {{
         yaml_string_join(
             addr_of_mut!($string_a.start),
             addr_of_mut!($string_a.pointer),
@@ -347,7 +347,7 @@ macro_rules! COPY {
 }
 
 macro_rules! STACK_INIT {
-    ($context:expr, $stack:expr, $type:ty) => {{
+    ($stack:expr, $type:ty) => {{
         $stack.start = yaml_malloc(16 * size_of::<$type>() as libc::c_ulong) as *mut $type;
         $stack.top = $stack.start;
         $stack.end = $stack.start.offset(16_isize);
@@ -381,7 +381,7 @@ macro_rules! STACK_LIMIT {
 }
 
 macro_rules! PUSH {
-    (do $context:expr, $stack:expr, $push:expr) => {{
+    (do $stack:expr, $push:expr) => {{
         if $stack.top == $stack.end {
             yaml_stack_extend(
                 addr_of_mut!($stack.start) as *mut *mut libc::c_void,
@@ -392,11 +392,11 @@ macro_rules! PUSH {
         $push;
         $stack.top = $stack.top.wrapping_offset(1);
     }};
-    ($context:expr, $stack:expr, *$value:expr) => {
-        PUSH!(do $context, $stack, ptr::copy_nonoverlapping($value, $stack.top, 1))
+    ($stack:expr, *$value:expr) => {
+        PUSH!(do $stack, ptr::copy_nonoverlapping($value, $stack.top, 1))
     };
-    ($context:expr, $stack:expr, $value:expr) => {
-        PUSH!(do $context, $stack, ptr::write($stack.top, $value))
+    ($stack:expr, $value:expr) => {
+        PUSH!(do $stack, ptr::write($stack.top, $value))
     };
 }
 
@@ -410,7 +410,7 @@ macro_rules! POP {
 }
 
 macro_rules! QUEUE_INIT {
-    ($context:expr, $queue:expr, $type:ty) => {{
+    ($queue:expr, $type:ty) => {{
         $queue.start = yaml_malloc(16 * size_of::<$type>() as libc::c_ulong) as *mut $type;
         $queue.tail = $queue.start;
         $queue.head = $queue.tail;
@@ -435,7 +435,7 @@ macro_rules! QUEUE_EMPTY {
 }
 
 macro_rules! ENQUEUE {
-    (do $context:expr, $queue:expr, $enqueue:expr) => {{
+    (do $queue:expr, $enqueue:expr) => {{
         if $queue.tail == $queue.end {
             yaml_queue_extend(
                 addr_of_mut!($queue.start) as *mut *mut libc::c_void,
@@ -447,11 +447,11 @@ macro_rules! ENQUEUE {
         $enqueue;
         $queue.tail = $queue.tail.wrapping_offset(1);
     }};
-    ($context:expr, $queue:expr, *$value:expr) => {
-        ENQUEUE!(do $context, $queue, ptr::copy_nonoverlapping($value, $queue.tail, 1))
+    ($queue:expr, *$value:expr) => {
+        ENQUEUE!(do $queue, ptr::copy_nonoverlapping($value, $queue.tail, 1))
     };
-    ($context:expr, $queue:expr, $value:expr) => {
-        ENQUEUE!(do $context, $queue, ptr::write($queue.tail, $value))
+    ($queue:expr, $value:expr) => {
+        ENQUEUE!(do $queue, ptr::write($queue.tail, $value))
     };
 }
 
@@ -466,7 +466,7 @@ macro_rules! DEQUEUE {
 }
 
 macro_rules! QUEUE_INSERT {
-    ($context:expr, $queue:expr, $index:expr, $value:expr) => {{
+    ($queue:expr, $index:expr, $value:expr) => {{
         if $queue.tail == $queue.end {
             yaml_queue_extend(
                 addr_of_mut!($queue.start) as *mut *mut libc::c_void,

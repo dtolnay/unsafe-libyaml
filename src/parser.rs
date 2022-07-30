@@ -257,7 +257,7 @@ unsafe fn yaml_parser_parse_document_start(
         {
             return FAIL;
         }
-        PUSH!(parser, (*parser).states, YAML_PARSE_DOCUMENT_END_STATE);
+        PUSH!((*parser).states, YAML_PARSE_DOCUMENT_END_STATE);
         (*parser).state = YAML_PARSE_BLOCK_NODE_STATE;
         memset(
             event as *mut libc::c_void,
@@ -297,7 +297,7 @@ unsafe fn yaml_parser_parse_document_start(
                     (*token).start_mark,
                 );
             } else {
-                PUSH!(parser, (*parser).states, YAML_PARSE_DOCUMENT_END_STATE);
+                PUSH!((*parser).states, YAML_PARSE_DOCUMENT_END_STATE);
                 (*parser).state = YAML_PARSE_DOCUMENT_CONTENT_STATE;
                 end_mark = (*token).end_mark;
                 memset(
@@ -755,7 +755,7 @@ unsafe fn yaml_parser_parse_block_sequence_entry(
     let mut token: *mut yaml_token_t;
     if first {
         token = PEEK_TOKEN(parser);
-        PUSH!(parser, (*parser).marks, (*token).start_mark);
+        PUSH!((*parser).marks, (*token).start_mark);
         SKIP_TOKEN(parser);
     }
     token = PEEK_TOKEN(parser);
@@ -770,11 +770,7 @@ unsafe fn yaml_parser_parse_block_sequence_entry(
             return FAIL;
         }
         if (*token).type_ != YAML_BLOCK_ENTRY_TOKEN && (*token).type_ != YAML_BLOCK_END_TOKEN {
-            PUSH!(
-                parser,
-                (*parser).states,
-                YAML_PARSE_BLOCK_SEQUENCE_ENTRY_STATE
-            );
+            PUSH!((*parser).states, YAML_PARSE_BLOCK_SEQUENCE_ENTRY_STATE);
             yaml_parser_parse_node(parser, event, true, false)
         } else {
             (*parser).state = YAML_PARSE_BLOCK_SEQUENCE_ENTRY_STATE;
@@ -826,11 +822,7 @@ unsafe fn yaml_parser_parse_indentless_sequence_entry(
             && (*token).type_ != YAML_VALUE_TOKEN
             && (*token).type_ != YAML_BLOCK_END_TOKEN
         {
-            PUSH!(
-                parser,
-                (*parser).states,
-                YAML_PARSE_INDENTLESS_SEQUENCE_ENTRY_STATE
-            );
+            PUSH!((*parser).states, YAML_PARSE_INDENTLESS_SEQUENCE_ENTRY_STATE);
             yaml_parser_parse_node(parser, event, true, false)
         } else {
             (*parser).state = YAML_PARSE_INDENTLESS_SEQUENCE_ENTRY_STATE;
@@ -858,7 +850,7 @@ unsafe fn yaml_parser_parse_block_mapping_key(
     let mut token: *mut yaml_token_t;
     if first {
         token = PEEK_TOKEN(parser);
-        PUSH!(parser, (*parser).marks, (*token).start_mark);
+        PUSH!((*parser).marks, (*token).start_mark);
         SKIP_TOKEN(parser);
     }
     token = PEEK_TOKEN(parser);
@@ -876,11 +868,7 @@ unsafe fn yaml_parser_parse_block_mapping_key(
             && (*token).type_ != YAML_VALUE_TOKEN
             && (*token).type_ != YAML_BLOCK_END_TOKEN
         {
-            PUSH!(
-                parser,
-                (*parser).states,
-                YAML_PARSE_BLOCK_MAPPING_VALUE_STATE
-            );
+            PUSH!((*parser).states, YAML_PARSE_BLOCK_MAPPING_VALUE_STATE);
             yaml_parser_parse_node(parser, event, true, true)
         } else {
             (*parser).state = YAML_PARSE_BLOCK_MAPPING_VALUE_STATE;
@@ -931,7 +919,7 @@ unsafe fn yaml_parser_parse_block_mapping_value(
             && (*token).type_ != YAML_VALUE_TOKEN
             && (*token).type_ != YAML_BLOCK_END_TOKEN
         {
-            PUSH!(parser, (*parser).states, YAML_PARSE_BLOCK_MAPPING_KEY_STATE);
+            PUSH!((*parser).states, YAML_PARSE_BLOCK_MAPPING_KEY_STATE);
             yaml_parser_parse_node(parser, event, true, true)
         } else {
             (*parser).state = YAML_PARSE_BLOCK_MAPPING_KEY_STATE;
@@ -951,7 +939,7 @@ unsafe fn yaml_parser_parse_flow_sequence_entry(
     let mut token: *mut yaml_token_t;
     if first {
         token = PEEK_TOKEN(parser);
-        PUSH!(parser, (*parser).marks, (*token).start_mark);
+        PUSH!((*parser).marks, (*token).start_mark);
         SKIP_TOKEN(parser);
     }
     token = PEEK_TOKEN(parser);
@@ -996,11 +984,7 @@ unsafe fn yaml_parser_parse_flow_sequence_entry(
             SKIP_TOKEN(parser);
             return OK;
         } else if (*token).type_ != YAML_FLOW_SEQUENCE_END_TOKEN {
-            PUSH!(
-                parser,
-                (*parser).states,
-                YAML_PARSE_FLOW_SEQUENCE_ENTRY_STATE
-            );
+            PUSH!((*parser).states, YAML_PARSE_FLOW_SEQUENCE_ENTRY_STATE);
             return yaml_parser_parse_node(parser, event, false, false);
         }
     }
@@ -1031,7 +1015,6 @@ unsafe fn yaml_parser_parse_flow_sequence_entry_mapping_key(
         && (*token).type_ != YAML_FLOW_SEQUENCE_END_TOKEN
     {
         PUSH!(
-            parser,
             (*parser).states,
             YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_VALUE_STATE
         );
@@ -1062,7 +1045,6 @@ unsafe fn yaml_parser_parse_flow_sequence_entry_mapping_value(
         if (*token).type_ != YAML_FLOW_ENTRY_TOKEN && (*token).type_ != YAML_FLOW_SEQUENCE_END_TOKEN
         {
             PUSH!(
-                parser,
                 (*parser).states,
                 YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_END_STATE
             );
@@ -1101,7 +1083,7 @@ unsafe fn yaml_parser_parse_flow_mapping_key(
     let mut token: *mut yaml_token_t;
     if first {
         token = PEEK_TOKEN(parser);
-        PUSH!(parser, (*parser).marks, (*token).start_mark);
+        PUSH!((*parser).marks, (*token).start_mark);
         SKIP_TOKEN(parser);
     }
     token = PEEK_TOKEN(parser);
@@ -1137,22 +1119,14 @@ unsafe fn yaml_parser_parse_flow_mapping_key(
                 && (*token).type_ != YAML_FLOW_ENTRY_TOKEN
                 && (*token).type_ != YAML_FLOW_MAPPING_END_TOKEN
             {
-                PUSH!(
-                    parser,
-                    (*parser).states,
-                    YAML_PARSE_FLOW_MAPPING_VALUE_STATE
-                );
+                PUSH!((*parser).states, YAML_PARSE_FLOW_MAPPING_VALUE_STATE);
                 return yaml_parser_parse_node(parser, event, false, false);
             } else {
                 (*parser).state = YAML_PARSE_FLOW_MAPPING_VALUE_STATE;
                 return yaml_parser_process_empty_scalar(event, (*token).start_mark);
             }
         } else if (*token).type_ != YAML_FLOW_MAPPING_END_TOKEN {
-            PUSH!(
-                parser,
-                (*parser).states,
-                YAML_PARSE_FLOW_MAPPING_EMPTY_VALUE_STATE
-            );
+            PUSH!((*parser).states, YAML_PARSE_FLOW_MAPPING_EMPTY_VALUE_STATE);
             return yaml_parser_parse_node(parser, event, false, false);
         }
     }
@@ -1192,7 +1166,7 @@ unsafe fn yaml_parser_parse_flow_mapping_value(
         }
         if (*token).type_ != YAML_FLOW_ENTRY_TOKEN && (*token).type_ != YAML_FLOW_MAPPING_END_TOKEN
         {
-            PUSH!(parser, (*parser).states, YAML_PARSE_FLOW_MAPPING_KEY_STATE);
+            PUSH!((*parser).states, YAML_PARSE_FLOW_MAPPING_KEY_STATE);
             return yaml_parser_parse_node(parser, event, false, false);
         }
     }
@@ -1262,7 +1236,7 @@ unsafe fn yaml_parser_process_directives(
         top: ptr::null_mut::<yaml_tag_directive_t>(),
     };
     let mut token: *mut yaml_token_t;
-    STACK_INIT!(parser, tag_directives, yaml_tag_directive_t);
+    STACK_INIT!(tag_directives, yaml_tag_directive_t);
     token = PEEK_TOKEN(parser);
     if !token.is_null() {
         loop {
@@ -1309,7 +1283,7 @@ unsafe fn yaml_parser_process_directives(
                     current_block = 17143798186130252483;
                     break;
                 }
-                PUSH!(parser, tag_directives, value);
+                PUSH!(tag_directives, value);
             }
             SKIP_TOKEN(parser);
             token = PEEK_TOKEN(parser);
@@ -1412,7 +1386,7 @@ unsafe fn yaml_parser_append_tag_directive(
     if copy.handle.is_null() || copy.prefix.is_null() {
         (*parser).error = YAML_MEMORY_ERROR;
     } else {
-        PUSH!(parser, (*parser).tag_directives, copy);
+        PUSH!((*parser).tag_directives, copy);
         return OK;
     }
     yaml_free(copy.handle as *mut libc::c_void);
