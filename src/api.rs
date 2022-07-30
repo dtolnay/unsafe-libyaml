@@ -190,16 +190,7 @@ pub unsafe fn yaml_parser_initialize(parser: *mut yaml_parser_t) -> Success {
     STACK_INIT!(parser, (*parser).states, yaml_parser_state_t);
     STACK_INIT!(parser, (*parser).marks, yaml_mark_t);
     STACK_INIT!(parser, (*parser).tag_directives, yaml_tag_directive_t);
-    return OK;
-    BUFFER_DEL!((*parser).raw_buffer);
-    BUFFER_DEL!((*parser).buffer);
-    QUEUE_DEL!((*parser).tokens);
-    STACK_DEL!((*parser).indents);
-    STACK_DEL!((*parser).simple_keys);
-    STACK_DEL!((*parser).states);
-    STACK_DEL!((*parser).marks);
-    STACK_DEL!((*parser).tag_directives);
-    FAIL
+    OK
 }
 
 /// Destroy a parser.
@@ -329,14 +320,7 @@ pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> Succe
     QUEUE_INIT!(emitter, (*emitter).events, yaml_event_t);
     STACK_INIT!(emitter, (*emitter).indents, libc::c_int);
     STACK_INIT!(emitter, (*emitter).tag_directives, yaml_tag_directive_t);
-    return OK;
-    BUFFER_DEL!((*emitter).buffer);
-    BUFFER_DEL!((*emitter).raw_buffer);
-    STACK_DEL!((*emitter).states);
-    QUEUE_DEL!((*emitter).events);
-    STACK_DEL!((*emitter).indents);
-    STACK_DEL!((*emitter).tag_directives);
-    FAIL
+    OK
 }
 
 /// Destroy an emitter.
