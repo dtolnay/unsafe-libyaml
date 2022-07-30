@@ -128,7 +128,7 @@ pub(crate) unsafe fn yaml_queue_extend(
     head: *mut *mut libc::c_void,
     tail: *mut *mut libc::c_void,
     end: *mut *mut libc::c_void,
-) -> Success {
+) {
     if *start == *head && *tail == *end {
         let new_start: *mut libc::c_void = yaml_realloc(
             *start,
@@ -164,7 +164,6 @@ pub(crate) unsafe fn yaml_queue_extend(
         ) as *mut libc::c_void;
         *head = *start;
     }
-    OK
 }
 
 /// Initialize a parser.

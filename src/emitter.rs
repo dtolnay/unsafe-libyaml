@@ -132,10 +132,7 @@ pub unsafe fn yaml_emitter_emit(
     mut emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
 ) -> Success {
-    if ENQUEUE!(emitter, (*emitter).events, *event).fail {
-        yaml_event_delete(event);
-        return FAIL;
-    }
+    ENQUEUE!(emitter, (*emitter).events, *event);
     while yaml_emitter_need_more_events(emitter).fail {
         if yaml_emitter_analyze_event(emitter, (*emitter).events.head).fail {
             return FAIL;

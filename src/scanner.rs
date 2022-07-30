@@ -7,16 +7,16 @@ use crate::reader::yaml_parser_update_buffer;
 use crate::success::{Success, FAIL, OK};
 use crate::yaml::{ptrdiff_t, size_t, yaml_char_t, yaml_string_t, NULL_STRING};
 use crate::{
-    libc, yaml_mark_t, yaml_parser_t, yaml_simple_key_t, yaml_token_delete, yaml_token_t,
-    yaml_token_type_t, PointerExt, YAML_ALIAS_TOKEN, YAML_ANCHOR_TOKEN, YAML_BLOCK_END_TOKEN,
-    YAML_BLOCK_ENTRY_TOKEN, YAML_BLOCK_MAPPING_START_TOKEN, YAML_BLOCK_SEQUENCE_START_TOKEN,
-    YAML_DOCUMENT_END_TOKEN, YAML_DOCUMENT_START_TOKEN, YAML_DOUBLE_QUOTED_SCALAR_STYLE,
-    YAML_FLOW_ENTRY_TOKEN, YAML_FLOW_MAPPING_END_TOKEN, YAML_FLOW_MAPPING_START_TOKEN,
-    YAML_FLOW_SEQUENCE_END_TOKEN, YAML_FLOW_SEQUENCE_START_TOKEN, YAML_FOLDED_SCALAR_STYLE,
-    YAML_KEY_TOKEN, YAML_LITERAL_SCALAR_STYLE, YAML_MEMORY_ERROR, YAML_NO_ERROR,
-    YAML_PLAIN_SCALAR_STYLE, YAML_SCALAR_TOKEN, YAML_SCANNER_ERROR,
-    YAML_SINGLE_QUOTED_SCALAR_STYLE, YAML_STREAM_END_TOKEN, YAML_STREAM_START_TOKEN,
-    YAML_TAG_DIRECTIVE_TOKEN, YAML_TAG_TOKEN, YAML_VALUE_TOKEN, YAML_VERSION_DIRECTIVE_TOKEN,
+    libc, yaml_mark_t, yaml_parser_t, yaml_simple_key_t, yaml_token_t, yaml_token_type_t,
+    PointerExt, YAML_ALIAS_TOKEN, YAML_ANCHOR_TOKEN, YAML_BLOCK_END_TOKEN, YAML_BLOCK_ENTRY_TOKEN,
+    YAML_BLOCK_MAPPING_START_TOKEN, YAML_BLOCK_SEQUENCE_START_TOKEN, YAML_DOCUMENT_END_TOKEN,
+    YAML_DOCUMENT_START_TOKEN, YAML_DOUBLE_QUOTED_SCALAR_STYLE, YAML_FLOW_ENTRY_TOKEN,
+    YAML_FLOW_MAPPING_END_TOKEN, YAML_FLOW_MAPPING_START_TOKEN, YAML_FLOW_SEQUENCE_END_TOKEN,
+    YAML_FLOW_SEQUENCE_START_TOKEN, YAML_FOLDED_SCALAR_STYLE, YAML_KEY_TOKEN,
+    YAML_LITERAL_SCALAR_STYLE, YAML_MEMORY_ERROR, YAML_NO_ERROR, YAML_PLAIN_SCALAR_STYLE,
+    YAML_SCALAR_TOKEN, YAML_SCANNER_ERROR, YAML_SINGLE_QUOTED_SCALAR_STYLE, YAML_STREAM_END_TOKEN,
+    YAML_STREAM_START_TOKEN, YAML_TAG_DIRECTIVE_TOKEN, YAML_TAG_TOKEN, YAML_VALUE_TOKEN,
+    YAML_VERSION_DIRECTIVE_TOKEN,
 };
 use core::mem::{size_of, MaybeUninit};
 use core::ptr::{self, addr_of_mut};
@@ -460,18 +460,14 @@ unsafe fn yaml_parser_roll_indent(
         (*token).start_mark = mark;
         (*token).end_mark = mark;
         if number == -1_i64 {
-            if ENQUEUE!(parser, (*parser).tokens, *token).fail {
-                return FAIL;
-            }
-        } else if QUEUE_INSERT!(
-            parser,
-            (*parser).tokens,
-            (number as libc::c_ulong).wrapping_sub((*parser).tokens_parsed),
-            *token
-        )
-        .fail
-        {
-            return FAIL;
+            ENQUEUE!(parser, (*parser).tokens, *token);
+        } else {
+            QUEUE_INSERT!(
+                parser,
+                (*parser).tokens,
+                (number as libc::c_ulong).wrapping_sub((*parser).tokens_parsed),
+                *token
+            );
         }
     }
     OK
@@ -492,9 +488,7 @@ unsafe fn yaml_parser_unroll_indent(mut parser: *mut yaml_parser_t, column: ptrd
         (*token).type_ = YAML_BLOCK_END_TOKEN;
         (*token).start_mark = (*parser).mark;
         (*token).end_mark = (*parser).mark;
-        if ENQUEUE!(parser, (*parser).tokens, *token).fail {
-            return FAIL;
-        }
+        ENQUEUE!(parser, (*parser).tokens, *token);
         (*parser).indent = POP!((*parser).indents);
     }
     OK
@@ -528,9 +522,7 @@ unsafe fn yaml_parser_fetch_stream_start(mut parser: *mut yaml_parser_t) -> Succ
     (*token).start_mark = (*parser).mark;
     (*token).end_mark = (*parser).mark;
     (*token).data.stream_start.encoding = (*parser).encoding;
-    if ENQUEUE!(parser, (*parser).tokens, *token).fail {
-        return FAIL;
-    }
+    ENQUEUE!(parser, (*parser).tokens, *token);
     OK
 }
 
@@ -557,9 +549,7 @@ unsafe fn yaml_parser_fetch_stream_end(mut parser: *mut yaml_parser_t) -> Succes
     (*token).type_ = YAML_STREAM_END_TOKEN;
     (*token).start_mark = (*parser).mark;
     (*token).end_mark = (*parser).mark;
-    if ENQUEUE!(parser, (*parser).tokens, *token).fail {
-        return FAIL;
-    }
+    ENQUEUE!(parser, (*parser).tokens, *token);
     OK
 }
 
@@ -576,10 +566,7 @@ unsafe fn yaml_parser_fetch_directive(mut parser: *mut yaml_parser_t) -> Success
     if yaml_parser_scan_directive(parser, token).fail {
         return FAIL;
     }
-    if ENQUEUE!(parser, (*parser).tokens, *token).fail {
-        yaml_token_delete(token);
-        return FAIL;
-    }
+    ENQUEUE!(parser, (*parser).tokens, *token);
     OK
 }
 
@@ -609,9 +596,7 @@ unsafe fn yaml_parser_fetch_document_indicator(
     (*token).type_ = type_;
     (*token).start_mark = start_mark;
     (*token).end_mark = end_mark;
-    if ENQUEUE!(parser, (*parser).tokens, *token).fail {
-        return FAIL;
-    }
+    ENQUEUE!(parser, (*parser).tokens, *token);
     OK
 }
 
@@ -639,9 +624,7 @@ unsafe fn yaml_parser_fetch_flow_collection_start(
     (*token).type_ = type_;
     (*token).start_mark = start_mark;
     (*token).end_mark = end_mark;
-    if ENQUEUE!(parser, (*parser).tokens, *token).fail {
-        return FAIL;
-    }
+    ENQUEUE!(parser, (*parser).tokens, *token);
     OK
 }
 
@@ -669,9 +652,7 @@ unsafe fn yaml_parser_fetch_flow_collection_end(
     (*token).type_ = type_;
     (*token).start_mark = start_mark;
     (*token).end_mark = end_mark;
-    if ENQUEUE!(parser, (*parser).tokens, *token).fail {
-        return FAIL;
-    }
+    ENQUEUE!(parser, (*parser).tokens, *token);
     OK
 }
 
@@ -693,9 +674,7 @@ unsafe fn yaml_parser_fetch_flow_entry(mut parser: *mut yaml_parser_t) -> Succes
     (*token).type_ = YAML_FLOW_ENTRY_TOKEN;
     (*token).start_mark = start_mark;
     (*token).end_mark = end_mark;
-    if ENQUEUE!(parser, (*parser).tokens, *token).fail {
-        return FAIL;
-    }
+    ENQUEUE!(parser, (*parser).tokens, *token);
     OK
 }
 
@@ -740,9 +719,7 @@ unsafe fn yaml_parser_fetch_block_entry(mut parser: *mut yaml_parser_t) -> Succe
     (*token).type_ = YAML_BLOCK_ENTRY_TOKEN;
     (*token).start_mark = start_mark;
     (*token).end_mark = end_mark;
-    if ENQUEUE!(parser, (*parser).tokens, *token).fail {
-        return FAIL;
-    }
+    ENQUEUE!(parser, (*parser).tokens, *token);
     OK
 }
 
@@ -787,9 +764,7 @@ unsafe fn yaml_parser_fetch_key(mut parser: *mut yaml_parser_t) -> Success {
     (*token).type_ = YAML_KEY_TOKEN;
     (*token).start_mark = start_mark;
     (*token).end_mark = end_mark;
-    if ENQUEUE!(parser, (*parser).tokens, *token).fail {
-        return FAIL;
-    }
+    ENQUEUE!(parser, (*parser).tokens, *token);
     OK
 }
 
@@ -807,16 +782,12 @@ unsafe fn yaml_parser_fetch_value(mut parser: *mut yaml_parser_t) -> Success {
         (*token).type_ = YAML_KEY_TOKEN;
         (*token).start_mark = (*simple_key).mark;
         (*token).end_mark = (*simple_key).mark;
-        if QUEUE_INSERT!(
+        QUEUE_INSERT!(
             parser,
             (*parser).tokens,
             ((*simple_key).token_number).wrapping_sub((*parser).tokens_parsed),
             *token
-        )
-        .fail
-        {
-            return FAIL;
-        }
+        );
         if yaml_parser_roll_indent(
             parser,
             (*simple_key).mark.column as ptrdiff_t,
@@ -867,9 +838,7 @@ unsafe fn yaml_parser_fetch_value(mut parser: *mut yaml_parser_t) -> Success {
     (*token).type_ = YAML_VALUE_TOKEN;
     (*token).start_mark = start_mark;
     (*token).end_mark = end_mark;
-    if ENQUEUE!(parser, (*parser).tokens, *token).fail {
-        return FAIL;
-    }
+    ENQUEUE!(parser, (*parser).tokens, *token);
     OK
 }
 
@@ -886,10 +855,7 @@ unsafe fn yaml_parser_fetch_anchor(
     if yaml_parser_scan_anchor(parser, token, type_).fail {
         return FAIL;
     }
-    if ENQUEUE!(parser, (*parser).tokens, *token).fail {
-        yaml_token_delete(token);
-        return FAIL;
-    }
+    ENQUEUE!(parser, (*parser).tokens, *token);
     OK
 }
 
@@ -903,10 +869,7 @@ unsafe fn yaml_parser_fetch_tag(mut parser: *mut yaml_parser_t) -> Success {
     if yaml_parser_scan_tag(parser, token).fail {
         return FAIL;
     }
-    if ENQUEUE!(parser, (*parser).tokens, *token).fail {
-        yaml_token_delete(token);
-        return FAIL;
-    }
+    ENQUEUE!(parser, (*parser).tokens, *token);
     OK
 }
 
@@ -920,10 +883,7 @@ unsafe fn yaml_parser_fetch_block_scalar(mut parser: *mut yaml_parser_t, literal
     if yaml_parser_scan_block_scalar(parser, token, literal).fail {
         return FAIL;
     }
-    if ENQUEUE!(parser, (*parser).tokens, *token).fail {
-        yaml_token_delete(token);
-        return FAIL;
-    }
+    ENQUEUE!(parser, (*parser).tokens, *token);
     OK
 }
 
@@ -937,10 +897,7 @@ unsafe fn yaml_parser_fetch_flow_scalar(mut parser: *mut yaml_parser_t, single: 
     if yaml_parser_scan_flow_scalar(parser, token, single).fail {
         return FAIL;
     }
-    if ENQUEUE!(parser, (*parser).tokens, *token).fail {
-        yaml_token_delete(token);
-        return FAIL;
-    }
+    ENQUEUE!(parser, (*parser).tokens, *token);
     OK
 }
 
@@ -954,10 +911,7 @@ unsafe fn yaml_parser_fetch_plain_scalar(mut parser: *mut yaml_parser_t) -> Succ
     if yaml_parser_scan_plain_scalar(parser, token).fail {
         return FAIL;
     }
-    if ENQUEUE!(parser, (*parser).tokens, *token).fail {
-        yaml_token_delete(token);
-        return FAIL;
-    }
+    ENQUEUE!(parser, (*parser).tokens, *token);
     OK
 }
 

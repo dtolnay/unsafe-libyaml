@@ -440,23 +440,18 @@ macro_rules! QUEUE_EMPTY {
 }
 
 macro_rules! ENQUEUE {
-    (do $context:expr, $queue:expr, $enqueue:expr) => {
-        if $queue.tail != $queue.end
-            || yaml_queue_extend(
+    (do $context:expr, $queue:expr, $enqueue:expr) => {{
+        if $queue.tail == $queue.end {
+            yaml_queue_extend(
                 addr_of_mut!($queue.start) as *mut *mut libc::c_void,
                 addr_of_mut!($queue.head) as *mut *mut libc::c_void,
                 addr_of_mut!($queue.tail) as *mut *mut libc::c_void,
                 addr_of_mut!($queue.end) as *mut *mut libc::c_void,
-            ).ok
-        {
-            $enqueue;
-            $queue.tail = $queue.tail.wrapping_offset(1);
-            OK
-        } else {
-            (*$context).error = YAML_MEMORY_ERROR;
-            FAIL
+            );
         }
-    };
+        $enqueue;
+        $queue.tail = $queue.tail.wrapping_offset(1);
+    }};
     ($context:expr, $queue:expr, *$value:expr) => {
         ENQUEUE!(do $context, $queue, ptr::copy_nonoverlapping($value, $queue.tail, 1))
     };
@@ -476,32 +471,26 @@ macro_rules! DEQUEUE {
 }
 
 macro_rules! QUEUE_INSERT {
-    ($context:expr, $queue:expr, $index:expr, $value:expr) => {
-        if $queue.tail != $queue.end
-            || yaml_queue_extend(
+    ($context:expr, $queue:expr, $index:expr, $value:expr) => {{
+        if $queue.tail == $queue.end {
+            yaml_queue_extend(
                 addr_of_mut!($queue.start) as *mut *mut libc::c_void,
                 addr_of_mut!($queue.head) as *mut *mut libc::c_void,
                 addr_of_mut!($queue.tail) as *mut *mut libc::c_void,
                 addr_of_mut!($queue.end) as *mut *mut libc::c_void,
-            )
-            .ok
-        {
-            memmove(
-                ($queue.head)
-                    .wrapping_offset($index as isize)
-                    .wrapping_offset(1_isize) as *mut libc::c_void,
-                ($queue.head).wrapping_offset($index as isize) as *const libc::c_void,
-                (($queue.tail).c_offset_from($queue.head) as libc::c_ulong)
-                    .wrapping_sub($index)
-                    .wrapping_mul(size_of::<yaml_token_t>() as libc::c_ulong),
             );
-            *($queue.head).wrapping_offset($index as isize) = $value;
-            let fresh14 = addr_of_mut!($queue.tail);
-            *fresh14 = (*fresh14).wrapping_offset(1);
-            OK
-        } else {
-            (*$context).error = YAML_MEMORY_ERROR;
-            FAIL
         }
-    };
+        memmove(
+            ($queue.head)
+                .wrapping_offset($index as isize)
+                .wrapping_offset(1_isize) as *mut libc::c_void,
+            ($queue.head).wrapping_offset($index as isize) as *const libc::c_void,
+            (($queue.tail).c_offset_from($queue.head) as libc::c_ulong)
+                .wrapping_sub($index)
+                .wrapping_mul(size_of::<yaml_token_t>() as libc::c_ulong),
+        );
+        *($queue.head).wrapping_offset($index as isize) = $value;
+        let fresh14 = addr_of_mut!($queue.tail);
+        *fresh14 = (*fresh14).wrapping_offset(1);
+    }};
 }
