@@ -1179,45 +1179,44 @@ unsafe fn yaml_parser_scan_directive_name(
 ) -> Success {
     let current_block: u64;
     let mut string = NULL_STRING;
-    if STRING_INIT!(parser, string).ok {
-        if CACHE(parser, 1_u64).ok {
-            loop {
-                if !IS_ALPHA!((*parser).buffer) {
-                    current_block = 10879442775620481940;
-                    break;
-                }
-                if READ!(parser, string).fail {
-                    current_block = 8318012024179131575;
-                    break;
-                }
-                if CACHE(parser, 1_u64).fail {
-                    current_block = 8318012024179131575;
-                    break;
-                }
+    STRING_INIT!(parser, string);
+    if CACHE(parser, 1_u64).ok {
+        loop {
+            if !IS_ALPHA!((*parser).buffer) {
+                current_block = 10879442775620481940;
+                break;
             }
-            match current_block {
-                8318012024179131575 => {}
-                _ => {
-                    if string.start == string.pointer {
-                        yaml_parser_set_scanner_error(
-                            parser,
-                            b"while scanning a directive\0" as *const u8 as *const libc::c_char,
-                            start_mark,
-                            b"could not find expected directive name\0" as *const u8
-                                as *const libc::c_char,
-                        );
-                    } else if !IS_BLANKZ!((*parser).buffer) {
-                        yaml_parser_set_scanner_error(
-                            parser,
-                            b"while scanning a directive\0" as *const u8 as *const libc::c_char,
-                            start_mark,
-                            b"found unexpected non-alphabetical character\0" as *const u8
-                                as *const libc::c_char,
-                        );
-                    } else {
-                        *name = string.start;
-                        return OK;
-                    }
+            if READ!(parser, string).fail {
+                current_block = 8318012024179131575;
+                break;
+            }
+            if CACHE(parser, 1_u64).fail {
+                current_block = 8318012024179131575;
+                break;
+            }
+        }
+        match current_block {
+            8318012024179131575 => {}
+            _ => {
+                if string.start == string.pointer {
+                    yaml_parser_set_scanner_error(
+                        parser,
+                        b"while scanning a directive\0" as *const u8 as *const libc::c_char,
+                        start_mark,
+                        b"could not find expected directive name\0" as *const u8
+                            as *const libc::c_char,
+                    );
+                } else if !IS_BLANKZ!((*parser).buffer) {
+                    yaml_parser_set_scanner_error(
+                        parser,
+                        b"while scanning a directive\0" as *const u8 as *const libc::c_char,
+                        start_mark,
+                        b"found unexpected non-alphabetical character\0" as *const u8
+                            as *const libc::c_char,
+                    );
+                } else {
+                    *name = string.start;
+                    return OK;
                 }
             }
         }
@@ -1411,80 +1410,78 @@ unsafe fn yaml_parser_scan_anchor(
 ) -> Success {
     let current_block: u64;
     let mut length: libc::c_int = 0;
-    let start_mark: yaml_mark_t;
     let end_mark: yaml_mark_t;
     let mut string = NULL_STRING;
-    if STRING_INIT!(parser, string).ok {
-        start_mark = (*parser).mark;
-        SKIP(parser);
-        if CACHE(parser, 1_u64).ok {
-            loop {
-                if !IS_ALPHA!((*parser).buffer) {
-                    current_block = 2868539653012386629;
-                    break;
-                }
-                if READ!(parser, string).fail {
-                    current_block = 5883759901342942623;
-                    break;
-                }
-                if CACHE(parser, 1_u64).fail {
-                    current_block = 5883759901342942623;
-                    break;
-                }
-                length += 1;
+    STRING_INIT!(parser, string);
+    let start_mark: yaml_mark_t = (*parser).mark;
+    SKIP(parser);
+    if CACHE(parser, 1_u64).ok {
+        loop {
+            if !IS_ALPHA!((*parser).buffer) {
+                current_block = 2868539653012386629;
+                break;
             }
-            match current_block {
-                5883759901342942623 => {}
-                _ => {
-                    end_mark = (*parser).mark;
-                    if length == 0
-                        || !(IS_BLANKZ!((*parser).buffer)
-                            || CHECK!((*parser).buffer, b'?')
-                            || CHECK!((*parser).buffer, b':')
-                            || CHECK!((*parser).buffer, b',')
-                            || CHECK!((*parser).buffer, b']')
-                            || CHECK!((*parser).buffer, b'}')
-                            || CHECK!((*parser).buffer, b'%')
-                            || CHECK!((*parser).buffer, b'@')
-                            || CHECK!((*parser).buffer, b'`'))
-                    {
-                        yaml_parser_set_scanner_error(
-                            parser,
-                            if type_ == YAML_ANCHOR_TOKEN {
-                                b"while scanning an anchor\0" as *const u8 as *const libc::c_char
-                            } else {
-                                b"while scanning an alias\0" as *const u8 as *const libc::c_char
-                            },
-                            start_mark,
-                            b"did not find expected alphabetic or numeric character\0" as *const u8
-                                as *const libc::c_char,
-                        );
-                    } else {
+            if READ!(parser, string).fail {
+                current_block = 5883759901342942623;
+                break;
+            }
+            if CACHE(parser, 1_u64).fail {
+                current_block = 5883759901342942623;
+                break;
+            }
+            length += 1;
+        }
+        match current_block {
+            5883759901342942623 => {}
+            _ => {
+                end_mark = (*parser).mark;
+                if length == 0
+                    || !(IS_BLANKZ!((*parser).buffer)
+                        || CHECK!((*parser).buffer, b'?')
+                        || CHECK!((*parser).buffer, b':')
+                        || CHECK!((*parser).buffer, b',')
+                        || CHECK!((*parser).buffer, b']')
+                        || CHECK!((*parser).buffer, b'}')
+                        || CHECK!((*parser).buffer, b'%')
+                        || CHECK!((*parser).buffer, b'@')
+                        || CHECK!((*parser).buffer, b'`'))
+                {
+                    yaml_parser_set_scanner_error(
+                        parser,
                         if type_ == YAML_ANCHOR_TOKEN {
-                            memset(
-                                token as *mut libc::c_void,
-                                0,
-                                size_of::<yaml_token_t>() as libc::c_ulong,
-                            );
-                            (*token).type_ = YAML_ANCHOR_TOKEN;
-                            (*token).start_mark = start_mark;
-                            (*token).end_mark = end_mark;
-                            let fresh220 = addr_of_mut!((*token).data.anchor.value);
-                            *fresh220 = string.start;
+                            b"while scanning an anchor\0" as *const u8 as *const libc::c_char
                         } else {
-                            memset(
-                                token as *mut libc::c_void,
-                                0,
-                                size_of::<yaml_token_t>() as libc::c_ulong,
-                            );
-                            (*token).type_ = YAML_ALIAS_TOKEN;
-                            (*token).start_mark = start_mark;
-                            (*token).end_mark = end_mark;
-                            let fresh221 = addr_of_mut!((*token).data.alias.value);
-                            *fresh221 = string.start;
-                        }
-                        return OK;
+                            b"while scanning an alias\0" as *const u8 as *const libc::c_char
+                        },
+                        start_mark,
+                        b"did not find expected alphabetic or numeric character\0" as *const u8
+                            as *const libc::c_char,
+                    );
+                } else {
+                    if type_ == YAML_ANCHOR_TOKEN {
+                        memset(
+                            token as *mut libc::c_void,
+                            0,
+                            size_of::<yaml_token_t>() as libc::c_ulong,
+                        );
+                        (*token).type_ = YAML_ANCHOR_TOKEN;
+                        (*token).start_mark = start_mark;
+                        (*token).end_mark = end_mark;
+                        let fresh220 = addr_of_mut!((*token).data.anchor.value);
+                        *fresh220 = string.start;
+                    } else {
+                        memset(
+                            token as *mut libc::c_void,
+                            0,
+                            size_of::<yaml_token_t>() as libc::c_ulong,
+                        );
+                        (*token).type_ = YAML_ALIAS_TOKEN;
+                        (*token).start_mark = start_mark;
+                        (*token).end_mark = end_mark;
+                        let fresh221 = addr_of_mut!((*token).data.alias.value);
+                        *fresh221 = string.start;
                     }
+                    return OK;
                 }
             }
         }
@@ -1633,66 +1630,64 @@ unsafe fn yaml_parser_scan_tag_handle(
 ) -> Success {
     let mut current_block: u64;
     let mut string = NULL_STRING;
-    if STRING_INIT!(parser, string).ok {
-        if CACHE(parser, 1_u64).ok {
-            if !CHECK!((*parser).buffer, b'!') {
-                yaml_parser_set_scanner_error(
-                    parser,
-                    if directive {
-                        b"while scanning a tag directive\0" as *const u8 as *const libc::c_char
-                    } else {
-                        b"while scanning a tag\0" as *const u8 as *const libc::c_char
-                    },
-                    start_mark,
-                    b"did not find expected '!'\0" as *const u8 as *const libc::c_char,
-                );
-            } else if READ!(parser, string).ok {
-                if CACHE(parser, 1_u64).ok {
-                    loop {
-                        if !IS_ALPHA!((*parser).buffer) {
-                            current_block = 7651349459974463963;
-                            break;
-                        }
-                        if READ!(parser, string).fail {
-                            current_block = 1771849829115608806;
-                            break;
-                        }
-                        if CACHE(parser, 1_u64).fail {
-                            current_block = 1771849829115608806;
-                            break;
-                        }
+    STRING_INIT!(parser, string);
+    if CACHE(parser, 1_u64).ok {
+        if !CHECK!((*parser).buffer, b'!') {
+            yaml_parser_set_scanner_error(
+                parser,
+                if directive {
+                    b"while scanning a tag directive\0" as *const u8 as *const libc::c_char
+                } else {
+                    b"while scanning a tag\0" as *const u8 as *const libc::c_char
+                },
+                start_mark,
+                b"did not find expected '!'\0" as *const u8 as *const libc::c_char,
+            );
+        } else if READ!(parser, string).ok {
+            if CACHE(parser, 1_u64).ok {
+                loop {
+                    if !IS_ALPHA!((*parser).buffer) {
+                        current_block = 7651349459974463963;
+                        break;
                     }
-                    match current_block {
-                        1771849829115608806 => {}
-                        _ => {
-                            if CHECK!((*parser).buffer, b'!') {
-                                if READ!(parser, string).fail {
-                                    current_block = 1771849829115608806;
-                                } else {
-                                    current_block = 5689001924483802034;
-                                }
-                            } else if directive
-                                && !(*string.start == b'!'
-                                    && *string.start.wrapping_offset(1_isize) == b'\0')
-                            {
-                                yaml_parser_set_scanner_error(
-                                    parser,
-                                    b"while parsing a tag directive\0" as *const u8
-                                        as *const libc::c_char,
-                                    start_mark,
-                                    b"did not find expected '!'\0" as *const u8
-                                        as *const libc::c_char,
-                                );
+                    if READ!(parser, string).fail {
+                        current_block = 1771849829115608806;
+                        break;
+                    }
+                    if CACHE(parser, 1_u64).fail {
+                        current_block = 1771849829115608806;
+                        break;
+                    }
+                }
+                match current_block {
+                    1771849829115608806 => {}
+                    _ => {
+                        if CHECK!((*parser).buffer, b'!') {
+                            if READ!(parser, string).fail {
                                 current_block = 1771849829115608806;
                             } else {
                                 current_block = 5689001924483802034;
                             }
-                            match current_block {
-                                1771849829115608806 => {}
-                                _ => {
-                                    *handle = string.start;
-                                    return OK;
-                                }
+                        } else if directive
+                            && !(*string.start == b'!'
+                                && *string.start.wrapping_offset(1_isize) == b'\0')
+                        {
+                            yaml_parser_set_scanner_error(
+                                parser,
+                                b"while parsing a tag directive\0" as *const u8
+                                    as *const libc::c_char,
+                                start_mark,
+                                b"did not find expected '!'\0" as *const u8 as *const libc::c_char,
+                            );
+                            current_block = 1771849829115608806;
+                        } else {
+                            current_block = 5689001924483802034;
+                        }
+                        match current_block {
+                            1771849829115608806 => {}
+                            _ => {
+                                *handle = string.start;
+                                return OK;
                             }
                         }
                     }
@@ -1719,11 +1714,8 @@ unsafe fn yaml_parser_scan_tag_uri(
         0_u64
     };
     let mut string = NULL_STRING;
-    if STRING_INIT!(parser, string).fail {
-        current_block = 15265153392498847348;
-    } else {
-        current_block = 14916268686031723178;
-    }
+    STRING_INIT!(parser, string);
+    current_block = 14916268686031723178;
     'c_21953: loop {
         match current_block {
             15265153392498847348 => {
@@ -1923,7 +1915,6 @@ unsafe fn yaml_parser_scan_block_scalar(
     literal: bool,
 ) -> Success {
     let mut current_block: u64;
-    let start_mark: yaml_mark_t;
     let mut end_mark: yaml_mark_t;
     let mut string = NULL_STRING;
     let mut leading_break = NULL_STRING;
@@ -1933,12 +1924,55 @@ unsafe fn yaml_parser_scan_block_scalar(
     let mut indent: libc::c_int = 0;
     let mut leading_blank: libc::c_int = 0;
     let mut trailing_blank: libc::c_int;
-    if STRING_INIT!(parser, string).ok {
-        if STRING_INIT!(parser, leading_break).ok {
-            if STRING_INIT!(parser, trailing_breaks).ok {
-                start_mark = (*parser).mark;
+    STRING_INIT!(parser, string);
+    STRING_INIT!(parser, leading_break);
+    STRING_INIT!(parser, trailing_breaks);
+    let start_mark: yaml_mark_t = (*parser).mark;
+    SKIP(parser);
+    if CACHE(parser, 1_u64).ok {
+        if CHECK!((*parser).buffer, b'+') || CHECK!((*parser).buffer, b'-') {
+            chomping = if CHECK!((*parser).buffer, b'+') {
+                1
+            } else {
+                -1
+            };
+            SKIP(parser);
+            if CACHE(parser, 1_u64).fail {
+                current_block = 14984465786483313892;
+            } else if IS_DIGIT!((*parser).buffer) {
+                if CHECK!((*parser).buffer, b'0') {
+                    yaml_parser_set_scanner_error(
+                        parser,
+                        b"while scanning a block scalar\0" as *const u8 as *const libc::c_char,
+                        start_mark,
+                        b"found an indentation indicator equal to 0\0" as *const u8
+                            as *const libc::c_char,
+                    );
+                    current_block = 14984465786483313892;
+                } else {
+                    increment = AS_DIGIT!((*parser).buffer);
+                    SKIP(parser);
+                    current_block = 11913429853522160501;
+                }
+            } else {
+                current_block = 11913429853522160501;
+            }
+        } else if IS_DIGIT!((*parser).buffer) {
+            if CHECK!((*parser).buffer, b'0') {
+                yaml_parser_set_scanner_error(
+                    parser,
+                    b"while scanning a block scalar\0" as *const u8 as *const libc::c_char,
+                    start_mark,
+                    b"found an indentation indicator equal to 0\0" as *const u8
+                        as *const libc::c_char,
+                );
+                current_block = 14984465786483313892;
+            } else {
+                increment = AS_DIGIT!((*parser).buffer);
                 SKIP(parser);
-                if CACHE(parser, 1_u64).ok {
+                if CACHE(parser, 1_u64).fail {
+                    current_block = 14984465786483313892;
+                } else {
                     if CHECK!((*parser).buffer, b'+') || CHECK!((*parser).buffer, b'-') {
                         chomping = if CHECK!((*parser).buffer, b'+') {
                             1
@@ -1946,66 +1980,35 @@ unsafe fn yaml_parser_scan_block_scalar(
                             -1
                         };
                         SKIP(parser);
+                    }
+                    current_block = 11913429853522160501;
+                }
+            }
+        } else {
+            current_block = 11913429853522160501;
+        }
+        match current_block {
+            14984465786483313892 => {}
+            _ => {
+                if CACHE(parser, 1_u64).ok {
+                    loop {
+                        if !IS_BLANK!((*parser).buffer) {
+                            current_block = 4090602189656566074;
+                            break;
+                        }
+                        SKIP(parser);
                         if CACHE(parser, 1_u64).fail {
                             current_block = 14984465786483313892;
-                        } else if IS_DIGIT!((*parser).buffer) {
-                            if CHECK!((*parser).buffer, b'0') {
-                                yaml_parser_set_scanner_error(
-                                    parser,
-                                    b"while scanning a block scalar\0" as *const u8
-                                        as *const libc::c_char,
-                                    start_mark,
-                                    b"found an indentation indicator equal to 0\0" as *const u8
-                                        as *const libc::c_char,
-                                );
-                                current_block = 14984465786483313892;
-                            } else {
-                                increment = AS_DIGIT!((*parser).buffer);
-                                SKIP(parser);
-                                current_block = 11913429853522160501;
-                            }
-                        } else {
-                            current_block = 11913429853522160501;
+                            break;
                         }
-                    } else if IS_DIGIT!((*parser).buffer) {
-                        if CHECK!((*parser).buffer, b'0') {
-                            yaml_parser_set_scanner_error(
-                                parser,
-                                b"while scanning a block scalar\0" as *const u8
-                                    as *const libc::c_char,
-                                start_mark,
-                                b"found an indentation indicator equal to 0\0" as *const u8
-                                    as *const libc::c_char,
-                            );
-                            current_block = 14984465786483313892;
-                        } else {
-                            increment = AS_DIGIT!((*parser).buffer);
-                            SKIP(parser);
-                            if CACHE(parser, 1_u64).fail {
-                                current_block = 14984465786483313892;
-                            } else {
-                                if CHECK!((*parser).buffer, b'+') || CHECK!((*parser).buffer, b'-')
-                                {
-                                    chomping = if CHECK!((*parser).buffer, b'+') {
-                                        1
-                                    } else {
-                                        -1
-                                    };
-                                    SKIP(parser);
-                                }
-                                current_block = 11913429853522160501;
-                            }
-                        }
-                    } else {
-                        current_block = 11913429853522160501;
                     }
                     match current_block {
                         14984465786483313892 => {}
                         _ => {
-                            if CACHE(parser, 1_u64).ok {
+                            if CHECK!((*parser).buffer, b'#') {
                                 loop {
-                                    if !IS_BLANK!((*parser).buffer) {
-                                        current_block = 4090602189656566074;
+                                    if IS_BREAKZ!((*parser).buffer) {
+                                        current_block = 12997042908615822766;
                                         break;
                                     }
                                     SKIP(parser);
@@ -2014,57 +2017,140 @@ unsafe fn yaml_parser_scan_block_scalar(
                                         break;
                                     }
                                 }
-                                match current_block {
-                                    14984465786483313892 => {}
-                                    _ => {
-                                        if CHECK!((*parser).buffer, b'#') {
-                                            loop {
-                                                if IS_BREAKZ!((*parser).buffer) {
-                                                    current_block = 12997042908615822766;
-                                                    break;
-                                                }
-                                                SKIP(parser);
-                                                if CACHE(parser, 1_u64).fail {
-                                                    current_block = 14984465786483313892;
-                                                    break;
-                                                }
+                            } else {
+                                current_block = 12997042908615822766;
+                            }
+                            match current_block {
+                                14984465786483313892 => {}
+                                _ => {
+                                    if !IS_BREAKZ!((*parser).buffer) {
+                                        yaml_parser_set_scanner_error(
+                                            parser,
+                                            b"while scanning a block scalar\0" as *const u8
+                                                as *const libc::c_char,
+                                            start_mark,
+                                            b"did not find expected comment or line break\0"
+                                                as *const u8
+                                                as *const libc::c_char,
+                                        );
+                                    } else {
+                                        if IS_BREAK!((*parser).buffer) {
+                                            if CACHE(parser, 2_u64).fail {
+                                                current_block = 14984465786483313892;
+                                            } else {
+                                                SKIP_LINE(parser);
+                                                current_block = 13619784596304402172;
                                             }
                                         } else {
-                                            current_block = 12997042908615822766;
+                                            current_block = 13619784596304402172;
                                         }
                                         match current_block {
                                             14984465786483313892 => {}
                                             _ => {
-                                                if !IS_BREAKZ!((*parser).buffer) {
-                                                    yaml_parser_set_scanner_error(
-                                                        parser,
-                                                        b"while scanning a block scalar\0" as *const u8
-                                                            as *const libc::c_char,
-                                                        start_mark,
-                                                        b"did not find expected comment or line break\0"
-                                                            as *const u8 as *const libc::c_char,
-                                                    );
-                                                } else {
-                                                    if IS_BREAK!((*parser).buffer) {
-                                                        if CACHE(parser, 2_u64).fail {
-                                                            current_block = 14984465786483313892;
-                                                        } else {
-                                                            SKIP_LINE(parser);
-                                                            current_block = 13619784596304402172;
-                                                        }
+                                                end_mark = (*parser).mark;
+                                                if increment != 0 {
+                                                    indent = if (*parser).indent >= 0 {
+                                                        (*parser).indent + increment
                                                     } else {
-                                                        current_block = 13619784596304402172;
-                                                    }
-                                                    match current_block {
-                                                        14984465786483313892 => {}
-                                                        _ => {
-                                                            end_mark = (*parser).mark;
-                                                            if increment != 0 {
-                                                                indent = if (*parser).indent >= 0 {
-                                                                    (*parser).indent + increment
-                                                                } else {
-                                                                    increment
-                                                                };
+                                                        increment
+                                                    };
+                                                }
+                                                if yaml_parser_scan_block_scalar_breaks(
+                                                    parser,
+                                                    addr_of_mut!(indent),
+                                                    addr_of_mut!(trailing_breaks),
+                                                    start_mark,
+                                                    addr_of_mut!(end_mark),
+                                                )
+                                                .ok
+                                                {
+                                                    if CACHE(parser, 1_u64).ok {
+                                                        's_281: loop {
+                                                            if !((*parser).mark.column
+                                                                as libc::c_int
+                                                                == indent
+                                                                && !IS_Z!((*parser).buffer))
+                                                            {
+                                                                current_block = 5793491756164225964;
+                                                                break;
+                                                            }
+                                                            trailing_blank =
+                                                                IS_BLANK!((*parser).buffer)
+                                                                    as libc::c_int;
+                                                            if !literal
+                                                                && *leading_break.start == b'\n'
+                                                                && leading_blank == 0
+                                                                && trailing_blank == 0
+                                                            {
+                                                                if *trailing_breaks.start == b'\0' {
+                                                                    if STRING_EXTEND!(
+                                                                        parser, string
+                                                                    )
+                                                                    .fail
+                                                                    {
+                                                                        current_block =
+                                                                            14984465786483313892;
+                                                                        break;
+                                                                    }
+                                                                    let fresh418 = string.pointer;
+                                                                    string.pointer = string
+                                                                        .pointer
+                                                                        .wrapping_offset(1);
+                                                                    *fresh418 = b' ';
+                                                                }
+                                                                CLEAR!(leading_break);
+                                                            } else {
+                                                                if JOIN!(
+                                                                    parser,
+                                                                    string,
+                                                                    leading_break
+                                                                )
+                                                                .fail
+                                                                {
+                                                                    current_block =
+                                                                        14984465786483313892;
+                                                                    break;
+                                                                }
+                                                                CLEAR!(leading_break);
+                                                            }
+                                                            if JOIN!(
+                                                                parser,
+                                                                string,
+                                                                trailing_breaks
+                                                            )
+                                                            .fail
+                                                            {
+                                                                current_block =
+                                                                    14984465786483313892;
+                                                                break;
+                                                            }
+                                                            CLEAR!(trailing_breaks);
+                                                            leading_blank =
+                                                                IS_BLANK!((*parser).buffer)
+                                                                    as libc::c_int;
+                                                            while !IS_BREAKZ!((*parser).buffer) {
+                                                                if READ!(parser, string).fail {
+                                                                    current_block =
+                                                                        14984465786483313892;
+                                                                    break 's_281;
+                                                                }
+                                                                if CACHE(parser, 1_u64).fail {
+                                                                    current_block =
+                                                                        14984465786483313892;
+                                                                    break 's_281;
+                                                                }
+                                                            }
+                                                            if CACHE(parser, 2_u64).fail {
+                                                                current_block =
+                                                                    14984465786483313892;
+                                                                break;
+                                                            }
+                                                            if READ_LINE!(parser, leading_break)
+                                                                .fail
+                                                            {
+                                                                current_block =
+                                                                    14984465786483313892;
+                                                                break;
                                                             }
                                                             if yaml_parser_scan_block_scalar_breaks(
                                                                 parser,
@@ -2073,181 +2159,81 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                 start_mark,
                                                                 addr_of_mut!(end_mark),
                                                             )
-                                                            .ok
+                                                            .fail
                                                             {
-                                                                if CACHE(parser, 1_u64).ok {
-                                                                    's_281: loop {
-                                                                        if !((*parser).mark.column
-                                                                            as libc::c_int
-                                                                            == indent
-                                                                            && !IS_Z!(
-                                                                                (*parser).buffer
-                                                                            ))
-                                                                        {
-                                                                            current_block =
-                                                                                5793491756164225964;
-                                                                            break;
-                                                                        }
-                                                                        trailing_blank = IS_BLANK!(
-                                                                            (*parser).buffer
-                                                                        )
-                                                                            as libc::c_int;
-                                                                        if !literal
-                                                                            && *leading_break.start
-                                                                                == b'\n'
-                                                                            && leading_blank == 0
-                                                                            && trailing_blank == 0
-                                                                        {
-                                                                            if *trailing_breaks
-                                                                                .start
-                                                                                == b'\0'
-                                                                            {
-                                                                                if STRING_EXTEND!(
-                                                                                    parser, string
-                                                                                )
-                                                                                .fail
-                                                                                {
-                                                                                    current_block = 14984465786483313892;
-                                                                                    break;
-                                                                                }
-                                                                                let fresh418 =
-                                                                                    string.pointer;
-                                                                                string.pointer = string.pointer.wrapping_offset(1);
-                                                                                *fresh418 = b' ';
-                                                                            }
-                                                                            CLEAR!(leading_break);
-                                                                        } else {
+                                                                current_block =
+                                                                    14984465786483313892;
+                                                                break;
+                                                            }
+                                                        }
+                                                        match current_block {
+                                                            14984465786483313892 => {}
+                                                            _ => {
+                                                                if chomping != -1 {
+                                                                    if JOIN!(
+                                                                        parser,
+                                                                        string,
+                                                                        leading_break
+                                                                    )
+                                                                    .fail
+                                                                    {
+                                                                        current_block =
+                                                                            14984465786483313892;
+                                                                    } else {
+                                                                        current_block =
+                                                                            17787701279558130514;
+                                                                    }
+                                                                } else {
+                                                                    current_block =
+                                                                        17787701279558130514;
+                                                                }
+                                                                match current_block {
+                                                                    14984465786483313892 => {}
+                                                                    _ => {
+                                                                        if chomping == 1 {
                                                                             if JOIN!(
                                                                                 parser,
                                                                                 string,
-                                                                                leading_break
+                                                                                trailing_breaks
                                                                             )
                                                                             .fail
                                                                             {
                                                                                 current_block = 14984465786483313892;
-                                                                                break;
-                                                                            }
-                                                                            CLEAR!(leading_break);
-                                                                        }
-                                                                        if JOIN!(
-                                                                            parser,
-                                                                            string,
-                                                                            trailing_breaks
-                                                                        )
-                                                                        .fail
-                                                                        {
-                                                                            current_block = 14984465786483313892;
-                                                                            break;
-                                                                        }
-                                                                        CLEAR!(trailing_breaks);
-                                                                        leading_blank = IS_BLANK!(
-                                                                            (*parser).buffer
-                                                                        )
-                                                                            as libc::c_int;
-                                                                        while !IS_BREAKZ!(
-                                                                            (*parser).buffer
-                                                                        ) {
-                                                                            if READ!(parser, string)
-                                                                                .fail
-                                                                            {
-                                                                                current_block = 14984465786483313892;
-                                                                                break 's_281;
-                                                                            }
-                                                                            if CACHE(parser, 1_u64)
-                                                                                .fail
-                                                                            {
-                                                                                current_block = 14984465786483313892;
-                                                                                break 's_281;
-                                                                            }
-                                                                        }
-                                                                        if CACHE(parser, 2_u64).fail
-                                                                        {
-                                                                            current_block = 14984465786483313892;
-                                                                            break;
-                                                                        }
-                                                                        if READ_LINE!(
-                                                                            parser,
-                                                                            leading_break
-                                                                        )
-                                                                        .fail
-                                                                        {
-                                                                            current_block = 14984465786483313892;
-                                                                            break;
-                                                                        }
-                                                                        if yaml_parser_scan_block_scalar_breaks(
-                                                                            parser,
-                                                                            addr_of_mut!(indent),
-                                                                            addr_of_mut!(trailing_breaks),
-                                                                            start_mark,
-                                                                            addr_of_mut!(end_mark),
-                                                                        ).fail
-                                                                        {
-                                                                            current_block = 14984465786483313892;
-                                                                            break;
-                                                                        }
-                                                                    }
-                                                                    match current_block {
-                                                                        14984465786483313892 => {}
-                                                                        _ => {
-                                                                            if chomping != -1 {
-                                                                                if JOIN!(
-                                                                                    parser,
-                                                                                    string,
-                                                                                    leading_break
-                                                                                )
-                                                                                .fail
-                                                                                {
-                                                                                    current_block = 14984465786483313892;
-                                                                                } else {
-                                                                                    current_block = 17787701279558130514;
-                                                                                }
                                                                             } else {
-                                                                                current_block = 17787701279558130514;
+                                                                                current_block = 14648606000749551097;
                                                                             }
-                                                                            match current_block {
-                                                                                14984465786483313892 => {}
-                                                                                _ => {
-                                                                                    if chomping == 1 {
-                                                                                        if JOIN!(parser, string, trailing_breaks).fail {
-                                                                                            current_block = 14984465786483313892;
-                                                                                        } else {
-                                                                                            current_block = 14648606000749551097;
-                                                                                        }
-                                                                                    } else {
-                                                                                        current_block = 14648606000749551097;
-                                                                                    }
-                                                                                    match current_block {
-                                                                                        14984465786483313892 => {}
-                                                                                        _ => {
-                                                                                            memset(
-                                                                                                token as *mut libc::c_void,
-                                                                                                0,
-                                                                                                size_of::<yaml_token_t>() as libc::c_ulong,
-                                                                                            );
-                                                                                            (*token).type_ = YAML_SCALAR_TOKEN;
-                                                                                            (*token).start_mark = start_mark;
-                                                                                            (*token).end_mark = end_mark;
-                                                                                            let fresh479 = addr_of_mut!((*token).data.scalar.value);
-                                                                                            *fresh479 = string.start;
-                                                                                            (*token)
-                                                                                                .data
-                                                                                                .scalar
-                                                                                                .length = string.pointer.c_offset_from(string.start)
-                                                                                                as libc::c_long as size_t;
-                                                                                            (*token)
-                                                                                                .data
-                                                                                                .scalar
-                                                                                                .style = if literal {
-                                                                                                YAML_LITERAL_SCALAR_STYLE
-                                                                                            } else {
-                                                                                                YAML_FOLDED_SCALAR_STYLE
-                                                                                            };
-                                                                                            STRING_DEL!(leading_break);
-                                                                                            STRING_DEL!(trailing_breaks);
-                                                                                            return OK;
-                                                                                        }
-                                                                                    }
-                                                                                }
+                                                                        } else {
+                                                                            current_block = 14648606000749551097;
+                                                                        }
+                                                                        match current_block {
+                                                                            14984465786483313892 => {}
+                                                                            _ => {
+                                                                                memset(
+                                                                                    token as *mut libc::c_void,
+                                                                                    0,
+                                                                                    size_of::<yaml_token_t>() as libc::c_ulong,
+                                                                                );
+                                                                                (*token).type_ = YAML_SCALAR_TOKEN;
+                                                                                (*token).start_mark = start_mark;
+                                                                                (*token).end_mark = end_mark;
+                                                                                let fresh479 = addr_of_mut!((*token).data.scalar.value);
+                                                                                *fresh479 = string.start;
+                                                                                (*token)
+                                                                                    .data
+                                                                                    .scalar
+                                                                                    .length = string.pointer.c_offset_from(string.start)
+                                                                                    as libc::c_long as size_t;
+                                                                                (*token)
+                                                                                    .data
+                                                                                    .scalar
+                                                                                    .style = if literal {
+                                                                                    YAML_LITERAL_SCALAR_STYLE
+                                                                                } else {
+                                                                                    YAML_FOLDED_SCALAR_STYLE
+                                                                                };
+                                                                                STRING_DEL!(leading_break);
+                                                                                STRING_DEL!(trailing_breaks);
+                                                                                return OK;
                                                                             }
                                                                         }
                                                                     }
@@ -2338,458 +2324,424 @@ unsafe fn yaml_parser_scan_flow_scalar(
     single: bool,
 ) -> Success {
     let current_block: u64;
-    let start_mark: yaml_mark_t;
     let end_mark: yaml_mark_t;
     let mut string = NULL_STRING;
     let mut leading_break = NULL_STRING;
     let mut trailing_breaks = NULL_STRING;
     let mut whitespaces = NULL_STRING;
     let mut leading_blanks: libc::c_int;
-    if STRING_INIT!(parser, string).ok {
-        if STRING_INIT!(parser, leading_break).ok {
-            if STRING_INIT!(parser, trailing_breaks).ok {
-                if STRING_INIT!(parser, whitespaces).ok {
-                    start_mark = (*parser).mark;
-                    SKIP(parser);
-                    's_58: loop {
-                        if CACHE(parser, 4_u64).fail {
-                            current_block = 8114179180390253173;
-                            break;
-                        }
-                        if (*parser).mark.column == 0_u64
-                            && (CHECK_AT!((*parser).buffer, b'-', 0)
-                                && CHECK_AT!((*parser).buffer, b'-', 1)
-                                && CHECK_AT!((*parser).buffer, b'-', 2)
-                                || CHECK_AT!((*parser).buffer, b'.', 0)
-                                    && CHECK_AT!((*parser).buffer, b'.', 1)
-                                    && CHECK_AT!((*parser).buffer, b'.', 2))
-                            && IS_BLANKZ_AT!((*parser).buffer, 3)
-                        {
-                            yaml_parser_set_scanner_error(
-                                parser,
-                                b"while scanning a quoted scalar\0" as *const u8
-                                    as *const libc::c_char,
-                                start_mark,
-                                b"found unexpected document indicator\0" as *const u8
-                                    as *const libc::c_char,
-                            );
-                            current_block = 8114179180390253173;
-                            break;
-                        } else if IS_Z!((*parser).buffer) {
-                            yaml_parser_set_scanner_error(
-                                parser,
-                                b"while scanning a quoted scalar\0" as *const u8
-                                    as *const libc::c_char,
-                                start_mark,
-                                b"found unexpected end of stream\0" as *const u8
-                                    as *const libc::c_char,
-                            );
-                            current_block = 8114179180390253173;
-                            break;
-                        } else {
-                            if CACHE(parser, 2_u64).fail {
-                                current_block = 8114179180390253173;
-                                break;
-                            }
-                            leading_blanks = 0;
-                            while !IS_BLANKZ!((*parser).buffer) {
-                                if single
-                                    && CHECK_AT!((*parser).buffer, b'\'', 0)
-                                    && CHECK_AT!((*parser).buffer, b'\'', 1)
-                                {
-                                    if STRING_EXTEND!(parser, string).fail {
-                                        current_block = 8114179180390253173;
-                                        break 's_58;
-                                    }
-                                    let fresh521 = string.pointer;
-                                    string.pointer = string.pointer.wrapping_offset(1);
-                                    *fresh521 = b'\'';
-                                    SKIP(parser);
-                                    SKIP(parser);
-                                } else {
-                                    if CHECK!((*parser).buffer, if single { b'\'' } else { b'"' }) {
-                                        break;
-                                    }
-                                    if !single
-                                        && CHECK!((*parser).buffer, b'\\')
-                                        && IS_BREAK_AT!((*parser).buffer, 1)
-                                    {
-                                        if CACHE(parser, 3_u64).fail {
-                                            current_block = 8114179180390253173;
-                                            break 's_58;
-                                        }
-                                        SKIP(parser);
-                                        SKIP_LINE(parser);
-                                        leading_blanks = 1;
-                                        break;
-                                    } else if !single && CHECK!((*parser).buffer, b'\\') {
-                                        let mut code_length: size_t = 0_u64;
-                                        if STRING_EXTEND!(parser, string).fail {
-                                            current_block = 8114179180390253173;
-                                            break 's_58;
-                                        }
-                                        match *(*parser).buffer.pointer.wrapping_offset(1_isize) {
-                                            48 => {
-                                                let fresh542 = string.pointer;
-                                                string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh542 = b'\0';
-                                            }
-                                            97 => {
-                                                let fresh543 = string.pointer;
-                                                string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh543 = b'\x07';
-                                            }
-                                            98 => {
-                                                let fresh544 = string.pointer;
-                                                string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh544 = b'\x08';
-                                            }
-                                            116 | 9 => {
-                                                let fresh545 = string.pointer;
-                                                string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh545 = b'\t';
-                                            }
-                                            110 => {
-                                                let fresh546 = string.pointer;
-                                                string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh546 = b'\n';
-                                            }
-                                            118 => {
-                                                let fresh547 = string.pointer;
-                                                string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh547 = b'\x0B';
-                                            }
-                                            102 => {
-                                                let fresh548 = string.pointer;
-                                                string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh548 = b'\x0C';
-                                            }
-                                            114 => {
-                                                let fresh549 = string.pointer;
-                                                string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh549 = b'\r';
-                                            }
-                                            101 => {
-                                                let fresh550 = string.pointer;
-                                                string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh550 = b'\x1B';
-                                            }
-                                            32 => {
-                                                let fresh551 = string.pointer;
-                                                string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh551 = b' ';
-                                            }
-                                            34 => {
-                                                let fresh552 = string.pointer;
-                                                string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh552 = b'"';
-                                            }
-                                            47 => {
-                                                let fresh553 = string.pointer;
-                                                string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh553 = b'/';
-                                            }
-                                            92 => {
-                                                let fresh554 = string.pointer;
-                                                string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh554 = b'\\';
-                                            }
-                                            78 => {
-                                                let fresh555 = string.pointer;
-                                                string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh555 = b'\xC2';
-                                                let fresh556 = string.pointer;
-                                                string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh556 = b'\x85';
-                                            }
-                                            95 => {
-                                                let fresh557 = string.pointer;
-                                                string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh557 = b'\xC2';
-                                                let fresh558 = string.pointer;
-                                                string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh558 = b'\xA0';
-                                            }
-                                            76 => {
-                                                let fresh559 = string.pointer;
-                                                string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh559 = b'\xE2';
-                                                let fresh560 = string.pointer;
-                                                string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh560 = b'\x80';
-                                                let fresh561 = string.pointer;
-                                                string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh561 = b'\xA8';
-                                            }
-                                            80 => {
-                                                let fresh562 = string.pointer;
-                                                string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh562 = b'\xE2';
-                                                let fresh563 = string.pointer;
-                                                string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh563 = b'\x80';
-                                                let fresh564 = string.pointer;
-                                                string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh564 = b'\xA9';
-                                            }
-                                            120 => {
-                                                code_length = 2_u64;
-                                            }
-                                            117 => {
-                                                code_length = 4_u64;
-                                            }
-                                            85 => {
-                                                code_length = 8_u64;
-                                            }
-                                            _ => {
-                                                yaml_parser_set_scanner_error(
-                                                    parser,
-                                                    b"while parsing a quoted scalar\0" as *const u8
-                                                        as *const libc::c_char,
-                                                    start_mark,
-                                                    b"found unknown escape character\0" as *const u8
-                                                        as *const libc::c_char,
-                                                );
-                                                current_block = 8114179180390253173;
-                                                break 's_58;
-                                            }
-                                        }
-                                        SKIP(parser);
-                                        SKIP(parser);
-                                        if code_length != 0 {
-                                            let mut value: libc::c_uint = 0;
-                                            let mut k: size_t;
-                                            if CACHE(parser, code_length).fail {
-                                                current_block = 8114179180390253173;
-                                                break 's_58;
-                                            }
-                                            k = 0_u64;
-                                            while k < code_length {
-                                                if !IS_HEX_AT!((*parser).buffer, k as isize) {
-                                                    yaml_parser_set_scanner_error(
-                                                        parser,
-                                                        b"while parsing a quoted scalar\0"
-                                                            as *const u8
-                                                            as *const libc::c_char,
-                                                        start_mark,
-                                                        b"did not find expected hexdecimal number\0"
-                                                            as *const u8
-                                                            as *const libc::c_char,
-                                                    );
-                                                    current_block = 8114179180390253173;
-                                                    break 's_58;
-                                                } else {
-                                                    value = (value << 4).wrapping_add(AS_HEX_AT!(
-                                                        (*parser).buffer,
-                                                        k as isize
-                                                    )
-                                                        as libc::c_uint);
-                                                    k = k.wrapping_add(1);
-                                                }
-                                            }
-                                            if value >= 0xD800 && value <= 0xDFFF
-                                                || value > 0x10FFFF
-                                            {
-                                                yaml_parser_set_scanner_error(
-                                                    parser,
-                                                    b"while parsing a quoted scalar\0" as *const u8
-                                                        as *const libc::c_char,
-                                                    start_mark,
-                                                    b"found invalid Unicode character escape code\0"
-                                                        as *const u8
-                                                        as *const libc::c_char,
-                                                );
-                                                current_block = 8114179180390253173;
-                                                break 's_58;
-                                            } else {
-                                                if value <= 0x7F {
-                                                    let fresh573 = string.pointer;
-                                                    string.pointer =
-                                                        string.pointer.wrapping_offset(1);
-                                                    *fresh573 = value as yaml_char_t;
-                                                } else if value <= 0x7FF {
-                                                    let fresh574 = string.pointer;
-                                                    string.pointer =
-                                                        string.pointer.wrapping_offset(1);
-                                                    *fresh574 = 0xC0_u32.wrapping_add(value >> 6)
-                                                        as yaml_char_t;
-                                                    let fresh575 = string.pointer;
-                                                    string.pointer =
-                                                        string.pointer.wrapping_offset(1);
-                                                    *fresh575 = 0x80_u32.wrapping_add(value & 0x3F)
-                                                        as yaml_char_t;
-                                                } else if value <= 0xFFFF {
-                                                    let fresh576 = string.pointer;
-                                                    string.pointer =
-                                                        string.pointer.wrapping_offset(1);
-                                                    *fresh576 = 0xE0_u32.wrapping_add(value >> 12)
-                                                        as yaml_char_t;
-                                                    let fresh577 = string.pointer;
-                                                    string.pointer =
-                                                        string.pointer.wrapping_offset(1);
-                                                    *fresh577 = 0x80_u32
-                                                        .wrapping_add(value >> 6 & 0x3F)
-                                                        as yaml_char_t;
-                                                    let fresh578 = string.pointer;
-                                                    string.pointer =
-                                                        string.pointer.wrapping_offset(1);
-                                                    *fresh578 = 0x80_u32.wrapping_add(value & 0x3F)
-                                                        as yaml_char_t;
-                                                } else {
-                                                    let fresh579 = string.pointer;
-                                                    string.pointer =
-                                                        string.pointer.wrapping_offset(1);
-                                                    *fresh579 = 0xF0_u32.wrapping_add(value >> 18)
-                                                        as yaml_char_t;
-                                                    let fresh580 = string.pointer;
-                                                    string.pointer =
-                                                        string.pointer.wrapping_offset(1);
-                                                    *fresh580 = 0x80_u32
-                                                        .wrapping_add(value >> 12 & 0x3F)
-                                                        as yaml_char_t;
-                                                    let fresh581 = string.pointer;
-                                                    string.pointer =
-                                                        string.pointer.wrapping_offset(1);
-                                                    *fresh581 = 0x80_u32
-                                                        .wrapping_add(value >> 6 & 0x3F)
-                                                        as yaml_char_t;
-                                                    let fresh582 = string.pointer;
-                                                    string.pointer =
-                                                        string.pointer.wrapping_offset(1);
-                                                    *fresh582 = 0x80_u32.wrapping_add(value & 0x3F)
-                                                        as yaml_char_t;
-                                                }
-                                                k = 0_u64;
-                                                while k < code_length {
-                                                    SKIP(parser);
-                                                    k = k.wrapping_add(1);
-                                                }
-                                            }
-                                        }
-                                    } else if READ!(parser, string).fail {
-                                        current_block = 8114179180390253173;
-                                        break 's_58;
-                                    }
-                                }
-                                if CACHE(parser, 2_u64).fail {
-                                    current_block = 8114179180390253173;
-                                    break 's_58;
-                                }
-                            }
-                            if CACHE(parser, 1_u64).fail {
-                                current_block = 8114179180390253173;
-                                break;
-                            }
-                            if CHECK!((*parser).buffer, if single { b'\'' } else { b'"' }) {
-                                current_block = 7468767852762055642;
-                                break;
-                            }
-                            if CACHE(parser, 1_u64).fail {
-                                current_block = 8114179180390253173;
-                                break;
-                            }
-                            while IS_BLANK!((*parser).buffer) || IS_BREAK!((*parser).buffer) {
-                                if IS_BLANK!((*parser).buffer) {
-                                    if leading_blanks == 0 {
-                                        if READ!(parser, whitespaces).fail {
-                                            current_block = 8114179180390253173;
-                                            break 's_58;
-                                        }
-                                    } else {
-                                        SKIP(parser);
-                                    }
-                                } else {
-                                    if CACHE(parser, 2_u64).fail {
-                                        current_block = 8114179180390253173;
-                                        break 's_58;
-                                    }
-                                    if leading_blanks == 0 {
-                                        CLEAR!(whitespaces);
-                                        if READ_LINE!(parser, leading_break).fail {
-                                            current_block = 8114179180390253173;
-                                            break 's_58;
-                                        }
-                                        leading_blanks = 1;
-                                    } else if READ_LINE!(parser, trailing_breaks).fail {
-                                        current_block = 8114179180390253173;
-                                        break 's_58;
-                                    }
-                                }
-                                if CACHE(parser, 1_u64).fail {
-                                    current_block = 8114179180390253173;
-                                    break 's_58;
-                                }
-                            }
-                            if leading_blanks != 0 {
-                                if *leading_break.start == b'\n' {
-                                    if *trailing_breaks.start == b'\0' {
-                                        if STRING_EXTEND!(parser, string).fail {
-                                            current_block = 8114179180390253173;
-                                            break;
-                                        }
-                                        let fresh711 = string.pointer;
-                                        string.pointer = string.pointer.wrapping_offset(1);
-                                        *fresh711 = b' ';
-                                    } else {
-                                        if JOIN!(parser, string, trailing_breaks).fail {
-                                            current_block = 8114179180390253173;
-                                            break;
-                                        }
-                                        CLEAR!(trailing_breaks);
-                                    }
-                                    CLEAR!(leading_break);
-                                } else {
-                                    if JOIN!(parser, string, leading_break).fail {
-                                        current_block = 8114179180390253173;
-                                        break;
-                                    }
-                                    if JOIN!(parser, string, trailing_breaks).fail {
-                                        current_block = 8114179180390253173;
-                                        break;
-                                    }
-                                    CLEAR!(leading_break);
-                                    CLEAR!(trailing_breaks);
-                                }
-                            } else {
-                                if JOIN!(parser, string, whitespaces).fail {
-                                    current_block = 8114179180390253173;
-                                    break;
-                                }
-                                CLEAR!(whitespaces);
-                            }
-                        }
+    STRING_INIT!(parser, string);
+    STRING_INIT!(parser, leading_break);
+    STRING_INIT!(parser, trailing_breaks);
+    STRING_INIT!(parser, whitespaces);
+    let start_mark: yaml_mark_t = (*parser).mark;
+    SKIP(parser);
+    's_58: loop {
+        if CACHE(parser, 4_u64).fail {
+            current_block = 8114179180390253173;
+            break;
+        }
+        if (*parser).mark.column == 0_u64
+            && (CHECK_AT!((*parser).buffer, b'-', 0)
+                && CHECK_AT!((*parser).buffer, b'-', 1)
+                && CHECK_AT!((*parser).buffer, b'-', 2)
+                || CHECK_AT!((*parser).buffer, b'.', 0)
+                    && CHECK_AT!((*parser).buffer, b'.', 1)
+                    && CHECK_AT!((*parser).buffer, b'.', 2))
+            && IS_BLANKZ_AT!((*parser).buffer, 3)
+        {
+            yaml_parser_set_scanner_error(
+                parser,
+                b"while scanning a quoted scalar\0" as *const u8 as *const libc::c_char,
+                start_mark,
+                b"found unexpected document indicator\0" as *const u8 as *const libc::c_char,
+            );
+            current_block = 8114179180390253173;
+            break;
+        } else if IS_Z!((*parser).buffer) {
+            yaml_parser_set_scanner_error(
+                parser,
+                b"while scanning a quoted scalar\0" as *const u8 as *const libc::c_char,
+                start_mark,
+                b"found unexpected end of stream\0" as *const u8 as *const libc::c_char,
+            );
+            current_block = 8114179180390253173;
+            break;
+        } else {
+            if CACHE(parser, 2_u64).fail {
+                current_block = 8114179180390253173;
+                break;
+            }
+            leading_blanks = 0;
+            while !IS_BLANKZ!((*parser).buffer) {
+                if single
+                    && CHECK_AT!((*parser).buffer, b'\'', 0)
+                    && CHECK_AT!((*parser).buffer, b'\'', 1)
+                {
+                    if STRING_EXTEND!(parser, string).fail {
+                        current_block = 8114179180390253173;
+                        break 's_58;
                     }
-                    match current_block {
-                        8114179180390253173 => {}
-                        _ => {
-                            SKIP(parser);
-                            end_mark = (*parser).mark;
-                            memset(
-                                token as *mut libc::c_void,
-                                0,
-                                size_of::<yaml_token_t>() as libc::c_ulong,
-                            );
-                            (*token).type_ = YAML_SCALAR_TOKEN;
-                            (*token).start_mark = start_mark;
-                            (*token).end_mark = end_mark;
-                            let fresh716 = addr_of_mut!((*token).data.scalar.value);
-                            *fresh716 = string.start;
-                            (*token).data.scalar.length = string.pointer.c_offset_from(string.start)
-                                as libc::c_long
-                                as size_t;
-                            (*token).data.scalar.style = if single {
-                                YAML_SINGLE_QUOTED_SCALAR_STYLE
-                            } else {
-                                YAML_DOUBLE_QUOTED_SCALAR_STYLE
-                            };
-                            STRING_DEL!(leading_break);
-                            STRING_DEL!(trailing_breaks);
-                            STRING_DEL!(whitespaces);
-                            return OK;
+                    let fresh521 = string.pointer;
+                    string.pointer = string.pointer.wrapping_offset(1);
+                    *fresh521 = b'\'';
+                    SKIP(parser);
+                    SKIP(parser);
+                } else {
+                    if CHECK!((*parser).buffer, if single { b'\'' } else { b'"' }) {
+                        break;
+                    }
+                    if !single
+                        && CHECK!((*parser).buffer, b'\\')
+                        && IS_BREAK_AT!((*parser).buffer, 1)
+                    {
+                        if CACHE(parser, 3_u64).fail {
+                            current_block = 8114179180390253173;
+                            break 's_58;
                         }
+                        SKIP(parser);
+                        SKIP_LINE(parser);
+                        leading_blanks = 1;
+                        break;
+                    } else if !single && CHECK!((*parser).buffer, b'\\') {
+                        let mut code_length: size_t = 0_u64;
+                        if STRING_EXTEND!(parser, string).fail {
+                            current_block = 8114179180390253173;
+                            break 's_58;
+                        }
+                        match *(*parser).buffer.pointer.wrapping_offset(1_isize) {
+                            48 => {
+                                let fresh542 = string.pointer;
+                                string.pointer = string.pointer.wrapping_offset(1);
+                                *fresh542 = b'\0';
+                            }
+                            97 => {
+                                let fresh543 = string.pointer;
+                                string.pointer = string.pointer.wrapping_offset(1);
+                                *fresh543 = b'\x07';
+                            }
+                            98 => {
+                                let fresh544 = string.pointer;
+                                string.pointer = string.pointer.wrapping_offset(1);
+                                *fresh544 = b'\x08';
+                            }
+                            116 | 9 => {
+                                let fresh545 = string.pointer;
+                                string.pointer = string.pointer.wrapping_offset(1);
+                                *fresh545 = b'\t';
+                            }
+                            110 => {
+                                let fresh546 = string.pointer;
+                                string.pointer = string.pointer.wrapping_offset(1);
+                                *fresh546 = b'\n';
+                            }
+                            118 => {
+                                let fresh547 = string.pointer;
+                                string.pointer = string.pointer.wrapping_offset(1);
+                                *fresh547 = b'\x0B';
+                            }
+                            102 => {
+                                let fresh548 = string.pointer;
+                                string.pointer = string.pointer.wrapping_offset(1);
+                                *fresh548 = b'\x0C';
+                            }
+                            114 => {
+                                let fresh549 = string.pointer;
+                                string.pointer = string.pointer.wrapping_offset(1);
+                                *fresh549 = b'\r';
+                            }
+                            101 => {
+                                let fresh550 = string.pointer;
+                                string.pointer = string.pointer.wrapping_offset(1);
+                                *fresh550 = b'\x1B';
+                            }
+                            32 => {
+                                let fresh551 = string.pointer;
+                                string.pointer = string.pointer.wrapping_offset(1);
+                                *fresh551 = b' ';
+                            }
+                            34 => {
+                                let fresh552 = string.pointer;
+                                string.pointer = string.pointer.wrapping_offset(1);
+                                *fresh552 = b'"';
+                            }
+                            47 => {
+                                let fresh553 = string.pointer;
+                                string.pointer = string.pointer.wrapping_offset(1);
+                                *fresh553 = b'/';
+                            }
+                            92 => {
+                                let fresh554 = string.pointer;
+                                string.pointer = string.pointer.wrapping_offset(1);
+                                *fresh554 = b'\\';
+                            }
+                            78 => {
+                                let fresh555 = string.pointer;
+                                string.pointer = string.pointer.wrapping_offset(1);
+                                *fresh555 = b'\xC2';
+                                let fresh556 = string.pointer;
+                                string.pointer = string.pointer.wrapping_offset(1);
+                                *fresh556 = b'\x85';
+                            }
+                            95 => {
+                                let fresh557 = string.pointer;
+                                string.pointer = string.pointer.wrapping_offset(1);
+                                *fresh557 = b'\xC2';
+                                let fresh558 = string.pointer;
+                                string.pointer = string.pointer.wrapping_offset(1);
+                                *fresh558 = b'\xA0';
+                            }
+                            76 => {
+                                let fresh559 = string.pointer;
+                                string.pointer = string.pointer.wrapping_offset(1);
+                                *fresh559 = b'\xE2';
+                                let fresh560 = string.pointer;
+                                string.pointer = string.pointer.wrapping_offset(1);
+                                *fresh560 = b'\x80';
+                                let fresh561 = string.pointer;
+                                string.pointer = string.pointer.wrapping_offset(1);
+                                *fresh561 = b'\xA8';
+                            }
+                            80 => {
+                                let fresh562 = string.pointer;
+                                string.pointer = string.pointer.wrapping_offset(1);
+                                *fresh562 = b'\xE2';
+                                let fresh563 = string.pointer;
+                                string.pointer = string.pointer.wrapping_offset(1);
+                                *fresh563 = b'\x80';
+                                let fresh564 = string.pointer;
+                                string.pointer = string.pointer.wrapping_offset(1);
+                                *fresh564 = b'\xA9';
+                            }
+                            120 => {
+                                code_length = 2_u64;
+                            }
+                            117 => {
+                                code_length = 4_u64;
+                            }
+                            85 => {
+                                code_length = 8_u64;
+                            }
+                            _ => {
+                                yaml_parser_set_scanner_error(
+                                    parser,
+                                    b"while parsing a quoted scalar\0" as *const u8
+                                        as *const libc::c_char,
+                                    start_mark,
+                                    b"found unknown escape character\0" as *const u8
+                                        as *const libc::c_char,
+                                );
+                                current_block = 8114179180390253173;
+                                break 's_58;
+                            }
+                        }
+                        SKIP(parser);
+                        SKIP(parser);
+                        if code_length != 0 {
+                            let mut value: libc::c_uint = 0;
+                            let mut k: size_t;
+                            if CACHE(parser, code_length).fail {
+                                current_block = 8114179180390253173;
+                                break 's_58;
+                            }
+                            k = 0_u64;
+                            while k < code_length {
+                                if !IS_HEX_AT!((*parser).buffer, k as isize) {
+                                    yaml_parser_set_scanner_error(
+                                        parser,
+                                        b"while parsing a quoted scalar\0" as *const u8
+                                            as *const libc::c_char,
+                                        start_mark,
+                                        b"did not find expected hexdecimal number\0" as *const u8
+                                            as *const libc::c_char,
+                                    );
+                                    current_block = 8114179180390253173;
+                                    break 's_58;
+                                } else {
+                                    value = (value << 4).wrapping_add(AS_HEX_AT!(
+                                        (*parser).buffer,
+                                        k as isize
+                                    )
+                                        as libc::c_uint);
+                                    k = k.wrapping_add(1);
+                                }
+                            }
+                            if value >= 0xD800 && value <= 0xDFFF || value > 0x10FFFF {
+                                yaml_parser_set_scanner_error(
+                                    parser,
+                                    b"while parsing a quoted scalar\0" as *const u8
+                                        as *const libc::c_char,
+                                    start_mark,
+                                    b"found invalid Unicode character escape code\0" as *const u8
+                                        as *const libc::c_char,
+                                );
+                                current_block = 8114179180390253173;
+                                break 's_58;
+                            } else {
+                                if value <= 0x7F {
+                                    let fresh573 = string.pointer;
+                                    string.pointer = string.pointer.wrapping_offset(1);
+                                    *fresh573 = value as yaml_char_t;
+                                } else if value <= 0x7FF {
+                                    let fresh574 = string.pointer;
+                                    string.pointer = string.pointer.wrapping_offset(1);
+                                    *fresh574 = 0xC0_u32.wrapping_add(value >> 6) as yaml_char_t;
+                                    let fresh575 = string.pointer;
+                                    string.pointer = string.pointer.wrapping_offset(1);
+                                    *fresh575 = 0x80_u32.wrapping_add(value & 0x3F) as yaml_char_t;
+                                } else if value <= 0xFFFF {
+                                    let fresh576 = string.pointer;
+                                    string.pointer = string.pointer.wrapping_offset(1);
+                                    *fresh576 = 0xE0_u32.wrapping_add(value >> 12) as yaml_char_t;
+                                    let fresh577 = string.pointer;
+                                    string.pointer = string.pointer.wrapping_offset(1);
+                                    *fresh577 =
+                                        0x80_u32.wrapping_add(value >> 6 & 0x3F) as yaml_char_t;
+                                    let fresh578 = string.pointer;
+                                    string.pointer = string.pointer.wrapping_offset(1);
+                                    *fresh578 = 0x80_u32.wrapping_add(value & 0x3F) as yaml_char_t;
+                                } else {
+                                    let fresh579 = string.pointer;
+                                    string.pointer = string.pointer.wrapping_offset(1);
+                                    *fresh579 = 0xF0_u32.wrapping_add(value >> 18) as yaml_char_t;
+                                    let fresh580 = string.pointer;
+                                    string.pointer = string.pointer.wrapping_offset(1);
+                                    *fresh580 =
+                                        0x80_u32.wrapping_add(value >> 12 & 0x3F) as yaml_char_t;
+                                    let fresh581 = string.pointer;
+                                    string.pointer = string.pointer.wrapping_offset(1);
+                                    *fresh581 =
+                                        0x80_u32.wrapping_add(value >> 6 & 0x3F) as yaml_char_t;
+                                    let fresh582 = string.pointer;
+                                    string.pointer = string.pointer.wrapping_offset(1);
+                                    *fresh582 = 0x80_u32.wrapping_add(value & 0x3F) as yaml_char_t;
+                                }
+                                k = 0_u64;
+                                while k < code_length {
+                                    SKIP(parser);
+                                    k = k.wrapping_add(1);
+                                }
+                            }
+                        }
+                    } else if READ!(parser, string).fail {
+                        current_block = 8114179180390253173;
+                        break 's_58;
                     }
                 }
+                if CACHE(parser, 2_u64).fail {
+                    current_block = 8114179180390253173;
+                    break 's_58;
+                }
             }
+            if CACHE(parser, 1_u64).fail {
+                current_block = 8114179180390253173;
+                break;
+            }
+            if CHECK!((*parser).buffer, if single { b'\'' } else { b'"' }) {
+                current_block = 7468767852762055642;
+                break;
+            }
+            if CACHE(parser, 1_u64).fail {
+                current_block = 8114179180390253173;
+                break;
+            }
+            while IS_BLANK!((*parser).buffer) || IS_BREAK!((*parser).buffer) {
+                if IS_BLANK!((*parser).buffer) {
+                    if leading_blanks == 0 {
+                        if READ!(parser, whitespaces).fail {
+                            current_block = 8114179180390253173;
+                            break 's_58;
+                        }
+                    } else {
+                        SKIP(parser);
+                    }
+                } else {
+                    if CACHE(parser, 2_u64).fail {
+                        current_block = 8114179180390253173;
+                        break 's_58;
+                    }
+                    if leading_blanks == 0 {
+                        CLEAR!(whitespaces);
+                        if READ_LINE!(parser, leading_break).fail {
+                            current_block = 8114179180390253173;
+                            break 's_58;
+                        }
+                        leading_blanks = 1;
+                    } else if READ_LINE!(parser, trailing_breaks).fail {
+                        current_block = 8114179180390253173;
+                        break 's_58;
+                    }
+                }
+                if CACHE(parser, 1_u64).fail {
+                    current_block = 8114179180390253173;
+                    break 's_58;
+                }
+            }
+            if leading_blanks != 0 {
+                if *leading_break.start == b'\n' {
+                    if *trailing_breaks.start == b'\0' {
+                        if STRING_EXTEND!(parser, string).fail {
+                            current_block = 8114179180390253173;
+                            break;
+                        }
+                        let fresh711 = string.pointer;
+                        string.pointer = string.pointer.wrapping_offset(1);
+                        *fresh711 = b' ';
+                    } else {
+                        if JOIN!(parser, string, trailing_breaks).fail {
+                            current_block = 8114179180390253173;
+                            break;
+                        }
+                        CLEAR!(trailing_breaks);
+                    }
+                    CLEAR!(leading_break);
+                } else {
+                    if JOIN!(parser, string, leading_break).fail {
+                        current_block = 8114179180390253173;
+                        break;
+                    }
+                    if JOIN!(parser, string, trailing_breaks).fail {
+                        current_block = 8114179180390253173;
+                        break;
+                    }
+                    CLEAR!(leading_break);
+                    CLEAR!(trailing_breaks);
+                }
+            } else {
+                if JOIN!(parser, string, whitespaces).fail {
+                    current_block = 8114179180390253173;
+                    break;
+                }
+                CLEAR!(whitespaces);
+            }
+        }
+    }
+    match current_block {
+        8114179180390253173 => {}
+        _ => {
+            SKIP(parser);
+            end_mark = (*parser).mark;
+            memset(
+                token as *mut libc::c_void,
+                0,
+                size_of::<yaml_token_t>() as libc::c_ulong,
+            );
+            (*token).type_ = YAML_SCALAR_TOKEN;
+            (*token).start_mark = start_mark;
+            (*token).end_mark = end_mark;
+            let fresh716 = addr_of_mut!((*token).data.scalar.value);
+            *fresh716 = string.start;
+            (*token).data.scalar.length =
+                string.pointer.c_offset_from(string.start) as libc::c_long as size_t;
+            (*token).data.scalar.style = if single {
+                YAML_SINGLE_QUOTED_SCALAR_STYLE
+            } else {
+                YAML_DOUBLE_QUOTED_SCALAR_STYLE
+            };
+            STRING_DEL!(leading_break);
+            STRING_DEL!(trailing_breaks);
+            STRING_DEL!(whitespaces);
+            return OK;
         }
     }
     STRING_DEL!(string);
@@ -2804,7 +2756,6 @@ unsafe fn yaml_parser_scan_plain_scalar(
     mut token: *mut yaml_token_t,
 ) -> Success {
     let current_block: u64;
-    let start_mark: yaml_mark_t;
     let mut end_mark: yaml_mark_t;
     let mut string = NULL_STRING;
     let mut leading_break = NULL_STRING;
@@ -2812,205 +2763,194 @@ unsafe fn yaml_parser_scan_plain_scalar(
     let mut whitespaces = NULL_STRING;
     let mut leading_blanks: libc::c_int = 0;
     let indent: libc::c_int = (*parser).indent + 1;
-    if STRING_INIT!(parser, string).ok {
-        if STRING_INIT!(parser, leading_break).ok {
-            if STRING_INIT!(parser, trailing_breaks).ok {
-                if STRING_INIT!(parser, whitespaces).ok {
-                    end_mark = (*parser).mark;
-                    start_mark = end_mark;
-                    's_57: loop {
-                        if CACHE(parser, 4_u64).fail {
-                            current_block = 16642808987012640029;
-                            break;
-                        }
-                        if (*parser).mark.column == 0_u64
-                            && (CHECK_AT!((*parser).buffer, b'-', 0)
-                                && CHECK_AT!((*parser).buffer, b'-', 1)
-                                && CHECK_AT!((*parser).buffer, b'-', 2)
-                                || CHECK_AT!((*parser).buffer, b'.', 0)
-                                    && CHECK_AT!((*parser).buffer, b'.', 1)
-                                    && CHECK_AT!((*parser).buffer, b'.', 2))
-                            && IS_BLANKZ_AT!((*parser).buffer, 3)
-                        {
-                            current_block = 6281126495347172768;
-                            break;
-                        }
-                        if CHECK!((*parser).buffer, b'#') {
-                            current_block = 6281126495347172768;
-                            break;
-                        }
-                        while !IS_BLANKZ!((*parser).buffer) {
-                            if (*parser).flow_level != 0
-                                && CHECK!((*parser).buffer, b':')
-                                && (CHECK_AT!((*parser).buffer, b',', 1)
-                                    || CHECK_AT!((*parser).buffer, b'?', 1)
-                                    || CHECK_AT!((*parser).buffer, b'[', 1)
-                                    || CHECK_AT!((*parser).buffer, b']', 1)
-                                    || CHECK_AT!((*parser).buffer, b'{', 1)
-                                    || CHECK_AT!((*parser).buffer, b'}', 1))
-                            {
-                                yaml_parser_set_scanner_error(
-                                    parser,
-                                    b"while scanning a plain scalar\0" as *const u8
-                                        as *const libc::c_char,
-                                    start_mark,
-                                    b"found unexpected ':'\0" as *const u8 as *const libc::c_char,
-                                );
-                                current_block = 16642808987012640029;
-                                break 's_57;
+    STRING_INIT!(parser, string);
+    STRING_INIT!(parser, leading_break);
+    STRING_INIT!(parser, trailing_breaks);
+    STRING_INIT!(parser, whitespaces);
+    end_mark = (*parser).mark;
+    let start_mark: yaml_mark_t = end_mark;
+    's_57: loop {
+        if CACHE(parser, 4_u64).fail {
+            current_block = 16642808987012640029;
+            break;
+        }
+        if (*parser).mark.column == 0_u64
+            && (CHECK_AT!((*parser).buffer, b'-', 0)
+                && CHECK_AT!((*parser).buffer, b'-', 1)
+                && CHECK_AT!((*parser).buffer, b'-', 2)
+                || CHECK_AT!((*parser).buffer, b'.', 0)
+                    && CHECK_AT!((*parser).buffer, b'.', 1)
+                    && CHECK_AT!((*parser).buffer, b'.', 2))
+            && IS_BLANKZ_AT!((*parser).buffer, 3)
+        {
+            current_block = 6281126495347172768;
+            break;
+        }
+        if CHECK!((*parser).buffer, b'#') {
+            current_block = 6281126495347172768;
+            break;
+        }
+        while !IS_BLANKZ!((*parser).buffer) {
+            if (*parser).flow_level != 0
+                && CHECK!((*parser).buffer, b':')
+                && (CHECK_AT!((*parser).buffer, b',', 1)
+                    || CHECK_AT!((*parser).buffer, b'?', 1)
+                    || CHECK_AT!((*parser).buffer, b'[', 1)
+                    || CHECK_AT!((*parser).buffer, b']', 1)
+                    || CHECK_AT!((*parser).buffer, b'{', 1)
+                    || CHECK_AT!((*parser).buffer, b'}', 1))
+            {
+                yaml_parser_set_scanner_error(
+                    parser,
+                    b"while scanning a plain scalar\0" as *const u8 as *const libc::c_char,
+                    start_mark,
+                    b"found unexpected ':'\0" as *const u8 as *const libc::c_char,
+                );
+                current_block = 16642808987012640029;
+                break 's_57;
+            } else {
+                if CHECK!((*parser).buffer, b':') && IS_BLANKZ_AT!((*parser).buffer, 1)
+                    || (*parser).flow_level != 0
+                        && (CHECK!((*parser).buffer, b',')
+                            || CHECK!((*parser).buffer, b'[')
+                            || CHECK!((*parser).buffer, b']')
+                            || CHECK!((*parser).buffer, b'{')
+                            || CHECK!((*parser).buffer, b'}'))
+                {
+                    break;
+                }
+                if leading_blanks != 0 || whitespaces.start != whitespaces.pointer {
+                    if leading_blanks != 0 {
+                        if *leading_break.start == b'\n' {
+                            if *trailing_breaks.start == b'\0' {
+                                if STRING_EXTEND!(parser, string).fail {
+                                    current_block = 16642808987012640029;
+                                    break 's_57;
+                                }
+                                let fresh717 = string.pointer;
+                                string.pointer = string.pointer.wrapping_offset(1);
+                                *fresh717 = b' ';
                             } else {
-                                if CHECK!((*parser).buffer, b':')
-                                    && IS_BLANKZ_AT!((*parser).buffer, 1)
-                                    || (*parser).flow_level != 0
-                                        && (CHECK!((*parser).buffer, b',')
-                                            || CHECK!((*parser).buffer, b'[')
-                                            || CHECK!((*parser).buffer, b']')
-                                            || CHECK!((*parser).buffer, b'{')
-                                            || CHECK!((*parser).buffer, b'}'))
-                                {
-                                    break;
-                                }
-                                if leading_blanks != 0 || whitespaces.start != whitespaces.pointer {
-                                    if leading_blanks != 0 {
-                                        if *leading_break.start == b'\n' {
-                                            if *trailing_breaks.start == b'\0' {
-                                                if STRING_EXTEND!(parser, string).fail {
-                                                    current_block = 16642808987012640029;
-                                                    break 's_57;
-                                                }
-                                                let fresh717 = string.pointer;
-                                                string.pointer = string.pointer.wrapping_offset(1);
-                                                *fresh717 = b' ';
-                                            } else {
-                                                if JOIN!(parser, string, trailing_breaks).fail {
-                                                    current_block = 16642808987012640029;
-                                                    break 's_57;
-                                                }
-                                                CLEAR!(trailing_breaks);
-                                            }
-                                            CLEAR!(leading_break);
-                                        } else {
-                                            if JOIN!(parser, string, leading_break).fail {
-                                                current_block = 16642808987012640029;
-                                                break 's_57;
-                                            }
-                                            if JOIN!(parser, string, trailing_breaks).fail {
-                                                current_block = 16642808987012640029;
-                                                break 's_57;
-                                            }
-                                            CLEAR!(leading_break);
-                                            CLEAR!(trailing_breaks);
-                                        }
-                                        leading_blanks = 0;
-                                    } else {
-                                        if JOIN!(parser, string, whitespaces).fail {
-                                            current_block = 16642808987012640029;
-                                            break 's_57;
-                                        }
-                                        CLEAR!(whitespaces);
-                                    }
-                                }
-                                if READ!(parser, string).fail {
+                                if JOIN!(parser, string, trailing_breaks).fail {
                                     current_block = 16642808987012640029;
                                     break 's_57;
                                 }
-                                end_mark = (*parser).mark;
-                                if CACHE(parser, 2_u64).fail {
-                                    current_block = 16642808987012640029;
-                                    break 's_57;
-                                }
+                                CLEAR!(trailing_breaks);
                             }
-                        }
-                        if !(IS_BLANK!((*parser).buffer) || IS_BREAK!((*parser).buffer)) {
-                            current_block = 6281126495347172768;
-                            break;
-                        }
-                        if CACHE(parser, 1_u64).fail {
-                            current_block = 16642808987012640029;
-                            break;
-                        }
-                        while IS_BLANK!((*parser).buffer) || IS_BREAK!((*parser).buffer) {
-                            if IS_BLANK!((*parser).buffer) {
-                                if leading_blanks != 0
-                                    && ((*parser).mark.column as libc::c_int) < indent
-                                    && IS_TAB!((*parser).buffer)
-                                {
-                                    yaml_parser_set_scanner_error(
-                                        parser,
-                                        b"while scanning a plain scalar\0" as *const u8
-                                            as *const libc::c_char,
-                                        start_mark,
-                                        b"found a tab character that violates indentation\0"
-                                            as *const u8
-                                            as *const libc::c_char,
-                                    );
-                                    current_block = 16642808987012640029;
-                                    break 's_57;
-                                } else if leading_blanks == 0 {
-                                    if READ!(parser, whitespaces).fail {
-                                        current_block = 16642808987012640029;
-                                        break 's_57;
-                                    }
-                                } else {
-                                    SKIP(parser);
-                                }
-                            } else {
-                                if CACHE(parser, 2_u64).fail {
-                                    current_block = 16642808987012640029;
-                                    break 's_57;
-                                }
-                                if leading_blanks == 0 {
-                                    CLEAR!(whitespaces);
-                                    if READ_LINE!(parser, leading_break).fail {
-                                        current_block = 16642808987012640029;
-                                        break 's_57;
-                                    }
-                                    leading_blanks = 1;
-                                } else if READ_LINE!(parser, trailing_breaks).fail {
-                                    current_block = 16642808987012640029;
-                                    break 's_57;
-                                }
-                            }
-                            if CACHE(parser, 1_u64).fail {
+                            CLEAR!(leading_break);
+                        } else {
+                            if JOIN!(parser, string, leading_break).fail {
                                 current_block = 16642808987012640029;
                                 break 's_57;
                             }
-                        }
-                        if (*parser).flow_level == 0
-                            && ((*parser).mark.column as libc::c_int) < indent
-                        {
-                            current_block = 6281126495347172768;
-                            break;
-                        }
-                    }
-                    match current_block {
-                        16642808987012640029 => {}
-                        _ => {
-                            memset(
-                                token as *mut libc::c_void,
-                                0,
-                                size_of::<yaml_token_t>() as libc::c_ulong,
-                            );
-                            (*token).type_ = YAML_SCALAR_TOKEN;
-                            (*token).start_mark = start_mark;
-                            (*token).end_mark = end_mark;
-                            let fresh842 = addr_of_mut!((*token).data.scalar.value);
-                            *fresh842 = string.start;
-                            (*token).data.scalar.length = string.pointer.c_offset_from(string.start)
-                                as libc::c_long
-                                as size_t;
-                            (*token).data.scalar.style = YAML_PLAIN_SCALAR_STYLE;
-                            if leading_blanks != 0 {
-                                (*parser).simple_key_allowed = true;
+                            if JOIN!(parser, string, trailing_breaks).fail {
+                                current_block = 16642808987012640029;
+                                break 's_57;
                             }
-                            STRING_DEL!(leading_break);
-                            STRING_DEL!(trailing_breaks);
-                            STRING_DEL!(whitespaces);
-                            return OK;
+                            CLEAR!(leading_break);
+                            CLEAR!(trailing_breaks);
                         }
+                        leading_blanks = 0;
+                    } else {
+                        if JOIN!(parser, string, whitespaces).fail {
+                            current_block = 16642808987012640029;
+                            break 's_57;
+                        }
+                        CLEAR!(whitespaces);
                     }
                 }
+                if READ!(parser, string).fail {
+                    current_block = 16642808987012640029;
+                    break 's_57;
+                }
+                end_mark = (*parser).mark;
+                if CACHE(parser, 2_u64).fail {
+                    current_block = 16642808987012640029;
+                    break 's_57;
+                }
             }
+        }
+        if !(IS_BLANK!((*parser).buffer) || IS_BREAK!((*parser).buffer)) {
+            current_block = 6281126495347172768;
+            break;
+        }
+        if CACHE(parser, 1_u64).fail {
+            current_block = 16642808987012640029;
+            break;
+        }
+        while IS_BLANK!((*parser).buffer) || IS_BREAK!((*parser).buffer) {
+            if IS_BLANK!((*parser).buffer) {
+                if leading_blanks != 0
+                    && ((*parser).mark.column as libc::c_int) < indent
+                    && IS_TAB!((*parser).buffer)
+                {
+                    yaml_parser_set_scanner_error(
+                        parser,
+                        b"while scanning a plain scalar\0" as *const u8 as *const libc::c_char,
+                        start_mark,
+                        b"found a tab character that violates indentation\0" as *const u8
+                            as *const libc::c_char,
+                    );
+                    current_block = 16642808987012640029;
+                    break 's_57;
+                } else if leading_blanks == 0 {
+                    if READ!(parser, whitespaces).fail {
+                        current_block = 16642808987012640029;
+                        break 's_57;
+                    }
+                } else {
+                    SKIP(parser);
+                }
+            } else {
+                if CACHE(parser, 2_u64).fail {
+                    current_block = 16642808987012640029;
+                    break 's_57;
+                }
+                if leading_blanks == 0 {
+                    CLEAR!(whitespaces);
+                    if READ_LINE!(parser, leading_break).fail {
+                        current_block = 16642808987012640029;
+                        break 's_57;
+                    }
+                    leading_blanks = 1;
+                } else if READ_LINE!(parser, trailing_breaks).fail {
+                    current_block = 16642808987012640029;
+                    break 's_57;
+                }
+            }
+            if CACHE(parser, 1_u64).fail {
+                current_block = 16642808987012640029;
+                break 's_57;
+            }
+        }
+        if (*parser).flow_level == 0 && ((*parser).mark.column as libc::c_int) < indent {
+            current_block = 6281126495347172768;
+            break;
+        }
+    }
+    match current_block {
+        16642808987012640029 => {}
+        _ => {
+            memset(
+                token as *mut libc::c_void,
+                0,
+                size_of::<yaml_token_t>() as libc::c_ulong,
+            );
+            (*token).type_ = YAML_SCALAR_TOKEN;
+            (*token).start_mark = start_mark;
+            (*token).end_mark = end_mark;
+            let fresh842 = addr_of_mut!((*token).data.scalar.value);
+            *fresh842 = string.start;
+            (*token).data.scalar.length =
+                string.pointer.c_offset_from(string.start) as libc::c_long as size_t;
+            (*token).data.scalar.style = YAML_PLAIN_SCALAR_STYLE;
+            if leading_blanks != 0 {
+                (*parser).simple_key_allowed = true;
+            }
+            STRING_DEL!(leading_break);
+            STRING_DEL!(trailing_breaks);
+            STRING_DEL!(whitespaces);
+            return OK;
         }
     }
     STRING_DEL!(string);

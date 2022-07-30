@@ -8,7 +8,6 @@ macro_rules! BUFFER_INIT {
         *last = *pointer;
         let end = addr_of_mut!($buffer.end);
         *end = $buffer.start.wrapping_add($size as usize);
-        OK
     }};
 }
 
@@ -40,7 +39,6 @@ macro_rules! STRING_INIT {
         $string.pointer = $string.start;
         $string.end = $string.start.wrapping_add(16);
         memset($string.start as *mut libc::c_void, 0, 16);
-        OK
     }};
 }
 
@@ -366,7 +364,6 @@ macro_rules! STACK_INIT {
         $stack.start = yaml_malloc(16 * size_of::<$type>() as libc::c_ulong) as *mut $type;
         $stack.top = $stack.start;
         $stack.end = $stack.start.offset(16_isize);
-        OK
     }};
 }
 
@@ -436,7 +433,6 @@ macro_rules! QUEUE_INIT {
         $queue.tail = $queue.start;
         $queue.head = $queue.tail;
         $queue.end = $queue.start.offset(16_isize);
-        OK
     }};
 }
 
