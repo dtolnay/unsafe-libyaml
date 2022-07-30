@@ -231,14 +231,13 @@ unsafe fn yaml_emitter_increase_indent(
     mut emitter: *mut yaml_emitter_t,
     flow: bool,
     indentless: bool,
-) -> Success {
+) {
     PUSH!((*emitter).indents, (*emitter).indent);
     if (*emitter).indent < 0 {
         (*emitter).indent = if flow { (*emitter).best_indent } else { 0 };
     } else if !indentless {
         (*emitter).indent += (*emitter).best_indent;
     }
-    OK
 }
 
 unsafe fn yaml_emitter_state_machine(
@@ -622,9 +621,7 @@ unsafe fn yaml_emitter_emit_flow_sequence_item(
         {
             return FAIL;
         }
-        if yaml_emitter_increase_indent(emitter, true, false).fail {
-            return FAIL;
-        }
+        yaml_emitter_increase_indent(emitter, true, false);
         let fresh12 = addr_of_mut!((*emitter).flow_level);
         *fresh12 += 1;
     }
@@ -701,9 +698,7 @@ unsafe fn yaml_emitter_emit_flow_mapping_key(
         {
             return FAIL;
         }
-        if yaml_emitter_increase_indent(emitter, true, false).fail {
-            return FAIL;
-        }
+        yaml_emitter_increase_indent(emitter, true, false);
         let fresh18 = addr_of_mut!((*emitter).flow_level);
         *fresh18 += 1;
     }
@@ -827,15 +822,11 @@ unsafe fn yaml_emitter_emit_block_sequence_item(
     first: bool,
 ) -> Success {
     if first {
-        if yaml_emitter_increase_indent(
+        yaml_emitter_increase_indent(
             emitter,
             false,
             (*emitter).mapping_context && !(*emitter).indention,
-        )
-        .fail
-        {
-            return FAIL;
-        }
+        );
     }
     if (*event).type_ == YAML_SEQUENCE_END_EVENT {
         (*emitter).indent = POP!((*emitter).indents);
@@ -866,9 +857,7 @@ unsafe fn yaml_emitter_emit_block_mapping_key(
     first: bool,
 ) -> Success {
     if first {
-        if yaml_emitter_increase_indent(emitter, false, false).fail {
-            return FAIL;
-        }
+        yaml_emitter_increase_indent(emitter, false, false);
     }
     if (*event).type_ == YAML_MAPPING_END_EVENT {
         (*emitter).indent = POP!((*emitter).indents);
@@ -992,9 +981,7 @@ unsafe fn yaml_emitter_emit_scalar(
     if yaml_emitter_process_tag(emitter).fail {
         return FAIL;
     }
-    if yaml_emitter_increase_indent(emitter, true, false).fail {
-        return FAIL;
-    }
+    yaml_emitter_increase_indent(emitter, true, false);
     if yaml_emitter_process_scalar(emitter).fail {
         return FAIL;
     }
