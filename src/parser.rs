@@ -360,7 +360,7 @@ unsafe fn yaml_parser_parse_document_content(
         || (*token).type_ == YAML_STREAM_END_TOKEN
     {
         (*parser).state = POP!((*parser).states);
-        yaml_parser_process_empty_scalar(parser, event, (*token).start_mark)
+        yaml_parser_process_empty_scalar(event, (*token).start_mark)
     } else {
         yaml_parser_parse_node(parser, event, true, false)
     }
@@ -785,7 +785,7 @@ unsafe fn yaml_parser_parse_block_sequence_entry(
             yaml_parser_parse_node(parser, event, true, false)
         } else {
             (*parser).state = YAML_PARSE_BLOCK_SEQUENCE_ENTRY_STATE;
-            yaml_parser_process_empty_scalar(parser, event, mark)
+            yaml_parser_process_empty_scalar(event, mark)
         }
     } else if (*token).type_ == YAML_BLOCK_END_TOKEN {
         (*parser).state = POP!((*parser).states);
@@ -845,7 +845,7 @@ unsafe fn yaml_parser_parse_indentless_sequence_entry(
             yaml_parser_parse_node(parser, event, true, false)
         } else {
             (*parser).state = YAML_PARSE_INDENTLESS_SEQUENCE_ENTRY_STATE;
-            yaml_parser_process_empty_scalar(parser, event, mark)
+            yaml_parser_process_empty_scalar(event, mark)
         }
     } else {
         (*parser).state = POP!((*parser).states);
@@ -901,7 +901,7 @@ unsafe fn yaml_parser_parse_block_mapping_key(
             yaml_parser_parse_node(parser, event, true, true)
         } else {
             (*parser).state = YAML_PARSE_BLOCK_MAPPING_VALUE_STATE;
-            yaml_parser_process_empty_scalar(parser, event, mark)
+            yaml_parser_process_empty_scalar(event, mark)
         }
     } else if (*token).type_ == YAML_BLOCK_END_TOKEN {
         (*parser).state = POP!((*parser).states);
@@ -954,11 +954,11 @@ unsafe fn yaml_parser_parse_block_mapping_value(
             yaml_parser_parse_node(parser, event, true, true)
         } else {
             (*parser).state = YAML_PARSE_BLOCK_MAPPING_KEY_STATE;
-            yaml_parser_process_empty_scalar(parser, event, mark)
+            yaml_parser_process_empty_scalar(event, mark)
         }
     } else {
         (*parser).state = YAML_PARSE_BLOCK_MAPPING_KEY_STATE;
-        yaml_parser_process_empty_scalar(parser, event, (*token).start_mark)
+        yaml_parser_process_empty_scalar(event, (*token).start_mark)
     }
 }
 
@@ -1069,7 +1069,7 @@ unsafe fn yaml_parser_parse_flow_sequence_entry_mapping_key(
         let mark: yaml_mark_t = (*token).end_mark;
         SKIP_TOKEN(parser);
         (*parser).state = YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_VALUE_STATE;
-        yaml_parser_process_empty_scalar(parser, event, mark)
+        yaml_parser_process_empty_scalar(event, mark)
     }
 }
 
@@ -1103,7 +1103,7 @@ unsafe fn yaml_parser_parse_flow_sequence_entry_mapping_value(
         }
     }
     (*parser).state = YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_END_STATE;
-    yaml_parser_process_empty_scalar(parser, event, (*token).start_mark)
+    yaml_parser_process_empty_scalar(event, (*token).start_mark)
 }
 
 unsafe fn yaml_parser_parse_flow_sequence_entry_mapping_end(
@@ -1184,7 +1184,7 @@ unsafe fn yaml_parser_parse_flow_mapping_key(
                 return yaml_parser_parse_node(parser, event, false, false);
             } else {
                 (*parser).state = YAML_PARSE_FLOW_MAPPING_VALUE_STATE;
-                return yaml_parser_process_empty_scalar(parser, event, (*token).start_mark);
+                return yaml_parser_process_empty_scalar(event, (*token).start_mark);
             }
         } else if (*token).type_ != YAML_FLOW_MAPPING_END_TOKEN {
             if PUSH!(
@@ -1225,7 +1225,7 @@ unsafe fn yaml_parser_parse_flow_mapping_value(
     }
     if empty {
         (*parser).state = YAML_PARSE_FLOW_MAPPING_KEY_STATE;
-        return yaml_parser_process_empty_scalar(parser, event, (*token).start_mark);
+        return yaml_parser_process_empty_scalar(event, (*token).start_mark);
     }
     if (*token).type_ == YAML_VALUE_TOKEN {
         SKIP_TOKEN(parser);
@@ -1242,11 +1242,10 @@ unsafe fn yaml_parser_parse_flow_mapping_value(
         }
     }
     (*parser).state = YAML_PARSE_FLOW_MAPPING_KEY_STATE;
-    yaml_parser_process_empty_scalar(parser, event, (*token).start_mark)
+    yaml_parser_process_empty_scalar(event, (*token).start_mark)
 }
 
 unsafe fn yaml_parser_process_empty_scalar(
-    _parser: *mut yaml_parser_t,
     mut event: *mut yaml_event_t,
     mark: yaml_mark_t,
 ) -> Success {
