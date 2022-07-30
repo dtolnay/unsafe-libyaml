@@ -55,67 +55,60 @@ unsafe fn SKIP_LINE(parser: *mut yaml_parser_t) {
 }
 
 unsafe fn READ(parser: *mut yaml_parser_t, string: *mut yaml_string_t) -> Success {
-    if STRING_EXTEND!(parser, *string).ok {
-        let width = WIDTH!((*parser).buffer);
-        COPY!(*string, (*parser).buffer);
-        (*parser).mark.index = (*parser).mark.index.wrapping_add(width as u64);
-        (*parser).mark.column = (*parser).mark.column.wrapping_add(1);
-        (*parser).unread = (*parser).unread.wrapping_sub(1);
-        OK
-    } else {
-        FAIL
-    }
+    STRING_EXTEND!(parser, *string);
+    let width = WIDTH!((*parser).buffer);
+    COPY!(*string, (*parser).buffer);
+    (*parser).mark.index = (*parser).mark.index.wrapping_add(width as u64);
+    (*parser).mark.column = (*parser).mark.column.wrapping_add(1);
+    (*parser).unread = (*parser).unread.wrapping_sub(1);
+    OK
 }
 
 unsafe fn READ_LINE(parser: *mut yaml_parser_t, string: *mut yaml_string_t) -> Success {
-    if STRING_EXTEND!(parser, *string).ok {
-        if CHECK_AT!((*parser).buffer, b'\r', 0) && CHECK_AT!((*parser).buffer, b'\n', 1) {
-            *(*string).pointer = b'\n';
-            (*string).pointer = (*string).pointer.wrapping_offset(1);
-            (*parser).buffer.pointer = (*parser).buffer.pointer.wrapping_offset(2);
-            (*parser).mark.index = (*parser).mark.index.wrapping_add(2);
-            (*parser).mark.column = 0;
-            (*parser).mark.line = (*parser).mark.line.wrapping_add(1);
-            (*parser).unread = (*parser).unread.wrapping_sub(2);
-        } else if CHECK_AT!((*parser).buffer, b'\r', 0) || CHECK_AT!((*parser).buffer, b'\n', 0) {
-            *(*string).pointer = b'\n';
-            (*string).pointer = (*string).pointer.wrapping_offset(1);
-            (*parser).buffer.pointer = (*parser).buffer.pointer.wrapping_offset(1);
-            (*parser).mark.index = (*parser).mark.index.wrapping_add(1);
-            (*parser).mark.column = 0;
-            (*parser).mark.line = (*parser).mark.line.wrapping_add(1);
-            (*parser).unread = (*parser).unread.wrapping_sub(1);
-        } else if CHECK_AT!((*parser).buffer, b'\xC2', 0) && CHECK_AT!((*parser).buffer, b'\x85', 1)
-        {
-            *(*string).pointer = b'\n';
-            (*string).pointer = (*string).pointer.wrapping_offset(1);
-            (*parser).buffer.pointer = (*parser).buffer.pointer.wrapping_offset(2);
-            (*parser).mark.index = (*parser).mark.index.wrapping_add(2);
-            (*parser).mark.column = 0;
-            (*parser).mark.line = (*parser).mark.line.wrapping_add(1);
-            (*parser).unread = (*parser).unread.wrapping_sub(1);
-        } else if CHECK_AT!((*parser).buffer, b'\xE2', 0)
-            && CHECK_AT!((*parser).buffer, b'\x80', 1)
-            && (CHECK_AT!((*parser).buffer, b'\xA8', 2) || CHECK_AT!((*parser).buffer, b'\xA9', 2))
-        {
-            *(*string).pointer = *(*parser).buffer.pointer;
-            (*string).pointer = (*string).pointer.wrapping_offset(1);
-            (*parser).buffer.pointer = (*parser).buffer.pointer.wrapping_offset(1);
-            *(*string).pointer = *(*parser).buffer.pointer;
-            (*string).pointer = (*string).pointer.wrapping_offset(1);
-            (*parser).buffer.pointer = (*parser).buffer.pointer.wrapping_offset(1);
-            *(*string).pointer = *(*parser).buffer.pointer;
-            (*string).pointer = (*string).pointer.wrapping_offset(1);
-            (*parser).buffer.pointer = (*parser).buffer.pointer.wrapping_offset(1);
-            (*parser).mark.index = (*parser).mark.index.wrapping_add(3);
-            (*parser).mark.column = 0;
-            (*parser).mark.line = (*parser).mark.line.wrapping_add(1);
-            (*parser).unread = (*parser).unread.wrapping_sub(1);
-        };
-        OK
-    } else {
-        FAIL
-    }
+    STRING_EXTEND!(parser, *string);
+    if CHECK_AT!((*parser).buffer, b'\r', 0) && CHECK_AT!((*parser).buffer, b'\n', 1) {
+        *(*string).pointer = b'\n';
+        (*string).pointer = (*string).pointer.wrapping_offset(1);
+        (*parser).buffer.pointer = (*parser).buffer.pointer.wrapping_offset(2);
+        (*parser).mark.index = (*parser).mark.index.wrapping_add(2);
+        (*parser).mark.column = 0;
+        (*parser).mark.line = (*parser).mark.line.wrapping_add(1);
+        (*parser).unread = (*parser).unread.wrapping_sub(2);
+    } else if CHECK_AT!((*parser).buffer, b'\r', 0) || CHECK_AT!((*parser).buffer, b'\n', 0) {
+        *(*string).pointer = b'\n';
+        (*string).pointer = (*string).pointer.wrapping_offset(1);
+        (*parser).buffer.pointer = (*parser).buffer.pointer.wrapping_offset(1);
+        (*parser).mark.index = (*parser).mark.index.wrapping_add(1);
+        (*parser).mark.column = 0;
+        (*parser).mark.line = (*parser).mark.line.wrapping_add(1);
+        (*parser).unread = (*parser).unread.wrapping_sub(1);
+    } else if CHECK_AT!((*parser).buffer, b'\xC2', 0) && CHECK_AT!((*parser).buffer, b'\x85', 1) {
+        *(*string).pointer = b'\n';
+        (*string).pointer = (*string).pointer.wrapping_offset(1);
+        (*parser).buffer.pointer = (*parser).buffer.pointer.wrapping_offset(2);
+        (*parser).mark.index = (*parser).mark.index.wrapping_add(2);
+        (*parser).mark.column = 0;
+        (*parser).mark.line = (*parser).mark.line.wrapping_add(1);
+        (*parser).unread = (*parser).unread.wrapping_sub(1);
+    } else if CHECK_AT!((*parser).buffer, b'\xE2', 0)
+        && CHECK_AT!((*parser).buffer, b'\x80', 1)
+        && (CHECK_AT!((*parser).buffer, b'\xA8', 2) || CHECK_AT!((*parser).buffer, b'\xA9', 2))
+    {
+        *(*string).pointer = *(*parser).buffer.pointer;
+        (*string).pointer = (*string).pointer.wrapping_offset(1);
+        (*parser).buffer.pointer = (*parser).buffer.pointer.wrapping_offset(1);
+        *(*string).pointer = *(*parser).buffer.pointer;
+        (*string).pointer = (*string).pointer.wrapping_offset(1);
+        (*parser).buffer.pointer = (*parser).buffer.pointer.wrapping_offset(1);
+        *(*string).pointer = *(*parser).buffer.pointer;
+        (*string).pointer = (*string).pointer.wrapping_offset(1);
+        (*parser).buffer.pointer = (*parser).buffer.pointer.wrapping_offset(1);
+        (*parser).mark.index = (*parser).mark.index.wrapping_add(3);
+        (*parser).mark.column = 0;
+        (*parser).mark.line = (*parser).mark.line.wrapping_add(1);
+        (*parser).unread = (*parser).unread.wrapping_sub(1);
+    };
+    OK
 }
 
 macro_rules! READ {
@@ -1700,7 +1693,7 @@ unsafe fn yaml_parser_scan_tag_handle(
 }
 
 unsafe fn yaml_parser_scan_tag_uri(
-    mut parser: *mut yaml_parser_t,
+    parser: *mut yaml_parser_t,
     uri_char: bool,
     directive: bool,
     head: *mut yaml_char_t,
@@ -1724,18 +1717,13 @@ unsafe fn yaml_parser_scan_tag_uri(
             }
             _ => {
                 if string.end.c_offset_from(string.start) as libc::c_long as size_t <= length {
-                    if yaml_string_extend(
+                    yaml_string_extend(
                         addr_of_mut!(string.start),
                         addr_of_mut!(string.pointer),
                         addr_of_mut!(string.end),
-                    )
-                    .ok
-                    {
-                        current_block = 14916268686031723178;
-                        continue;
-                    }
-                    (*parser).error = YAML_MEMORY_ERROR;
-                    current_block = 15265153392498847348;
+                    );
+                    current_block = 14916268686031723178;
+                    continue;
                 } else {
                     if length > 1_u64 {
                         memcpy(
@@ -1775,10 +1763,7 @@ unsafe fn yaml_parser_scan_tag_uri(
                                 || CHECK!((*parser).buffer, b']'))
                     {
                         if CHECK!((*parser).buffer, b'%') {
-                            if STRING_EXTEND!(parser, string).fail {
-                                current_block = 15265153392498847348;
-                                continue 'c_21953;
-                            }
+                            STRING_EXTEND!(parser, string);
                             if yaml_parser_scan_uri_escapes(
                                 parser,
                                 directive,
@@ -1801,10 +1786,7 @@ unsafe fn yaml_parser_scan_tag_uri(
                         }
                     }
                     if length == 0 {
-                        if STRING_EXTEND!(parser, string).fail {
-                            current_block = 15265153392498847348;
-                            continue;
-                        }
+                        STRING_EXTEND!(parser, string);
                         yaml_parser_set_scanner_error(
                             parser,
                             if directive {
@@ -2083,15 +2065,7 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                 && trailing_blank == 0
                                                             {
                                                                 if *trailing_breaks.start == b'\0' {
-                                                                    if STRING_EXTEND!(
-                                                                        parser, string
-                                                                    )
-                                                                    .fail
-                                                                    {
-                                                                        current_block =
-                                                                            14984465786483313892;
-                                                                        break;
-                                                                    }
+                                                                    STRING_EXTEND!(parser, string);
                                                                     let fresh418 = string.pointer;
                                                                     string.pointer = string
                                                                         .pointer
@@ -2378,10 +2352,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                     && CHECK_AT!((*parser).buffer, b'\'', 0)
                     && CHECK_AT!((*parser).buffer, b'\'', 1)
                 {
-                    if STRING_EXTEND!(parser, string).fail {
-                        current_block = 8114179180390253173;
-                        break 's_58;
-                    }
+                    STRING_EXTEND!(parser, string);
                     let fresh521 = string.pointer;
                     string.pointer = string.pointer.wrapping_offset(1);
                     *fresh521 = b'\'';
@@ -2405,10 +2376,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                         break;
                     } else if !single && CHECK!((*parser).buffer, b'\\') {
                         let mut code_length: size_t = 0_u64;
-                        if STRING_EXTEND!(parser, string).fail {
-                            current_block = 8114179180390253173;
-                            break 's_58;
-                        }
+                        STRING_EXTEND!(parser, string);
                         match *(*parser).buffer.pointer.wrapping_offset(1_isize) {
                             48 => {
                                 let fresh542 = string.pointer;
@@ -2680,10 +2648,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
             if leading_blanks != 0 {
                 if *leading_break.start == b'\n' {
                     if *trailing_breaks.start == b'\0' {
-                        if STRING_EXTEND!(parser, string).fail {
-                            current_block = 8114179180390253173;
-                            break;
-                        }
+                        STRING_EXTEND!(parser, string);
                         let fresh711 = string.pointer;
                         string.pointer = string.pointer.wrapping_offset(1);
                         *fresh711 = b' ';
@@ -2823,10 +2788,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
                     if leading_blanks != 0 {
                         if *leading_break.start == b'\n' {
                             if *trailing_breaks.start == b'\0' {
-                                if STRING_EXTEND!(parser, string).fail {
-                                    current_block = 16642808987012640029;
-                                    break 's_57;
-                                }
+                                STRING_EXTEND!(parser, string);
                                 let fresh717 = string.pointer;
                                 string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh717 = b' ';

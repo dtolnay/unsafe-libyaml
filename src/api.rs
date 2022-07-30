@@ -54,7 +54,7 @@ pub(crate) unsafe fn yaml_string_extend(
     start: *mut *mut yaml_char_t,
     pointer: *mut *mut yaml_char_t,
     end: *mut *mut yaml_char_t,
-) -> Success {
+) {
     let new_start: *mut yaml_char_t = yaml_realloc(
         *start as *mut libc::c_void,
         ((*end).c_offset_from(*start) as libc::c_long * 2_i64) as size_t,
@@ -69,7 +69,6 @@ pub(crate) unsafe fn yaml_string_extend(
     *end =
         new_start.wrapping_offset(((*end).c_offset_from(*start) as libc::c_long * 2_i64) as isize);
     *start = new_start;
-    OK
 }
 
 pub(crate) unsafe fn yaml_string_join(
@@ -86,9 +85,7 @@ pub(crate) unsafe fn yaml_string_join(
     while (*a_end).c_offset_from(*a_pointer) as libc::c_long
         <= (*b_pointer).c_offset_from(*b_start) as libc::c_long
     {
-        if yaml_string_extend(a_start, a_pointer, a_end).fail {
-            return FAIL;
-        }
+        yaml_string_extend(a_start, a_pointer, a_end);
     }
     memcpy(
         *a_pointer as *mut libc::c_void,

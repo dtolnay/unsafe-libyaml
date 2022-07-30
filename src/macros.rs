@@ -53,18 +53,12 @@ macro_rules! STRING_DEL {
 
 macro_rules! STRING_EXTEND {
     ($context:expr, $string:expr) => {
-        if $string.pointer.wrapping_add(5) < $string.end
-            || yaml_string_extend(
+        if $string.pointer.wrapping_add(5) >= $string.end {
+            yaml_string_extend(
                 addr_of_mut!($string.start),
                 addr_of_mut!($string.pointer),
                 addr_of_mut!($string.end),
-            )
-            .ok
-        {
-            OK
-        } else {
-            (*$context).error = YAML_MEMORY_ERROR;
-            FAIL
+            );
         }
     };
 }
