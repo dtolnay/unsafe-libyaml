@@ -2046,41 +2046,48 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                                 string,
                                                                                 trailing_breaks
                                                                             );
-                                                                            current_block = 14648606000749551097;
+                                                                        }
+                                                                        memset(
+                                                                            token as *mut libc::c_void,
+                                                                            0,
+                                                                            size_of::<yaml_token_t>() as libc::c_ulong,
+                                                                        );
+                                                                        (*token).type_ =
+                                                                            YAML_SCALAR_TOKEN;
+                                                                        (*token).start_mark =
+                                                                            start_mark;
+                                                                        (*token).end_mark =
+                                                                            end_mark;
+                                                                        let fresh479 = addr_of_mut!(
+                                                                            (*token)
+                                                                                .data
+                                                                                .scalar
+                                                                                .value
+                                                                        );
+                                                                        *fresh479 = string.start;
+                                                                        (*token)
+                                                                            .data
+                                                                            .scalar
+                                                                            .length = string
+                                                                            .pointer
+                                                                            .c_offset_from(
+                                                                                string.start,
+                                                                            )
+                                                                            as libc::c_long
+                                                                            as size_t;
+                                                                        (*token)
+                                                                            .data
+                                                                            .scalar
+                                                                            .style = if literal {
+                                                                            YAML_LITERAL_SCALAR_STYLE
                                                                         } else {
-                                                                            current_block = 14648606000749551097;
-                                                                        }
-                                                                        match current_block {
-                                                                            14984465786483313892 => {}
-                                                                            _ => {
-                                                                                memset(
-                                                                                    token as *mut libc::c_void,
-                                                                                    0,
-                                                                                    size_of::<yaml_token_t>() as libc::c_ulong,
-                                                                                );
-                                                                                (*token).type_ = YAML_SCALAR_TOKEN;
-                                                                                (*token).start_mark = start_mark;
-                                                                                (*token).end_mark = end_mark;
-                                                                                let fresh479 = addr_of_mut!((*token).data.scalar.value);
-                                                                                *fresh479 = string.start;
-                                                                                (*token)
-                                                                                    .data
-                                                                                    .scalar
-                                                                                    .length = string.pointer.c_offset_from(string.start)
-                                                                                    as libc::c_long as size_t;
-                                                                                (*token)
-                                                                                    .data
-                                                                                    .scalar
-                                                                                    .style = if literal {
-                                                                                    YAML_LITERAL_SCALAR_STYLE
-                                                                                } else {
-                                                                                    YAML_FOLDED_SCALAR_STYLE
-                                                                                };
-                                                                                STRING_DEL!(leading_break);
-                                                                                STRING_DEL!(trailing_breaks);
-                                                                                return OK;
-                                                                            }
-                                                                        }
+                                                                            YAML_FOLDED_SCALAR_STYLE
+                                                                        };
+                                                                        STRING_DEL!(leading_break);
+                                                                        STRING_DEL!(
+                                                                            trailing_breaks
+                                                                        );
+                                                                        return OK;
                                                                     }
                                                                 }
                                                             }
