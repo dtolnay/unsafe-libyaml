@@ -8,7 +8,6 @@ macro_rules! BUFFER_INIT {
         *last = *pointer;
         let end = addr_of_mut!($buffer.end);
         *end = $buffer.start.wrapping_add($size as usize);
-        OK
     }};
 }
 

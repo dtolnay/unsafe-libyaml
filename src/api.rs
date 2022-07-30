@@ -182,23 +182,15 @@ pub unsafe fn yaml_parser_initialize(parser: *mut yaml_parser_t) -> Success {
         0,
         size_of::<yaml_parser_t>() as libc::c_ulong,
     );
-    if BUFFER_INIT!(parser, (*parser).raw_buffer, INPUT_RAW_BUFFER_SIZE).ok {
-        if BUFFER_INIT!(parser, (*parser).buffer, INPUT_BUFFER_SIZE).ok {
-            if QUEUE_INIT!(parser, (*parser).tokens, yaml_token_t).ok {
-                if STACK_INIT!(parser, (*parser).indents, libc::c_int).ok {
-                    if STACK_INIT!(parser, (*parser).simple_keys, yaml_simple_key_t).ok {
-                        if STACK_INIT!(parser, (*parser).states, yaml_parser_state_t).ok {
-                            if STACK_INIT!(parser, (*parser).marks, yaml_mark_t).ok {
-                                if STACK_INIT!(
-                                    parser,
-                                    (*parser).tag_directives,
-                                    yaml_tag_directive_t
-                                )
-                                .ok
-                                {
-                                    return OK;
-                                }
-                            }
+    BUFFER_INIT!(parser, (*parser).raw_buffer, INPUT_RAW_BUFFER_SIZE);
+    BUFFER_INIT!(parser, (*parser).buffer, INPUT_BUFFER_SIZE);
+    if QUEUE_INIT!(parser, (*parser).tokens, yaml_token_t).ok {
+        if STACK_INIT!(parser, (*parser).indents, libc::c_int).ok {
+            if STACK_INIT!(parser, (*parser).simple_keys, yaml_simple_key_t).ok {
+                if STACK_INIT!(parser, (*parser).states, yaml_parser_state_t).ok {
+                    if STACK_INIT!(parser, (*parser).marks, yaml_mark_t).ok {
+                        if STACK_INIT!(parser, (*parser).tag_directives, yaml_tag_directive_t).ok {
+                            return OK;
                         }
                     }
                 }
@@ -337,16 +329,13 @@ pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> Succe
         0,
         size_of::<yaml_emitter_t>() as libc::c_ulong,
     );
-    if BUFFER_INIT!(emitter, (*emitter).buffer, OUTPUT_BUFFER_SIZE).ok {
-        if BUFFER_INIT!(emitter, (*emitter).raw_buffer, OUTPUT_RAW_BUFFER_SIZE).ok {
-            if STACK_INIT!(emitter, (*emitter).states, yaml_emitter_state_t).ok {
-                if QUEUE_INIT!(emitter, (*emitter).events, yaml_event_t).ok {
-                    if STACK_INIT!(emitter, (*emitter).indents, libc::c_int).ok {
-                        if STACK_INIT!(emitter, (*emitter).tag_directives, yaml_tag_directive_t).ok
-                        {
-                            return OK;
-                        }
-                    }
+    BUFFER_INIT!(emitter, (*emitter).buffer, OUTPUT_BUFFER_SIZE);
+    BUFFER_INIT!(emitter, (*emitter).raw_buffer, OUTPUT_RAW_BUFFER_SIZE);
+    if STACK_INIT!(emitter, (*emitter).states, yaml_emitter_state_t).ok {
+        if QUEUE_INIT!(emitter, (*emitter).events, yaml_event_t).ok {
+            if STACK_INIT!(emitter, (*emitter).indents, libc::c_int).ok {
+                if STACK_INIT!(emitter, (*emitter).tag_directives, yaml_tag_directive_t).ok {
+                    return OK;
                 }
             }
         }
