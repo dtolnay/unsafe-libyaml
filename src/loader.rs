@@ -239,10 +239,7 @@ unsafe fn yaml_parser_register_anchor(
         }
         alias_data = alias_data.wrapping_offset(1);
     }
-    if PUSH!(parser, (*parser).aliases, *data).fail {
-        yaml_free(anchor as *mut libc::c_void);
-        return FAIL;
-    }
+    PUSH!(parser, (*parser).aliases, *data);
     OK
 }
 
@@ -264,9 +261,7 @@ unsafe fn yaml_parser_load_node_add(
             if STACK_LIMIT!(parser, (*parent).data.sequence.items).fail {
                 return FAIL;
             }
-            if PUSH!(parser, (*parent).data.sequence.items, index).fail {
-                return FAIL;
-            }
+            PUSH!(parser, (*parent).data.sequence.items, index);
         }
         YAML_MAPPING_NODE => {
             let mut pair = MaybeUninit::<yaml_node_pair_t>::uninit();
@@ -291,9 +286,7 @@ unsafe fn yaml_parser_load_node_add(
                     if STACK_LIMIT!(parser, (*parent).data.mapping.pairs).fail {
                         return FAIL;
                     }
-                    if PUSH!(parser, (*parent).data.mapping.pairs, *pair).fail {
-                        return FAIL;
-                    }
+                    PUSH!(parser, (*parent).data.mapping.pairs, *pair);
                 }
             }
         }
@@ -375,18 +368,16 @@ unsafe fn yaml_parser_load_scalar(
                 (*node).data.scalar.value = (*event).data.scalar.value;
                 (*node).data.scalar.length = (*event).data.scalar.length;
                 (*node).data.scalar.style = (*event).data.scalar.style;
-                if PUSH!(parser, (*(*parser).document).nodes, *node).ok {
-                    index = (*(*parser).document)
-                        .nodes
-                        .top
-                        .c_offset_from((*(*parser).document).nodes.start)
-                        as libc::c_int;
-                    if yaml_parser_register_anchor(parser, index, (*event).data.scalar.anchor).fail
-                    {
-                        return FAIL;
-                    }
-                    return yaml_parser_load_node_add(parser, ctx, index);
+                PUSH!(parser, (*(*parser).document).nodes, *node);
+                index = (*(*parser).document)
+                    .nodes
+                    .top
+                    .c_offset_from((*(*parser).document).nodes.start)
+                    as libc::c_int;
+                if yaml_parser_register_anchor(parser, index, (*event).data.scalar.anchor).fail {
+                    return FAIL;
                 }
+                return yaml_parser_load_node_add(parser, ctx, index);
             }
         }
     }
@@ -452,32 +443,25 @@ unsafe fn yaml_parser_load_sequence(
                 (*node).data.sequence.items.end = items.end;
                 (*node).data.sequence.items.top = items.start;
                 (*node).data.sequence.style = (*event).data.sequence_start.style;
-                if PUSH!(parser, (*(*parser).document).nodes, *node).ok {
-                    index = (*(*parser).document)
-                        .nodes
-                        .top
-                        .c_offset_from((*(*parser).document).nodes.start)
-                        as libc::c_int;
-                    if yaml_parser_register_anchor(
-                        parser,
-                        index,
-                        (*event).data.sequence_start.anchor,
-                    )
+                PUSH!(parser, (*(*parser).document).nodes, *node);
+                index = (*(*parser).document)
+                    .nodes
+                    .top
+                    .c_offset_from((*(*parser).document).nodes.start)
+                    as libc::c_int;
+                if yaml_parser_register_anchor(parser, index, (*event).data.sequence_start.anchor)
                     .fail
-                    {
-                        return FAIL;
-                    }
-                    if yaml_parser_load_node_add(parser, ctx, index).fail {
-                        return FAIL;
-                    }
-                    if STACK_LIMIT!(parser, *ctx).fail {
-                        return FAIL;
-                    }
-                    if PUSH!(parser, *ctx, index).fail {
-                        return FAIL;
-                    }
-                    return OK;
+                {
+                    return FAIL;
                 }
+                if yaml_parser_load_node_add(parser, ctx, index).fail {
+                    return FAIL;
+                }
+                if STACK_LIMIT!(parser, *ctx).fail {
+                    return FAIL;
+                }
+                PUSH!(parser, *ctx, index);
+                return OK;
             }
         }
     }
@@ -562,32 +546,25 @@ unsafe fn yaml_parser_load_mapping(
                 (*node).data.mapping.pairs.end = pairs.end;
                 (*node).data.mapping.pairs.top = pairs.start;
                 (*node).data.mapping.style = (*event).data.mapping_start.style;
-                if PUSH!(parser, (*(*parser).document).nodes, *node).ok {
-                    index = (*(*parser).document)
-                        .nodes
-                        .top
-                        .c_offset_from((*(*parser).document).nodes.start)
-                        as libc::c_int;
-                    if yaml_parser_register_anchor(
-                        parser,
-                        index,
-                        (*event).data.mapping_start.anchor,
-                    )
+                PUSH!(parser, (*(*parser).document).nodes, *node);
+                index = (*(*parser).document)
+                    .nodes
+                    .top
+                    .c_offset_from((*(*parser).document).nodes.start)
+                    as libc::c_int;
+                if yaml_parser_register_anchor(parser, index, (*event).data.mapping_start.anchor)
                     .fail
-                    {
-                        return FAIL;
-                    }
-                    if yaml_parser_load_node_add(parser, ctx, index).fail {
-                        return FAIL;
-                    }
-                    if STACK_LIMIT!(parser, *ctx).fail {
-                        return FAIL;
-                    }
-                    if PUSH!(parser, *ctx, index).fail {
-                        return FAIL;
-                    }
-                    return OK;
+                {
+                    return FAIL;
                 }
+                if yaml_parser_load_node_add(parser, ctx, index).fail {
+                    return FAIL;
+                }
+                if STACK_LIMIT!(parser, *ctx).fail {
+                    return FAIL;
+                }
+                PUSH!(parser, *ctx, index);
+                return OK;
             }
         }
     }

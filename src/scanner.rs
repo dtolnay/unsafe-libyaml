@@ -409,9 +409,7 @@ unsafe fn yaml_parser_increase_flow_level(mut parser: *mut yaml_parser_t) -> Suc
             column: 0_u64,
         },
     };
-    if PUSH!(parser, (*parser).simple_keys, empty_simple_key).fail {
-        return FAIL;
-    }
+    PUSH!(parser, (*parser).simple_keys, empty_simple_key);
     if (*parser).flow_level == 2147483647 {
         (*parser).error = YAML_MEMORY_ERROR;
         return FAIL;
@@ -443,9 +441,7 @@ unsafe fn yaml_parser_roll_indent(
         return OK;
     }
     if ((*parser).indent as libc::c_long) < column {
-        if PUSH!(parser, (*parser).indents, (*parser).indent).fail {
-            return FAIL;
-        }
+        PUSH!(parser, (*parser).indents, (*parser).indent);
         if column > 2147483647_i64 {
             (*parser).error = YAML_MEMORY_ERROR;
             return FAIL;
@@ -508,9 +504,7 @@ unsafe fn yaml_parser_fetch_stream_start(mut parser: *mut yaml_parser_t) -> Succ
     let mut token = MaybeUninit::<yaml_token_t>::uninit();
     let token = token.as_mut_ptr();
     (*parser).indent = -1;
-    if PUSH!(parser, (*parser).simple_keys, simple_key).fail {
-        return FAIL;
-    }
+    PUSH!(parser, (*parser).simple_keys, simple_key);
     (*parser).simple_key_allowed = true;
     (*parser).stream_start_produced = true;
     memset(

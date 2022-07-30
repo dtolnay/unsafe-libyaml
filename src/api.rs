@@ -3,22 +3,18 @@ use crate::success::{Success, FAIL, OK};
 use crate::yaml::{size_t, yaml_char_t};
 use crate::{
     libc, yaml_break_t, yaml_document_t, yaml_emitter_state_t, yaml_emitter_t, yaml_encoding_t,
-    yaml_error_type_t, yaml_event_t, yaml_mapping_style_t, yaml_mark_t, yaml_node_item_t,
-    yaml_node_pair_t, yaml_node_t, yaml_parser_state_t, yaml_parser_t, yaml_read_handler_t,
-    yaml_scalar_style_t, yaml_sequence_style_t, yaml_simple_key_t, yaml_tag_directive_t,
-    yaml_token_t, yaml_version_directive_t, yaml_write_handler_t, PointerExt, YAML_ALIAS_EVENT,
-    YAML_ALIAS_TOKEN, YAML_ANCHOR_TOKEN, YAML_ANY_ENCODING, YAML_DOCUMENT_END_EVENT,
-    YAML_DOCUMENT_START_EVENT, YAML_MAPPING_END_EVENT, YAML_MAPPING_NODE, YAML_MAPPING_START_EVENT,
-    YAML_MEMORY_ERROR, YAML_NO_ERROR, YAML_SCALAR_EVENT, YAML_SCALAR_NODE, YAML_SCALAR_TOKEN,
-    YAML_SEQUENCE_END_EVENT, YAML_SEQUENCE_NODE, YAML_SEQUENCE_START_EVENT, YAML_STREAM_END_EVENT,
-    YAML_STREAM_START_EVENT, YAML_TAG_DIRECTIVE_TOKEN, YAML_TAG_TOKEN,
+    yaml_event_t, yaml_mapping_style_t, yaml_mark_t, yaml_node_item_t, yaml_node_pair_t,
+    yaml_node_t, yaml_parser_state_t, yaml_parser_t, yaml_read_handler_t, yaml_scalar_style_t,
+    yaml_sequence_style_t, yaml_simple_key_t, yaml_tag_directive_t, yaml_token_t,
+    yaml_version_directive_t, yaml_write_handler_t, PointerExt, YAML_ALIAS_EVENT, YAML_ALIAS_TOKEN,
+    YAML_ANCHOR_TOKEN, YAML_ANY_ENCODING, YAML_DOCUMENT_END_EVENT, YAML_DOCUMENT_START_EVENT,
+    YAML_MAPPING_END_EVENT, YAML_MAPPING_NODE, YAML_MAPPING_START_EVENT, YAML_SCALAR_EVENT,
+    YAML_SCALAR_NODE, YAML_SCALAR_TOKEN, YAML_SEQUENCE_END_EVENT, YAML_SEQUENCE_NODE,
+    YAML_SEQUENCE_START_EVENT, YAML_STREAM_END_EVENT, YAML_STREAM_START_EVENT,
+    YAML_TAG_DIRECTIVE_TOKEN, YAML_TAG_TOKEN,
 };
 use core::mem::{size_of, MaybeUninit};
 use core::ptr::{self, addr_of_mut};
-
-struct api_context {
-    error: yaml_error_type_t,
-}
 
 const INPUT_RAW_BUFFER_SIZE: usize = 16384;
 const INPUT_BUFFER_SIZE: usize = INPUT_RAW_BUFFER_SIZE * 3;
@@ -100,12 +96,7 @@ pub(crate) unsafe fn yaml_stack_extend(
     start: *mut *mut libc::c_void,
     top: *mut *mut libc::c_void,
     end: *mut *mut libc::c_void,
-) -> Success {
-    if (*end as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
-        >= (2147483647 / 2) as libc::c_long
-    {
-        return FAIL;
-    }
+) {
     let new_start: *mut libc::c_void = yaml_realloc(
         *start,
         ((*end as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
@@ -120,7 +111,6 @@ pub(crate) unsafe fn yaml_stack_extend(
             * 2_i64) as isize,
     ) as *mut libc::c_void;
     *start = new_start;
-    OK
 }
 
 pub(crate) unsafe fn yaml_queue_extend(
@@ -614,9 +604,6 @@ pub unsafe fn yaml_document_start_event_initialize(
     implicit: bool,
 ) -> Success {
     let mut current_block: u64;
-    let mut context = api_context {
-        error: YAML_NO_ERROR,
-    };
     let mark = yaml_mark_t {
         index: 0_u64,
         line: 0_u64,
@@ -693,10 +680,7 @@ pub unsafe fn yaml_document_start_event_initialize(
                         current_block = 14964981520188694172;
                         break;
                     }
-                    if PUSH!(addr_of_mut!(context), tag_directives_copy, value).fail {
-                        current_block = 14964981520188694172;
-                        break;
-                    }
+                    PUSH!(addr_of_mut!(context), tag_directives_copy, value);
                     value.handle = ptr::null_mut::<yaml_char_t>();
                     value.prefix = ptr::null_mut::<yaml_char_t>();
                     tag_directive = tag_directive.wrapping_offset(1);
@@ -1147,9 +1131,6 @@ pub unsafe fn yaml_document_initialize(
     end_implicit: bool,
 ) -> Success {
     let mut current_block: u64;
-    let mut context = api_context {
-        error: YAML_NO_ERROR,
-    };
     struct Nodes {
         start: *mut yaml_node_t,
         end: *mut yaml_node_t,
@@ -1238,10 +1219,7 @@ pub unsafe fn yaml_document_initialize(
                         current_block = 8142820162064489797;
                         break;
                     }
-                    if PUSH!(addr_of_mut!(context), tag_directives_copy, value).fail {
-                        current_block = 8142820162064489797;
-                        break;
-                    }
+                    PUSH!(addr_of_mut!(context), tag_directives_copy, value);
                     value.handle = ptr::null_mut::<yaml_char_t>();
                     value.prefix = ptr::null_mut::<yaml_char_t>();
                     tag_directive = tag_directive.wrapping_offset(1);
@@ -1382,9 +1360,6 @@ pub unsafe fn yaml_document_add_scalar(
     mut length: libc::c_int,
     style: yaml_scalar_style_t,
 ) -> libc::c_int {
-    let mut context = api_context {
-        error: YAML_NO_ERROR,
-    };
     let mark = yaml_mark_t {
         index: 0_u64,
         line: 0_u64,
@@ -1425,10 +1400,8 @@ pub unsafe fn yaml_document_add_scalar(
                 (*node).data.scalar.value = value_copy;
                 (*node).data.scalar.length = length as size_t;
                 (*node).data.scalar.style = style;
-                if PUSH!(addr_of_mut!(context), (*document).nodes, *node).ok {
-                    return (*document).nodes.top.c_offset_from((*document).nodes.start)
-                        as libc::c_int;
-                }
+                PUSH!(addr_of_mut!(context), (*document).nodes, *node);
+                return (*document).nodes.top.c_offset_from((*document).nodes.start) as libc::c_int;
             }
         }
     }
@@ -1448,9 +1421,6 @@ pub unsafe fn yaml_document_add_sequence(
     mut tag: *const yaml_char_t,
     style: yaml_sequence_style_t,
 ) -> libc::c_int {
-    let mut context = api_context {
-        error: YAML_NO_ERROR,
-    };
     let mark = yaml_mark_t {
         index: 0_u64,
         line: 0_u64,
@@ -1490,9 +1460,8 @@ pub unsafe fn yaml_document_add_sequence(
             (*node).data.sequence.items.end = items.end;
             (*node).data.sequence.items.top = items.start;
             (*node).data.sequence.style = style;
-            if PUSH!(addr_of_mut!(context), (*document).nodes, *node).ok {
-                return (*document).nodes.top.c_offset_from((*document).nodes.start) as libc::c_int;
-            }
+            PUSH!(addr_of_mut!(context), (*document).nodes, *node);
+            return (*document).nodes.top.c_offset_from((*document).nodes.start) as libc::c_int;
         }
     }
     STACK_DEL!(items);
@@ -1511,9 +1480,6 @@ pub unsafe fn yaml_document_add_mapping(
     mut tag: *const yaml_char_t,
     style: yaml_mapping_style_t,
 ) -> libc::c_int {
-    let mut context = api_context {
-        error: YAML_NO_ERROR,
-    };
     let mark = yaml_mark_t {
         index: 0_u64,
         line: 0_u64,
@@ -1553,9 +1519,8 @@ pub unsafe fn yaml_document_add_mapping(
             (*node).data.mapping.pairs.end = pairs.end;
             (*node).data.mapping.pairs.top = pairs.start;
             (*node).data.mapping.style = style;
-            if PUSH!(addr_of_mut!(context), (*document).nodes, *node).ok {
-                return (*document).nodes.top.c_offset_from((*document).nodes.start) as libc::c_int;
-            }
+            PUSH!(addr_of_mut!(context), (*document).nodes, *node);
+            return (*document).nodes.top.c_offset_from((*document).nodes.start) as libc::c_int;
         }
     }
     STACK_DEL!(pairs);
@@ -1569,9 +1534,6 @@ pub unsafe fn yaml_document_append_sequence_item(
     sequence: libc::c_int,
     item: libc::c_int,
 ) -> Success {
-    let mut context = api_context {
-        error: YAML_NO_ERROR,
-    };
     __assert!(!document.is_null());
     __assert!(
         sequence > 0
@@ -1586,18 +1548,14 @@ pub unsafe fn yaml_document_append_sequence_item(
         item > 0
             && ((*document).nodes.start).wrapping_offset(item as isize) <= (*document).nodes.top
     );
-    if PUSH!(
+    PUSH!(
         addr_of_mut!(context),
         (*((*document).nodes.start).wrapping_offset((sequence - 1) as isize))
             .data
             .sequence
             .items,
         item
-    )
-    .fail
-    {
-        return FAIL;
-    }
+    );
     OK
 }
 
@@ -1608,9 +1566,6 @@ pub unsafe fn yaml_document_append_mapping_pair(
     key: libc::c_int,
     value: libc::c_int,
 ) -> Success {
-    let mut context = api_context {
-        error: YAML_NO_ERROR,
-    };
     __assert!(!document.is_null());
     __assert!(
         mapping > 0
@@ -1628,17 +1583,13 @@ pub unsafe fn yaml_document_append_mapping_pair(
             && ((*document).nodes.start).wrapping_offset(value as isize) <= (*document).nodes.top
     );
     let pair = yaml_node_pair_t { key, value };
-    if PUSH!(
+    PUSH!(
         addr_of_mut!(context),
         (*((*document).nodes.start).wrapping_offset((mapping - 1) as isize))
             .data
             .mapping
             .pairs,
         pair
-    )
-    .fail
-    {
-        return FAIL;
-    }
+    );
     OK
 }

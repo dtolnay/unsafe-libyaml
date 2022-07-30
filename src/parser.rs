@@ -257,9 +257,7 @@ unsafe fn yaml_parser_parse_document_start(
         {
             return FAIL;
         }
-        if PUSH!(parser, (*parser).states, YAML_PARSE_DOCUMENT_END_STATE).fail {
-            return FAIL;
-        }
+        PUSH!(parser, (*parser).states, YAML_PARSE_DOCUMENT_END_STATE);
         (*parser).state = YAML_PARSE_BLOCK_NODE_STATE;
         memset(
             event as *mut libc::c_void,
@@ -298,7 +296,8 @@ unsafe fn yaml_parser_parse_document_start(
                     b"did not find expected <document start>\0" as *const u8 as *const libc::c_char,
                     (*token).start_mark,
                 );
-            } else if PUSH!(parser, (*parser).states, YAML_PARSE_DOCUMENT_END_STATE).ok {
+            } else {
+                PUSH!(parser, (*parser).states, YAML_PARSE_DOCUMENT_END_STATE);
                 (*parser).state = YAML_PARSE_DOCUMENT_CONTENT_STATE;
                 end_mark = (*token).end_mark;
                 memset(
@@ -756,9 +755,7 @@ unsafe fn yaml_parser_parse_block_sequence_entry(
     let mut token: *mut yaml_token_t;
     if first {
         token = PEEK_TOKEN(parser);
-        if PUSH!(parser, (*parser).marks, (*token).start_mark).fail {
-            return FAIL;
-        }
+        PUSH!(parser, (*parser).marks, (*token).start_mark);
         SKIP_TOKEN(parser);
     }
     token = PEEK_TOKEN(parser);
@@ -773,15 +770,11 @@ unsafe fn yaml_parser_parse_block_sequence_entry(
             return FAIL;
         }
         if (*token).type_ != YAML_BLOCK_ENTRY_TOKEN && (*token).type_ != YAML_BLOCK_END_TOKEN {
-            if PUSH!(
+            PUSH!(
                 parser,
                 (*parser).states,
                 YAML_PARSE_BLOCK_SEQUENCE_ENTRY_STATE
-            )
-            .fail
-            {
-                return FAIL;
-            }
+            );
             yaml_parser_parse_node(parser, event, true, false)
         } else {
             (*parser).state = YAML_PARSE_BLOCK_SEQUENCE_ENTRY_STATE;
@@ -833,15 +826,11 @@ unsafe fn yaml_parser_parse_indentless_sequence_entry(
             && (*token).type_ != YAML_VALUE_TOKEN
             && (*token).type_ != YAML_BLOCK_END_TOKEN
         {
-            if PUSH!(
+            PUSH!(
                 parser,
                 (*parser).states,
                 YAML_PARSE_INDENTLESS_SEQUENCE_ENTRY_STATE
-            )
-            .fail
-            {
-                return FAIL;
-            }
+            );
             yaml_parser_parse_node(parser, event, true, false)
         } else {
             (*parser).state = YAML_PARSE_INDENTLESS_SEQUENCE_ENTRY_STATE;
@@ -869,9 +858,7 @@ unsafe fn yaml_parser_parse_block_mapping_key(
     let mut token: *mut yaml_token_t;
     if first {
         token = PEEK_TOKEN(parser);
-        if PUSH!(parser, (*parser).marks, (*token).start_mark).fail {
-            return FAIL;
-        }
+        PUSH!(parser, (*parser).marks, (*token).start_mark);
         SKIP_TOKEN(parser);
     }
     token = PEEK_TOKEN(parser);
@@ -889,15 +876,11 @@ unsafe fn yaml_parser_parse_block_mapping_key(
             && (*token).type_ != YAML_VALUE_TOKEN
             && (*token).type_ != YAML_BLOCK_END_TOKEN
         {
-            if PUSH!(
+            PUSH!(
                 parser,
                 (*parser).states,
                 YAML_PARSE_BLOCK_MAPPING_VALUE_STATE
-            )
-            .fail
-            {
-                return FAIL;
-            }
+            );
             yaml_parser_parse_node(parser, event, true, true)
         } else {
             (*parser).state = YAML_PARSE_BLOCK_MAPPING_VALUE_STATE;
@@ -948,9 +931,7 @@ unsafe fn yaml_parser_parse_block_mapping_value(
             && (*token).type_ != YAML_VALUE_TOKEN
             && (*token).type_ != YAML_BLOCK_END_TOKEN
         {
-            if PUSH!(parser, (*parser).states, YAML_PARSE_BLOCK_MAPPING_KEY_STATE).fail {
-                return FAIL;
-            }
+            PUSH!(parser, (*parser).states, YAML_PARSE_BLOCK_MAPPING_KEY_STATE);
             yaml_parser_parse_node(parser, event, true, true)
         } else {
             (*parser).state = YAML_PARSE_BLOCK_MAPPING_KEY_STATE;
@@ -970,9 +951,7 @@ unsafe fn yaml_parser_parse_flow_sequence_entry(
     let mut token: *mut yaml_token_t;
     if first {
         token = PEEK_TOKEN(parser);
-        if PUSH!(parser, (*parser).marks, (*token).start_mark).fail {
-            return FAIL;
-        }
+        PUSH!(parser, (*parser).marks, (*token).start_mark);
         SKIP_TOKEN(parser);
     }
     token = PEEK_TOKEN(parser);
@@ -1017,15 +996,11 @@ unsafe fn yaml_parser_parse_flow_sequence_entry(
             SKIP_TOKEN(parser);
             return OK;
         } else if (*token).type_ != YAML_FLOW_SEQUENCE_END_TOKEN {
-            if PUSH!(
+            PUSH!(
                 parser,
                 (*parser).states,
                 YAML_PARSE_FLOW_SEQUENCE_ENTRY_STATE
-            )
-            .fail
-            {
-                return FAIL;
-            }
+            );
             return yaml_parser_parse_node(parser, event, false, false);
         }
     }
@@ -1055,15 +1030,11 @@ unsafe fn yaml_parser_parse_flow_sequence_entry_mapping_key(
         && (*token).type_ != YAML_FLOW_ENTRY_TOKEN
         && (*token).type_ != YAML_FLOW_SEQUENCE_END_TOKEN
     {
-        if PUSH!(
+        PUSH!(
             parser,
             (*parser).states,
             YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_VALUE_STATE
-        )
-        .fail
-        {
-            return FAIL;
-        }
+        );
         yaml_parser_parse_node(parser, event, false, false)
     } else {
         let mark: yaml_mark_t = (*token).end_mark;
@@ -1090,15 +1061,11 @@ unsafe fn yaml_parser_parse_flow_sequence_entry_mapping_value(
         }
         if (*token).type_ != YAML_FLOW_ENTRY_TOKEN && (*token).type_ != YAML_FLOW_SEQUENCE_END_TOKEN
         {
-            if PUSH!(
+            PUSH!(
                 parser,
                 (*parser).states,
                 YAML_PARSE_FLOW_SEQUENCE_ENTRY_MAPPING_END_STATE
-            )
-            .fail
-            {
-                return FAIL;
-            }
+            );
             return yaml_parser_parse_node(parser, event, false, false);
         }
     }
@@ -1134,9 +1101,7 @@ unsafe fn yaml_parser_parse_flow_mapping_key(
     let mut token: *mut yaml_token_t;
     if first {
         token = PEEK_TOKEN(parser);
-        if PUSH!(parser, (*parser).marks, (*token).start_mark).fail {
-            return FAIL;
-        }
+        PUSH!(parser, (*parser).marks, (*token).start_mark);
         SKIP_TOKEN(parser);
     }
     token = PEEK_TOKEN(parser);
@@ -1172,30 +1137,22 @@ unsafe fn yaml_parser_parse_flow_mapping_key(
                 && (*token).type_ != YAML_FLOW_ENTRY_TOKEN
                 && (*token).type_ != YAML_FLOW_MAPPING_END_TOKEN
             {
-                if PUSH!(
+                PUSH!(
                     parser,
                     (*parser).states,
                     YAML_PARSE_FLOW_MAPPING_VALUE_STATE
-                )
-                .fail
-                {
-                    return FAIL;
-                }
+                );
                 return yaml_parser_parse_node(parser, event, false, false);
             } else {
                 (*parser).state = YAML_PARSE_FLOW_MAPPING_VALUE_STATE;
                 return yaml_parser_process_empty_scalar(event, (*token).start_mark);
             }
         } else if (*token).type_ != YAML_FLOW_MAPPING_END_TOKEN {
-            if PUSH!(
+            PUSH!(
                 parser,
                 (*parser).states,
                 YAML_PARSE_FLOW_MAPPING_EMPTY_VALUE_STATE
-            )
-            .fail
-            {
-                return FAIL;
-            }
+            );
             return yaml_parser_parse_node(parser, event, false, false);
         }
     }
@@ -1235,9 +1192,7 @@ unsafe fn yaml_parser_parse_flow_mapping_value(
         }
         if (*token).type_ != YAML_FLOW_ENTRY_TOKEN && (*token).type_ != YAML_FLOW_MAPPING_END_TOKEN
         {
-            if PUSH!(parser, (*parser).states, YAML_PARSE_FLOW_MAPPING_KEY_STATE).fail {
-                return FAIL;
-            }
+            PUSH!(parser, (*parser).states, YAML_PARSE_FLOW_MAPPING_KEY_STATE);
             return yaml_parser_parse_node(parser, event, false, false);
         }
     }
@@ -1273,7 +1228,7 @@ unsafe fn yaml_parser_process_empty_scalar(
 }
 
 unsafe fn yaml_parser_process_directives(
-    mut parser: *mut yaml_parser_t,
+    parser: *mut yaml_parser_t,
     version_directive_ref: *mut *mut yaml_version_directive_t,
     tag_directives_start_ref: *mut *mut yaml_tag_directive_t,
     tag_directives_end_ref: *mut *mut yaml_tag_directive_t,
@@ -1354,10 +1309,7 @@ unsafe fn yaml_parser_process_directives(
                     current_block = 17143798186130252483;
                     break;
                 }
-                if PUSH!(parser, tag_directives, value).fail {
-                    current_block = 17143798186130252483;
-                    break;
-                }
+                PUSH!(parser, tag_directives, value);
             }
             SKIP_TOKEN(parser);
             token = PEEK_TOKEN(parser);
@@ -1459,7 +1411,8 @@ unsafe fn yaml_parser_append_tag_directive(
     copy.prefix = yaml_strdup(value.prefix);
     if copy.handle.is_null() || copy.prefix.is_null() {
         (*parser).error = YAML_MEMORY_ERROR;
-    } else if PUSH!(parser, (*parser).tag_directives, copy).ok {
+    } else {
+        PUSH!(parser, (*parser).tag_directives, copy);
         return OK;
     }
     yaml_free(copy.handle as *mut libc::c_void);
