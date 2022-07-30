@@ -78,9 +78,9 @@ pub(crate) unsafe fn yaml_string_join(
     b_start: *mut *mut yaml_char_t,
     b_pointer: *mut *mut yaml_char_t,
     _b_end: *mut *mut yaml_char_t,
-) -> Success {
+) {
     if *b_start == *b_pointer {
-        return OK;
+        return;
     }
     while (*a_end).c_offset_from(*a_pointer) as libc::c_long
         <= (*b_pointer).c_offset_from(*b_start) as libc::c_long
@@ -94,7 +94,6 @@ pub(crate) unsafe fn yaml_string_join(
     );
     *a_pointer =
         (*a_pointer).wrapping_offset((*b_pointer).c_offset_from(*b_start) as libc::c_long as isize);
-    OK
 }
 
 pub(crate) unsafe fn yaml_stack_extend(

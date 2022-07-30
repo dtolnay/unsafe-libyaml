@@ -1878,7 +1878,7 @@ unsafe fn yaml_parser_scan_uri_escapes(
 }
 
 unsafe fn yaml_parser_scan_block_scalar(
-    mut parser: *mut yaml_parser_t,
+    parser: *mut yaml_parser_t,
     mut token: *mut yaml_token_t,
     literal: bool,
 ) -> Success {
@@ -2060,30 +2060,14 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                 }
                                                                 CLEAR!(leading_break);
                                                             } else {
-                                                                if JOIN!(
+                                                                JOIN!(
                                                                     parser,
                                                                     string,
                                                                     leading_break
-                                                                )
-                                                                .fail
-                                                                {
-                                                                    current_block =
-                                                                        14984465786483313892;
-                                                                    break;
-                                                                }
+                                                                );
                                                                 CLEAR!(leading_break);
                                                             }
-                                                            if JOIN!(
-                                                                parser,
-                                                                string,
-                                                                trailing_breaks
-                                                            )
-                                                            .fail
-                                                            {
-                                                                current_block =
-                                                                    14984465786483313892;
-                                                                break;
-                                                            }
+                                                            JOIN!(parser, string, trailing_breaks);
                                                             CLEAR!(trailing_breaks);
                                                             leading_blank =
                                                                 IS_BLANK!((*parser).buffer)
@@ -2120,19 +2104,13 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                             14984465786483313892 => {}
                                                             _ => {
                                                                 if chomping != -1 {
-                                                                    if JOIN!(
+                                                                    JOIN!(
                                                                         parser,
                                                                         string,
                                                                         leading_break
-                                                                    )
-                                                                    .fail
-                                                                    {
-                                                                        current_block =
-                                                                            14984465786483313892;
-                                                                    } else {
-                                                                        current_block =
-                                                                            17787701279558130514;
-                                                                    }
+                                                                    );
+                                                                    current_block =
+                                                                        17787701279558130514;
                                                                 } else {
                                                                     current_block =
                                                                         17787701279558130514;
@@ -2141,17 +2119,12 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                                     14984465786483313892 => {}
                                                                     _ => {
                                                                         if chomping == 1 {
-                                                                            if JOIN!(
+                                                                            JOIN!(
                                                                                 parser,
                                                                                 string,
                                                                                 trailing_breaks
-                                                                            )
-                                                                            .fail
-                                                                            {
-                                                                                current_block = 14984465786483313892;
-                                                                            } else {
-                                                                                current_block = 14648606000749551097;
-                                                                            }
+                                                                            );
+                                                                            current_block = 14648606000749551097;
                                                                         } else {
                                                                             current_block = 14648606000749551097;
                                                                         }
@@ -2267,7 +2240,7 @@ unsafe fn yaml_parser_scan_block_scalar_breaks(
 }
 
 unsafe fn yaml_parser_scan_flow_scalar(
-    mut parser: *mut yaml_parser_t,
+    parser: *mut yaml_parser_t,
     mut token: *mut yaml_token_t,
     single: bool,
 ) -> Success {
@@ -2619,30 +2592,18 @@ unsafe fn yaml_parser_scan_flow_scalar(
                         string.pointer = string.pointer.wrapping_offset(1);
                         *fresh711 = b' ';
                     } else {
-                        if JOIN!(parser, string, trailing_breaks).fail {
-                            current_block = 8114179180390253173;
-                            break;
-                        }
+                        JOIN!(parser, string, trailing_breaks);
                         CLEAR!(trailing_breaks);
                     }
                     CLEAR!(leading_break);
                 } else {
-                    if JOIN!(parser, string, leading_break).fail {
-                        current_block = 8114179180390253173;
-                        break;
-                    }
-                    if JOIN!(parser, string, trailing_breaks).fail {
-                        current_block = 8114179180390253173;
-                        break;
-                    }
+                    JOIN!(parser, string, leading_break);
+                    JOIN!(parser, string, trailing_breaks);
                     CLEAR!(leading_break);
                     CLEAR!(trailing_breaks);
                 }
             } else {
-                if JOIN!(parser, string, whitespaces).fail {
-                    current_block = 8114179180390253173;
-                    break;
-                }
+                JOIN!(parser, string, whitespaces);
                 CLEAR!(whitespaces);
             }
         }
@@ -2759,31 +2720,19 @@ unsafe fn yaml_parser_scan_plain_scalar(
                                 string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh717 = b' ';
                             } else {
-                                if JOIN!(parser, string, trailing_breaks).fail {
-                                    current_block = 16642808987012640029;
-                                    break 's_57;
-                                }
+                                JOIN!(parser, string, trailing_breaks);
                                 CLEAR!(trailing_breaks);
                             }
                             CLEAR!(leading_break);
                         } else {
-                            if JOIN!(parser, string, leading_break).fail {
-                                current_block = 16642808987012640029;
-                                break 's_57;
-                            }
-                            if JOIN!(parser, string, trailing_breaks).fail {
-                                current_block = 16642808987012640029;
-                                break 's_57;
-                            }
+                            JOIN!(parser, string, leading_break);
+                            JOIN!(parser, string, trailing_breaks);
                             CLEAR!(leading_break);
                             CLEAR!(trailing_breaks);
                         }
                         leading_blanks = 0;
                     } else {
-                        if JOIN!(parser, string, whitespaces).fail {
-                            current_block = 16642808987012640029;
-                            break 's_57;
-                        }
+                        JOIN!(parser, string, whitespaces);
                         CLEAR!(whitespaces);
                     }
                 }

@@ -75,24 +75,17 @@ macro_rules! CLEAR {
 }
 
 macro_rules! JOIN {
-    ($context:expr, $string_a:expr, $string_b:expr) => {
-        if yaml_string_join(
+    ($context:expr, $string_a:expr, $string_b:expr) => {{
+        yaml_string_join(
             addr_of_mut!($string_a.start),
             addr_of_mut!($string_a.pointer),
             addr_of_mut!($string_a.end),
             addr_of_mut!($string_b.start),
             addr_of_mut!($string_b.pointer),
             addr_of_mut!($string_b.end),
-        )
-        .ok
-        {
-            $string_b.pointer = $string_b.start;
-            OK
-        } else {
-            (*$context).error = YAML_MEMORY_ERROR;
-            FAIL
-        }
-    };
+        );
+        $string_b.pointer = $string_b.start;
+    }};
 }
 
 macro_rules! CHECK_AT {
