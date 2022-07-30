@@ -185,17 +185,12 @@ pub unsafe fn yaml_parser_initialize(parser: *mut yaml_parser_t) -> Success {
     BUFFER_INIT!(parser, (*parser).raw_buffer, INPUT_RAW_BUFFER_SIZE);
     BUFFER_INIT!(parser, (*parser).buffer, INPUT_BUFFER_SIZE);
     if QUEUE_INIT!(parser, (*parser).tokens, yaml_token_t).ok {
-        if STACK_INIT!(parser, (*parser).indents, libc::c_int).ok {
-            if STACK_INIT!(parser, (*parser).simple_keys, yaml_simple_key_t).ok {
-                if STACK_INIT!(parser, (*parser).states, yaml_parser_state_t).ok {
-                    if STACK_INIT!(parser, (*parser).marks, yaml_mark_t).ok {
-                        if STACK_INIT!(parser, (*parser).tag_directives, yaml_tag_directive_t).ok {
-                            return OK;
-                        }
-                    }
-                }
-            }
-        }
+        STACK_INIT!(parser, (*parser).indents, libc::c_int);
+        STACK_INIT!(parser, (*parser).simple_keys, yaml_simple_key_t);
+        STACK_INIT!(parser, (*parser).states, yaml_parser_state_t);
+        STACK_INIT!(parser, (*parser).marks, yaml_mark_t);
+        STACK_INIT!(parser, (*parser).tag_directives, yaml_tag_directive_t);
+        return OK;
     }
     BUFFER_DEL!((*parser).raw_buffer);
     BUFFER_DEL!((*parser).buffer);
@@ -331,14 +326,11 @@ pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> Succe
     );
     BUFFER_INIT!(emitter, (*emitter).buffer, OUTPUT_BUFFER_SIZE);
     BUFFER_INIT!(emitter, (*emitter).raw_buffer, OUTPUT_RAW_BUFFER_SIZE);
-    if STACK_INIT!(emitter, (*emitter).states, yaml_emitter_state_t).ok {
-        if QUEUE_INIT!(emitter, (*emitter).events, yaml_event_t).ok {
-            if STACK_INIT!(emitter, (*emitter).indents, libc::c_int).ok {
-                if STACK_INIT!(emitter, (*emitter).tag_directives, yaml_tag_directive_t).ok {
-                    return OK;
-                }
-            }
-        }
+    STACK_INIT!(emitter, (*emitter).states, yaml_emitter_state_t);
+    if QUEUE_INIT!(emitter, (*emitter).events, yaml_event_t).ok {
+        STACK_INIT!(emitter, (*emitter).indents, libc::c_int);
+        STACK_INIT!(emitter, (*emitter).tag_directives, yaml_tag_directive_t);
+        return OK;
     }
     BUFFER_DEL!((*emitter).buffer);
     BUFFER_DEL!((*emitter).raw_buffer);
@@ -687,55 +679,50 @@ pub unsafe fn yaml_document_start_event_initialize(
         1394248824506584008 => {
             if tag_directives_start != tag_directives_end {
                 let mut tag_directive: *mut yaml_tag_directive_t;
-                if STACK_INIT!(
+                STACK_INIT!(
                     addr_of_mut!(context),
                     tag_directives_copy,
                     yaml_tag_directive_t
-                )
-                .fail
-                {
-                    current_block = 14964981520188694172;
-                } else {
-                    tag_directive = tag_directives_start;
-                    loop {
-                        if !(tag_directive != tag_directives_end) {
-                            current_block = 16203760046146113240;
-                            break;
-                        }
-                        __assert!(!((*tag_directive).handle).is_null());
-                        __assert!(!((*tag_directive).prefix).is_null());
-                        if yaml_check_utf8(
-                            (*tag_directive).handle,
-                            strlen((*tag_directive).handle as *mut libc::c_char),
-                        )
-                        .fail
-                        {
-                            current_block = 14964981520188694172;
-                            break;
-                        }
-                        if yaml_check_utf8(
-                            (*tag_directive).prefix,
-                            strlen((*tag_directive).prefix as *mut libc::c_char),
-                        )
-                        .fail
-                        {
-                            current_block = 14964981520188694172;
-                            break;
-                        }
-                        value.handle = yaml_strdup((*tag_directive).handle);
-                        value.prefix = yaml_strdup((*tag_directive).prefix);
-                        if value.handle.is_null() || value.prefix.is_null() {
-                            current_block = 14964981520188694172;
-                            break;
-                        }
-                        if PUSH!(addr_of_mut!(context), tag_directives_copy, value).fail {
-                            current_block = 14964981520188694172;
-                            break;
-                        }
-                        value.handle = ptr::null_mut::<yaml_char_t>();
-                        value.prefix = ptr::null_mut::<yaml_char_t>();
-                        tag_directive = tag_directive.wrapping_offset(1);
+                );
+                tag_directive = tag_directives_start;
+                loop {
+                    if !(tag_directive != tag_directives_end) {
+                        current_block = 16203760046146113240;
+                        break;
                     }
+                    __assert!(!((*tag_directive).handle).is_null());
+                    __assert!(!((*tag_directive).prefix).is_null());
+                    if yaml_check_utf8(
+                        (*tag_directive).handle,
+                        strlen((*tag_directive).handle as *mut libc::c_char),
+                    )
+                    .fail
+                    {
+                        current_block = 14964981520188694172;
+                        break;
+                    }
+                    if yaml_check_utf8(
+                        (*tag_directive).prefix,
+                        strlen((*tag_directive).prefix as *mut libc::c_char),
+                    )
+                    .fail
+                    {
+                        current_block = 14964981520188694172;
+                        break;
+                    }
+                    value.handle = yaml_strdup((*tag_directive).handle);
+                    value.prefix = yaml_strdup((*tag_directive).prefix);
+                    if value.handle.is_null() || value.prefix.is_null() {
+                        current_block = 14964981520188694172;
+                        break;
+                    }
+                    if PUSH!(addr_of_mut!(context), tag_directives_copy, value).fail {
+                        current_block = 14964981520188694172;
+                        break;
+                    }
+                    value.handle = ptr::null_mut::<yaml_char_t>();
+                    value.prefix = ptr::null_mut::<yaml_char_t>();
+                    tag_directive = tag_directive.wrapping_offset(1);
                 }
             } else {
                 current_block = 16203760046146113240;
@@ -1222,101 +1209,94 @@ pub unsafe fn yaml_document_initialize(
         !tag_directives_start.is_null() && !tag_directives_end.is_null()
             || tag_directives_start == tag_directives_end
     );
-    if STACK_INIT!(addr_of_mut!(context), nodes, yaml_node_t).ok {
-        if !version_directive.is_null() {
-            version_directive_copy =
-                yaml_malloc(size_of::<yaml_version_directive_t>() as libc::c_ulong)
-                    as *mut yaml_version_directive_t;
-            (*version_directive_copy).major = (*version_directive).major;
-            (*version_directive_copy).minor = (*version_directive).minor;
-            current_block = 7746791466490516765;
-        } else {
-            current_block = 7746791466490516765;
-        }
-        match current_block {
-            8142820162064489797 => {}
-            _ => {
-                if tag_directives_start != tag_directives_end {
-                    let mut tag_directive: *mut yaml_tag_directive_t;
-                    if STACK_INIT!(
-                        addr_of_mut!(context),
-                        tag_directives_copy,
-                        yaml_tag_directive_t
+    STACK_INIT!(addr_of_mut!(context), nodes, yaml_node_t);
+    if !version_directive.is_null() {
+        version_directive_copy = yaml_malloc(size_of::<yaml_version_directive_t>() as libc::c_ulong)
+            as *mut yaml_version_directive_t;
+        (*version_directive_copy).major = (*version_directive).major;
+        (*version_directive_copy).minor = (*version_directive).minor;
+        current_block = 7746791466490516765;
+    } else {
+        current_block = 7746791466490516765;
+    }
+    match current_block {
+        8142820162064489797 => {}
+        _ => {
+            if tag_directives_start != tag_directives_end {
+                let mut tag_directive: *mut yaml_tag_directive_t;
+                STACK_INIT!(
+                    addr_of_mut!(context),
+                    tag_directives_copy,
+                    yaml_tag_directive_t
+                );
+                tag_directive = tag_directives_start;
+                loop {
+                    if !(tag_directive != tag_directives_end) {
+                        current_block = 14818589718467733107;
+                        break;
+                    }
+                    __assert!(!((*tag_directive).handle).is_null());
+                    __assert!(!((*tag_directive).prefix).is_null());
+                    if yaml_check_utf8(
+                        (*tag_directive).handle,
+                        strlen((*tag_directive).handle as *mut libc::c_char),
                     )
                     .fail
                     {
                         current_block = 8142820162064489797;
-                    } else {
-                        tag_directive = tag_directives_start;
-                        loop {
-                            if !(tag_directive != tag_directives_end) {
-                                current_block = 14818589718467733107;
-                                break;
-                            }
-                            __assert!(!((*tag_directive).handle).is_null());
-                            __assert!(!((*tag_directive).prefix).is_null());
-                            if yaml_check_utf8(
-                                (*tag_directive).handle,
-                                strlen((*tag_directive).handle as *mut libc::c_char),
-                            )
-                            .fail
-                            {
-                                current_block = 8142820162064489797;
-                                break;
-                            }
-                            if yaml_check_utf8(
-                                (*tag_directive).prefix,
-                                strlen((*tag_directive).prefix as *mut libc::c_char),
-                            )
-                            .fail
-                            {
-                                current_block = 8142820162064489797;
-                                break;
-                            }
-                            value.handle = yaml_strdup((*tag_directive).handle);
-                            value.prefix = yaml_strdup((*tag_directive).prefix);
-                            if value.handle.is_null() || value.prefix.is_null() {
-                                current_block = 8142820162064489797;
-                                break;
-                            }
-                            if PUSH!(addr_of_mut!(context), tag_directives_copy, value).fail {
-                                current_block = 8142820162064489797;
-                                break;
-                            }
-                            value.handle = ptr::null_mut::<yaml_char_t>();
-                            value.prefix = ptr::null_mut::<yaml_char_t>();
-                            tag_directive = tag_directive.wrapping_offset(1);
-                        }
+                        break;
                     }
-                } else {
-                    current_block = 14818589718467733107;
+                    if yaml_check_utf8(
+                        (*tag_directive).prefix,
+                        strlen((*tag_directive).prefix as *mut libc::c_char),
+                    )
+                    .fail
+                    {
+                        current_block = 8142820162064489797;
+                        break;
+                    }
+                    value.handle = yaml_strdup((*tag_directive).handle);
+                    value.prefix = yaml_strdup((*tag_directive).prefix);
+                    if value.handle.is_null() || value.prefix.is_null() {
+                        current_block = 8142820162064489797;
+                        break;
+                    }
+                    if PUSH!(addr_of_mut!(context), tag_directives_copy, value).fail {
+                        current_block = 8142820162064489797;
+                        break;
+                    }
+                    value.handle = ptr::null_mut::<yaml_char_t>();
+                    value.prefix = ptr::null_mut::<yaml_char_t>();
+                    tag_directive = tag_directive.wrapping_offset(1);
                 }
-                match current_block {
-                    8142820162064489797 => {}
-                    _ => {
-                        memset(
-                            document as *mut libc::c_void,
-                            0,
-                            size_of::<yaml_document_t>() as libc::c_ulong,
-                        );
-                        let fresh176 = addr_of_mut!((*document).nodes.start);
-                        *fresh176 = nodes.start;
-                        let fresh177 = addr_of_mut!((*document).nodes.end);
-                        *fresh177 = nodes.end;
-                        let fresh178 = addr_of_mut!((*document).nodes.top);
-                        *fresh178 = nodes.start;
-                        let fresh179 = addr_of_mut!((*document).version_directive);
-                        *fresh179 = version_directive_copy;
-                        let fresh180 = addr_of_mut!((*document).tag_directives.start);
-                        *fresh180 = tag_directives_copy.start;
-                        let fresh181 = addr_of_mut!((*document).tag_directives.end);
-                        *fresh181 = tag_directives_copy.top;
-                        (*document).start_implicit = start_implicit;
-                        (*document).end_implicit = end_implicit;
-                        (*document).start_mark = mark;
-                        (*document).end_mark = mark;
-                        return OK;
-                    }
+            } else {
+                current_block = 14818589718467733107;
+            }
+            match current_block {
+                8142820162064489797 => {}
+                _ => {
+                    memset(
+                        document as *mut libc::c_void,
+                        0,
+                        size_of::<yaml_document_t>() as libc::c_ulong,
+                    );
+                    let fresh176 = addr_of_mut!((*document).nodes.start);
+                    *fresh176 = nodes.start;
+                    let fresh177 = addr_of_mut!((*document).nodes.end);
+                    *fresh177 = nodes.end;
+                    let fresh178 = addr_of_mut!((*document).nodes.top);
+                    *fresh178 = nodes.start;
+                    let fresh179 = addr_of_mut!((*document).version_directive);
+                    *fresh179 = version_directive_copy;
+                    let fresh180 = addr_of_mut!((*document).tag_directives.start);
+                    *fresh180 = tag_directives_copy.start;
+                    let fresh181 = addr_of_mut!((*document).tag_directives.end);
+                    *fresh181 = tag_directives_copy.top;
+                    (*document).start_implicit = start_implicit;
+                    (*document).end_implicit = end_implicit;
+                    (*document).start_mark = mark;
+                    (*document).end_mark = mark;
+                    return OK;
                 }
             }
         }
@@ -1519,24 +1499,22 @@ pub unsafe fn yaml_document_add_sequence(
     if yaml_check_utf8(tag, strlen(tag as *mut libc::c_char)).ok {
         tag_copy = yaml_strdup(tag);
         if !tag_copy.is_null() {
-            if STACK_INIT!(addr_of_mut!(context), items, yaml_node_item_t).ok {
-                memset(
-                    node as *mut libc::c_void,
-                    0,
-                    size_of::<yaml_node_t>() as libc::c_ulong,
-                );
-                (*node).type_ = YAML_SEQUENCE_NODE;
-                (*node).tag = tag_copy;
-                (*node).start_mark = mark;
-                (*node).end_mark = mark;
-                (*node).data.sequence.items.start = items.start;
-                (*node).data.sequence.items.end = items.end;
-                (*node).data.sequence.items.top = items.start;
-                (*node).data.sequence.style = style;
-                if PUSH!(addr_of_mut!(context), (*document).nodes, *node).ok {
-                    return (*document).nodes.top.c_offset_from((*document).nodes.start)
-                        as libc::c_int;
-                }
+            STACK_INIT!(addr_of_mut!(context), items, yaml_node_item_t);
+            memset(
+                node as *mut libc::c_void,
+                0,
+                size_of::<yaml_node_t>() as libc::c_ulong,
+            );
+            (*node).type_ = YAML_SEQUENCE_NODE;
+            (*node).tag = tag_copy;
+            (*node).start_mark = mark;
+            (*node).end_mark = mark;
+            (*node).data.sequence.items.start = items.start;
+            (*node).data.sequence.items.end = items.end;
+            (*node).data.sequence.items.top = items.start;
+            (*node).data.sequence.style = style;
+            if PUSH!(addr_of_mut!(context), (*document).nodes, *node).ok {
+                return (*document).nodes.top.c_offset_from((*document).nodes.start) as libc::c_int;
             }
         }
     }
@@ -1584,24 +1562,22 @@ pub unsafe fn yaml_document_add_mapping(
     if yaml_check_utf8(tag, strlen(tag as *mut libc::c_char)).ok {
         tag_copy = yaml_strdup(tag);
         if !tag_copy.is_null() {
-            if STACK_INIT!(addr_of_mut!(context), pairs, yaml_node_pair_t).ok {
-                memset(
-                    node as *mut libc::c_void,
-                    0,
-                    size_of::<yaml_node_t>() as libc::c_ulong,
-                );
-                (*node).type_ = YAML_MAPPING_NODE;
-                (*node).tag = tag_copy;
-                (*node).start_mark = mark;
-                (*node).end_mark = mark;
-                (*node).data.mapping.pairs.start = pairs.start;
-                (*node).data.mapping.pairs.end = pairs.end;
-                (*node).data.mapping.pairs.top = pairs.start;
-                (*node).data.mapping.style = style;
-                if PUSH!(addr_of_mut!(context), (*document).nodes, *node).ok {
-                    return (*document).nodes.top.c_offset_from((*document).nodes.start)
-                        as libc::c_int;
-                }
+            STACK_INIT!(addr_of_mut!(context), pairs, yaml_node_pair_t);
+            memset(
+                node as *mut libc::c_void,
+                0,
+                size_of::<yaml_node_t>() as libc::c_ulong,
+            );
+            (*node).type_ = YAML_MAPPING_NODE;
+            (*node).tag = tag_copy;
+            (*node).start_mark = mark;
+            (*node).end_mark = mark;
+            (*node).data.mapping.pairs.start = pairs.start;
+            (*node).data.mapping.pairs.end = pairs.end;
+            (*node).data.mapping.pairs.top = pairs.start;
+            (*node).data.mapping.style = style;
+            if PUSH!(addr_of_mut!(context), (*document).nodes, *node).ok {
+                return (*document).nodes.top.c_offset_from((*document).nodes.start) as libc::c_int;
             }
         }
     }

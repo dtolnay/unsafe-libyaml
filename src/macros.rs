@@ -365,7 +365,6 @@ macro_rules! STACK_INIT {
         $stack.start = yaml_malloc(16 * size_of::<$type>() as libc::c_ulong) as *mut $type;
         $stack.top = $stack.start;
         $stack.end = $stack.start.offset(16_isize);
-        OK
     }};
 }
 

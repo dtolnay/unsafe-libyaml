@@ -1307,114 +1307,109 @@ unsafe fn yaml_parser_process_directives(
         top: ptr::null_mut::<yaml_tag_directive_t>(),
     };
     let mut token: *mut yaml_token_t;
-    if STACK_INIT!(parser, tag_directives, yaml_tag_directive_t).ok {
-        token = PEEK_TOKEN(parser);
-        if !token.is_null() {
-            loop {
-                if !((*token).type_ == YAML_VERSION_DIRECTIVE_TOKEN
-                    || (*token).type_ == YAML_TAG_DIRECTIVE_TOKEN)
+    STACK_INIT!(parser, tag_directives, yaml_tag_directive_t);
+    token = PEEK_TOKEN(parser);
+    if !token.is_null() {
+        loop {
+            if !((*token).type_ == YAML_VERSION_DIRECTIVE_TOKEN
+                || (*token).type_ == YAML_TAG_DIRECTIVE_TOKEN)
+            {
+                current_block = 16924917904204750491;
+                break;
+            }
+            if (*token).type_ == YAML_VERSION_DIRECTIVE_TOKEN {
+                if !version_directive.is_null() {
+                    yaml_parser_set_parser_error(
+                        parser,
+                        b"found duplicate %YAML directive\0" as *const u8 as *const libc::c_char,
+                        (*token).start_mark,
+                    );
+                    current_block = 17143798186130252483;
+                    break;
+                } else if (*token).data.version_directive.major != 1
+                    || (*token).data.version_directive.minor != 1
+                        && (*token).data.version_directive.minor != 2
                 {
-                    current_block = 16924917904204750491;
+                    yaml_parser_set_parser_error(
+                        parser,
+                        b"found incompatible YAML document\0" as *const u8 as *const libc::c_char,
+                        (*token).start_mark,
+                    );
+                    current_block = 17143798186130252483;
+                    break;
+                } else {
+                    version_directive =
+                        yaml_malloc(size_of::<yaml_version_directive_t>() as libc::c_ulong)
+                            as *mut yaml_version_directive_t;
+                    (*version_directive).major = (*token).data.version_directive.major;
+                    (*version_directive).minor = (*token).data.version_directive.minor;
+                }
+            } else if (*token).type_ == YAML_TAG_DIRECTIVE_TOKEN {
+                let value = yaml_tag_directive_t {
+                    handle: (*token).data.tag_directive.handle,
+                    prefix: (*token).data.tag_directive.prefix,
+                };
+                if yaml_parser_append_tag_directive(parser, value, false, (*token).start_mark).fail
+                {
+                    current_block = 17143798186130252483;
                     break;
                 }
-                if (*token).type_ == YAML_VERSION_DIRECTIVE_TOKEN {
-                    if !version_directive.is_null() {
-                        yaml_parser_set_parser_error(
-                            parser,
-                            b"found duplicate %YAML directive\0" as *const u8
-                                as *const libc::c_char,
-                            (*token).start_mark,
-                        );
-                        current_block = 17143798186130252483;
-                        break;
-                    } else if (*token).data.version_directive.major != 1
-                        || (*token).data.version_directive.minor != 1
-                            && (*token).data.version_directive.minor != 2
-                    {
-                        yaml_parser_set_parser_error(
-                            parser,
-                            b"found incompatible YAML document\0" as *const u8
-                                as *const libc::c_char,
-                            (*token).start_mark,
-                        );
-                        current_block = 17143798186130252483;
-                        break;
-                    } else {
-                        version_directive =
-                            yaml_malloc(size_of::<yaml_version_directive_t>() as libc::c_ulong)
-                                as *mut yaml_version_directive_t;
-                        (*version_directive).major = (*token).data.version_directive.major;
-                        (*version_directive).minor = (*token).data.version_directive.minor;
-                    }
-                } else if (*token).type_ == YAML_TAG_DIRECTIVE_TOKEN {
-                    let value = yaml_tag_directive_t {
-                        handle: (*token).data.tag_directive.handle,
-                        prefix: (*token).data.tag_directive.prefix,
-                    };
-                    if yaml_parser_append_tag_directive(parser, value, false, (*token).start_mark)
-                        .fail
-                    {
-                        current_block = 17143798186130252483;
-                        break;
-                    }
-                    if PUSH!(parser, tag_directives, value).fail {
-                        current_block = 17143798186130252483;
-                        break;
-                    }
-                }
-                SKIP_TOKEN(parser);
-                token = PEEK_TOKEN(parser);
-                if token.is_null() {
+                if PUSH!(parser, tag_directives, value).fail {
                     current_block = 17143798186130252483;
                     break;
                 }
             }
-            match current_block {
-                17143798186130252483 => {}
-                _ => {
-                    default_tag_directive = default_tag_directives.as_mut_ptr();
-                    loop {
-                        if (*default_tag_directive).handle.is_null() {
-                            current_block = 18377268871191777778;
-                            break;
-                        }
-                        if yaml_parser_append_tag_directive(
-                            parser,
-                            *default_tag_directive,
-                            true,
-                            (*token).start_mark,
-                        )
-                        .fail
-                        {
-                            current_block = 17143798186130252483;
-                            break;
-                        }
-                        default_tag_directive = default_tag_directive.wrapping_offset(1);
+            SKIP_TOKEN(parser);
+            token = PEEK_TOKEN(parser);
+            if token.is_null() {
+                current_block = 17143798186130252483;
+                break;
+            }
+        }
+        match current_block {
+            17143798186130252483 => {}
+            _ => {
+                default_tag_directive = default_tag_directives.as_mut_ptr();
+                loop {
+                    if (*default_tag_directive).handle.is_null() {
+                        current_block = 18377268871191777778;
+                        break;
                     }
-                    match current_block {
-                        17143798186130252483 => {}
-                        _ => {
-                            if !version_directive_ref.is_null() {
-                                *version_directive_ref = version_directive;
-                            }
-                            if !tag_directives_start_ref.is_null() {
-                                if STACK_EMPTY!(tag_directives) {
-                                    *tag_directives_end_ref =
-                                        ptr::null_mut::<yaml_tag_directive_t>();
-                                    *tag_directives_start_ref = *tag_directives_end_ref;
-                                    STACK_DEL!(tag_directives);
-                                } else {
-                                    *tag_directives_start_ref = tag_directives.start;
-                                    *tag_directives_end_ref = tag_directives.top;
-                                }
-                            } else {
-                                STACK_DEL!(tag_directives);
-                            }
-                            if version_directive_ref.is_null() {
-                                yaml_free(version_directive as *mut libc::c_void);
-                            }
-                            return OK;
+                    if yaml_parser_append_tag_directive(
+                        parser,
+                        *default_tag_directive,
+                        true,
+                        (*token).start_mark,
+                    )
+                    .fail
+                    {
+                        current_block = 17143798186130252483;
+                        break;
+                    }
+                    default_tag_directive = default_tag_directive.wrapping_offset(1);
+                }
+                match current_block {
+                    17143798186130252483 => {}
+                    _ => {
+                        if !version_directive_ref.is_null() {
+                            *version_directive_ref = version_directive;
                         }
+                        if !tag_directives_start_ref.is_null() {
+                            if STACK_EMPTY!(tag_directives) {
+                                *tag_directives_end_ref = ptr::null_mut::<yaml_tag_directive_t>();
+                                *tag_directives_start_ref = *tag_directives_end_ref;
+                                STACK_DEL!(tag_directives);
+                            } else {
+                                *tag_directives_start_ref = tag_directives.start;
+                                *tag_directives_end_ref = tag_directives.top;
+                            }
+                        } else {
+                            STACK_DEL!(tag_directives);
+                        }
+                        if version_directive_ref.is_null() {
+                            yaml_free(version_directive as *mut libc::c_void);
+                        }
+                        return OK;
                     }
                 }
             }
