@@ -1,6 +1,6 @@
 [package]
 name = "unsafe-libyaml"
-version = "0.2.1" # remember to update html_root_url
+version = "0.2.2" # remember to update html_root_url
 authors = ["David Tolnay <dtolnay@gmail.com>"]
 categories = ["encoding", "parser-implementations", "no-std"]
 description = "libyaml transpiled to rust by c2rust"
