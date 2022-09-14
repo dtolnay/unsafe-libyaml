@@ -8,7 +8,6 @@ documentation = "https://docs.rs/unsafe-libyaml"
 edition = "2021"
 keywords = ["yaml"]
 license = "MIT"
-readme = "README.md"
 repository = "https://github.com/dtolnay/unsafe-libyaml"
 rust-version = "1.56"
 
