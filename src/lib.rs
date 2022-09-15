@@ -69,6 +69,9 @@ mod externs {
         let size = HEADER + size as usize;
         let layout = Layout::from_size_align_unchecked(size, MALLOC_ALIGN);
         let memory = rust::alloc(layout);
+        if memory.is_null() {
+            rust::handle_alloc_error(layout);
+        }
         memory.cast::<usize>().write(size);
         memory.add(HEADER).cast()
     }
@@ -79,6 +82,10 @@ mod externs {
         let layout = Layout::from_size_align_unchecked(size, MALLOC_ALIGN);
         let new_size = HEADER + new_size as usize;
         memory = rust::realloc(memory, layout, new_size);
+        if memory.is_null() {
+            let layout = Layout::from_size_align_unchecked(new_size, MALLOC_ALIGN);
+            rust::handle_alloc_error(layout);
+        }
         memory.cast::<usize>().write(new_size);
         memory.add(HEADER).cast()
     }
