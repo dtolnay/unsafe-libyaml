@@ -35,6 +35,7 @@
     clippy::single_match_else,
     clippy::too_many_arguments,
     clippy::too_many_lines,
+    clippy::unnecessary_cast,
     clippy::unreadable_literal,
     clippy::while_immutable_condition, // https://github.com/rust-lang/rust-clippy/issues/3548
 )]
