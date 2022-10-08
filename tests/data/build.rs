@@ -1,3 +1,5 @@
+#![allow(clippy::uninlined_format_args)]
+
 use anyhow::Result;
 use flate2::read::GzDecoder;
 use std::fs;
