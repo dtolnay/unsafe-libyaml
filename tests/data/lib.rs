@@ -33,7 +33,7 @@ fn test(ignorelist: &str, check: fn(&Path) -> bool) -> TokenStream {
 
     let mut ids = Map::new();
     let yaml_test_suite = tests_dir.join("data").join("yaml-test-suite");
-    for entry in fs::read_dir(&yaml_test_suite).unwrap() {
+    for entry in fs::read_dir(yaml_test_suite).unwrap() {
         let entry = entry.unwrap();
         if !entry.file_type().unwrap().is_dir() {
             continue;
