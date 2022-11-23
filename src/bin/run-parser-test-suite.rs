@@ -5,7 +5,6 @@
     clippy::cast_possible_wrap,
     clippy::cast_sign_loss,
     clippy::items_after_statements,
-    clippy::let_underscore_drop,
     clippy::missing_errors_doc,
     clippy::missing_safety_doc,
     clippy::too_many_lines

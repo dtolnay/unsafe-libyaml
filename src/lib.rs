@@ -20,7 +20,6 @@
     clippy::fn_params_excessive_bools,
     clippy::if_not_else,
     clippy::items_after_statements,
-    clippy::let_underscore_drop,
     clippy::manual_range_contains,
     clippy::manual_swap,
     clippy::missing_panics_doc,
