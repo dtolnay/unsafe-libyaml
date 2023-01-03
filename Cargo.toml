@@ -16,5 +16,8 @@ rust-version = "1.56"
 pretty_assertions = "1.0"
 unsafe-libyaml-test-suite = { path = "tests/data" }
 
+[lib]
+doc-scrape-examples = false
+
 [package.metadata.docs.rs]
 targets = ["x86_64-unknown-linux-gnu"]
