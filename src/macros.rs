@@ -157,18 +157,18 @@ macro_rules! IS_ASCII {
 
 macro_rules! IS_PRINTABLE {
     ($string:expr) => {
-        (*$string.pointer == 0x0A
+        *$string.pointer == 0x0A
             || *$string.pointer >= 0x20 && *$string.pointer <= 0x7E
             || *$string.pointer == 0xC2 && *$string.pointer.wrapping_offset(1) >= 0xA0
-            || *$string.pointer > 0xC2 && (*$string.pointer) < 0xED
-            || *$string.pointer == 0xED && (*$string.pointer.wrapping_offset(1)) < 0xA0
+            || *$string.pointer > 0xC2 && *$string.pointer < 0xED
+            || *$string.pointer == 0xED && *$string.pointer.wrapping_offset(1) < 0xA0
             || *$string.pointer == 0xEE
             || *$string.pointer == 0xEF
                 && !(*$string.pointer.wrapping_offset(1) == 0xBB
                     && *$string.pointer.wrapping_offset(2) == 0xBF)
                 && !(*$string.pointer.wrapping_offset(1) == 0xBF
                     && (*$string.pointer.wrapping_offset(2) == 0xBE
-                        || *$string.pointer.wrapping_offset(2) == 0xBF)))
+                        || *$string.pointer.wrapping_offset(2) == 0xBF))
     };
 }
 
@@ -476,15 +476,16 @@ macro_rules! QUEUE_INSERT {
             );
         }
         memmove(
-            ($queue.head)
+            $queue
+                .head
                 .wrapping_offset($index as isize)
                 .wrapping_offset(1_isize) as *mut libc::c_void,
-            ($queue.head).wrapping_offset($index as isize) as *const libc::c_void,
-            (($queue.tail).c_offset_from($queue.head) as libc::c_ulong)
+            $queue.head.wrapping_offset($index as isize) as *const libc::c_void,
+            ($queue.tail.c_offset_from($queue.head) as libc::c_ulong)
                 .wrapping_sub($index)
                 .wrapping_mul(size_of::<yaml_token_t>() as libc::c_ulong),
         );
-        *($queue.head).wrapping_offset($index as isize) = $value;
+        *$queue.head.wrapping_offset($index as isize) = $value;
         let fresh14 = addr_of_mut!($queue.tail);
         *fresh14 = (*fresh14).wrapping_offset(1);
     }};
