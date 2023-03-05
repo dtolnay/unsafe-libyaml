@@ -157,18 +157,38 @@ macro_rules! IS_ASCII {
 
 macro_rules! IS_PRINTABLE {
     ($string:expr) => {
-        *$string.pointer == 0x0A
-            || *$string.pointer >= 0x20 && *$string.pointer <= 0x7E
-            || *$string.pointer == 0xC2 && *$string.pointer.wrapping_offset(1) >= 0xA0
-            || *$string.pointer > 0xC2 && *$string.pointer < 0xED
-            || *$string.pointer == 0xED && *$string.pointer.wrapping_offset(1) < 0xA0
-            || *$string.pointer == 0xEE
-            || *$string.pointer == 0xEF
-                && !(*$string.pointer.wrapping_offset(1) == 0xBB
-                    && *$string.pointer.wrapping_offset(2) == 0xBF)
-                && !(*$string.pointer.wrapping_offset(1) == 0xBF
-                    && (*$string.pointer.wrapping_offset(2) == 0xBE
-                        || *$string.pointer.wrapping_offset(2) == 0xBF))
+        match *$string.pointer {
+            // ASCII
+            0x0A | 0x20..=0x7E => true,
+            // U+A0 ... U+BF
+            0xC2 => match *$string.pointer.wrapping_offset(1) {
+                0xA0..=0xBF => true,
+                _ => false,
+            },
+            // U+C0 ... U+CFFF
+            0xC3..=0xEC => true,
+            // U+D000 ... U+D7FF
+            0xED => match *$string.pointer.wrapping_offset(1) {
+                0x00..=0x9F => true,
+                _ => false,
+            },
+            // U+E000 ... U+EFFF
+            0xEE => true,
+            // U+F000 ... U+FFFD
+            0xEF => match *$string.pointer.wrapping_offset(1) {
+                0xBB => match *$string.pointer.wrapping_offset(2) {
+                    // except U+FEFF
+                    0xBF => false,
+                    _ => true,
+                },
+                0xBF => match *$string.pointer.wrapping_offset(2) {
+                    0xBE | 0xBF => false,
+                    _ => true,
+                },
+                _ => true,
+            },
+            _ => false,
+        }
     };
 }
 
