@@ -1,2 +1,4 @@
 artifacts/
 corpus/
+coverage/
+target/
