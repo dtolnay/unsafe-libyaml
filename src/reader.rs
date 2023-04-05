@@ -152,7 +152,7 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
     parser: *mut yaml_parser_t,
     length: size_t,
 ) -> Success {
-    let mut first: libc::c_int = 1;
+    let mut first = true;
     __assert!(((*parser).read_handler).is_some());
     if (*parser).eof && (*parser).raw_buffer.pointer == (*parser).raw_buffer.last {
         return OK;
@@ -189,16 +189,16 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
         *fresh13 = (*parser).buffer.start;
     }
     while (*parser).unread < length {
-        if first == 0 || (*parser).raw_buffer.pointer == (*parser).raw_buffer.last {
+        if !first || (*parser).raw_buffer.pointer == (*parser).raw_buffer.last {
             if yaml_parser_update_raw_buffer(parser).fail {
                 return FAIL;
             }
         }
-        first = 0;
+        first = false;
         while (*parser).raw_buffer.pointer != (*parser).raw_buffer.last {
             let mut value: libc::c_uint = 0;
             let value2: libc::c_uint;
-            let mut incomplete: libc::c_int = 0;
+            let mut incomplete = false;
             let mut octet: libc::c_uchar;
             let mut width: libc::c_uint = 0;
             let low: libc::c_int;
@@ -241,7 +241,7 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
                                 -1,
                             );
                         }
-                        incomplete = 1;
+                        incomplete = true;
                     } else {
                         value = if octet & 0x80 == 0 {
                             octet & 0x7F
@@ -313,7 +313,7 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
                                 -1,
                             );
                         }
-                        incomplete = 1;
+                        incomplete = true;
                     } else {
                         value = (*(*parser).raw_buffer.pointer.wrapping_offset(low as isize)
                             as libc::c_int
@@ -341,7 +341,7 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
                                         -1,
                                     );
                                 }
-                                incomplete = 1;
+                                incomplete = true;
                             } else {
                                 value2 = (*(*parser)
                                     .raw_buffer
@@ -375,7 +375,7 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
                 }
                 _ => {}
             }
-            if incomplete != 0 {
+            if incomplete {
                 break;
             }
             if !(value == 0x9

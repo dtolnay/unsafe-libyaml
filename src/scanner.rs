@@ -178,11 +178,11 @@ unsafe fn yaml_parser_set_scanner_error(
 }
 
 pub(crate) unsafe fn yaml_parser_fetch_more_tokens(mut parser: *mut yaml_parser_t) -> Success {
-    let mut need_more_tokens: libc::c_int;
+    let mut need_more_tokens;
     loop {
-        need_more_tokens = 0;
+        need_more_tokens = false;
         if (*parser).tokens.head == (*parser).tokens.tail {
-            need_more_tokens = 1;
+            need_more_tokens = true;
         } else {
             let mut simple_key: *mut yaml_simple_key_t;
             if yaml_parser_stale_simple_keys(parser).fail {
@@ -191,14 +191,14 @@ pub(crate) unsafe fn yaml_parser_fetch_more_tokens(mut parser: *mut yaml_parser_
             simple_key = (*parser).simple_keys.start;
             while simple_key != (*parser).simple_keys.top {
                 if (*simple_key).possible && (*simple_key).token_number == (*parser).tokens_parsed {
-                    need_more_tokens = 1;
+                    need_more_tokens = true;
                     break;
                 } else {
                     simple_key = simple_key.wrapping_offset(1);
                 }
             }
         }
-        if need_more_tokens == 0 {
+        if !need_more_tokens {
             break;
         }
         if yaml_parser_fetch_next_token(parser).fail {
@@ -2095,7 +2095,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
     let mut leading_break = NULL_STRING;
     let mut trailing_breaks = NULL_STRING;
     let mut whitespaces = NULL_STRING;
-    let mut leading_blanks: libc::c_int;
+    let mut leading_blanks;
     STRING_INIT!(string);
     STRING_INIT!(leading_break);
     STRING_INIT!(trailing_breaks);
@@ -2138,7 +2138,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                 current_block = 8114179180390253173;
                 break;
             }
-            leading_blanks = 0;
+            leading_blanks = false;
             while !IS_BLANKZ!((*parser).buffer) {
                 if single
                     && CHECK_AT!((*parser).buffer, b'\'', 0)
@@ -2164,7 +2164,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                         }
                         SKIP(parser);
                         SKIP_LINE(parser);
-                        leading_blanks = 1;
+                        leading_blanks = true;
                         break;
                     } else if !single && CHECK!((*parser).buffer, b'\\') {
                         let mut code_length: size_t = 0_u64;
@@ -2406,7 +2406,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
             }
             while IS_BLANK!((*parser).buffer) || IS_BREAK!((*parser).buffer) {
                 if IS_BLANK!((*parser).buffer) {
-                    if leading_blanks == 0 {
+                    if !leading_blanks {
                         READ!(parser, whitespaces);
                     } else {
                         SKIP(parser);
@@ -2416,10 +2416,10 @@ unsafe fn yaml_parser_scan_flow_scalar(
                         current_block = 8114179180390253173;
                         break 's_58;
                     }
-                    if leading_blanks == 0 {
+                    if !leading_blanks {
                         CLEAR!(whitespaces);
                         READ_LINE!(parser, leading_break);
-                        leading_blanks = 1;
+                        leading_blanks = true;
                     } else {
                         READ_LINE!(parser, trailing_breaks);
                     }
@@ -2429,7 +2429,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                     break 's_58;
                 }
             }
-            if leading_blanks != 0 {
+            if leading_blanks {
                 if *leading_break.start == b'\n' {
                     if *trailing_breaks.start == b'\0' {
                         STRING_EXTEND!(string);
@@ -2495,7 +2495,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
     let mut leading_break = NULL_STRING;
     let mut trailing_breaks = NULL_STRING;
     let mut whitespaces = NULL_STRING;
-    let mut leading_blanks: libc::c_int = 0;
+    let mut leading_blanks = false;
     let indent: libc::c_int = (*parser).indent + 1;
     STRING_INIT!(string);
     STRING_INIT!(leading_break);
@@ -2553,8 +2553,8 @@ unsafe fn yaml_parser_scan_plain_scalar(
                 {
                     break;
                 }
-                if leading_blanks != 0 || whitespaces.start != whitespaces.pointer {
-                    if leading_blanks != 0 {
+                if leading_blanks || whitespaces.start != whitespaces.pointer {
+                    if leading_blanks {
                         if *leading_break.start == b'\n' {
                             if *trailing_breaks.start == b'\0' {
                                 STRING_EXTEND!(string);
@@ -2572,7 +2572,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
                             CLEAR!(leading_break);
                             CLEAR!(trailing_breaks);
                         }
-                        leading_blanks = 0;
+                        leading_blanks = false;
                     } else {
                         JOIN!(string, whitespaces);
                         CLEAR!(whitespaces);
@@ -2596,7 +2596,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
         }
         while IS_BLANK!((*parser).buffer) || IS_BREAK!((*parser).buffer) {
             if IS_BLANK!((*parser).buffer) {
-                if leading_blanks != 0
+                if leading_blanks
                     && ((*parser).mark.column as libc::c_int) < indent
                     && IS_TAB!((*parser).buffer)
                 {
@@ -2609,7 +2609,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
                     );
                     current_block = 16642808987012640029;
                     break 's_57;
-                } else if leading_blanks == 0 {
+                } else if !leading_blanks {
                     READ!(parser, whitespaces);
                 } else {
                     SKIP(parser);
@@ -2619,10 +2619,10 @@ unsafe fn yaml_parser_scan_plain_scalar(
                     current_block = 16642808987012640029;
                     break 's_57;
                 }
-                if leading_blanks == 0 {
+                if !leading_blanks {
                     CLEAR!(whitespaces);
                     READ_LINE!(parser, leading_break);
-                    leading_blanks = 1;
+                    leading_blanks = true;
                 } else {
                     READ_LINE!(parser, trailing_breaks);
                 }
@@ -2651,7 +2651,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
         (*token).data.scalar.length =
             string.pointer.c_offset_from(string.start) as libc::c_long as size_t;
         (*token).data.scalar.style = YAML_PLAIN_SCALAR_STYLE;
-        if leading_blanks != 0 {
+        if leading_blanks {
             (*parser).simple_key_allowed = true;
         }
         STRING_DEL!(leading_break);

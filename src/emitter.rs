@@ -1872,8 +1872,8 @@ unsafe fn yaml_emitter_write_plain_scalar(
     length: size_t,
     allow_breaks: bool,
 ) -> Success {
-    let mut spaces: libc::c_int = 0;
-    let mut breaks: libc::c_int = 0;
+    let mut spaces = false;
+    let mut breaks = false;
     let mut string = STRING_ASSIGN!(value, length);
     if !(*emitter).whitespace && (length != 0 || (*emitter).flow_level != 0) {
         if PUT(emitter, b' ').fail {
@@ -1883,7 +1883,7 @@ unsafe fn yaml_emitter_write_plain_scalar(
     while string.pointer != string.end {
         if IS_SPACE!(string) {
             if allow_breaks
-                && spaces == 0
+                && !spaces
                 && (*emitter).column > (*emitter).best_width
                 && !IS_SPACE_AT!(string, 1)
             {
@@ -1894,9 +1894,9 @@ unsafe fn yaml_emitter_write_plain_scalar(
             } else if WRITE!(emitter, string).fail {
                 return FAIL;
             }
-            spaces = 1;
+            spaces = true;
         } else if IS_BREAK!(string) {
-            if breaks == 0 && CHECK!(string, b'\n') {
+            if !breaks && CHECK!(string, b'\n') {
                 if PUT_BREAK(emitter).fail {
                     return FAIL;
                 }
@@ -1905,9 +1905,9 @@ unsafe fn yaml_emitter_write_plain_scalar(
                 return FAIL;
             }
             (*emitter).indention = true;
-            breaks = 1;
+            breaks = true;
         } else {
-            if breaks != 0 {
+            if breaks {
                 if yaml_emitter_write_indent(emitter).fail {
                     return FAIL;
                 }
@@ -1916,8 +1916,8 @@ unsafe fn yaml_emitter_write_plain_scalar(
                 return FAIL;
             }
             (*emitter).indention = false;
-            spaces = 0;
-            breaks = 0;
+            spaces = false;
+            breaks = false;
         }
     }
     (*emitter).whitespace = false;
@@ -1931,8 +1931,8 @@ unsafe fn yaml_emitter_write_single_quoted_scalar(
     length: size_t,
     allow_breaks: bool,
 ) -> Success {
-    let mut spaces: libc::c_int = 0;
-    let mut breaks: libc::c_int = 0;
+    let mut spaces = false;
+    let mut breaks = false;
     let mut string = STRING_ASSIGN!(value, length);
     if yaml_emitter_write_indicator(
         emitter,
@@ -1948,7 +1948,7 @@ unsafe fn yaml_emitter_write_single_quoted_scalar(
     while string.pointer != string.end {
         if IS_SPACE!(string) {
             if allow_breaks
-                && spaces == 0
+                && !spaces
                 && (*emitter).column > (*emitter).best_width
                 && string.pointer != string.start
                 && string.pointer != string.end.wrapping_offset(-1_isize)
@@ -1961,9 +1961,9 @@ unsafe fn yaml_emitter_write_single_quoted_scalar(
             } else if WRITE!(emitter, string).fail {
                 return FAIL;
             }
-            spaces = 1;
+            spaces = true;
         } else if IS_BREAK!(string) {
-            if breaks == 0 && CHECK!(string, b'\n') {
+            if !breaks && CHECK!(string, b'\n') {
                 if PUT_BREAK(emitter).fail {
                     return FAIL;
                 }
@@ -1972,9 +1972,9 @@ unsafe fn yaml_emitter_write_single_quoted_scalar(
                 return FAIL;
             }
             (*emitter).indention = true;
-            breaks = 1;
+            breaks = true;
         } else {
-            if breaks != 0 {
+            if breaks {
                 if yaml_emitter_write_indent(emitter).fail {
                     return FAIL;
                 }
@@ -1988,11 +1988,11 @@ unsafe fn yaml_emitter_write_single_quoted_scalar(
                 return FAIL;
             }
             (*emitter).indention = false;
-            spaces = 0;
-            breaks = 0;
+            spaces = false;
+            breaks = false;
         }
     }
-    if breaks != 0 {
+    if breaks {
         if yaml_emitter_write_indent(emitter).fail {
             return FAIL;
         }
@@ -2019,7 +2019,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
     length: size_t,
     allow_breaks: bool,
 ) -> Success {
-    let mut spaces: libc::c_int = 0;
+    let mut spaces = false;
     let mut string = STRING_ASSIGN!(value, length);
     if yaml_emitter_write_indicator(
         emitter,
@@ -2185,10 +2185,10 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                     }
                 }
             }
-            spaces = 0;
+            spaces = false;
         } else if IS_SPACE!(string) {
             if allow_breaks
-                && spaces == 0
+                && !spaces
                 && (*emitter).column > (*emitter).best_width
                 && string.pointer != string.start
                 && string.pointer != string.end.wrapping_offset(-1_isize)
@@ -2205,12 +2205,12 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
             } else if WRITE!(emitter, string).fail {
                 return FAIL;
             }
-            spaces = 1;
+            spaces = true;
         } else {
             if WRITE!(emitter, string).fail {
                 return FAIL;
             }
-            spaces = 0;
+            spaces = false;
         }
     }
     if yaml_emitter_write_indicator(
@@ -2285,7 +2285,7 @@ unsafe fn yaml_emitter_write_literal_scalar(
     value: *mut yaml_char_t,
     length: size_t,
 ) -> Success {
-    let mut breaks: libc::c_int = 1;
+    let mut breaks = true;
     let mut string = STRING_ASSIGN!(value, length);
     if yaml_emitter_write_indicator(
         emitter,
@@ -2312,9 +2312,9 @@ unsafe fn yaml_emitter_write_literal_scalar(
                 return FAIL;
             }
             (*emitter).indention = true;
-            breaks = 1;
+            breaks = true;
         } else {
-            if breaks != 0 {
+            if breaks {
                 if yaml_emitter_write_indent(emitter).fail {
                     return FAIL;
                 }
@@ -2323,7 +2323,7 @@ unsafe fn yaml_emitter_write_literal_scalar(
                 return FAIL;
             }
             (*emitter).indention = false;
-            breaks = 0;
+            breaks = false;
         }
     }
     OK
@@ -2334,8 +2334,8 @@ unsafe fn yaml_emitter_write_folded_scalar(
     value: *mut yaml_char_t,
     length: size_t,
 ) -> Success {
-    let mut breaks: libc::c_int = 1;
-    let mut leading_spaces: libc::c_int = 1;
+    let mut breaks = true;
+    let mut leading_spaces = true;
     let mut string = STRING_ASSIGN!(value, length);
     if yaml_emitter_write_indicator(
         emitter,
@@ -2358,7 +2358,7 @@ unsafe fn yaml_emitter_write_folded_scalar(
     (*emitter).whitespace = true;
     while string.pointer != string.end {
         if IS_BREAK!(string) {
-            if breaks == 0 && leading_spaces == 0 && CHECK!(string, b'\n') {
+            if !breaks && !leading_spaces && CHECK!(string, b'\n') {
                 let mut k: libc::c_int = 0;
                 while IS_BREAK_AT!(string, k as isize) {
                     k += WIDTH_AT!(string, k as isize);
@@ -2373,15 +2373,15 @@ unsafe fn yaml_emitter_write_folded_scalar(
                 return FAIL;
             }
             (*emitter).indention = true;
-            breaks = 1;
+            breaks = true;
         } else {
-            if breaks != 0 {
+            if breaks {
                 if yaml_emitter_write_indent(emitter).fail {
                     return FAIL;
                 }
-                leading_spaces = IS_BLANK!(string) as libc::c_int;
+                leading_spaces = IS_BLANK!(string);
             }
-            if breaks == 0
+            if !breaks
                 && IS_SPACE!(string)
                 && !IS_SPACE_AT!(string, 1)
                 && (*emitter).column > (*emitter).best_width
@@ -2394,7 +2394,7 @@ unsafe fn yaml_emitter_write_folded_scalar(
                 return FAIL;
             }
             (*emitter).indention = false;
-            breaks = 0;
+            breaks = false;
         }
     }
     OK
