@@ -2170,72 +2170,73 @@ unsafe fn yaml_parser_scan_flow_scalar(
                         let mut code_length: size_t = 0_u64;
                         STRING_EXTEND!(string);
                         match *(*parser).buffer.pointer.wrapping_offset(1_isize) {
-                            48 => {
+                            b'0' => {
                                 let fresh542 = string.pointer;
                                 string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh542 = b'\0';
                             }
-                            97 => {
+                            b'a' => {
                                 let fresh543 = string.pointer;
                                 string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh543 = b'\x07';
                             }
-                            98 => {
+                            b'b' => {
                                 let fresh544 = string.pointer;
                                 string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh544 = b'\x08';
                             }
-                            116 | 9 => {
+                            b't' | b'\t' => {
                                 let fresh545 = string.pointer;
                                 string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh545 = b'\t';
                             }
-                            110 => {
+                            b'n' => {
                                 let fresh546 = string.pointer;
                                 string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh546 = b'\n';
                             }
-                            118 => {
+                            b'v' => {
                                 let fresh547 = string.pointer;
                                 string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh547 = b'\x0B';
                             }
-                            102 => {
+                            b'f' => {
                                 let fresh548 = string.pointer;
                                 string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh548 = b'\x0C';
                             }
-                            114 => {
+                            b'r' => {
                                 let fresh549 = string.pointer;
                                 string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh549 = b'\r';
                             }
-                            101 => {
+                            b'e' => {
                                 let fresh550 = string.pointer;
                                 string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh550 = b'\x1B';
                             }
-                            32 => {
+                            b' ' => {
                                 let fresh551 = string.pointer;
                                 string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh551 = b' ';
                             }
-                            34 => {
+                            b'"' => {
                                 let fresh552 = string.pointer;
                                 string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh552 = b'"';
                             }
-                            47 => {
+                            b'/' => {
                                 let fresh553 = string.pointer;
                                 string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh553 = b'/';
                             }
-                            92 => {
+                            b'\\' => {
                                 let fresh554 = string.pointer;
                                 string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh554 = b'\\';
                             }
-                            78 => {
+                            // NEL (#x85)
+                            b'N' => {
                                 let fresh555 = string.pointer;
                                 string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh555 = b'\xC2';
@@ -2243,7 +2244,8 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                 string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh556 = b'\x85';
                             }
-                            95 => {
+                            // #xA0
+                            b'_' => {
                                 let fresh557 = string.pointer;
                                 string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh557 = b'\xC2';
@@ -2251,7 +2253,8 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                 string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh558 = b'\xA0';
                             }
-                            76 => {
+                            // LS (#x2028)
+                            b'L' => {
                                 let fresh559 = string.pointer;
                                 string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh559 = b'\xE2';
@@ -2262,7 +2265,8 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                 string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh561 = b'\xA8';
                             }
-                            80 => {
+                            // PS (#x2029)
+                            b'P' => {
                                 let fresh562 = string.pointer;
                                 string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh562 = b'\xE2';
@@ -2273,13 +2277,13 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                 string.pointer = string.pointer.wrapping_offset(1);
                                 *fresh564 = b'\xA9';
                             }
-                            120 => {
+                            b'x' => {
                                 code_length = 2_u64;
                             }
-                            117 => {
+                            b'u' => {
                                 code_length = 4_u64;
                             }
-                            85 => {
+                            b'U' => {
                                 code_length = 8_u64;
                             }
                             _ => {
