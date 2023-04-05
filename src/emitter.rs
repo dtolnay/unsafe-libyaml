@@ -2078,77 +2078,77 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
                 return FAIL;
             }
             match value_0 {
-                0 => {
+                0x00 => {
                     if PUT(emitter, b'0').fail {
                         return FAIL;
                     }
                 }
-                7 => {
+                0x07 => {
                     if PUT(emitter, b'a').fail {
                         return FAIL;
                     }
                 }
-                8 => {
+                0x08 => {
                     if PUT(emitter, b'b').fail {
                         return FAIL;
                     }
                 }
-                9 => {
+                0x09 => {
                     if PUT(emitter, b't').fail {
                         return FAIL;
                     }
                 }
-                10 => {
+                0x0A => {
                     if PUT(emitter, b'n').fail {
                         return FAIL;
                     }
                 }
-                11 => {
+                0x0B => {
                     if PUT(emitter, b'v').fail {
                         return FAIL;
                     }
                 }
-                12 => {
+                0x0C => {
                     if PUT(emitter, b'f').fail {
                         return FAIL;
                     }
                 }
-                13 => {
+                0x0D => {
                     if PUT(emitter, b'r').fail {
                         return FAIL;
                     }
                 }
-                27 => {
+                0x1B => {
                     if PUT(emitter, b'e').fail {
                         return FAIL;
                     }
                 }
-                34 => {
+                0x22 => {
                     if PUT(emitter, b'"').fail {
                         return FAIL;
                     }
                 }
-                92 => {
+                0x5C => {
                     if PUT(emitter, b'\\').fail {
                         return FAIL;
                     }
                 }
-                133 => {
+                0x85 => {
                     if PUT(emitter, b'N').fail {
                         return FAIL;
                     }
                 }
-                160 => {
+                0xA0 => {
                     if PUT(emitter, b'_').fail {
                         return FAIL;
                     }
                 }
-                8232 => {
+                0x2028 => {
                     if PUT(emitter, b'L').fail {
                         return FAIL;
                     }
                 }
-                8233 => {
+                0x2029 => {
                     if PUT(emitter, b'P').fail {
                         return FAIL;
                     }
