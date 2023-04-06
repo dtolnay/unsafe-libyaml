@@ -307,7 +307,7 @@ unsafe fn yaml_emitter_emit_stream_start(
             (*emitter).best_width = 80;
         }
         if (*emitter).best_width < 0 {
-            (*emitter).best_width = 2147483647;
+            (*emitter).best_width = libc::c_int::MAX;
         }
         if (*emitter).line_break == YAML_ANY_BREAK {
             (*emitter).line_break = YAML_LN_BREAK;

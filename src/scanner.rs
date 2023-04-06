@@ -409,7 +409,7 @@ unsafe fn yaml_parser_increase_flow_level(mut parser: *mut yaml_parser_t) -> Suc
         },
     };
     PUSH!((*parser).simple_keys, empty_simple_key);
-    if (*parser).flow_level == 2147483647 {
+    if (*parser).flow_level == libc::c_int::MAX {
         (*parser).error = YAML_MEMORY_ERROR;
         return FAIL;
     }
@@ -440,7 +440,7 @@ unsafe fn yaml_parser_roll_indent(
     }
     if ((*parser).indent as libc::c_long) < column {
         PUSH!((*parser).indents, (*parser).indent);
-        if column > 2147483647_i64 {
+        if column > ptrdiff_t::from(libc::c_int::MAX) {
             (*parser).error = YAML_MEMORY_ERROR;
             return FAIL;
         }
