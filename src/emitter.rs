@@ -17,9 +17,9 @@ use crate::{
     YAML_EMIT_FLOW_SEQUENCE_FIRST_ITEM_STATE, YAML_EMIT_FLOW_SEQUENCE_ITEM_STATE,
     YAML_EMIT_STREAM_START_STATE, YAML_FLOW_MAPPING_STYLE, YAML_FLOW_SEQUENCE_STYLE,
     YAML_FOLDED_SCALAR_STYLE, YAML_LITERAL_SCALAR_STYLE, YAML_LN_BREAK, YAML_MAPPING_END_EVENT,
-    YAML_MAPPING_START_EVENT, YAML_MEMORY_ERROR, YAML_PLAIN_SCALAR_STYLE, YAML_SCALAR_EVENT,
-    YAML_SEQUENCE_END_EVENT, YAML_SEQUENCE_START_EVENT, YAML_SINGLE_QUOTED_SCALAR_STYLE,
-    YAML_STREAM_END_EVENT, YAML_STREAM_START_EVENT, YAML_UTF8_ENCODING,
+    YAML_MAPPING_START_EVENT, YAML_PLAIN_SCALAR_STYLE, YAML_SCALAR_EVENT, YAML_SEQUENCE_END_EVENT,
+    YAML_SEQUENCE_START_EVENT, YAML_SINGLE_QUOTED_SCALAR_STYLE, YAML_STREAM_END_EVENT,
+    YAML_STREAM_START_EVENT, YAML_UTF8_ENCODING,
 };
 use core::ptr::{self, addr_of_mut};
 
@@ -216,15 +216,8 @@ unsafe fn yaml_emitter_append_tag_directive(
     }
     copy.handle = yaml_strdup(value.handle);
     copy.prefix = yaml_strdup(value.prefix);
-    if copy.handle.is_null() || copy.prefix.is_null() {
-        (*emitter).error = YAML_MEMORY_ERROR;
-    } else {
-        PUSH!((*emitter).tag_directives, copy);
-        return OK;
-    }
-    yaml_free(copy.handle as *mut libc::c_void);
-    yaml_free(copy.prefix as *mut libc::c_void);
-    FAIL
+    PUSH!((*emitter).tag_directives, copy);
+    OK
 }
 
 unsafe fn yaml_emitter_increase_indent(
