@@ -7,7 +7,7 @@ use crate::{
 use core::ptr::addr_of_mut;
 
 unsafe fn yaml_emitter_set_writer_error(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     problem: *const libc::c_char,
 ) -> Success {
     (*emitter).error = YAML_WRITER_ERROR;

@@ -16,7 +16,7 @@ use core::ptr::{self, addr_of_mut};
 /// Start a YAML stream.
 ///
 /// This function should be used before yaml_emitter_dump() is called.
-pub unsafe fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> Success {
+pub unsafe fn yaml_emitter_open(emitter: *mut yaml_emitter_t) -> Success {
     let mut event = MaybeUninit::<yaml_event_t>::uninit();
     let event = event.as_mut_ptr();
     let mark = yaml_mark_t {
@@ -45,7 +45,7 @@ pub unsafe fn yaml_emitter_open(mut emitter: *mut yaml_emitter_t) -> Success {
 /// Finish a YAML stream.
 ///
 /// This function should be used after yaml_emitter_dump() is called.
-pub unsafe fn yaml_emitter_close(mut emitter: *mut yaml_emitter_t) -> Success {
+pub unsafe fn yaml_emitter_close(emitter: *mut yaml_emitter_t) -> Success {
     let mut event = MaybeUninit::<yaml_event_t>::uninit();
     let event = event.as_mut_ptr();
     let mark = yaml_mark_t {
@@ -165,7 +165,7 @@ pub unsafe fn yaml_emitter_dump(
     FAIL
 }
 
-unsafe fn yaml_emitter_delete_document_and_anchors(mut emitter: *mut yaml_emitter_t) {
+unsafe fn yaml_emitter_delete_document_and_anchors(emitter: *mut yaml_emitter_t) {
     let mut index: libc::c_int;
     if (*emitter).anchors.is_null() {
         yaml_document_delete((*emitter).document);

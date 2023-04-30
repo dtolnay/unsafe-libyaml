@@ -8,7 +8,7 @@ use crate::{
 use core::ptr::addr_of_mut;
 
 unsafe fn yaml_parser_set_reader_error(
-    mut parser: *mut yaml_parser_t,
+    parser: *mut yaml_parser_t,
     problem: *const libc::c_char,
     offset: size_t,
     value: libc::c_int,
@@ -25,7 +25,7 @@ const BOM_UTF8: *const libc::c_char = b"\xEF\xBB\xBF\0" as *const u8 as *const l
 const BOM_UTF16LE: *const libc::c_char = b"\xFF\xFE\0" as *const u8 as *const libc::c_char;
 const BOM_UTF16BE: *const libc::c_char = b"\xFE\xFF\0" as *const u8 as *const libc::c_char;
 
-unsafe fn yaml_parser_determine_encoding(mut parser: *mut yaml_parser_t) -> Success {
+unsafe fn yaml_parser_determine_encoding(parser: *mut yaml_parser_t) -> Success {
     while !(*parser).eof
         && ((*parser)
             .raw_buffer
@@ -91,7 +91,7 @@ unsafe fn yaml_parser_determine_encoding(mut parser: *mut yaml_parser_t) -> Succ
     OK
 }
 
-unsafe fn yaml_parser_update_raw_buffer(mut parser: *mut yaml_parser_t) -> Success {
+unsafe fn yaml_parser_update_raw_buffer(parser: *mut yaml_parser_t) -> Success {
     let mut size_read: size_t = 0_u64;
     if (*parser).raw_buffer.start == (*parser).raw_buffer.pointer
         && (*parser).raw_buffer.last == (*parser).raw_buffer.end

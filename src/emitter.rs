@@ -113,7 +113,7 @@ macro_rules! WRITE_BREAK {
 }
 
 unsafe fn yaml_emitter_set_emitter_error(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     problem: *const libc::c_char,
 ) -> Success {
     (*emitter).error = YAML_EMITTER_ERROR;
@@ -128,10 +128,7 @@ unsafe fn yaml_emitter_set_emitter_error(
 /// The emitter takes the responsibility for the event object and destroys its
 /// content after it is emitted. The event object is destroyed even if the
 /// function fails.
-pub unsafe fn yaml_emitter_emit(
-    mut emitter: *mut yaml_emitter_t,
-    event: *mut yaml_event_t,
-) -> Success {
+pub unsafe fn yaml_emitter_emit(emitter: *mut yaml_emitter_t, event: *mut yaml_event_t) -> Success {
     ENQUEUE!((*emitter).events, *event);
     while yaml_emitter_need_more_events(emitter).fail {
         if yaml_emitter_analyze_event(emitter, (*emitter).events.head).fail {
@@ -188,7 +185,7 @@ unsafe fn yaml_emitter_need_more_events(emitter: *mut yaml_emitter_t) -> Success
 }
 
 unsafe fn yaml_emitter_append_tag_directive(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     value: yaml_tag_directive_t,
     allow_duplicates: bool,
 ) -> Success {
@@ -220,11 +217,7 @@ unsafe fn yaml_emitter_append_tag_directive(
     OK
 }
 
-unsafe fn yaml_emitter_increase_indent(
-    mut emitter: *mut yaml_emitter_t,
-    flow: bool,
-    indentless: bool,
-) {
+unsafe fn yaml_emitter_increase_indent(emitter: *mut yaml_emitter_t, flow: bool, indentless: bool) {
     PUSH!((*emitter).indents, (*emitter).indent);
     if (*emitter).indent < 0 {
         (*emitter).indent = if flow { (*emitter).best_indent } else { 0 };
@@ -289,7 +282,7 @@ unsafe fn yaml_emitter_state_machine(
 }
 
 unsafe fn yaml_emitter_emit_stream_start(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
 ) -> Success {
     (*emitter).open_ended = 0;
@@ -332,7 +325,7 @@ unsafe fn yaml_emitter_emit_stream_start(
 }
 
 unsafe fn yaml_emitter_emit_document_start(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
     first: bool,
 ) -> Success {
@@ -546,7 +539,7 @@ unsafe fn yaml_emitter_emit_document_start(
 }
 
 unsafe fn yaml_emitter_emit_document_content(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
 ) -> Success {
     PUSH!((*emitter).states, YAML_EMIT_DOCUMENT_END_STATE);
@@ -554,7 +547,7 @@ unsafe fn yaml_emitter_emit_document_content(
 }
 
 unsafe fn yaml_emitter_emit_document_end(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
 ) -> Success {
     if (*event).type_ == YAML_DOCUMENT_END_EVENT {
@@ -598,7 +591,7 @@ unsafe fn yaml_emitter_emit_document_end(
 }
 
 unsafe fn yaml_emitter_emit_flow_sequence_item(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
     first: bool,
 ) -> Success {
@@ -675,7 +668,7 @@ unsafe fn yaml_emitter_emit_flow_sequence_item(
 }
 
 unsafe fn yaml_emitter_emit_flow_mapping_key(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
     first: bool,
 ) -> Success {
@@ -771,7 +764,7 @@ unsafe fn yaml_emitter_emit_flow_mapping_key(
 }
 
 unsafe fn yaml_emitter_emit_flow_mapping_value(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
     simple: bool,
 ) -> Success {
@@ -810,7 +803,7 @@ unsafe fn yaml_emitter_emit_flow_mapping_value(
 }
 
 unsafe fn yaml_emitter_emit_block_sequence_item(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
     first: bool,
 ) -> Success {
@@ -845,7 +838,7 @@ unsafe fn yaml_emitter_emit_block_sequence_item(
 }
 
 unsafe fn yaml_emitter_emit_block_mapping_key(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
     first: bool,
 ) -> Success {
@@ -884,7 +877,7 @@ unsafe fn yaml_emitter_emit_block_mapping_key(
 }
 
 unsafe fn yaml_emitter_emit_block_mapping_value(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
     simple: bool,
 ) -> Success {
@@ -921,7 +914,7 @@ unsafe fn yaml_emitter_emit_block_mapping_value(
 }
 
 unsafe fn yaml_emitter_emit_node(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
     root: bool,
     sequence: bool,
@@ -946,7 +939,7 @@ unsafe fn yaml_emitter_emit_node(
 }
 
 unsafe fn yaml_emitter_emit_alias(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     _event: *mut yaml_event_t,
 ) -> Success {
     if yaml_emitter_process_anchor(emitter).fail {
@@ -962,7 +955,7 @@ unsafe fn yaml_emitter_emit_alias(
 }
 
 unsafe fn yaml_emitter_emit_scalar(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
 ) -> Success {
     if yaml_emitter_select_scalar_style(emitter, event).fail {
@@ -984,7 +977,7 @@ unsafe fn yaml_emitter_emit_scalar(
 }
 
 unsafe fn yaml_emitter_emit_sequence_start(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
 ) -> Success {
     if yaml_emitter_process_anchor(emitter).fail {
@@ -1006,7 +999,7 @@ unsafe fn yaml_emitter_emit_sequence_start(
 }
 
 unsafe fn yaml_emitter_emit_mapping_start(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
 ) -> Success {
     if yaml_emitter_process_anchor(emitter).fail {
@@ -1101,7 +1094,7 @@ unsafe fn yaml_emitter_check_simple_key(emitter: *mut yaml_emitter_t) -> bool {
 }
 
 unsafe fn yaml_emitter_select_scalar_style(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
 ) -> Success {
     let mut style: yaml_scalar_style_t = (*event).data.scalar.style;
@@ -1353,7 +1346,7 @@ unsafe fn yaml_emitter_analyze_tag_directive(
 }
 
 unsafe fn yaml_emitter_analyze_anchor(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     anchor: *mut yaml_char_t,
     alias: bool,
 ) -> Success {
@@ -1392,10 +1385,7 @@ unsafe fn yaml_emitter_analyze_anchor(
     OK
 }
 
-unsafe fn yaml_emitter_analyze_tag(
-    mut emitter: *mut yaml_emitter_t,
-    tag: *mut yaml_char_t,
-) -> Success {
+unsafe fn yaml_emitter_analyze_tag(emitter: *mut yaml_emitter_t, tag: *mut yaml_char_t) -> Success {
     let mut tag_directive: *mut yaml_tag_directive_t;
     let tag_length: size_t = strlen(tag as *mut libc::c_char);
     let string = STRING_ASSIGN!(tag, tag_length);
@@ -1436,7 +1426,7 @@ unsafe fn yaml_emitter_analyze_tag(
 }
 
 unsafe fn yaml_emitter_analyze_scalar(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     value: *mut yaml_char_t,
     length: size_t,
 ) -> Success {
@@ -1604,7 +1594,7 @@ unsafe fn yaml_emitter_analyze_scalar(
 }
 
 unsafe fn yaml_emitter_analyze_event(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     event: *mut yaml_event_t,
 ) -> Success {
     let fresh52 = addr_of_mut!((*emitter).anchor_data.anchor);
@@ -1699,7 +1689,7 @@ unsafe fn yaml_emitter_write_bom(emitter: *mut yaml_emitter_t) -> Success {
     OK
 }
 
-unsafe fn yaml_emitter_write_indent(mut emitter: *mut yaml_emitter_t) -> Success {
+unsafe fn yaml_emitter_write_indent(emitter: *mut yaml_emitter_t) -> Success {
     let indent: libc::c_int = if (*emitter).indent >= 0 {
         (*emitter).indent
     } else {
@@ -1724,7 +1714,7 @@ unsafe fn yaml_emitter_write_indent(mut emitter: *mut yaml_emitter_t) -> Success
 }
 
 unsafe fn yaml_emitter_write_indicator(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     indicator: *const libc::c_char,
     need_whitespace: bool,
     is_whitespace: bool,
@@ -1748,7 +1738,7 @@ unsafe fn yaml_emitter_write_indicator(
 }
 
 unsafe fn yaml_emitter_write_anchor(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     value: *mut yaml_char_t,
     length: size_t,
 ) -> Success {
@@ -1764,7 +1754,7 @@ unsafe fn yaml_emitter_write_anchor(
 }
 
 unsafe fn yaml_emitter_write_tag_handle(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     value: *mut yaml_char_t,
     length: size_t,
 ) -> Success {
@@ -1785,7 +1775,7 @@ unsafe fn yaml_emitter_write_tag_handle(
 }
 
 unsafe fn yaml_emitter_write_tag_content(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     value: *mut yaml_char_t,
     length: size_t,
     need_whitespace: bool,
@@ -1860,7 +1850,7 @@ unsafe fn yaml_emitter_write_tag_content(
 }
 
 unsafe fn yaml_emitter_write_plain_scalar(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     value: *mut yaml_char_t,
     length: size_t,
     allow_breaks: bool,
@@ -1919,7 +1909,7 @@ unsafe fn yaml_emitter_write_plain_scalar(
 }
 
 unsafe fn yaml_emitter_write_single_quoted_scalar(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     value: *mut yaml_char_t,
     length: size_t,
     allow_breaks: bool,
@@ -2007,7 +1997,7 @@ unsafe fn yaml_emitter_write_single_quoted_scalar(
 }
 
 unsafe fn yaml_emitter_write_double_quoted_scalar(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     value: *mut yaml_char_t,
     length: size_t,
     allow_breaks: bool,
@@ -2223,7 +2213,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
 }
 
 unsafe fn yaml_emitter_write_block_scalar_hints(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     mut string: yaml_string_t,
 ) -> Success {
     let mut indent_hint: [libc::c_char; 2] = [0; 2];
@@ -2274,7 +2264,7 @@ unsafe fn yaml_emitter_write_block_scalar_hints(
 }
 
 unsafe fn yaml_emitter_write_literal_scalar(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     value: *mut yaml_char_t,
     length: size_t,
 ) -> Success {
@@ -2323,7 +2313,7 @@ unsafe fn yaml_emitter_write_literal_scalar(
 }
 
 unsafe fn yaml_emitter_write_folded_scalar(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     value: *mut yaml_char_t,
     length: size_t,
 ) -> Success {

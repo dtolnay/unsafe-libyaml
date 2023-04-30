@@ -35,7 +35,7 @@ struct loader_ctx {
 /// calls of yaml_parser_scan() or yaml_parser_parse(). Doing this will break
 /// the parser.
 pub unsafe fn yaml_parser_load(
-    mut parser: *mut yaml_parser_t,
+    parser: *mut yaml_parser_t,
     document: *mut yaml_document_t,
 ) -> Success {
     let current_block: u64;
@@ -86,7 +86,7 @@ pub unsafe fn yaml_parser_load(
 }
 
 unsafe fn yaml_parser_set_composer_error(
-    mut parser: *mut yaml_parser_t,
+    parser: *mut yaml_parser_t,
     problem: *const libc::c_char,
     problem_mark: yaml_mark_t,
 ) -> Success {
@@ -98,7 +98,7 @@ unsafe fn yaml_parser_set_composer_error(
 }
 
 unsafe fn yaml_parser_set_composer_error_context(
-    mut parser: *mut yaml_parser_t,
+    parser: *mut yaml_parser_t,
     context: *const libc::c_char,
     context_mark: yaml_mark_t,
     problem: *const libc::c_char,
@@ -122,7 +122,7 @@ unsafe fn yaml_parser_delete_aliases(parser: *mut yaml_parser_t) {
 }
 
 unsafe fn yaml_parser_load_document(
-    mut parser: *mut yaml_parser_t,
+    parser: *mut yaml_parser_t,
     event: *mut yaml_event_t,
 ) -> Success {
     let mut ctx = loader_ctx {
@@ -148,7 +148,7 @@ unsafe fn yaml_parser_load_document(
     OK
 }
 
-unsafe fn yaml_parser_load_nodes(mut parser: *mut yaml_parser_t, ctx: *mut loader_ctx) -> Success {
+unsafe fn yaml_parser_load_nodes(parser: *mut yaml_parser_t, ctx: *mut loader_ctx) -> Success {
     let mut event = MaybeUninit::<yaml_event_t>::uninit();
     let event = event.as_mut_ptr();
     loop {
@@ -201,7 +201,7 @@ unsafe fn yaml_parser_load_nodes(mut parser: *mut yaml_parser_t, ctx: *mut loade
 }
 
 unsafe fn yaml_parser_register_anchor(
-    mut parser: *mut yaml_parser_t,
+    parser: *mut yaml_parser_t,
     index: libc::c_int,
     anchor: *mut yaml_char_t,
 ) -> Success {
@@ -241,7 +241,7 @@ unsafe fn yaml_parser_register_anchor(
 }
 
 unsafe fn yaml_parser_load_node_add(
-    mut parser: *mut yaml_parser_t,
+    parser: *mut yaml_parser_t,
     ctx: *mut loader_ctx,
     index: libc::c_int,
 ) -> Success {
@@ -264,7 +264,7 @@ unsafe fn yaml_parser_load_node_add(
             let mut pair = MaybeUninit::<yaml_node_pair_t>::uninit();
             let pair = pair.as_mut_ptr();
             if !STACK_EMPTY!((*parent).data.mapping.pairs) {
-                let mut p: *mut yaml_node_pair_t =
+                let p: *mut yaml_node_pair_t =
                     (*parent).data.mapping.pairs.top.wrapping_offset(-1_isize);
                 if (*p).key != 0 && (*p).value == 0 {
                     (*p).value = index;
@@ -322,7 +322,7 @@ unsafe fn yaml_parser_load_alias(
 }
 
 unsafe fn yaml_parser_load_scalar(
-    mut parser: *mut yaml_parser_t,
+    parser: *mut yaml_parser_t,
     event: *mut yaml_event_t,
     ctx: *mut loader_ctx,
 ) -> Success {
@@ -382,7 +382,7 @@ unsafe fn yaml_parser_load_scalar(
 }
 
 unsafe fn yaml_parser_load_sequence(
-    mut parser: *mut yaml_parser_t,
+    parser: *mut yaml_parser_t,
     event: *mut yaml_event_t,
     ctx: *mut loader_ctx,
 ) -> Success {
@@ -481,7 +481,7 @@ unsafe fn yaml_parser_load_sequence_end(
 }
 
 unsafe fn yaml_parser_load_mapping(
-    mut parser: *mut yaml_parser_t,
+    parser: *mut yaml_parser_t,
     event: *mut yaml_event_t,
     ctx: *mut loader_ctx,
 ) -> Success {

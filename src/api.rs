@@ -282,7 +282,7 @@ pub unsafe fn yaml_parser_set_input(
 }
 
 /// Set the source encoding.
-pub unsafe fn yaml_parser_set_encoding(mut parser: *mut yaml_parser_t, encoding: yaml_encoding_t) {
+pub unsafe fn yaml_parser_set_encoding(parser: *mut yaml_parser_t, encoding: yaml_encoding_t) {
     __assert!(!parser.is_null());
     __assert!((*parser).encoding == YAML_ANY_ENCODING);
     (*parser).encoding = encoding;
@@ -292,7 +292,7 @@ pub unsafe fn yaml_parser_set_encoding(mut parser: *mut yaml_parser_t, encoding:
 ///
 /// This function creates a new emitter object. An application is responsible
 /// for destroying the object using the yaml_emitter_delete() function.
-pub unsafe fn yaml_emitter_initialize(mut emitter: *mut yaml_emitter_t) -> Success {
+pub unsafe fn yaml_emitter_initialize(emitter: *mut yaml_emitter_t) -> Success {
     __assert!(!emitter.is_null());
     memset(
         emitter as *mut libc::c_void,
@@ -385,7 +385,7 @@ unsafe fn yaml_string_write_handler(
 /// bytes. If the buffer is smaller than required, the emitter produces the
 /// YAML_WRITE_ERROR error.
 pub unsafe fn yaml_emitter_set_output_string(
-    mut emitter: *mut yaml_emitter_t,
+    emitter: *mut yaml_emitter_t,
     output: *mut libc::c_uchar,
     size: size_t,
     size_written: *mut size_t,
@@ -423,10 +423,7 @@ pub unsafe fn yaml_emitter_set_output(
 }
 
 /// Set the output encoding.
-pub unsafe fn yaml_emitter_set_encoding(
-    mut emitter: *mut yaml_emitter_t,
-    encoding: yaml_encoding_t,
-) {
+pub unsafe fn yaml_emitter_set_encoding(emitter: *mut yaml_emitter_t, encoding: yaml_encoding_t) {
     __assert!(!emitter.is_null());
     __assert!((*emitter).encoding == YAML_ANY_ENCODING);
     (*emitter).encoding = encoding;
@@ -434,31 +431,31 @@ pub unsafe fn yaml_emitter_set_encoding(
 
 /// Set if the output should be in the "canonical" format as in the YAML
 /// specification.
-pub unsafe fn yaml_emitter_set_canonical(mut emitter: *mut yaml_emitter_t, canonical: bool) {
+pub unsafe fn yaml_emitter_set_canonical(emitter: *mut yaml_emitter_t, canonical: bool) {
     __assert!(!emitter.is_null());
     (*emitter).canonical = canonical;
 }
 
 /// Set the indentation increment.
-pub unsafe fn yaml_emitter_set_indent(mut emitter: *mut yaml_emitter_t, indent: libc::c_int) {
+pub unsafe fn yaml_emitter_set_indent(emitter: *mut yaml_emitter_t, indent: libc::c_int) {
     __assert!(!emitter.is_null());
     (*emitter).best_indent = if 1 < indent && indent < 10 { indent } else { 2 };
 }
 
 /// Set the preferred line width. -1 means unlimited.
-pub unsafe fn yaml_emitter_set_width(mut emitter: *mut yaml_emitter_t, width: libc::c_int) {
+pub unsafe fn yaml_emitter_set_width(emitter: *mut yaml_emitter_t, width: libc::c_int) {
     __assert!(!emitter.is_null());
     (*emitter).best_width = if width >= 0 { width } else { -1 };
 }
 
 /// Set if unescaped non-ASCII characters are allowed.
-pub unsafe fn yaml_emitter_set_unicode(mut emitter: *mut yaml_emitter_t, unicode: bool) {
+pub unsafe fn yaml_emitter_set_unicode(emitter: *mut yaml_emitter_t, unicode: bool) {
     __assert!(!emitter.is_null());
     (*emitter).unicode = unicode;
 }
 
 /// Set the preferred line break.
-pub unsafe fn yaml_emitter_set_break(mut emitter: *mut yaml_emitter_t, line_break: yaml_break_t) {
+pub unsafe fn yaml_emitter_set_break(emitter: *mut yaml_emitter_t, line_break: yaml_break_t) {
     __assert!(!emitter.is_null());
     (*emitter).line_break = line_break;
 }
@@ -552,7 +549,7 @@ unsafe fn yaml_check_utf8(start: *const yaml_char_t, length: size_t) -> Success 
 
 /// Create the STREAM-START event.
 pub unsafe fn yaml_stream_start_event_initialize(
-    mut event: *mut yaml_event_t,
+    event: *mut yaml_event_t,
     encoding: yaml_encoding_t,
 ) -> Success {
     let mark = yaml_mark_t {
@@ -574,7 +571,7 @@ pub unsafe fn yaml_stream_start_event_initialize(
 }
 
 /// Create the STREAM-END event.
-pub unsafe fn yaml_stream_end_event_initialize(mut event: *mut yaml_event_t) -> Success {
+pub unsafe fn yaml_stream_end_event_initialize(event: *mut yaml_event_t) -> Success {
     let mark = yaml_mark_t {
         index: 0_u64,
         line: 0_u64,
@@ -597,7 +594,7 @@ pub unsafe fn yaml_stream_end_event_initialize(mut event: *mut yaml_event_t) -> 
 /// The `implicit` argument is considered as a stylistic parameter and may be
 /// ignored by the emitter.
 pub unsafe fn yaml_document_start_event_initialize(
-    mut event: *mut yaml_event_t,
+    event: *mut yaml_event_t,
     version_directive: *mut yaml_version_directive_t,
     tag_directives_start: *mut yaml_tag_directive_t,
     tag_directives_end: *mut yaml_tag_directive_t,
@@ -714,7 +711,7 @@ pub unsafe fn yaml_document_start_event_initialize(
 /// The `implicit` argument is considered as a stylistic parameter and may be
 /// ignored by the emitter.
 pub unsafe fn yaml_document_end_event_initialize(
-    mut event: *mut yaml_event_t,
+    event: *mut yaml_event_t,
     implicit: bool,
 ) -> Success {
     let mark = yaml_mark_t {
@@ -737,7 +734,7 @@ pub unsafe fn yaml_document_end_event_initialize(
 
 /// Create an ALIAS event.
 pub unsafe fn yaml_alias_event_initialize(
-    mut event: *mut yaml_event_t,
+    event: *mut yaml_event_t,
     anchor: *const yaml_char_t,
 ) -> Success {
     let mark = yaml_mark_t {
@@ -775,7 +772,7 @@ pub unsafe fn yaml_alias_event_initialize(
 /// `quoted_implicit` flags must be set.
 ///
 pub unsafe fn yaml_scalar_event_initialize(
-    mut event: *mut yaml_event_t,
+    event: *mut yaml_event_t,
     anchor: *const yaml_char_t,
     tag: *const yaml_char_t,
     value: *const yaml_char_t,
@@ -870,7 +867,7 @@ pub unsafe fn yaml_scalar_event_initialize(
 ///
 /// Either the `tag` attribute or the `implicit` flag must be set.
 pub unsafe fn yaml_sequence_start_event_initialize(
-    mut event: *mut yaml_event_t,
+    event: *mut yaml_event_t,
     anchor: *const yaml_char_t,
     tag: *const yaml_char_t,
     implicit: bool,
@@ -941,7 +938,7 @@ pub unsafe fn yaml_sequence_start_event_initialize(
 }
 
 /// Create a SEQUENCE-END event.
-pub unsafe fn yaml_sequence_end_event_initialize(mut event: *mut yaml_event_t) -> Success {
+pub unsafe fn yaml_sequence_end_event_initialize(event: *mut yaml_event_t) -> Success {
     let mark = yaml_mark_t {
         index: 0_u64,
         line: 0_u64,
@@ -965,7 +962,7 @@ pub unsafe fn yaml_sequence_end_event_initialize(mut event: *mut yaml_event_t) -
 ///
 /// Either the `tag` attribute or the `implicit` flag must be set.
 pub unsafe fn yaml_mapping_start_event_initialize(
-    mut event: *mut yaml_event_t,
+    event: *mut yaml_event_t,
     anchor: *const yaml_char_t,
     tag: *const yaml_char_t,
     implicit: bool,
@@ -1033,7 +1030,7 @@ pub unsafe fn yaml_mapping_start_event_initialize(
 }
 
 /// Create a MAPPING-END event.
-pub unsafe fn yaml_mapping_end_event_initialize(mut event: *mut yaml_event_t) -> Success {
+pub unsafe fn yaml_mapping_end_event_initialize(event: *mut yaml_event_t) -> Success {
     let mark = yaml_mark_t {
         index: 0_u64,
         line: 0_u64,
@@ -1093,7 +1090,7 @@ pub unsafe fn yaml_event_delete(event: *mut yaml_event_t) {
 
 /// Create a YAML document.
 pub unsafe fn yaml_document_initialize(
-    mut document: *mut yaml_document_t,
+    document: *mut yaml_document_t,
     version_directive: *mut yaml_version_directive_t,
     tag_directives_start: *mut yaml_tag_directive_t,
     tag_directives_end: *mut yaml_tag_directive_t,
