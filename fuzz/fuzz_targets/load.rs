@@ -11,7 +11,7 @@ use unsafe_libyaml::{
     yaml_parser_initialize, yaml_parser_load, yaml_parser_set_input, yaml_parser_t,
 };
 
-fuzz_target!(|data: &[u8]| { unsafe { fuzz_target(data) } });
+fuzz_target!(|data: &[u8]| unsafe { fuzz_target(data) });
 
 unsafe fn fuzz_target(mut data: &[u8]) {
     let mut parser = MaybeUninit::<yaml_parser_t>::uninit();
