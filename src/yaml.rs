@@ -2,11 +2,7 @@ use crate::libc;
 use core::ops::Deref;
 use core::ptr::{self, addr_of};
 
-pub use self::{
-    yaml_break_t::*, yaml_emitter_state_t::*, yaml_encoding_t::*, yaml_error_type_t::*,
-    yaml_event_type_t::*, yaml_mapping_style_t::*, yaml_node_type_t::*, yaml_parser_state_t::*,
-    yaml_scalar_style_t::*, yaml_sequence_style_t::*, yaml_token_type_t::*,
-};
+pub use self::{yaml_encoding_t::*, yaml_event_type_t::*, yaml_node_type_t::*};
 pub use core::primitive::{i64 as ptrdiff_t, u64 as size_t, u8 as yaml_char_t};
 
 /// The version directive data.
