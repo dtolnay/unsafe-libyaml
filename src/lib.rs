@@ -54,6 +54,7 @@ mod libc {
 #[macro_use]
 mod externs {
     use crate::libc;
+    use crate::ops::{die, ForceAdd as _, ForceInto as _};
     use alloc::alloc::{self as rust, Layout};
     use core::mem::{self, MaybeUninit};
     use core::ptr;
@@ -66,8 +67,10 @@ mod externs {
     const MALLOC_ALIGN: usize = mem::align_of::<usize>();
 
     pub unsafe fn malloc(size: libc::c_ulong) -> *mut libc::c_void {
-        let size = HEADER + size as usize;
-        let layout = Layout::from_size_align_unchecked(size, MALLOC_ALIGN);
+        let size = HEADER.force_add(size.force_into());
+        let layout = Layout::from_size_align(size, MALLOC_ALIGN)
+            .ok()
+            .unwrap_or_else(die);
         let memory = rust::alloc(layout);
         if memory.is_null() {
             rust::handle_alloc_error(layout);
@@ -80,11 +83,13 @@ mod externs {
         let mut memory = ptr.cast::<u8>().sub(HEADER);
         let size = memory.cast::<usize>().read();
         let layout = Layout::from_size_align_unchecked(size, MALLOC_ALIGN);
-        let new_size = HEADER + new_size as usize;
+        let new_size = HEADER.force_add(new_size.force_into());
+        let new_layout = Layout::from_size_align(new_size, MALLOC_ALIGN)
+            .ok()
+            .unwrap_or_else(die);
         memory = rust::realloc(memory, layout, new_size);
         if memory.is_null() {
-            let layout = Layout::from_size_align_unchecked(new_size, MALLOC_ALIGN);
-            rust::handle_alloc_error(layout);
+            rust::handle_alloc_error(new_layout);
         }
         memory.cast::<usize>().write(new_size);
         memory.add(HEADER).cast()
