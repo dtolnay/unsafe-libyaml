@@ -1,5 +1,6 @@
 use crate::api::{yaml_free, yaml_malloc, yaml_stack_extend, yaml_strdup};
 use crate::externs::{memcpy, memset, strcmp, strlen};
+use crate::ops::ForceAdd as _;
 use crate::scanner::yaml_parser_fetch_more_tokens;
 use crate::success::{Success, FAIL, OK};
 use crate::yaml::{size_t, yaml_char_t};
@@ -504,9 +505,8 @@ unsafe fn yaml_parser_parse_node(
                             let prefix_len: size_t =
                                 strlen((*tag_directive).prefix as *mut libc::c_char);
                             let suffix_len: size_t = strlen(tag_suffix as *mut libc::c_char);
-                            tag = yaml_malloc(
-                                prefix_len.wrapping_add(suffix_len).wrapping_add(1_u64),
-                            ) as *mut yaml_char_t;
+                            tag = yaml_malloc(prefix_len.force_add(suffix_len).force_add(1_u64))
+                                as *mut yaml_char_t;
                             memcpy(
                                 tag as *mut libc::c_void,
                                 (*tag_directive).prefix as *const libc::c_void,
@@ -517,8 +517,7 @@ unsafe fn yaml_parser_parse_node(
                                 tag_suffix as *const libc::c_void,
                                 suffix_len,
                             );
-                            *tag.wrapping_offset(prefix_len.wrapping_add(suffix_len) as isize) =
-                                b'\0';
+                            *tag.wrapping_offset(prefix_len.force_add(suffix_len) as isize) = b'\0';
                             yaml_free(tag_handle as *mut libc::c_void);
                             yaml_free(tag_suffix as *mut libc::c_void);
                             tag_suffix = ptr::null_mut::<yaml_char_t>();

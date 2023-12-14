@@ -1,3 +1,4 @@
+use crate::ops::ForceAdd as _;
 use crate::success::{Success, FAIL, OK};
 use crate::yaml::size_t;
 use crate::{
@@ -90,8 +91,8 @@ pub unsafe fn yaml_emitter_flush(emitter: *mut yaml_emitter_t) -> Success {
         k = 1_u64;
         while k < width as libc::c_ulong {
             octet = *(*emitter).buffer.pointer.wrapping_offset(k as isize);
-            value = (value << 6).wrapping_add((octet & 0x3F) as libc::c_uint);
-            k = k.wrapping_add(1);
+            value = (value << 6).force_add((octet & 0x3F) as libc::c_uint);
+            k = k.force_add(1);
         }
         let fresh5 = addr_of_mut!((*emitter).buffer.pointer);
         *fresh5 = (*fresh5).wrapping_offset(width as isize);
@@ -105,14 +106,14 @@ pub unsafe fn yaml_emitter_flush(emitter: *mut yaml_emitter_t) -> Success {
         } else {
             value = value.wrapping_sub(0x10000);
             *(*emitter).raw_buffer.last.wrapping_offset(high as isize) =
-                0xD8_u32.wrapping_add(value >> 18) as libc::c_uchar;
+                0xD8_u32.force_add(value >> 18) as libc::c_uchar;
             *(*emitter).raw_buffer.last.wrapping_offset(low as isize) =
                 (value >> 10 & 0xFF) as libc::c_uchar;
             *(*emitter)
                 .raw_buffer
                 .last
                 .wrapping_offset((high + 2) as isize) =
-                0xDC_u32.wrapping_add(value >> 8 & 0xFF) as libc::c_uchar;
+                0xDC_u32.force_add(value >> 8 & 0xFF) as libc::c_uchar;
             *(*emitter)
                 .raw_buffer
                 .last

@@ -1,5 +1,6 @@
 use crate::api::{yaml_free, yaml_queue_extend, yaml_stack_extend, yaml_strdup};
 use crate::externs::{strcmp, strlen, strncmp};
+use crate::ops::{ForceAdd as _, ForceMul as _};
 use crate::success::{Success, FAIL, OK};
 use crate::yaml::{size_t, yaml_char_t, yaml_string_t};
 use crate::{
@@ -296,7 +297,9 @@ unsafe fn yaml_emitter_emit_stream_start(
         if (*emitter).best_indent < 2 || (*emitter).best_indent > 9 {
             (*emitter).best_indent = 2;
         }
-        if (*emitter).best_width >= 0 && (*emitter).best_width <= (*emitter).best_indent * 2 {
+        if (*emitter).best_width >= 0
+            && (*emitter).best_width <= (*emitter).best_indent.force_mul(2)
+        {
             (*emitter).best_width = 80;
         }
         if (*emitter).best_width < 0 {
@@ -1045,45 +1048,36 @@ unsafe fn yaml_emitter_check_simple_key(emitter: *mut yaml_emitter_t) -> bool {
     let mut length: size_t = 0_u64;
     match (*event).type_ {
         YAML_ALIAS_EVENT => {
-            length = (length as libc::c_ulong).wrapping_add((*emitter).anchor_data.anchor_length)
-                as size_t;
+            length =
+                (length as libc::c_ulong).force_add((*emitter).anchor_data.anchor_length) as size_t;
         }
         YAML_SCALAR_EVENT => {
             if (*emitter).scalar_data.multiline {
                 return false;
             }
-            length = (length as libc::c_ulong).wrapping_add(
-                (*emitter)
-                    .anchor_data
-                    .anchor_length
-                    .wrapping_add((*emitter).tag_data.handle_length)
-                    .wrapping_add((*emitter).tag_data.suffix_length)
-                    .wrapping_add((*emitter).scalar_data.length),
-            ) as size_t;
+            length = (length as libc::c_ulong)
+                .force_add((*emitter).anchor_data.anchor_length)
+                .force_add((*emitter).tag_data.handle_length)
+                .force_add((*emitter).tag_data.suffix_length)
+                .force_add((*emitter).scalar_data.length) as size_t;
         }
         YAML_SEQUENCE_START_EVENT => {
             if !yaml_emitter_check_empty_sequence(emitter) {
                 return false;
             }
-            length = (length as libc::c_ulong).wrapping_add(
-                (*emitter)
-                    .anchor_data
-                    .anchor_length
-                    .wrapping_add((*emitter).tag_data.handle_length)
-                    .wrapping_add((*emitter).tag_data.suffix_length),
-            ) as size_t;
+            length = (length as libc::c_ulong)
+                .force_add((*emitter).anchor_data.anchor_length)
+                .force_add((*emitter).tag_data.handle_length)
+                .force_add((*emitter).tag_data.suffix_length) as size_t;
         }
         YAML_MAPPING_START_EVENT => {
             if !yaml_emitter_check_empty_mapping(emitter) {
                 return false;
             }
-            length = (length as libc::c_ulong).wrapping_add(
-                (*emitter)
-                    .anchor_data
-                    .anchor_length
-                    .wrapping_add((*emitter).tag_data.handle_length)
-                    .wrapping_add((*emitter).tag_data.suffix_length),
-            ) as size_t;
+            length = (length as libc::c_ulong)
+                .force_add((*emitter).anchor_data.anchor_length)
+                .force_add((*emitter).tag_data.handle_length)
+                .force_add((*emitter).tag_data.suffix_length) as size_t;
         }
         _ => return false,
     }
@@ -1825,7 +1819,7 @@ unsafe fn yaml_emitter_write_tag_content(
                 }
                 if PUT(
                     emitter,
-                    (value >> 4).wrapping_add(if (value >> 4) < 10 { b'0' } else { b'A' - 10 }),
+                    (value >> 4).force_add(if (value >> 4) < 10 { b'0' } else { b'A' - 10 }),
                 )
                 .fail
                 {
@@ -1833,7 +1827,7 @@ unsafe fn yaml_emitter_write_tag_content(
                 }
                 if PUT(
                     emitter,
-                    (value & 0x0F).wrapping_add(if (value & 0x0F) < 10 { b'0' } else { b'A' - 10 }),
+                    (value & 0x0F).force_add(if (value & 0x0F) < 10 { b'0' } else { b'A' - 10 }),
                 )
                 .fail
                 {
@@ -2051,7 +2045,7 @@ unsafe fn yaml_emitter_write_double_quoted_scalar(
             k = 1;
             while k < width as libc::c_int {
                 octet = *string.pointer.wrapping_offset(k as isize);
-                value_0 = (value_0 << 6).wrapping_add((octet & 0x3F) as libc::c_uint);
+                value_0 = (value_0 << 6).force_add((octet & 0x3F) as libc::c_uint);
                 k += 1;
             }
             string.pointer = string.pointer.wrapping_offset(width as isize);

@@ -1,4 +1,5 @@
 use crate::externs::{memcmp, memmove};
+use crate::ops::ForceAdd as _;
 use crate::success::{Success, FAIL, OK};
 use crate::yaml::{size_t, yaml_char_t};
 use crate::{
@@ -52,7 +53,7 @@ unsafe fn yaml_parser_determine_encoding(parser: *mut yaml_parser_t) -> Success 
         let fresh1 = addr_of_mut!((*parser).raw_buffer.pointer);
         *fresh1 = (*fresh1).wrapping_offset(2_isize);
         let fresh2 = addr_of_mut!((*parser).offset);
-        *fresh2 = (*fresh2 as libc::c_ulong).wrapping_add(2_u64) as size_t;
+        *fresh2 = (*fresh2 as libc::c_ulong).force_add(2_u64) as size_t;
     } else if (*parser)
         .raw_buffer
         .last
@@ -68,7 +69,7 @@ unsafe fn yaml_parser_determine_encoding(parser: *mut yaml_parser_t) -> Success 
         let fresh3 = addr_of_mut!((*parser).raw_buffer.pointer);
         *fresh3 = (*fresh3).wrapping_offset(2_isize);
         let fresh4 = addr_of_mut!((*parser).offset);
-        *fresh4 = (*fresh4 as libc::c_ulong).wrapping_add(2_u64) as size_t;
+        *fresh4 = (*fresh4 as libc::c_ulong).force_add(2_u64) as size_t;
     } else if (*parser)
         .raw_buffer
         .last
@@ -84,7 +85,7 @@ unsafe fn yaml_parser_determine_encoding(parser: *mut yaml_parser_t) -> Success 
         let fresh5 = addr_of_mut!((*parser).raw_buffer.pointer);
         *fresh5 = (*fresh5).wrapping_offset(3_isize);
         let fresh6 = addr_of_mut!((*parser).offset);
-        *fresh6 = (*fresh6 as libc::c_ulong).wrapping_add(3_u64) as size_t;
+        *fresh6 = (*fresh6 as libc::c_ulong).force_add(3_u64) as size_t;
     } else {
         (*parser).encoding = YAML_UTF8_ENCODING;
     }
@@ -261,12 +262,12 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
                                     parser,
                                     b"invalid trailing UTF-8 octet\0" as *const u8
                                         as *const libc::c_char,
-                                    (*parser).offset.wrapping_add(k),
+                                    (*parser).offset.force_add(k),
                                     octet as libc::c_int,
                                 );
                             }
-                            value = (value << 6).wrapping_add((octet & 0x3F) as libc::c_uint);
-                            k = k.wrapping_add(1);
+                            value = (value << 6).force_add((octet & 0x3F) as libc::c_uint);
+                            k = k.force_add(1);
                         }
                         if !(width == 1
                             || width == 2 && value >= 0x80
@@ -359,13 +360,13 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
                                         parser,
                                         b"expected low surrogate area\0" as *const u8
                                             as *const libc::c_char,
-                                        (*parser).offset.wrapping_add(2_u64),
+                                        (*parser).offset.force_add(2_u64),
                                         value2 as libc::c_int,
                                     );
                                 }
                                 value = 0x10000_u32
-                                    .wrapping_add((value & 0x3FF) << 10)
-                                    .wrapping_add(value2 & 0x3FF);
+                                    .force_add((value & 0x3FF) << 10)
+                                    .force_add(value2 & 0x3FF);
                             }
                         } else {
                             width = 2;
@@ -396,7 +397,7 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
             let fresh14 = addr_of_mut!((*parser).raw_buffer.pointer);
             *fresh14 = (*fresh14).wrapping_offset(width as isize);
             let fresh15 = addr_of_mut!((*parser).offset);
-            *fresh15 = (*fresh15 as libc::c_ulong).wrapping_add(width as libc::c_ulong) as size_t;
+            *fresh15 = (*fresh15 as libc::c_ulong).force_add(width as libc::c_ulong) as size_t;
             if value <= 0x7F {
                 let fresh16 = addr_of_mut!((*parser).buffer.last);
                 let fresh17 = *fresh16;
@@ -406,44 +407,44 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
                 let fresh18 = addr_of_mut!((*parser).buffer.last);
                 let fresh19 = *fresh18;
                 *fresh18 = (*fresh18).wrapping_offset(1);
-                *fresh19 = 0xC0_u32.wrapping_add(value >> 6) as yaml_char_t;
+                *fresh19 = 0xC0_u32.force_add(value >> 6) as yaml_char_t;
                 let fresh20 = addr_of_mut!((*parser).buffer.last);
                 let fresh21 = *fresh20;
                 *fresh20 = (*fresh20).wrapping_offset(1);
-                *fresh21 = 0x80_u32.wrapping_add(value & 0x3F) as yaml_char_t;
+                *fresh21 = 0x80_u32.force_add(value & 0x3F) as yaml_char_t;
             } else if value <= 0xFFFF {
                 let fresh22 = addr_of_mut!((*parser).buffer.last);
                 let fresh23 = *fresh22;
                 *fresh22 = (*fresh22).wrapping_offset(1);
-                *fresh23 = 0xE0_u32.wrapping_add(value >> 12) as yaml_char_t;
+                *fresh23 = 0xE0_u32.force_add(value >> 12) as yaml_char_t;
                 let fresh24 = addr_of_mut!((*parser).buffer.last);
                 let fresh25 = *fresh24;
                 *fresh24 = (*fresh24).wrapping_offset(1);
-                *fresh25 = 0x80_u32.wrapping_add(value >> 6 & 0x3F) as yaml_char_t;
+                *fresh25 = 0x80_u32.force_add(value >> 6 & 0x3F) as yaml_char_t;
                 let fresh26 = addr_of_mut!((*parser).buffer.last);
                 let fresh27 = *fresh26;
                 *fresh26 = (*fresh26).wrapping_offset(1);
-                *fresh27 = 0x80_u32.wrapping_add(value & 0x3F) as yaml_char_t;
+                *fresh27 = 0x80_u32.force_add(value & 0x3F) as yaml_char_t;
             } else {
                 let fresh28 = addr_of_mut!((*parser).buffer.last);
                 let fresh29 = *fresh28;
                 *fresh28 = (*fresh28).wrapping_offset(1);
-                *fresh29 = 0xF0_u32.wrapping_add(value >> 18) as yaml_char_t;
+                *fresh29 = 0xF0_u32.force_add(value >> 18) as yaml_char_t;
                 let fresh30 = addr_of_mut!((*parser).buffer.last);
                 let fresh31 = *fresh30;
                 *fresh30 = (*fresh30).wrapping_offset(1);
-                *fresh31 = 0x80_u32.wrapping_add(value >> 12 & 0x3F) as yaml_char_t;
+                *fresh31 = 0x80_u32.force_add(value >> 12 & 0x3F) as yaml_char_t;
                 let fresh32 = addr_of_mut!((*parser).buffer.last);
                 let fresh33 = *fresh32;
                 *fresh32 = (*fresh32).wrapping_offset(1);
-                *fresh33 = 0x80_u32.wrapping_add(value >> 6 & 0x3F) as yaml_char_t;
+                *fresh33 = 0x80_u32.force_add(value >> 6 & 0x3F) as yaml_char_t;
                 let fresh34 = addr_of_mut!((*parser).buffer.last);
                 let fresh35 = *fresh34;
                 *fresh34 = (*fresh34).wrapping_offset(1);
-                *fresh35 = 0x80_u32.wrapping_add(value & 0x3F) as yaml_char_t;
+                *fresh35 = 0x80_u32.force_add(value & 0x3F) as yaml_char_t;
             }
             let fresh36 = addr_of_mut!((*parser).unread);
-            *fresh36 = (*fresh36).wrapping_add(1);
+            *fresh36 = (*fresh36).force_add(1);
         }
         if (*parser).eof {
             let fresh37 = addr_of_mut!((*parser).buffer.last);
@@ -451,7 +452,7 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
             *fresh37 = (*fresh37).wrapping_offset(1);
             *fresh38 = b'\0';
             let fresh39 = addr_of_mut!((*parser).unread);
-            *fresh39 = (*fresh39).wrapping_add(1);
+            *fresh39 = (*fresh39).force_add(1);
             return OK;
         }
     }

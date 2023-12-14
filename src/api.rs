@@ -1,4 +1,5 @@
 use crate::externs::{free, malloc, memcpy, memmove, memset, realloc, strdup, strlen};
+use crate::ops::{ForceAdd as _, ForceMul as _};
 use crate::success::{Success, FAIL, OK};
 use crate::yaml::{size_t, yaml_char_t};
 use crate::{
@@ -53,7 +54,7 @@ pub(crate) unsafe fn yaml_string_extend(
 ) {
     let new_start: *mut yaml_char_t = yaml_realloc(
         *start as *mut libc::c_void,
-        ((*end).c_offset_from(*start) as libc::c_long * 2_i64) as size_t,
+        (((*end).c_offset_from(*start) as libc::c_long).force_mul(2_i64)) as size_t,
     ) as *mut yaml_char_t;
     memset(
         new_start.wrapping_offset((*end).c_offset_from(*start) as libc::c_long as isize)
@@ -62,8 +63,9 @@ pub(crate) unsafe fn yaml_string_extend(
         (*end).c_offset_from(*start) as libc::c_long as libc::c_ulong,
     );
     *pointer = new_start.wrapping_offset((*pointer).c_offset_from(*start) as libc::c_long as isize);
-    *end =
-        new_start.wrapping_offset(((*end).c_offset_from(*start) as libc::c_long * 2_i64) as isize);
+    *end = new_start.wrapping_offset(
+        (((*end).c_offset_from(*start) as libc::c_long).force_mul(2_i64)) as isize,
+    );
     *start = new_start;
 }
 
@@ -99,16 +101,16 @@ pub(crate) unsafe fn yaml_stack_extend(
 ) {
     let new_start: *mut libc::c_void = yaml_realloc(
         *start,
-        ((*end as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
-            * 2_i64) as size_t,
+        (((*end as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long)
+            .force_mul(2_i64)) as size_t,
     );
     *top = (new_start as *mut libc::c_char).wrapping_offset(
         (*top as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
             as isize,
     ) as *mut libc::c_void;
     *end = (new_start as *mut libc::c_char).wrapping_offset(
-        ((*end as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
-            * 2_i64) as isize,
+        (((*end as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long)
+            .force_mul(2_i64)) as isize,
     ) as *mut libc::c_void;
     *start = new_start;
 }
@@ -122,8 +124,9 @@ pub(crate) unsafe fn yaml_queue_extend(
     if *start == *head && *tail == *end {
         let new_start: *mut libc::c_void = yaml_realloc(
             *start,
-            ((*end as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
-                * 2_i64) as size_t,
+            (((*end as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char)
+                as libc::c_long)
+                .force_mul(2_i64)) as size_t,
         );
         *head = (new_start as *mut libc::c_char).wrapping_offset(
             (*head as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
@@ -134,8 +137,9 @@ pub(crate) unsafe fn yaml_queue_extend(
                 as isize,
         ) as *mut libc::c_void;
         *end = (new_start as *mut libc::c_char).wrapping_offset(
-            ((*end as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char) as libc::c_long
-                * 2_i64) as isize,
+            (((*end as *mut libc::c_char).c_offset_from(*start as *mut libc::c_char)
+                as libc::c_long)
+                .force_mul(2_i64)) as isize,
         ) as *mut libc::c_void;
         *start = new_start;
     }
@@ -374,7 +378,7 @@ unsafe fn yaml_string_write_handler(
         size,
     );
     let fresh153 = addr_of_mut!((*(*emitter).output.string.size_written));
-    *fresh153 = (*fresh153 as libc::c_ulong).wrapping_add(size) as size_t;
+    *fresh153 = (*fresh153 as libc::c_ulong).force_add(size) as size_t;
     1
 }
 
@@ -532,8 +536,8 @@ unsafe fn yaml_check_utf8(start: *const yaml_char_t, length: size_t) -> Success 
             if octet & 0xC0 != 0x80 {
                 return FAIL;
             }
-            value = (value << 6).wrapping_add((octet & 0x3F) as libc::c_uint);
-            k = k.wrapping_add(1);
+            value = (value << 6).force_add((octet & 0x3F) as libc::c_uint);
+            k = k.force_add(1);
         }
         if !(width == 1
             || width == 2 && value >= 0x80
@@ -826,7 +830,7 @@ pub unsafe fn yaml_scalar_event_initialize(
                 length = strlen(value as *mut libc::c_char) as libc::c_int;
             }
             if yaml_check_utf8(value, length as size_t).ok {
-                value_copy = yaml_malloc((length + 1) as size_t) as *mut yaml_char_t;
+                value_copy = yaml_malloc(length.force_add(1) as size_t) as *mut yaml_char_t;
                 memcpy(
                     value_copy as *mut libc::c_void,
                     value as *const libc::c_void,
@@ -1333,7 +1337,7 @@ pub unsafe fn yaml_document_add_scalar(
                 length = strlen(value as *mut libc::c_char) as libc::c_int;
             }
             if yaml_check_utf8(value, length as size_t).ok {
-                value_copy = yaml_malloc((length + 1) as size_t) as *mut yaml_char_t;
+                value_copy = yaml_malloc(length.force_add(1) as size_t) as *mut yaml_char_t;
                 memcpy(
                     value_copy as *mut libc::c_void,
                     value as *const libc::c_void,
