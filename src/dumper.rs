@@ -118,14 +118,14 @@ pub unsafe fn yaml_emitter_dump(
                 *fresh1 = yaml_malloc(
                     (size_of::<yaml_anchors_t>() as libc::c_ulong)
                         .force_mul((*document).nodes.top.c_offset_from((*document).nodes.start)
-                            as libc::c_long as libc::c_ulong),
+                            as libc::c_ulong),
                 ) as *mut yaml_anchors_t;
                 memset(
                     (*emitter).anchors as *mut libc::c_void,
                     0,
                     (size_of::<yaml_anchors_t>() as libc::c_ulong)
                         .force_mul((*document).nodes.top.c_offset_from((*document).nodes.start)
-                            as libc::c_long as libc::c_ulong),
+                            as libc::c_ulong),
                 );
                 memset(
                     event as *mut libc::c_void,

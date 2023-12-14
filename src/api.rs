@@ -60,7 +60,7 @@ pub(crate) unsafe fn yaml_string_extend(
         new_start.wrapping_offset((*end).c_offset_from(*start) as libc::c_long as isize)
             as *mut libc::c_void,
         0,
-        (*end).c_offset_from(*start) as libc::c_long as libc::c_ulong,
+        (*end).c_offset_from(*start) as libc::c_ulong,
     );
     *pointer = new_start.wrapping_offset((*pointer).c_offset_from(*start) as libc::c_long as isize);
     *end = new_start.wrapping_offset(
@@ -88,7 +88,7 @@ pub(crate) unsafe fn yaml_string_join(
     memcpy(
         *a_pointer as *mut libc::c_void,
         *b_start as *const libc::c_void,
-        (*b_pointer).c_offset_from(*b_start) as libc::c_long as libc::c_ulong,
+        (*b_pointer).c_offset_from(*b_start) as libc::c_ulong,
     );
     *a_pointer =
         (*a_pointer).wrapping_offset((*b_pointer).c_offset_from(*b_start) as libc::c_long as isize);
@@ -149,7 +149,7 @@ pub(crate) unsafe fn yaml_queue_extend(
                 *start,
                 *head,
                 (*tail as *mut libc::c_char).c_offset_from(*head as *mut libc::c_char)
-                    as libc::c_long as libc::c_ulong,
+                    as libc::c_ulong,
             );
         }
         *tail = (*start as *mut libc::c_char).wrapping_offset(

@@ -1405,7 +1405,7 @@ unsafe fn yaml_emitter_analyze_tag(emitter: *mut yaml_emitter_t, tag: *mut yaml_
             let fresh49 = addr_of_mut!((*emitter).tag_data.suffix);
             *fresh49 = string.start.wrapping_offset(prefix_length as isize);
             (*emitter).tag_data.suffix_length = (string.end.c_offset_from(string.start)
-                as libc::c_long as libc::c_ulong)
+                as libc::c_ulong)
                 .wrapping_sub(prefix_length);
             return OK;
         }

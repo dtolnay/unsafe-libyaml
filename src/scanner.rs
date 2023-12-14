@@ -363,10 +363,9 @@ unsafe fn yaml_parser_save_simple_key(parser: *mut yaml_parser_t) -> Success {
         let simple_key = yaml_simple_key_t {
             possible: true,
             required,
-            token_number: (*parser)
-                .tokens_parsed
-                .force_add((*parser).tokens.tail.c_offset_from((*parser).tokens.head)
-                    as libc::c_long as libc::c_ulong),
+            token_number: (*parser).tokens_parsed.force_add(
+                (*parser).tokens.tail.c_offset_from((*parser).tokens.head) as libc::c_ulong,
+            ),
             mark: (*parser).mark,
         };
         if yaml_parser_remove_simple_key(parser).fail {
