@@ -26,6 +26,12 @@ impl ForceAdd for u64 {
     }
 }
 
+impl ForceAdd for usize {
+    fn force_add(self, rhs: Self) -> Self {
+        self.checked_add(rhs).unwrap_or_else(die)
+    }
+}
+
 pub(crate) trait ForceMul: Sized {
     fn force_mul(self, rhs: Self) -> Self;
 }
@@ -45,6 +51,23 @@ impl ForceMul for i64 {
 impl ForceMul for u64 {
     fn force_mul(self, rhs: Self) -> Self {
         self.checked_mul(rhs).unwrap_or_else(die)
+    }
+}
+
+pub(crate) trait ForceInto {
+    fn force_into<U>(self) -> U
+    where
+        Self: TryInto<U>;
+}
+
+impl<T> ForceInto for T {
+    fn force_into<U>(self) -> U
+    where
+        Self: TryInto<U>,
+    {
+        <Self as TryInto<U>>::try_into(self)
+            .ok()
+            .unwrap_or_else(die)
     }
 }
 
