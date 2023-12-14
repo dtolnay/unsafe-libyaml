@@ -374,7 +374,7 @@ unsafe fn yaml_string_write_handler(
         size,
     );
     let fresh153 = addr_of_mut!((*(*emitter).output.string.size_written));
-    *fresh153 = (*fresh153 as libc::c_ulong).wrapping_add(size) as size_t as size_t;
+    *fresh153 = (*fresh153 as libc::c_ulong).wrapping_add(size) as size_t;
     1
 }
 

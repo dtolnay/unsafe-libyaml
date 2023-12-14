@@ -1046,7 +1046,7 @@ unsafe fn yaml_emitter_check_simple_key(emitter: *mut yaml_emitter_t) -> bool {
     match (*event).type_ {
         YAML_ALIAS_EVENT => {
             length = (length as libc::c_ulong).wrapping_add((*emitter).anchor_data.anchor_length)
-                as size_t as size_t;
+                as size_t;
         }
         YAML_SCALAR_EVENT => {
             if (*emitter).scalar_data.multiline {
@@ -1059,7 +1059,7 @@ unsafe fn yaml_emitter_check_simple_key(emitter: *mut yaml_emitter_t) -> bool {
                     .wrapping_add((*emitter).tag_data.handle_length)
                     .wrapping_add((*emitter).tag_data.suffix_length)
                     .wrapping_add((*emitter).scalar_data.length),
-            ) as size_t as size_t;
+            ) as size_t;
         }
         YAML_SEQUENCE_START_EVENT => {
             if !yaml_emitter_check_empty_sequence(emitter) {
@@ -1071,7 +1071,7 @@ unsafe fn yaml_emitter_check_simple_key(emitter: *mut yaml_emitter_t) -> bool {
                     .anchor_length
                     .wrapping_add((*emitter).tag_data.handle_length)
                     .wrapping_add((*emitter).tag_data.suffix_length),
-            ) as size_t as size_t;
+            ) as size_t;
         }
         YAML_MAPPING_START_EVENT => {
             if !yaml_emitter_check_empty_mapping(emitter) {
@@ -1083,7 +1083,7 @@ unsafe fn yaml_emitter_check_simple_key(emitter: *mut yaml_emitter_t) -> bool {
                     .anchor_length
                     .wrapping_add((*emitter).tag_data.handle_length)
                     .wrapping_add((*emitter).tag_data.suffix_length),
-            ) as size_t as size_t;
+            ) as size_t;
         }
         _ => return false,
     }

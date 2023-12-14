@@ -52,7 +52,7 @@ unsafe fn yaml_parser_determine_encoding(parser: *mut yaml_parser_t) -> Success 
         let fresh1 = addr_of_mut!((*parser).raw_buffer.pointer);
         *fresh1 = (*fresh1).wrapping_offset(2_isize);
         let fresh2 = addr_of_mut!((*parser).offset);
-        *fresh2 = (*fresh2 as libc::c_ulong).wrapping_add(2_u64) as size_t as size_t;
+        *fresh2 = (*fresh2 as libc::c_ulong).wrapping_add(2_u64) as size_t;
     } else if (*parser)
         .raw_buffer
         .last
@@ -68,7 +68,7 @@ unsafe fn yaml_parser_determine_encoding(parser: *mut yaml_parser_t) -> Success 
         let fresh3 = addr_of_mut!((*parser).raw_buffer.pointer);
         *fresh3 = (*fresh3).wrapping_offset(2_isize);
         let fresh4 = addr_of_mut!((*parser).offset);
-        *fresh4 = (*fresh4 as libc::c_ulong).wrapping_add(2_u64) as size_t as size_t;
+        *fresh4 = (*fresh4 as libc::c_ulong).wrapping_add(2_u64) as size_t;
     } else if (*parser)
         .raw_buffer
         .last
@@ -84,7 +84,7 @@ unsafe fn yaml_parser_determine_encoding(parser: *mut yaml_parser_t) -> Success 
         let fresh5 = addr_of_mut!((*parser).raw_buffer.pointer);
         *fresh5 = (*fresh5).wrapping_offset(3_isize);
         let fresh6 = addr_of_mut!((*parser).offset);
-        *fresh6 = (*fresh6 as libc::c_ulong).wrapping_add(3_u64) as size_t as size_t;
+        *fresh6 = (*fresh6 as libc::c_ulong).wrapping_add(3_u64) as size_t;
     } else {
         (*parser).encoding = YAML_UTF8_ENCODING;
     }
@@ -397,8 +397,7 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
             let fresh14 = addr_of_mut!((*parser).raw_buffer.pointer);
             *fresh14 = (*fresh14).wrapping_offset(width as isize);
             let fresh15 = addr_of_mut!((*parser).offset);
-            *fresh15 = (*fresh15 as libc::c_ulong).wrapping_add(width as libc::c_ulong) as size_t
-                as size_t;
+            *fresh15 = (*fresh15 as libc::c_ulong).wrapping_add(width as libc::c_ulong) as size_t;
             if value <= 0x7F {
                 let fresh16 = addr_of_mut!((*parser).buffer.last);
                 let fresh17 = *fresh16;
