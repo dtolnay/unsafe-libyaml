@@ -1379,8 +1379,7 @@ unsafe fn yaml_emitter_analyze_anchor(
     }
     let fresh47 = addr_of_mut!((*emitter).anchor_data.anchor);
     *fresh47 = string.start;
-    (*emitter).anchor_data.anchor_length =
-        string.end.c_offset_from(string.start) as libc::c_long as size_t;
+    (*emitter).anchor_data.anchor_length = string.end.c_offset_from(string.start) as size_t;
     (*emitter).anchor_data.alias = alias;
     OK
 }
@@ -1398,7 +1397,7 @@ unsafe fn yaml_emitter_analyze_tag(emitter: *mut yaml_emitter_t, tag: *mut yaml_
     tag_directive = (*emitter).tag_directives.start;
     while tag_directive != (*emitter).tag_directives.top {
         let prefix_length: size_t = strlen((*tag_directive).prefix as *mut libc::c_char);
-        if prefix_length < string.end.c_offset_from(string.start) as libc::c_long as size_t
+        if prefix_length < string.end.c_offset_from(string.start) as size_t
             && strncmp(
                 (*tag_directive).prefix as *mut libc::c_char,
                 string.start as *mut libc::c_char,
@@ -1420,8 +1419,7 @@ unsafe fn yaml_emitter_analyze_tag(emitter: *mut yaml_emitter_t, tag: *mut yaml_
     }
     let fresh50 = addr_of_mut!((*emitter).tag_data.suffix);
     *fresh50 = string.start;
-    (*emitter).tag_data.suffix_length =
-        string.end.c_offset_from(string.start) as libc::c_long as size_t;
+    (*emitter).tag_data.suffix_length = string.end.c_offset_from(string.start) as size_t;
     OK
 }
 

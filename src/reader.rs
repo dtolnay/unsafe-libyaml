@@ -129,7 +129,7 @@ unsafe fn yaml_parser_update_raw_buffer(parser: *mut yaml_parser_t) -> Success {
         (*parser)
             .raw_buffer
             .end
-            .c_offset_from((*parser).raw_buffer.last) as libc::c_long as size_t,
+            .c_offset_from((*parser).raw_buffer.last) as size_t,
         addr_of_mut!(size_read),
     ) == 0
     {
@@ -171,8 +171,7 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
         let size: size_t = (*parser)
             .buffer
             .last
-            .c_offset_from((*parser).buffer.pointer) as libc::c_long
-            as size_t;
+            .c_offset_from((*parser).buffer.pointer) as size_t;
         memmove(
             (*parser).buffer.start as *mut libc::c_void,
             (*parser).buffer.pointer as *const libc::c_void,
@@ -208,7 +207,7 @@ pub(crate) unsafe fn yaml_parser_update_buffer(
                 .raw_buffer
                 .last
                 .c_offset_from((*parser).raw_buffer.pointer)
-                as libc::c_long as size_t;
+                as size_t;
             match (*parser).encoding {
                 YAML_UTF8_ENCODING => {
                     octet = *(*parser).raw_buffer.pointer;

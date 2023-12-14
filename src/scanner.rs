@@ -1592,7 +1592,7 @@ unsafe fn yaml_parser_scan_tag_uri(
                 return FAIL;
             }
             _ => {
-                if string.end.c_offset_from(string.start) as libc::c_long as size_t <= length {
+                if string.end.c_offset_from(string.start) as size_t <= length {
                     yaml_string_extend(
                         addr_of_mut!(string.start),
                         addr_of_mut!(string.pointer),
@@ -1992,7 +1992,6 @@ unsafe fn yaml_parser_scan_block_scalar(
                                                 *fresh479 = string.start;
                                                 (*token).data.scalar.length =
                                                     string.pointer.c_offset_from(string.start)
-                                                        as libc::c_long
                                                         as size_t;
                                                 (*token).data.scalar.style = if literal {
                                                     YAML_LITERAL_SCALAR_STYLE
@@ -2462,8 +2461,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
         (*token).end_mark = end_mark;
         let fresh716 = addr_of_mut!((*token).data.scalar.value);
         *fresh716 = string.start;
-        (*token).data.scalar.length =
-            string.pointer.c_offset_from(string.start) as libc::c_long as size_t;
+        (*token).data.scalar.length = string.pointer.c_offset_from(string.start) as size_t;
         (*token).data.scalar.style = if single {
             YAML_SINGLE_QUOTED_SCALAR_STYLE
         } else {
@@ -2644,8 +2642,7 @@ unsafe fn yaml_parser_scan_plain_scalar(
         (*token).end_mark = end_mark;
         let fresh842 = addr_of_mut!((*token).data.scalar.value);
         *fresh842 = string.start;
-        (*token).data.scalar.length =
-            string.pointer.c_offset_from(string.start) as libc::c_long as size_t;
+        (*token).data.scalar.length = string.pointer.c_offset_from(string.start) as size_t;
         (*token).data.scalar.style = YAML_PLAIN_SCALAR_STYLE;
         if leading_blanks {
             (*parser).simple_key_allowed = true;

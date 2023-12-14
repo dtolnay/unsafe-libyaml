@@ -220,13 +220,13 @@ unsafe fn yaml_string_read_handler(
             .input
             .string
             .end
-            .c_offset_from((*parser).input.string.current) as libc::c_long as size_t
+            .c_offset_from((*parser).input.string.current) as size_t
     {
         size = (*parser)
             .input
             .string
             .end
-            .c_offset_from((*parser).input.string.current) as libc::c_long as size_t;
+            .c_offset_from((*parser).input.string.current) as size_t;
     }
     memcpy(
         buffer as *mut libc::c_void,

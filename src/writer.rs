@@ -35,7 +35,7 @@ pub unsafe fn yaml_emitter_flush(emitter: *mut yaml_emitter_t) -> Success {
             (*emitter)
                 .buffer
                 .last
-                .c_offset_from((*emitter).buffer.start) as libc::c_long as size_t,
+                .c_offset_from((*emitter).buffer.start) as size_t,
         ) != 0
         {
             let fresh3 = addr_of_mut!((*emitter).buffer.last);
@@ -127,7 +127,7 @@ pub unsafe fn yaml_emitter_flush(emitter: *mut yaml_emitter_t) -> Success {
         (*emitter)
             .raw_buffer
             .last
-            .c_offset_from((*emitter).raw_buffer.start) as libc::c_long as size_t,
+            .c_offset_from((*emitter).raw_buffer.start) as size_t,
     ) != 0
     {
         let fresh8 = addr_of_mut!((*emitter).buffer.last);
