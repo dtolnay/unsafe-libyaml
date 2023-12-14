@@ -60,11 +60,23 @@ mod externs {
     use core::ptr;
     use core::slice;
 
-    const HEADER: usize = mem::size_of::<usize>();
+    const HEADER: usize = {
+        let need_len = mem::size_of::<usize>();
+        // Round up to multiple of MALLOC_ALIGN.
+        (need_len + MALLOC_ALIGN - 1) & !(MALLOC_ALIGN - 1)
+    };
 
     // `max_align_t` may be bigger than this, but libyaml does not use `long
     // double` or u128.
-    const MALLOC_ALIGN: usize = mem::align_of::<usize>();
+    const MALLOC_ALIGN: usize = {
+        let int_align = mem::align_of::<libc::c_ulong>();
+        let ptr_align = mem::align_of::<usize>();
+        if int_align >= ptr_align {
+            int_align
+        } else {
+            ptr_align
+        }
+    };
 
     pub unsafe fn malloc(size: libc::c_ulong) -> *mut libc::c_void {
         let size = HEADER.force_add(size.force_into());
