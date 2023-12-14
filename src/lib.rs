@@ -262,6 +262,7 @@ mod api;
 mod dumper;
 mod emitter;
 mod loader;
+mod ops;
 mod parser;
 mod reader;
 mod scanner;
