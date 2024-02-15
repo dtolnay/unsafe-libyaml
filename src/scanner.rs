@@ -2307,7 +2307,7 @@ unsafe fn yaml_parser_scan_flow_scalar(
                                         b"while parsing a quoted scalar\0" as *const u8
                                             as *const libc::c_char,
                                         start_mark,
-                                        b"did not find expected hexdecimal number\0" as *const u8
+                                        b"did not find expected hexadecimal number\0" as *const u8
                                             as *const libc::c_char,
                                     );
                                     current_block = 8114179180390253173;

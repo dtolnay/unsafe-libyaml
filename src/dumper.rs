@@ -76,7 +76,7 @@ pub unsafe fn yaml_emitter_close(emitter: *mut yaml_emitter_t) -> Success {
 
 /// Emit a YAML document.
 ///
-/// The documen object may be generated using the yaml_parser_load() function or
+/// The document object may be generated using the yaml_parser_load() function or
 /// the yaml_document_initialize() function. The emitter takes the
 /// responsibility for the document object and destroys its content after it is
 /// emitted. The document object is destroyed even if the function fails.
