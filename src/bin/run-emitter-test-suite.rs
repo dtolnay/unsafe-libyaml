@@ -48,7 +48,7 @@ pub(crate) unsafe fn unsafe_main(
     let mut emitter = MaybeUninit::<yaml_emitter_t>::uninit();
     let emitter = emitter.as_mut_ptr();
     if yaml_emitter_initialize(emitter).fail {
-        return Err("Could not initalize the emitter object".into());
+        return Err("Could not initialize the emitter object".into());
     }
 
     unsafe fn write_to_stdio(data: *mut c_void, buffer: *mut u8, size: u64) -> i32 {
