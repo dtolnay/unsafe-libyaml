@@ -916,6 +916,8 @@ pub struct yaml_parser_t {
     pub(crate) simple_key_allowed: bool,
     /// The stack of simple keys.
     pub(crate) simple_keys: yaml_stack_t<yaml_simple_key_t>,
+    /// At least this many leading elements of simple_keys have possible=0.
+    pub(crate) not_simple_keys: libc::c_int,
     /// The parser states stack.
     pub(crate) states: yaml_stack_t<yaml_parser_state_t>,
     /// The current parser state.
