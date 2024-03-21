@@ -1,4 +1,4 @@
-#![allow(clippy::type_complexity)]
+#![allow(clippy::type_complexity, clippy::uninlined_format_args)]
 
 mod bin;
 #[path = "../src/bin/run-emitter-test-suite.rs"]

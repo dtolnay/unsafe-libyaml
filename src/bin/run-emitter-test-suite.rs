@@ -11,6 +11,7 @@
     clippy::ptr_as_ptr,
     clippy::single_match_else,
     clippy::too_many_lines,
+    clippy::uninlined_format_args,
     clippy::unreadable_literal
 )]
 

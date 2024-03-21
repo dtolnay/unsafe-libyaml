@@ -8,7 +8,8 @@
     clippy::let_underscore_untyped,
     clippy::missing_errors_doc,
     clippy::missing_safety_doc,
-    clippy::too_many_lines
+    clippy::too_many_lines,
+    clippy::uninlined_format_args
 )]
 
 mod cstr;
