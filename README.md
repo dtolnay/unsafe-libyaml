@@ -17,7 +17,7 @@ of [c2rust].
 unsafe-libyaml = "0.2"
 ```
 
-*Compiler support: requires rustc 1.56+*
+*Compiler support: requires rustc 1.60+*
 
 ## License
 
